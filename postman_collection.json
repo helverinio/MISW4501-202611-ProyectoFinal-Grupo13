@@ -1,0 +1,1188 @@
+{
+	"info": {
+		"_postman_id": "proyecto1-experiment",
+		"name": "Proyecto1 - Hotel Reservations API",
+		"description": "API collection for testing hotel reservations microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "gateway_url",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "reservas_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "pagos_url",
+			"value": "http://localhost:5002",
+			"type": "string"
+		},
+		{
+			"key": "ext_payments_url",
+			"value": "http://localhost:5001",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Gateway",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/health",
+							"host": ["{{gateway_url}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "Paises",
+					"item": [
+						{
+							"name": "Create Pais",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Colombia\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises"]
+								}
+							}
+						},
+						{
+							"name": "Get All Paises",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises"]
+								}
+							}
+						},
+						{
+							"name": "Get Pais by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises", ":pais_id"],
+									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Pais",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Colombia Updated\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises", ":pais_id"],
+									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Pais",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises", ":pais_id"],
+									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Ciudades by Pais",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/paises/:pais_id/ciudades",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "paises", ":pais_id", "ciudades"],
+									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Ciudades",
+					"item": [
+						{
+							"name": "Create Ciudad",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Bogota\",\n    \"id_pais\": \"YOUR_PAIS_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades"]
+								}
+							}
+						},
+						{
+							"name": "Get All Ciudades",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades"]
+								}
+							}
+						},
+						{
+							"name": "Get Ciudad by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades", ":ciudad_id"],
+									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Ciudad",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Bogota DC\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades", ":ciudad_id"],
+									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Ciudad",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades", ":ciudad_id"],
+									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Hoteles by Ciudad",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id/hoteles",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "ciudades", ":ciudad_id", "hoteles"],
+									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Hoteles",
+					"item": [
+						{
+							"name": "Create Hotel",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Hotel Plaza\",\n    \"email\": \"info@hotelplaza.com\",\n    \"descripcion\": \"Luxury hotel in the city center\",\n    \"amenidades\": \"WiFi, Pool, Gym, Restaurant\",\n    \"id_ciudad\": \"YOUR_CIUDAD_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles"]
+								}
+							}
+						},
+						{
+							"name": "Get All Hoteles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles"]
+								}
+							}
+						},
+						{
+							"name": "Get Hotel by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles", ":hotel_id"],
+									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Hotel",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Hotel Plaza Premium\",\n    \"amenidades\": \"WiFi, Pool, Gym, Restaurant, Spa\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles", ":hotel_id"],
+									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Hotel",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles", ":hotel_id"],
+									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Habitaciones by Hotel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id/habitaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "hoteles", ":hotel_id", "habitaciones"],
+									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Habitaciones",
+					"item": [
+						{
+							"name": "Create Habitacion",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tipo\": \"Suite\",\n    \"nro_habitacion\": 101,\n    \"capacidad\": 4,\n    \"camas\": 2,\n    \"id_hotel\": \"YOUR_HOTEL_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones"]
+								}
+							}
+						},
+						{
+							"name": "Get All Habitaciones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones"]
+								}
+							}
+						},
+						{
+							"name": "Get Habitacion by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
+									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Habitacion",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tipo\": \"Suite Premium\",\n    \"capacidad\": 6\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
+									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Habitacion",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
+									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Tarifas by Habitacion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id/tarifas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones", ":habitacion_id", "tarifas"],
+									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Reservas by Habitacion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id/reservas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "habitaciones", ":habitacion_id", "reservas"],
+									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Tarifas",
+					"item": [
+						{
+							"name": "Create Tarifa",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Tarifa Estandar\",\n    \"valor\": 150.00,\n    \"descuento\": 0.0,\n    \"id_habitacion\": \"YOUR_HABITACION_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/tarifas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "tarifas"]
+								}
+							}
+						},
+						{
+							"name": "Get All Tarifas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/tarifas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "tarifas"]
+								}
+							}
+						},
+						{
+							"name": "Get Tarifa by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "tarifas", ":tarifa_id"],
+									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Tarifa",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"valor\": 175.00,\n    \"descuento\": 10.0\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "tarifas", ":tarifa_id"],
+									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Tarifa",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "tarifas", ":tarifa_id"],
+									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Estados",
+					"item": [
+						{
+							"name": "Create Estado",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Confirmada\",\n    \"descripcion\": \"Reserva confirmada y activa\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/estados",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "estados"]
+								}
+							}
+						},
+						{
+							"name": "Get All Estados",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/estados",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "estados"]
+								}
+							}
+						},
+						{
+							"name": "Get Estado by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "estados", ":estado_id"],
+									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Estado",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"descripcion\": \"Reserva confirmada y pagada\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "estados", ":estado_id"],
+									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Estado",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "estados", ":estado_id"],
+									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Reservas",
+					"item": [
+						{
+							"name": "Create Reserva",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fecha_ingreso\": \"2024-03-01T14:00:00\",\n    \"fecha_salida\": \"2024-03-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"user-123\",\n    \"id_pais\": \"YOUR_PAIS_ID\",\n    \"id_habitacion\": \"YOUR_HABITACION_ID\",\n    \"id_estado\": \"YOUR_ESTADO_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas"]
+								}
+							}
+						},
+						{
+							"name": "Get All Reservas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas"]
+								}
+							}
+						},
+						{
+							"name": "Get Reserva by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", ":reserva_id"],
+									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Reserva",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nro_personas\": 3,\n    \"total\": 750.00\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", ":reserva_id"],
+									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Reserva",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", ":reserva_id"],
+									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Reservas by Usuario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/usuarios/:usuario_id/reservas",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "usuarios", ":usuario_id", "reservas"],
+									"variable": [{"key": "usuario_id", "value": "user-123"}]
+								}
+							}
+						},
+						{
+							"name": "Get Pagos by Reserva",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id/pagos",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", ":reserva_id", "pagos"],
+									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Notificaciones by Reserva",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id/notificaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", ":reserva_id", "notificaciones"],
+									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Payments",
+					"item": [
+						{
+							"name": "Create Payment",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservation_id\": \"YOUR_RESERVATION_ID\",\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"payment_method\": \"card\",\n    \"description\": \"Payment for reservation\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/payments",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "payments"]
+								}
+							}
+						},
+						{
+							"name": "Get All Payments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/payments",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "payments"]
+								}
+							}
+						},
+						{
+							"name": "Get Payment by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/payments/:payment_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "payments", ":payment_id"],
+									"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Get Payment by Reservation",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/payments/reservation/:reservation_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "payments", "reservation", ":reservation_id"],
+									"variable": [{"key": "reservation_id", "value": "YOUR_RESERVATION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Process Payment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/payments/:payment_id/process",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "payments", ":payment_id", "process"],
+									"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Notificaciones",
+					"item": [
+						{
+							"name": "Create Notificacion",
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fecha_notif\": \"2024-03-01T10:00:00\",\n    \"titulo\": \"Reserva Confirmada\",\n    \"descripcion\": \"Su reserva ha sido confirmada exitosamente\",\n    \"id_reserva\": \"YOUR_RESERVA_ID\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/notificaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "notificaciones"]
+								}
+							}
+						},
+						{
+							"name": "Get All Notificaciones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/notificaciones",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "notificaciones"]
+								}
+							}
+						},
+						{
+							"name": "Get Notificacion by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/notificaciones/:notificacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "notificaciones", ":notificacion_id"],
+									"variable": [{"key": "notificacion_id", "value": "YOUR_NOTIFICACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Update Notificacion",
+							"request": {
+								"method": "PUT",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"titulo\": \"Reserva Actualizada\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/notificaciones/:notificacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "notificaciones", ":notificacion_id"],
+									"variable": [{"key": "notificacion_id", "value": "YOUR_NOTIFICACION_ID"}]
+								}
+							}
+						},
+						{
+							"name": "Delete Notificacion",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/notificaciones/:notificacion_id",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "notificaciones", ":notificacion_id"],
+									"variable": [{"key": "notificacion_id", "value": "YOUR_NOTIFICACION_ID"}]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Direct - Reservas Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/health",
+							"host": ["{{reservas_url}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "Get All Paises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/paises",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "paises"]
+						}
+					}
+				},
+				{
+					"name": "Get All Hoteles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/hoteles",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "hoteles"]
+						}
+					}
+				},
+				{
+					"name": "Get All Reservas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/reservas",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Payment Flow",
+			"description": "Test the complete payment flow: reservas -> pagos -> ext-payments -> webhook",
+			"item": [
+				{
+					"name": "1. Create Reserva (auto-registers payment)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-03-01T14:00:00\",\n    \"fecha_salida\": \"2024-03-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"user-123\",\n    \"id_pais\": \"YOUR_PAIS_ID\",\n    \"id_habitacion\": \"YOUR_HABITACION_ID\",\n    \"id_estado\": \"YOUR_ESTADO_ID\",\n    \"payment_method\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/reservas",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				},
+				{
+					"name": "2. Get Payment (status: pendiente)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/:payment_id",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "3. Process Payment (triggers ext-payments)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/:payment_id/process",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id", "process"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "4. Get Payment (status: completado)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/:payment_id",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "Direct - Register Payment",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reservation_id\": \"YOUR_RESERVATION_ID\",\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"payment_method\": \"card\",\n    \"description\": \"Payment for reservation\"\n}"
+						},
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "Direct - Create Payment Intent (ext-payments)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://pagos:5002/api/v1/payments/webhook\"\n}"
+						},
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payment-intents",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payment-intents"]
+						}
+					}
+				},
+				{
+					"name": "Direct - Make Payment (ext-payments)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"payment_method\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payments",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "Direct - Simulate Webhook (pagos)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"status\": \"completado\"\n}"
+						},
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/webhook",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", "webhook"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Direct - Pagos Service",
+			"description": "Direct access to pagos microservice endpoints",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/health",
+							"host": ["{{pagos_url}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "Get All Payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "Get Payment by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/:payment_id",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "Get Payment by Reservation ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/reservation/:reservation_id",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", "reservation", ":reservation_id"],
+							"variable": [{"key": "reservation_id", "value": "YOUR_RESERVATION_ID"}]
+						}
+					}
+				},
+				{
+					"name": "Register Payment",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reservation_id\": \"YOUR_RESERVATION_ID\",\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"payment_method\": \"card\",\n    \"description\": \"Payment for reservation\"\n}"
+						},
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "Process Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/:payment_id/process",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id", "process"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "Webhook (receive status update)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"status\": \"completado\"\n}"
+						},
+						"url": {
+							"raw": "{{pagos_url}}/api/v1/payments/webhook",
+							"host": ["{{pagos_url}}"],
+							"path": ["api", "v1", "payments", "webhook"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Direct - Ext-Payments Service",
+			"description": "Direct access to ext-payments microservice endpoints",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ext_payments_url}}/health",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "Create Payment Intent",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://localhost:5002/api/v1/payments/webhook\"\n}"
+						},
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payment-intents",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payment-intents"]
+						}
+					}
+				},
+				{
+					"name": "Get Payment Intent by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payment-intents/:intent_id",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payment-intents", ":intent_id"],
+							"variable": [{"key": "intent_id", "value": "YOUR_PAYMENT_INTENT_ID"}]
+						}
+					}
+				},
+				{
+					"name": "Make Payment",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"payment_method\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payments",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "Get Payment by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ext_payments_url}}/api/v1/payments/:payment_id",
+							"host": ["{{ext_payments_url}}"],
+							"path": ["api", "v1", "payments", ":payment_id"],
+							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				}
+			]
+		}
+	]
+}

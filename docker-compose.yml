@@ -1,0 +1,150 @@
+version: '3.8'
+
+services:
+  # Message Broker (Amazon MQ compatible - ActiveMQ)
+  activemq:
+    image: apache/activemq-classic:5.18.3
+    environment:
+      ACTIVEMQ_USERNAME: admin
+      ACTIVEMQ_PASSWORD: admin
+    ports:
+      - "61616:61616"  # OpenWire
+      - "61613:61613"  # STOMP
+      - "8161:8161"    # Web Console
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8161/admin/ -u admin:admin || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  # Databases
+  reservas-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: reservas
+    volumes:
+      - reservas-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ext-payments-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ext_payments
+    volumes:
+      - ext-payments-db-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pagos-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pagos
+    volumes:
+      - pagos-db-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Microservices
+  reservas:
+    build:
+      context: ./reservas
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@reservas-db:5432/reservas
+      PAGOS_SERVICE_URL: http://pagos:5002
+      MQ_HOST: activemq
+      MQ_PORT: 61613
+      MQ_USERNAME: admin
+      MQ_PASSWORD: admin
+    ports:
+      - "5000:5000"
+    depends_on:
+      reservas-db:
+        condition: service_healthy
+      pagos:
+        condition: service_started
+      activemq:
+        condition: service_healthy
+    restart: on-failure
+
+  ext-payments:
+    build:
+      context: ./ext-payments
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@ext-payments-db:5432/ext_payments
+    ports:
+      - "5001:5001"
+    depends_on:
+      ext-payments-db:
+        condition: service_healthy
+    restart: on-failure
+
+  pagos:
+    build:
+      context: ./pagos
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@pagos-db:5432/pagos
+      EXT_PAYMENTS_URL: http://ext-payments:5001
+      PAGOS_WEBHOOK_URL: http://pagos:5002
+      MQ_HOST: activemq
+      MQ_PORT: 61613
+      MQ_USERNAME: admin
+      MQ_PASSWORD: admin
+    ports:
+      - "5002:5002"
+    depends_on:
+      pagos-db:
+        condition: service_healthy
+      ext-payments:
+        condition: service_started
+      activemq:
+        condition: service_healthy
+    restart: on-failure
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: development
+      RESERVAS_SERVICE_URL: http://reservas:5000
+      PAGOS_SERVICE_URL: http://pagos:5002
+    ports:
+      - "8081:8080"
+    depends_on:
+      - reservas
+      - pagos
+    restart: on-failure
+
+volumes:
+  reservas-db-data:
+  ext-payments-db-data:
+  pagos-db-data:
