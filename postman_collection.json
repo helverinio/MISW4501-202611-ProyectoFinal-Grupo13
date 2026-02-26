@@ -25,6 +25,41 @@
 			"key": "ext_payments_url",
 			"value": "http://localhost:5001",
 			"type": "string"
+		},
+		{
+			"key": "pais_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ciudad_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "hotel_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "habitacion_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tarifa_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "estado_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "reserva_id",
+			"value": "",
+			"type": "string"
 		}
 	],
 	"item": [
@@ -48,6 +83,20 @@
 					"item": [
 						{
 							"name": "Create Pais",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('pais_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -83,7 +132,7 @@
 									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "paises", ":pais_id"],
-									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+									"variable": [{"key": "pais_id", "value": "{{pais_id}}"}]
 								}
 							}
 						},
@@ -100,7 +149,7 @@
 									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "paises", ":pais_id"],
-									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+									"variable": [{"key": "pais_id", "value": "{{pais_id}}"}]
 								}
 							}
 						},
@@ -113,7 +162,7 @@
 									"raw": "{{gateway_url}}/api/v1/paises/:pais_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "paises", ":pais_id"],
-									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+									"variable": [{"key": "pais_id", "value": "{{pais_id}}"}]
 								}
 							}
 						},
@@ -126,7 +175,7 @@
 									"raw": "{{gateway_url}}/api/v1/paises/:pais_id/ciudades",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "paises", ":pais_id", "ciudades"],
-									"variable": [{"key": "pais_id", "value": "YOUR_PAIS_ID"}]
+									"variable": [{"key": "pais_id", "value": "{{pais_id}}"}]
 								}
 							}
 						}
@@ -137,12 +186,26 @@
 					"item": [
 						{
 							"name": "Create Ciudad",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('ciudad_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"nombre\": \"Bogota\",\n    \"id_pais\": \"YOUR_PAIS_ID\"\n}"
+									"raw": "{\n    \"nombre\": \"Bogota\",\n    \"id_pais\": \"{{pais_id}}\"\n}"
 								},
 								"url": {
 									"raw": "{{gateway_url}}/api/v1/ciudades",
@@ -172,7 +235,7 @@
 									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "ciudades", ":ciudad_id"],
-									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+									"variable": [{"key": "ciudad_id", "value": "{{ciudad_id}}"}]
 								}
 							}
 						},
@@ -189,7 +252,7 @@
 									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "ciudades", ":ciudad_id"],
-									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+									"variable": [{"key": "ciudad_id", "value": "{{ciudad_id}}"}]
 								}
 							}
 						},
@@ -202,7 +265,7 @@
 									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "ciudades", ":ciudad_id"],
-									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+									"variable": [{"key": "ciudad_id", "value": "{{ciudad_id}}"}]
 								}
 							}
 						},
@@ -215,7 +278,7 @@
 									"raw": "{{gateway_url}}/api/v1/ciudades/:ciudad_id/hoteles",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "ciudades", ":ciudad_id", "hoteles"],
-									"variable": [{"key": "ciudad_id", "value": "YOUR_CIUDAD_ID"}]
+									"variable": [{"key": "ciudad_id", "value": "{{ciudad_id}}"}]
 								}
 							}
 						}
@@ -226,12 +289,26 @@
 					"item": [
 						{
 							"name": "Create Hotel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('hotel_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"nombre\": \"Hotel Plaza\",\n    \"email\": \"info@hotelplaza.com\",\n    \"descripcion\": \"Luxury hotel in the city center\",\n    \"amenidades\": \"WiFi, Pool, Gym, Restaurant\",\n    \"id_ciudad\": \"YOUR_CIUDAD_ID\"\n}"
+									"raw": "{\n    \"nombre\": \"Hotel Plaza\",\n    \"email\": \"info@hotelplaza.com\",\n    \"descripcion\": \"Luxury hotel in the city center\",\n    \"amenidades\": \"WiFi, Pool, Gym, Restaurant\",\n    \"id_ciudad\": \"{{ciudad_id}}\"\n}"
 								},
 								"url": {
 									"raw": "{{gateway_url}}/api/v1/hoteles",
@@ -261,7 +338,7 @@
 									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "hoteles", ":hotel_id"],
-									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+									"variable": [{"key": "hotel_id", "value": "{{hotel_id}}"}]
 								}
 							}
 						},
@@ -278,7 +355,7 @@
 									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "hoteles", ":hotel_id"],
-									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+									"variable": [{"key": "hotel_id", "value": "{{hotel_id}}"}]
 								}
 							}
 						},
@@ -291,7 +368,7 @@
 									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "hoteles", ":hotel_id"],
-									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+									"variable": [{"key": "hotel_id", "value": "{{hotel_id}}"}]
 								}
 							}
 						},
@@ -304,7 +381,7 @@
 									"raw": "{{gateway_url}}/api/v1/hoteles/:hotel_id/habitaciones",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "hoteles", ":hotel_id", "habitaciones"],
-									"variable": [{"key": "hotel_id", "value": "YOUR_HOTEL_ID"}]
+									"variable": [{"key": "hotel_id", "value": "{{hotel_id}}"}]
 								}
 							}
 						}
@@ -315,12 +392,26 @@
 					"item": [
 						{
 							"name": "Create Habitacion",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('habitacion_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"tipo\": \"Suite\",\n    \"nro_habitacion\": 101,\n    \"capacidad\": 4,\n    \"camas\": 2,\n    \"id_hotel\": \"YOUR_HOTEL_ID\"\n}"
+									"raw": "{\n    \"tipo\": \"Suite\",\n    \"nro_habitacion\": 101,\n    \"capacidad\": 4,\n    \"camas\": 2,\n    \"id_hotel\": \"{{hotel_id}}\"\n}"
 								},
 								"url": {
 									"raw": "{{gateway_url}}/api/v1/habitaciones",
@@ -350,7 +441,7 @@
 									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
-									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+									"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
 								}
 							}
 						},
@@ -367,7 +458,7 @@
 									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
-									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+									"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
 								}
 							}
 						},
@@ -380,7 +471,7 @@
 									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "habitaciones", ":habitacion_id"],
-									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+									"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
 								}
 							}
 						},
@@ -393,7 +484,7 @@
 									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id/tarifas",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "habitaciones", ":habitacion_id", "tarifas"],
-									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+									"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
 								}
 							}
 						},
@@ -406,7 +497,7 @@
 									"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id/reservas",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "habitaciones", ":habitacion_id", "reservas"],
-									"variable": [{"key": "habitacion_id", "value": "YOUR_HABITACION_ID"}]
+									"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
 								}
 							}
 						}
@@ -417,12 +508,26 @@
 					"item": [
 						{
 							"name": "Create Tarifa",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('tarifa_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"nombre\": \"Tarifa Estandar\",\n    \"valor\": 150.00,\n    \"descuento\": 0.0,\n    \"id_habitacion\": \"YOUR_HABITACION_ID\"\n}"
+									"raw": "{\n    \"nombre\": \"Tarifa Estandar\",\n    \"valor\": 150.00,\n    \"descuento\": 0.0,\n    \"id_habitacion\": \"{{habitacion_id}}\"\n}"
 								},
 								"url": {
 									"raw": "{{gateway_url}}/api/v1/tarifas",
@@ -452,7 +557,7 @@
 									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "tarifas", ":tarifa_id"],
-									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+									"variable": [{"key": "tarifa_id", "value": "{{tarifa_id}}"}]
 								}
 							}
 						},
@@ -469,7 +574,7 @@
 									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "tarifas", ":tarifa_id"],
-									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+									"variable": [{"key": "tarifa_id", "value": "{{tarifa_id}}"}]
 								}
 							}
 						},
@@ -482,7 +587,7 @@
 									"raw": "{{gateway_url}}/api/v1/tarifas/:tarifa_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "tarifas", ":tarifa_id"],
-									"variable": [{"key": "tarifa_id", "value": "YOUR_TARIFA_ID"}]
+									"variable": [{"key": "tarifa_id", "value": "{{tarifa_id}}"}]
 								}
 							}
 						}
@@ -493,6 +598,20 @@
 					"item": [
 						{
 							"name": "Create Estado",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('estado_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -528,7 +647,7 @@
 									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "estados", ":estado_id"],
-									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+									"variable": [{"key": "estado_id", "value": "{{estado_id}}"}]
 								}
 							}
 						},
@@ -545,7 +664,7 @@
 									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "estados", ":estado_id"],
-									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+									"variable": [{"key": "estado_id", "value": "{{estado_id}}"}]
 								}
 							}
 						},
@@ -558,7 +677,7 @@
 									"raw": "{{gateway_url}}/api/v1/estados/:estado_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "estados", ":estado_id"],
-									"variable": [{"key": "estado_id", "value": "YOUR_ESTADO_ID"}]
+									"variable": [{"key": "estado_id", "value": "{{estado_id}}"}]
 								}
 							}
 						}
@@ -569,12 +688,26 @@
 					"item": [
 						{
 							"name": "Create Reserva",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('reserva_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [{"key": "Content-Type", "value": "application/json"}],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"fecha_ingreso\": \"2024-03-01T14:00:00\",\n    \"fecha_salida\": \"2024-03-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"user-123\",\n    \"id_pais\": \"YOUR_PAIS_ID\",\n    \"id_habitacion\": \"YOUR_HABITACION_ID\",\n    \"id_estado\": \"YOUR_ESTADO_ID\"\n}"
+									"raw": "{\n    \"fecha_ingreso\": \"2024-03-01T14:00:00\",\n    \"fecha_salida\": \"2024-03-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"user-123\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\",\n    \"id_estado\": \"{{estado_id}}\"\n}"
 								},
 								"url": {
 									"raw": "{{gateway_url}}/api/v1/reservas",
@@ -604,7 +737,7 @@
 									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "reservas", ":reserva_id"],
-									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
 						},
@@ -621,7 +754,7 @@
 									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "reservas", ":reserva_id"],
-									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
 						},
@@ -634,7 +767,7 @@
 									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "reservas", ":reserva_id"],
-									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
 						},
@@ -660,7 +793,7 @@
 									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id/pagos",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "reservas", ":reserva_id", "pagos"],
-									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
 						},
@@ -673,7 +806,7 @@
 									"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id/notificaciones",
 									"host": ["{{gateway_url}}"],
 									"path": ["api", "v1", "reservas", ":reserva_id", "notificaciones"],
-									"variable": [{"key": "reserva_id", "value": "YOUR_RESERVA_ID"}]
+									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
 						}
