@@ -34,3 +34,12 @@ class PaymentRepository(ABC):
     @abstractmethod
     def update_status_by_intent(self, payment_intent_id: str, status: str) -> Optional[Payment]:
         pass
+    
+    @abstractmethod
+    def try_lock_for_processing(self, payment_id: str) -> Optional[Payment]:
+        """
+        Atomically tries to lock a payment for processing by updating status 
+        from 'pendiente' to 'procesando'. Returns the payment if successful, 
+        None if payment not found or not in 'pendiente' status.
+        """
+        pass

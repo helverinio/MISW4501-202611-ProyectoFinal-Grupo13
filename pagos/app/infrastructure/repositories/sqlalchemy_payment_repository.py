@@ -66,6 +66,19 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
             return self._to_entity(model)
         return None
     
+    def try_lock_for_processing(self, payment_id: str) -> Optional[Payment]:
+        rows_updated = PaymentModel.query.filter_by(
+            id=payment_id, 
+            status='pendiente'
+        ).update({'status': 'procesando'})
+        db.session.commit()
+        
+        if rows_updated == 0:
+            return None
+        
+        model = PaymentModel.query.get(payment_id)
+        return self._to_entity(model) if model else None
+    
     def _to_entity(self, model: PaymentModel) -> Payment:
         return Payment(
             id=model.id,
