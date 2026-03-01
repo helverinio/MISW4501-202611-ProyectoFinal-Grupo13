@@ -7,3 +7,4 @@ from app.domain.entities.estado import Estado
 from app.domain.entities.reserva import Reserva
 from app.domain.entities.pago import Pago
 from app.domain.entities.notificacion import Notificacion
+from app.domain.entities.room_hold import RoomHold

@@ -60,6 +60,21 @@
 			"key": "reserva_id",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "hold_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id_1",
+			"value": "user-001",
+			"type": "string"
+		},
+		{
+			"key": "user_id_2",
+			"value": "user-002",
+			"type": "string"
 		}
 	],
 	"item": [
@@ -1312,6 +1327,277 @@
 							"host": ["{{ext_payments_url}}"],
 							"path": ["api", "v1", "payments", ":payment_id"],
 							"variable": [{"key": "payment_id", "value": "YOUR_PAYMENT_ID"}]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Room Hold Flow - Overbooking Prevention",
+			"description": "Test the room hold mechanism to prevent overbooking. Flow: acquire hold -> create reservation -> verify hold prevents other users",
+			"item": [
+				{
+					"name": "1. User1 - Acquire Room Hold",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Hold acquired successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('hold_id', jsonData.id);",
+									"    console.log('Hold ID saved: ' + jsonData.id);",
+									"    console.log('Hold expires at: ' + jsonData.expires_at);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_usuario\": \"{{user_id_1}}\",\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\",\n    \"hold_duration_minutes\": 15\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/habitaciones/:habitacion_id/hold",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "habitaciones", ":habitacion_id", "hold"],
+							"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "2. User2 - Try Acquire Same Room (Should Fail 409)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Hold denied - room already held', function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test('Error message indicates room is held', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include('already held');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_usuario\": \"{{user_id_2}}\",\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/habitaciones/:habitacion_id/hold",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "habitaciones", ":habitacion_id", "hold"],
+							"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "3. Check Room Hold Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Room is held', function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.is_held).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/habitaciones/:habitacion_id/hold/check",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "habitaciones", ":habitacion_id", "hold", "check"],
+							"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "4. Get Hold Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Hold details retrieved', function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.is_active).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/holds/:hold_id",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "holds", ":hold_id"],
+							"variable": [{"key": "hold_id", "value": "{{hold_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "5. User2 - Create Reserva Without Hold (Should Fail 400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Reservation denied - no hold', function () {",
+									"    pm.expect([400, 409]).to.include(pm.response.code);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"{{user_id_2}}\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\",\n    \"id_estado\": \"{{estado_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/reservas",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				},
+				{
+					"name": "6. User1 - Create Reserva With Hold (Should Succeed)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Reservation created successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('reserva_id', jsonData.id);",
+									"    console.log('Reserva ID saved: ' + jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"{{user_id_1}}\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\",\n    \"id_estado\": \"{{estado_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/reservas",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				},
+				{
+					"name": "7. Verify Hold Released After Reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Hold no longer exists or is inactive', function () {",
+									"    pm.expect([200, 404]).to.include(pm.response.code);",
+									"    if (pm.response.code === 200) {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData.is_held).to.be.false;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-04-01T14:00:00\",\n    \"fecha_salida\": \"2024-04-05T12:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/habitaciones/:habitacion_id/hold/check",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "habitaciones", ":habitacion_id", "hold", "check"],
+							"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "8. Cleanup - Delete Test Reserva",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/reservas/:reserva_id",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "reservas", ":reserva_id"],
+							"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
+						}
+					}
+				},
+				{
+					"name": "Utility - Cleanup Expired Holds",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/holds/cleanup",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "holds", "cleanup"]
+						}
+					}
+				},
+				{
+					"name": "Utility - Release Hold Manually",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{reservas_url}}/api/v1/holds/:hold_id",
+							"host": ["{{reservas_url}}"],
+							"path": ["api", "v1", "holds", ":hold_id"],
+							"variable": [{"key": "hold_id", "value": "{{hold_id}}"}]
 						}
 					}
 				}

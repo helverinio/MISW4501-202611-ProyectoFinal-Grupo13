@@ -4,9 +4,10 @@ from app.api.v1 import api_v1_bp
 from app.application.use_cases import (
     CreateReservaUseCase, GetReservaUseCase, GetAllReservasUseCase,
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
-    UpdateReservaUseCase, DeleteReservaUseCase
+    UpdateReservaUseCase, DeleteReservaUseCase,
+    ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase
 )
-from app.infrastructure.repositories import SQLAlchemyReservaRepository
+from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository
 from app.infrastructure.services import PagosService
 
 
@@ -16,6 +17,10 @@ def get_repository():
 
 def get_pagos_service():
     return PagosService(current_app.config['PAGOS_SERVICE_URL'])
+
+
+def get_room_hold_repository():
+    return SQLAlchemyRoomHoldRepository()
 
 
 def parse_datetime(date_str):
@@ -47,6 +52,24 @@ def create_reserva():
                 id_usuario, id_pais, id_habitacion, id_estado]):
         return jsonify({'error': 'All fields are required: fecha_ingreso, fecha_salida, total, nro_personas, id_usuario, id_pais, id_habitacion, id_estado'}), 400
 
+    room_hold_repository = get_room_hold_repository()
+    validate_hold_use_case = ValidateUserHoldUseCase(room_hold_repository)
+    has_valid_hold = validate_hold_use_case.execute(
+        id_usuario, id_habitacion, fecha_ingreso, fecha_salida
+    )
+
+    if not has_valid_hold:
+        check_hold_use_case = CheckRoomHoldUseCase(room_hold_repository)
+        existing_hold = check_hold_use_case.execute(id_habitacion, fecha_ingreso, fecha_salida)
+        if existing_hold:
+            return jsonify({
+                'error': 'Room is held by another user. Please acquire a hold first.',
+                'hold_expires_at': existing_hold.expires_at.isoformat()
+            }), 409
+        return jsonify({
+            'error': 'You must acquire a hold on the room before making a reservation. POST to /habitaciones/{id}/hold first.'
+        }), 400
+
     repository = get_repository()
     confirmed_estados = ['confirmada', 'Confirmada', 'CONFIRMADA']
     if repository.has_overlapping_confirmed_reservation(
@@ -61,6 +84,14 @@ def create_reserva():
     )
 
     current_app.logger.info(f"[RESERVAS] Reserva created: {reserva.id}, now registering payment...")
+
+    user_hold = room_hold_repository.find_active_hold_by_user_and_room(
+        id_usuario, id_habitacion, fecha_ingreso, fecha_salida
+    )
+    if user_hold:
+        release_hold_use_case = ReleaseRoomHoldUseCase(room_hold_repository)
+        release_hold_use_case.execute(user_hold.id)
+        current_app.logger.info(f"[RESERVAS] Hold {user_hold.id} released after reservation creation")
     
     pagos_service = get_pagos_service()
     payment_result = pagos_service.create_payment(

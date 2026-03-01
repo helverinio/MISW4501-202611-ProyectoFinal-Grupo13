@@ -7,3 +7,4 @@ from app.infrastructure.models.estado_model import EstadoModel
 from app.infrastructure.models.reserva_model import ReservaModel
 from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.notificacion_model import NotificacionModel
+from app.infrastructure.models.room_hold_model import RoomHoldModel
