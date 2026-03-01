@@ -1,0 +1,2 @@
+# Room Hold Configuration
+DEFAULT_HOLD_DURATION_MINUTES = 15

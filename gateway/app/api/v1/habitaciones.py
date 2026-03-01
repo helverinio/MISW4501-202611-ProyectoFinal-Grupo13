@@ -53,3 +53,39 @@ def get_tarifas_by_habitacion(habitacion_id):
 def get_reservas_by_habitacion(habitacion_id):
     result = get_service().get_reservas_by_habitacion(habitacion_id)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/habitaciones/<habitacion_id>/hold', methods=['POST'])
+def acquire_room_hold(habitacion_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().acquire_room_hold(habitacion_id, data)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/habitaciones/<habitacion_id>/hold/check', methods=['POST'])
+def check_room_hold(habitacion_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().check_room_hold(habitacion_id, data)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/holds/<hold_id>', methods=['GET'])
+def get_hold(hold_id):
+    result = get_service().get_hold(hold_id)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/holds/<hold_id>', methods=['DELETE'])
+def release_hold(hold_id):
+    result = get_service().release_hold(hold_id)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/holds/cleanup', methods=['POST'])
+def cleanup_expired_holds():
+    result = get_service().cleanup_expired_holds()
+    return jsonify(result['data']), result['status_code']

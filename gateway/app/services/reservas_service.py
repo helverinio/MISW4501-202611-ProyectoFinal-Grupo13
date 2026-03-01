@@ -102,6 +102,22 @@ class ReservasService:
     def get_reservas_by_habitacion(self, habitacion_id: str) -> Dict[str, Any]:
         return self._request('GET', f'habitaciones/{habitacion_id}/reservas')
 
+    # Room Holds
+    def acquire_room_hold(self, habitacion_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'habitaciones/{habitacion_id}/hold', data)
+
+    def check_room_hold(self, habitacion_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'habitaciones/{habitacion_id}/hold/check', data)
+
+    def get_hold(self, hold_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'holds/{hold_id}')
+
+    def release_hold(self, hold_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'holds/{hold_id}')
+
+    def cleanup_expired_holds(self) -> Dict[str, Any]:
+        return self._request('POST', 'holds/cleanup')
+
     # Tarifas
     def create_tarifa(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'tarifas', data)

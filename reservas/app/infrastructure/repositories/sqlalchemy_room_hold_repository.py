@@ -6,6 +6,7 @@ from app import db
 from app.domain.entities.room_hold import RoomHold
 from app.domain.repositories.room_hold_repository import RoomHoldRepository
 from app.infrastructure.models.room_hold_model import RoomHoldModel
+from app.config.constants import DEFAULT_HOLD_DURATION_MINUTES
 
 
 class SQLAlchemyRoomHoldRepository(RoomHoldRepository):
@@ -80,7 +81,7 @@ class SQLAlchemyRoomHoldRepository(RoomHoldRepository):
 
     def acquire_hold_atomically(
         self, id_habitacion: str, id_usuario: str, fecha_ingreso: datetime,
-        fecha_salida: datetime, hold_duration_minutes: int = 15
+        fecha_salida: datetime, hold_duration_minutes: int = DEFAULT_HOLD_DURATION_MINUTES
     ) -> Optional[RoomHold]:
         now = datetime.utcnow()
         

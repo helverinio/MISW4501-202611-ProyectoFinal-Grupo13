@@ -2,6 +2,7 @@ from typing import Optional
 from datetime import datetime
 from app.domain.entities.room_hold import RoomHold
 from app.domain.repositories.room_hold_repository import RoomHoldRepository
+from app.config.constants import DEFAULT_HOLD_DURATION_MINUTES
 
 
 class AcquireRoomHoldUseCase:
@@ -10,7 +11,7 @@ class AcquireRoomHoldUseCase:
 
     def execute(
         self, id_habitacion: str, id_usuario: str, fecha_ingreso: datetime,
-        fecha_salida: datetime, hold_duration_minutes: int = 15
+        fecha_salida: datetime, hold_duration_minutes: int = DEFAULT_HOLD_DURATION_MINUTES
     ) -> Optional[RoomHold]:
         return self.repository.acquire_hold_atomically(
             id_habitacion=id_habitacion,

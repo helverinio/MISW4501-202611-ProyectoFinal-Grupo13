@@ -1,6 +1,7 @@
-from flask import request, jsonify, current_app
 from datetime import datetime
+from flask import request, jsonify, current_app
 from app.api.v1 import api_v1_bp
+from app.config.constants import DEFAULT_HOLD_DURATION_MINUTES
 from app.application.use_cases import (
     AcquireRoomHoldUseCase, GetRoomHoldUseCase, CheckRoomHoldUseCase,
     ReleaseRoomHoldUseCase, CleanupExpiredHoldsUseCase
@@ -30,7 +31,7 @@ def acquire_room_hold(habitacion_id):
     id_usuario = data.get('id_usuario')
     fecha_ingreso = parse_datetime(data.get('fecha_ingreso'))
     fecha_salida = parse_datetime(data.get('fecha_salida'))
-    hold_duration_minutes = data.get('hold_duration_minutes', 15)
+    hold_duration_minutes = data.get('hold_duration_minutes', DEFAULT_HOLD_DURATION_MINUTES)
 
     if not all([id_usuario, fecha_ingreso, fecha_salida]):
         return jsonify({

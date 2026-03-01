@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import uuid
+from app.config.constants import DEFAULT_HOLD_DURATION_MINUTES
 
 
 @dataclass
@@ -15,7 +16,7 @@ class RoomHold:
 
     @staticmethod
     def create(id_habitacion: str, id_usuario: str, fecha_ingreso: datetime,
-               fecha_salida: datetime, hold_duration_minutes: int = 15) -> 'RoomHold':
+               fecha_salida: datetime, hold_duration_minutes: int = DEFAULT_HOLD_DURATION_MINUTES) -> 'RoomHold':
         now = datetime.utcnow()
         return RoomHold(
             id=str(uuid.uuid4()),
