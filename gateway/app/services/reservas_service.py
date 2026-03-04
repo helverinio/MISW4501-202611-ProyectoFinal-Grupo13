@@ -169,6 +169,9 @@ class ReservasService:
     def get_reservas_by_usuario(self, usuario_id: str) -> Dict[str, Any]:
         return self._request('GET', f'usuarios/{usuario_id}/reservas')
 
+    def create_reserva_pms_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'reservas/webhook/pms', data)
+
     def get_pagos_by_reserva(self, reserva_id: str) -> Dict[str, Any]:
         return self._request('GET', f'reservas/{reserva_id}/pagos')
 

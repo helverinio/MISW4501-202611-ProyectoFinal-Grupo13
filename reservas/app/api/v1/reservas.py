@@ -5,10 +5,12 @@ from app.application.use_cases import (
     CreateReservaUseCase, GetReservaUseCase, GetAllReservasUseCase,
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
     UpdateReservaUseCase, DeleteReservaUseCase,
-    ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase
+    ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase,
+    AcquireRoomHoldUseCase
 )
-from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository
+from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository, SQLAlchemyEstadoRepository
 from app.infrastructure.services import PagosService
+from app.domain.entities.estado import Estado
 
 
 def get_repository():
@@ -58,6 +60,13 @@ def create_reserva():
         id_usuario, id_habitacion, fecha_ingreso, fecha_salida
     )
 
+    repository = get_repository()
+    confirmed_estados = ['confirmada', 'Confirmada', 'CONFIRMADA', 'Reservada via PMS']
+    if repository.has_overlapping_confirmed_reservation(
+        id_habitacion, fecha_ingreso, fecha_salida, confirmed_estados
+    ):
+        return jsonify({'error': 'Room is already reserved and confirmed for the requested dates'}), 409
+
     if not has_valid_hold:
         check_hold_use_case = CheckRoomHoldUseCase(room_hold_repository)
         existing_hold = check_hold_use_case.execute(id_habitacion, fecha_ingreso, fecha_salida)
@@ -69,14 +78,7 @@ def create_reserva():
         return jsonify({
             'error': 'You must acquire a hold on the room before making a reservation. POST to /habitaciones/{id}/hold first.'
         }), 400
-
-    repository = get_repository()
-    confirmed_estados = ['confirmada', 'Confirmada', 'CONFIRMADA']
-    if repository.has_overlapping_confirmed_reservation(
-        id_habitacion, fecha_ingreso, fecha_salida, confirmed_estados
-    ):
-        return jsonify({'error': 'Room is already reserved and confirmed for the requested dates'}), 409
-
+        
     use_case = CreateReservaUseCase(repository)
     reserva = use_case.execute(
         fecha_ingreso, fecha_salida, total, nro_personas,
@@ -254,3 +256,84 @@ def delete_reserva(reserva_id):
         return jsonify({'error': 'Reserva not found'}), 404
 
     return jsonify({'message': 'Reserva deleted successfully'})
+
+
+@api_v1_bp.route('/reservas/webhook/pms', methods=['POST'])
+def create_reserva_pms_webhook():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    fecha_ingreso = parse_datetime(data.get('fecha_ingreso'))
+    fecha_salida = parse_datetime(data.get('fecha_salida'))
+    total = data.get('total')
+    nro_personas = data.get('nro_personas')
+    id_usuario = data.get('id_usuario')
+    id_pais = data.get('id_pais')
+    id_habitacion = data.get('id_habitacion')
+
+    if not all([fecha_ingreso, fecha_salida, total is not None, nro_personas is not None,
+                id_usuario, id_pais, id_habitacion]):
+        return jsonify({'error': 'All fields are required: fecha_ingreso, fecha_salida, total, nro_personas, id_usuario, id_pais, id_habitacion'}), 400
+
+    repository = get_repository()
+    room_hold_repository = get_room_hold_repository()
+    estado_repository = SQLAlchemyEstadoRepository()
+
+    estado_nombre = 'Reservada via PMS'
+    estado = estado_repository.find_by_nombre(estado_nombre)
+    if not estado:
+        current_app.logger.info(f"[RESERVAS PMS] Estado '{estado_nombre}' not found, creating it")
+        estado = Estado.create(nombre=estado_nombre, descripcion='Reserva creada desde el sistema PMS')
+        estado = estado_repository.save(estado)
+        current_app.logger.info(f"[RESERVAS PMS] Created estado '{estado_nombre}' with id {estado.id}")
+    id_estado = estado.id
+
+    confirmed_estados = ['confirmada', 'Confirmada', 'CONFIRMADA', 'Reservada via PMS']
+    if repository.has_overlapping_confirmed_reservation(
+        id_habitacion, fecha_ingreso, fecha_salida, confirmed_estados
+    ):
+        return jsonify({'error': 'Room is already reserved and confirmed for the requested dates'}), 409
+
+    check_hold_use_case = CheckRoomHoldUseCase(room_hold_repository)
+    existing_hold = check_hold_use_case.execute(id_habitacion, fecha_ingreso, fecha_salida)
+    if existing_hold:
+        release_hold_use_case = ReleaseRoomHoldUseCase(room_hold_repository)
+        release_hold_use_case.execute(existing_hold.id)
+        current_app.logger.info(f"[RESERVAS PMS] Released existing hold {existing_hold.id} for PMS reservation")
+
+    acquire_hold_use_case = AcquireRoomHoldUseCase(room_hold_repository)
+    pms_hold = acquire_hold_use_case.execute(
+        id_habitacion=id_habitacion,
+        id_usuario=id_usuario,
+        fecha_ingreso=fecha_ingreso,
+        fecha_salida=fecha_salida,
+        hold_duration_minutes=5
+    )
+    current_app.logger.info(f"[RESERVAS PMS] Hold {pms_hold.id} acquired for PMS reservation")
+
+    use_case = CreateReservaUseCase(repository)
+    reserva = use_case.execute(
+        fecha_ingreso, fecha_salida, total, nro_personas,
+        id_usuario, id_pais, id_habitacion, id_estado
+    )
+
+    current_app.logger.info(f"[RESERVAS PMS] Reserva created via PMS webhook: {reserva.id} with estado '{estado_nombre}'")
+
+    release_hold_use_case = ReleaseRoomHoldUseCase(room_hold_repository)
+    release_hold_use_case.execute(pms_hold.id)
+    current_app.logger.info(f"[RESERVAS PMS] Hold {pms_hold.id} released after reservation creation")
+
+    return jsonify({
+        'id': reserva.id,
+        'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
+        'fecha_salida': reserva.fecha_salida.isoformat(),
+        'total': reserva.total,
+        'nro_personas': reserva.nro_personas,
+        'id_usuario': reserva.id_usuario,
+        'id_pais': reserva.id_pais,
+        'id_habitacion': reserva.id_habitacion,
+        'id_estado': reserva.id_estado,
+        'estado_nombre': estado_nombre,
+        'source': 'PMS'
+    }), 201

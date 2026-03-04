@@ -75,6 +75,11 @@
 			"key": "user_id_2",
 			"value": "user-002",
 			"type": "string"
+		},
+		{
+			"key": "pms_reserva_id",
+			"value": "",
+			"type": "string"
 		}
 	],
 	"item": [
@@ -824,6 +829,37 @@
 									"variable": [{"key": "reserva_id", "value": "{{reserva_id}}"}]
 								}
 							}
+						},
+						{
+							"name": "Create Reserva via PMS Webhook",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.collectionVariables.set('reserva_id', jsonData.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fecha_ingreso\": \"2024-03-01T14:00:00\",\n    \"fecha_salida\": \"2024-03-05T12:00:00\",\n    \"total\": 600.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"pms-user-001\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\"\n}"
+								},
+								"url": {
+									"raw": "{{gateway_url}}/api/v1/reservas/webhook/pms",
+									"host": ["{{gateway_url}}"],
+									"path": ["api", "v1", "reservas", "webhook", "pms"]
+								},
+								"description": "Creates a reservation via PMS webhook. This endpoint bypasses the normal hold requirement, immediately acquires a hold, creates the reservation with 'Reservada via PMS' state, and releases the hold. No payment processing is performed."
+							}
 						}
 					]
 				},
@@ -1151,6 +1187,148 @@
 							"host": ["{{pagos_url}}"],
 							"path": ["api", "v1", "payments", "webhook"]
 						}
+					}
+				}
+			]
+		},
+		{
+			"name": "PMS Reservation Conflict Flow",
+			"description": "Test scenario: User holds a room, PMS reserves it via webhook, user's reservation fails with conflict error",
+			"item": [
+				{
+					"name": "1. User Acquires Hold on Room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('hold_id', jsonData.id);",
+									"    console.log('Hold acquired: ' + jsonData.id);",
+									"}",
+									"pm.test('Hold acquired successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_usuario\": \"{{user_id_1}}\",\n    \"fecha_ingreso\": \"2024-06-01T14:00:00\",\n    \"fecha_salida\": \"2024-06-05T12:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/v1/habitaciones/:habitacion_id/hold",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "v1", "habitaciones", ":habitacion_id", "hold"],
+							"variable": [{"key": "habitacion_id", "value": "{{habitacion_id}}"}]
+						},
+						"description": "User 1 acquires a hold on the room for specific dates"
+					}
+				},
+				{
+					"name": "2. PMS Creates Reservation via Webhook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('pms_reserva_id', jsonData.id);",
+									"    console.log('PMS Reservation created: ' + jsonData.id);",
+									"}",
+									"pm.test('PMS reservation created successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response includes source PMS', function () {",
+									"    pm.expect(jsonData.source).to.eql('PMS');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-06-01T14:00:00\",\n    \"fecha_salida\": \"2024-06-05T12:00:00\",\n    \"total\": 800.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"pms-system\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/v1/reservas/webhook/pms",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "v1", "reservas", "webhook", "pms"]
+						},
+						"description": "PMS webhook creates a reservation for the same room and dates. This releases the user's hold and creates the PMS reservation."
+					}
+				},
+				{
+					"name": "3. User Tries to Reserve (Should Fail - 409)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.test('Reservation fails with 409 Conflict', function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test('Error message indicates room is reserved', function () {",
+									"    pm.expect(jsonData.error).to.include('Room is already reserved');",
+									"});",
+									"console.log('Expected failure: ' + jsonData.error);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"2024-06-01T14:00:00\",\n    \"fecha_salida\": \"2024-06-05T12:00:00\",\n    \"total\": 800.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"{{user_id_1}}\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\",\n    \"id_estado\": \"{{estado_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/v1/reservas",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "v1", "reservas"]
+						},
+						"description": "User tries to create a reservation but fails because the room is already reserved via PMS with 'Reservada via PMS' state (which is in confirmed_estados)"
+					}
+				},
+				{
+					"name": "4. Cleanup - Delete PMS Reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('PMS reservation deleted', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/v1/reservas/:reserva_id",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "v1", "reservas", ":reserva_id"],
+							"variable": [{"key": "reserva_id", "value": "{{pms_reserva_id}}"}]
+						},
+						"description": "Clean up by deleting the PMS reservation"
 					}
 				}
 			]
