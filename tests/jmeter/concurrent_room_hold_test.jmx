@@ -23,12 +23,12 @@
           </elementProp>
           <elementProp name="CHECK_IN_DATE" elementType="Argument">
             <stringProp name="Argument.name">CHECK_IN_DATE</stringProp>
-            <stringProp name="Argument.value">2024-06-01T14:00:00</stringProp>
+            <stringProp name="Argument.value">2024-06-06T14:00:00</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="CHECK_OUT_DATE" elementType="Argument">
             <stringProp name="Argument.name">CHECK_OUT_DATE</stringProp>
-            <stringProp name="Argument.value">2024-06-05T12:00:00</stringProp>
+            <stringProp name="Argument.value">2024-06-08T12:00:00</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -83,12 +83,12 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer - Wait for All Users" enabled="true">
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer - Wait for All Users">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">30000</longProp>
         </SyncTimer>
         <hashTree/>
-        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User ID Counter" enabled="true">
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User ID Counter">
           <stringProp name="CounterConfig.start">1</stringProp>
           <stringProp name="CounterConfig.end"></stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
@@ -97,7 +97,7 @@
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Acquire Room Hold" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Acquire Room Hold">
           <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
           <stringProp name="HTTPSampler.port">${PORT}</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
