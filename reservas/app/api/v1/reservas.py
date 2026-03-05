@@ -9,7 +9,7 @@ from app.application.use_cases import (
     AcquireRoomHoldUseCase
 )
 from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository, SQLAlchemyEstadoRepository
-from app.infrastructure.services import PagosService
+from app.infrastructure.services import PagosService, get_redis_lock_service, RedisLockAcquisitionError
 from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 from app.domain.entities.estado import Estado
 
@@ -24,6 +24,10 @@ def get_pagos_service():
 
 def get_room_hold_repository():
     return SQLAlchemyRoomHoldRepository()
+
+
+def get_lock_service():
+    return get_redis_lock_service()
 
 
 def parse_datetime(date_str):
@@ -55,6 +59,44 @@ def create_reserva():
                 id_usuario, id_pais, id_habitacion, id_estado]):
         return jsonify({'error': 'All fields are required: fecha_ingreso, fecha_salida, total, nro_personas, id_usuario, id_pais, id_habitacion, id_estado'}), 400
 
+    lock_service = get_lock_service()
+    
+    if lock_service:
+        fecha_ingreso_str = fecha_ingreso.strftime('%Y-%m-%d')
+        fecha_salida_str = fecha_salida.strftime('%Y-%m-%d')
+        
+        try:
+            with lock_service.room_hold_lock(id_habitacion, fecha_ingreso_str, fecha_salida_str):
+                current_app.logger.info(
+                    f"[RESERVAS] Redis lock acquired for reservation creation on room {id_habitacion}"
+                )
+                return _execute_reservation_creation(
+                    fecha_ingreso, fecha_salida, total, nro_personas,
+                    id_usuario, id_pais, id_habitacion, id_estado, payment_method
+                )
+        except RedisLockAcquisitionError:
+            current_app.logger.warning(
+                f"[RESERVAS] Could not acquire Redis lock for room {id_habitacion} - concurrent request"
+            )
+            return jsonify({
+                'error': 'Reservation operation is being processed by another request. Please retry.',
+                'retry_after_ms': 500
+            }), 429
+    else:
+        current_app.logger.warning(
+            "[RESERVAS] Redis lock service unavailable, falling back to DB-only atomicity"
+        )
+        return _execute_reservation_creation(
+            fecha_ingreso, fecha_salida, total, nro_personas,
+            id_usuario, id_pais, id_habitacion, id_estado, payment_method
+        )
+
+
+def _execute_reservation_creation(
+    fecha_ingreso, fecha_salida, total, nro_personas,
+    id_usuario, id_pais, id_habitacion, id_estado, payment_method
+):
+    """Execute the actual reservation creation within the distributed lock."""
     room_hold_repository = get_room_hold_repository()
     validate_hold_use_case = ValidateUserHoldUseCase(room_hold_repository)
     has_valid_hold = validate_hold_use_case.execute(

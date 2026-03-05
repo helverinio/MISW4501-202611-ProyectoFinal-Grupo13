@@ -8,3 +8,4 @@ gunicorn==21.2.0
 psycopg2-binary==2.9.9
 requests==2.31.0
 stomp.py==8.1.0
+redis==4.6.0

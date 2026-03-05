@@ -7,10 +7,15 @@ from app.application.use_cases import (
     ReleaseRoomHoldUseCase, CleanupExpiredHoldsUseCase
 )
 from app.infrastructure.repositories import SQLAlchemyRoomHoldRepository
+from app.infrastructure.services import get_redis_lock_service, RedisLockAcquisitionError
 
 
 def get_repository():
     return SQLAlchemyRoomHoldRepository()
+
+
+def get_lock_service():
+    return get_redis_lock_service()
 
 
 def parse_datetime(date_str):
@@ -38,6 +43,39 @@ def acquire_room_hold(habitacion_id):
             'error': 'Required fields: id_usuario, fecha_ingreso, fecha_salida'
         }), 400
 
+    lock_service = get_lock_service()
+    
+    if lock_service:
+        fecha_ingreso_str = fecha_ingreso.strftime('%Y-%m-%d')
+        fecha_salida_str = fecha_salida.strftime('%Y-%m-%d')
+        
+        try:
+            with lock_service.room_hold_lock(habitacion_id, fecha_ingreso_str, fecha_salida_str):
+                current_app.logger.info(
+                    f"[RESERVAS] Redis lock acquired for room {habitacion_id} hold request"
+                )
+                return _execute_hold_acquisition(
+                    habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes
+                )
+        except RedisLockAcquisitionError:
+            current_app.logger.warning(
+                f"[RESERVAS] Could not acquire Redis lock for room {habitacion_id} - concurrent request"
+            )
+            return jsonify({
+                'error': 'Room hold operation is being processed by another request. Please retry.',
+                'retry_after_ms': 500
+            }), 429
+    else:
+        current_app.logger.warning(
+            "[RESERVAS] Redis lock service unavailable, falling back to DB-only atomicity"
+        )
+        return _execute_hold_acquisition(
+            habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes
+        )
+
+
+def _execute_hold_acquisition(habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes):
+    """Execute the actual hold acquisition within the distributed lock."""
     use_case = AcquireRoomHoldUseCase(get_repository())
     hold = use_case.execute(
         id_habitacion=habitacion_id,

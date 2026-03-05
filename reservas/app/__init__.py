@@ -8,6 +8,7 @@ import time
 
 db = SQLAlchemy()
 migrate = Migrate()
+redis_lock_service = None
 
 def setup_logging(app):
     handler = logging.StreamHandler(sys.stdout)
@@ -30,6 +31,19 @@ def create_app(config_name='default'):
     db.init_app(app)
     migrate.init_app(app, db)
     
+    global redis_lock_service
+    try:
+        from app.infrastructure.services import init_redis_lock_service
+        redis_lock_service = init_redis_lock_service(app.config)
+        health = redis_lock_service.health_check()
+        if health['status'] == 'healthy':
+            logger.info("Redis lock service initialized successfully")
+        else:
+            logger.warning(f"Redis lock service unhealthy: {health.get('error')}")
+    except Exception as e:
+        logger.warning(f"Could not initialize Redis lock service: {str(e)}")
+        redis_lock_service = None
+    
     @app.before_request
     def log_request_start():
         g.start_time = time.time()
@@ -48,7 +62,15 @@ def create_app(config_name='default'):
     
     @app.route('/health')
     def health():
-        return {'status': 'healthy', 'service': 'reservas'}
+        health_status = {'status': 'healthy', 'service': 'reservas'}
+        
+        if redis_lock_service:
+            redis_health = redis_lock_service.health_check()
+            health_status['redis'] = redis_health
+        else:
+            health_status['redis'] = {'status': 'unavailable'}
+        
+        return health_status
     
     logger.info("Reservas microservice started")
     return app
