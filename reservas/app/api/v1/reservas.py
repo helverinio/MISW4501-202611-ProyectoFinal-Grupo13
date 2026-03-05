@@ -80,10 +80,17 @@ def create_reserva():
         }), 400
         
     use_case = CreateReservaUseCase(repository)
-    reserva = use_case.execute(
-        fecha_ingreso, fecha_salida, total, nro_personas,
-        id_usuario, id_pais, id_habitacion, id_estado
-    )
+    try:
+        reserva = use_case.execute(
+            fecha_ingreso, fecha_salida, total, nro_personas,
+            id_usuario, id_pais, id_habitacion, id_estado
+        )
+        if not reserva:
+            current_app.logger.error("[RESERVAS] Failed to save reservation to database")
+            return jsonify({'error': 'Failed to save reservation to database'}), 500
+    except Exception as e:
+        current_app.logger.error(f"[RESERVAS] Error creating reservation: {str(e)}")
+        return jsonify({'error': 'Failed to save reservation to database'}), 500
 
     current_app.logger.info(f"[RESERVAS] Reserva created: {reserva.id}, now registering payment...")
 
