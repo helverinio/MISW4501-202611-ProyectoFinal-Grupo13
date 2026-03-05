@@ -57,7 +57,9 @@ def create_app(config_name='default'):
         host=app.config.get('MQ_HOST', 'activemq'),
         port=app.config.get('MQ_PORT', 61613),
         username=app.config.get('MQ_USERNAME', 'admin'),
-        password=app.config.get('MQ_PASSWORD', 'admin')
+        password=app.config.get('MQ_PASSWORD', 'admin'),
+        max_retries=app.config.get('MQ_MAX_RETRIES', 3),
+        dlq_topic=app.config.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ')
     )
     subscriber.start()
     

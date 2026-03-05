@@ -118,6 +118,8 @@ services:
       MQ_PORT: 61613
       MQ_USERNAME: admin
       MQ_PASSWORD: admin
+      MQ_MAX_RETRIES: 3
+      MQ_DLQ_TOPIC: /topic/PaymentStatusUpdated.DLQ
     ports:
       - "5002:5002"
     depends_on:
