@@ -34,4 +34,9 @@ Each microservice has its own PostgreSQL database:
 docker-compose up --build
 ```
 
+### To generate a full HTML dashboard report with charts and detailed analysis:
+```bash
+jmeter -n -t concurrent_payment_test.jmx -l results/raw_results.jtl -e -o results/html-report
+```
+
 This will start all services and their databases.
