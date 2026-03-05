@@ -44,26 +44,46 @@ def acquire_room_hold(habitacion_id):
         }), 400
 
     lock_service = get_lock_service()
+    fecha_ingreso_str = fecha_ingreso.strftime('%Y-%m-%d')
+    fecha_salida_str = fecha_salida.strftime('%Y-%m-%d')
     
     if lock_service:
-        fecha_ingreso_str = fecha_ingreso.strftime('%Y-%m-%d')
-        fecha_salida_str = fecha_salida.strftime('%Y-%m-%d')
+        cached_exists, cached_hold = lock_service.check_room_hold_exists_in_cache(
+            habitacion_id, fecha_ingreso_str, fecha_salida_str
+        )
+        
+        if cached_exists and cached_hold:
+            if cached_hold.get('id_usuario') != id_usuario:
+                current_app.logger.info(
+                    f"[RESERVAS] Cache hit: room {habitacion_id} already held by another user"
+                )
+                return jsonify({
+                    'error': 'Room is already held by another user for the requested dates'
+                }), 409
+            else:
+                current_app.logger.info(
+                    f"[RESERVAS] Cache hit: returning existing hold for user {id_usuario}"
+                )
+                return jsonify(cached_hold), 200
         
         try:
-            with lock_service.room_hold_lock(habitacion_id, fecha_ingreso_str, fecha_salida_str):
+            with lock_service.room_hold_lock(
+                habitacion_id, fecha_ingreso_str, fecha_salida_str, blocking=False
+            ):
                 current_app.logger.info(
                     f"[RESERVAS] Redis lock acquired for room {habitacion_id} hold request"
                 )
                 return _execute_hold_acquisition(
-                    habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes
+                    habitacion_id, id_usuario, fecha_ingreso, fecha_salida, 
+                    hold_duration_minutes, lock_service, fecha_ingreso_str, fecha_salida_str
                 )
         except RedisLockAcquisitionError:
-            current_app.logger.warning(
-                f"[RESERVAS] Could not acquire Redis lock for room {habitacion_id} - concurrent request"
+            current_app.logger.info(
+                f"[RESERVAS] Fast-fail: room {habitacion_id} lock busy - rejecting immediately"
             )
             return jsonify({
-                'error': 'Room hold operation is being processed by another request. Please retry.',
-                'retry_after_ms': 500
+                'error': 'Room is currently being processed. Please retry shortly.',
+                'retry_after_ms': 100
             }), 429
     else:
         current_app.logger.warning(
@@ -74,7 +94,10 @@ def acquire_room_hold(habitacion_id):
         )
 
 
-def _execute_hold_acquisition(habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes):
+def _execute_hold_acquisition(
+    habitacion_id, id_usuario, fecha_ingreso, fecha_salida, hold_duration_minutes,
+    lock_service=None, fecha_ingreso_str=None, fecha_salida_str=None
+):
     """Execute the actual hold acquisition within the distributed lock."""
     use_case = AcquireRoomHoldUseCase(get_repository())
     hold = use_case.execute(
@@ -97,7 +120,7 @@ def _execute_hold_acquisition(habitacion_id, id_usuario, fecha_ingreso, fecha_sa
         f"[RESERVAS] Hold acquired: {hold.id} for room {habitacion_id} by user {id_usuario}"
     )
 
-    return jsonify({
+    hold_data = {
         'id': hold.id,
         'id_habitacion': hold.id_habitacion,
         'id_usuario': hold.id_usuario,
@@ -105,11 +128,29 @@ def _execute_hold_acquisition(habitacion_id, id_usuario, fecha_ingreso, fecha_sa
         'fecha_salida': hold.fecha_salida.isoformat(),
         'created_at': hold.created_at.isoformat(),
         'expires_at': hold.expires_at.isoformat()
-    }), 201
+    }
+
+    if lock_service and fecha_ingreso_str and fecha_salida_str:
+        ttl_seconds = int((hold.expires_at - datetime.utcnow()).total_seconds())
+        if ttl_seconds > 0:
+            lock_service.cache_room_hold(
+                hold_data, habitacion_id, fecha_ingreso_str, fecha_salida_str, ttl_seconds
+            )
+
+    return jsonify(hold_data), 201
 
 
 @api_v1_bp.route('/holds/<hold_id>', methods=['GET'])
 def get_room_hold(hold_id):
+    lock_service = get_lock_service()
+    
+    if lock_service:
+        cached_hold = lock_service.get_cached_room_hold_by_id(hold_id)
+        if cached_hold:
+            current_app.logger.debug(f"[RESERVAS] Cache hit for hold {hold_id}")
+            cached_hold['is_active'] = True
+            return jsonify(cached_hold)
+    
     use_case = GetRoomHoldUseCase(get_repository())
     hold = use_case.execute(hold_id)
 
@@ -142,6 +183,25 @@ def check_room_hold(habitacion_id):
             'error': 'Required fields: fecha_ingreso, fecha_salida'
         }), 400
 
+    lock_service = get_lock_service()
+    fecha_ingreso_str = fecha_ingreso.strftime('%Y-%m-%d')
+    fecha_salida_str = fecha_salida.strftime('%Y-%m-%d')
+    
+    if lock_service:
+        cached_exists, cached_hold = lock_service.check_room_hold_exists_in_cache(
+            habitacion_id, fecha_ingreso_str, fecha_salida_str
+        )
+        if cached_exists and cached_hold:
+            current_app.logger.debug(f"[RESERVAS] Cache hit for room {habitacion_id} check")
+            return jsonify({
+                'is_held': True,
+                'hold': {
+                    'id': cached_hold['id'],
+                    'id_usuario': cached_hold['id_usuario'],
+                    'expires_at': cached_hold['expires_at']
+                }
+            })
+
     use_case = CheckRoomHoldUseCase(get_repository())
     hold = use_case.execute(habitacion_id, fecha_ingreso, fecha_salida)
 
@@ -160,6 +220,11 @@ def check_room_hold(habitacion_id):
 
 @api_v1_bp.route('/holds/<hold_id>', methods=['DELETE'])
 def release_room_hold(hold_id):
+    lock_service = get_lock_service()
+    
+    if lock_service:
+        lock_service.invalidate_room_hold_cache_by_id(hold_id)
+    
     use_case = ReleaseRoomHoldUseCase(get_repository())
     deleted = use_case.execute(hold_id)
 

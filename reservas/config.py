@@ -22,9 +22,9 @@ class Config:
     REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
     
     # Redlock Configuration
-    REDIS_LOCK_TIMEOUT_SECONDS = int(os.environ.get('REDIS_LOCK_TIMEOUT_SECONDS', '30'))
-    REDIS_LOCK_RETRY_TIMES = int(os.environ.get('REDIS_LOCK_RETRY_TIMES', '3'))
-    REDIS_LOCK_RETRY_DELAY_MS = int(os.environ.get('REDIS_LOCK_RETRY_DELAY_MS', '200'))
+    REDIS_LOCK_TIMEOUT_SECONDS = int(os.environ.get('REDIS_LOCK_TIMEOUT_SECONDS', '10'))
+    REDIS_LOCK_RETRY_TIMES = int(os.environ.get('REDIS_LOCK_RETRY_TIMES', '1'))
+    REDIS_LOCK_RETRY_DELAY_MS = int(os.environ.get('REDIS_LOCK_RETRY_DELAY_MS', '50'))
 
 class DevelopmentConfig(Config):
     DEBUG = True
