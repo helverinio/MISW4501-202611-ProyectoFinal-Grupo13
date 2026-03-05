@@ -33,12 +33,14 @@ class PaymentStatusListener(stomp.ConnectionListener):
             with self.app.app_context():
                 self.handler(body)
             
+            # Manual ACK: acknowledge message after successful processing
             self.connection.ack(message_id, subscription)
             logger.debug(f"[MQ] Message acknowledged: {message_id}")
                 
         except Exception as e:
             logger.error(f"[MQ] Error processing message: {str(e)}")
             self._handle_failed_message(frame, body if 'body' in dir() else None, retry_count, str(e))
+            # Manual ACK: acknowledge after handling failure (retry or DLQ)
             self.connection.ack(message_id, subscription)
 
     def _handle_failed_message(self, frame, body: Optional[dict], retry_count: int, error: str):
@@ -166,10 +168,12 @@ class PaymentStatusSubscriber:
                 )
                 self._connection.set_listener('payment_status', listener)
                 self._connection.connect(self.username, self.password, wait=True)
+                # Manual ACK mode: messages must be explicitly acknowledged
+                # If not ACK'd, broker will redeliver on consumer disconnect
                 self._connection.subscribe(
                     destination=self.TOPIC_PAYMENT_STATUS_UPDATED,
                     id='pagos-payment-subscriber',
-                    ack='client'
+                    ack='client'  # Requires manual ack() call
                 )
                 logger.info(f"[MQ] Subscribed to {self.TOPIC_PAYMENT_STATUS_UPDATED} (max_retries={self.max_retries}, dlq={self.dlq_topic})")
                 
