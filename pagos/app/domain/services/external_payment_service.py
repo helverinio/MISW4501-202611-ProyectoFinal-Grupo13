@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 class ExternalPaymentService(ABC):
     @abstractmethod
     def create_payment_intent(self, amount: float, currency: str, description: Optional[str] = None,
-                              webhook_url: Optional[str] = None) -> Dict[str, Any]:
+                              webhook_url: Optional[str] = None, reservation_id: Optional[str] = None) -> Dict[str, Any]:
         pass
     
     @abstractmethod

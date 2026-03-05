@@ -10,6 +10,7 @@ class PaymentIntentModel(db.Model):
     description = db.Column(db.String(255), nullable=True)
     status = db.Column(db.String(20), nullable=False, default='pending')
     webhook_url = db.Column(db.String(500), nullable=True)
+    reservation_id = db.Column(db.String(36), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     
     def to_dict(self):
@@ -20,6 +21,7 @@ class PaymentIntentModel(db.Model):
             'description': self.description,
             'status': self.status,
             'webhook_url': self.webhook_url,
+            'reservation_id': self.reservation_id,
             'created_at': self.created_at.isoformat()
         }
 

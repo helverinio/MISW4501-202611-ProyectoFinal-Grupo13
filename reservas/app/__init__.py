@@ -50,16 +50,5 @@ def create_app(config_name='default'):
     def health():
         return {'status': 'healthy', 'service': 'reservas'}
     
-    # Start MQ subscriber for payment status updates
-    from app.infrastructure.messaging import PaymentStatusSubscriber
-    subscriber = PaymentStatusSubscriber(
-        app=app,
-        host=app.config.get('MQ_HOST', 'activemq'),
-        port=app.config.get('MQ_PORT', 61613),
-        username=app.config.get('MQ_USERNAME', 'admin'),
-        password=app.config.get('MQ_PASSWORD', 'admin')
-    )
-    subscriber.start()
-    
     logger.info("Reservas microservice started")
     return app

@@ -1148,7 +1148,7 @@
 						"header": [{"key": "Content-Type", "value": "application/json"}],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://pagos:5002/api/v1/payments/webhook\"\n}"
+							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://gateway:8080/api/v1/payments/webhook\",\n    \"reservation_id\": \"YOUR_RESERVATION_ID\"\n}"
 						},
 						"url": {
 							"raw": "{{ext_payments_url}}/api/v1/payment-intents",
@@ -1174,19 +1174,20 @@
 					}
 				},
 				{
-					"name": "Direct - Simulate Webhook (pagos)",
+					"name": "Direct - Simulate Webhook (gateway -> reservas)",
 					"request": {
 						"method": "POST",
 						"header": [{"key": "Content-Type", "value": "application/json"}],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"status\": \"completado\"\n}"
+							"raw": "{\n    \"payment_intent_id\": \"YOUR_PAYMENT_INTENT_ID\",\n    \"status\": \"completado\",\n    \"reservation_id\": \"YOUR_RESERVATION_ID\",\n    \"amount\": 600.00,\n    \"currency\": \"USD\"\n}"
 						},
 						"url": {
-							"raw": "{{pagos_url}}/api/v1/payments/webhook",
-							"host": ["{{pagos_url}}"],
+							"raw": "{{gateway_url}}/api/v1/payments/webhook",
+							"host": ["{{gateway_url}}"],
 							"path": ["api", "v1", "payments", "webhook"]
-						}
+						},
+						"description": "Simulates the webhook call from ext-payments. Now routes through gateway to reservas, which updates reservation status to 'Pago recibido' and publishes event to pagos."
 					}
 				}
 			]
@@ -1417,7 +1418,7 @@
 					}
 				},
 				{
-					"name": "Webhook (receive status update)",
+					"name": "Webhook (DEPRECATED - use gateway)",
 					"request": {
 						"method": "POST",
 						"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -1429,7 +1430,8 @@
 							"raw": "{{pagos_url}}/api/v1/payments/webhook",
 							"host": ["{{pagos_url}}"],
 							"path": ["api", "v1", "payments", "webhook"]
-						}
+						},
+						"description": "DEPRECATED: This webhook is kept for backwards compatibility. The primary webhook is now exposed via gateway at /api/v1/payments/webhook which routes to reservas."
 					}
 				}
 			]
@@ -1457,7 +1459,7 @@
 						"header": [{"key": "Content-Type", "value": "application/json"}],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://localhost:5002/api/v1/payments/webhook\"\n}"
+							"raw": "{\n    \"amount\": 600.00,\n    \"currency\": \"USD\",\n    \"description\": \"Test payment intent\",\n    \"webhook_url\": \"http://localhost:8081/api/v1/payments/webhook\",\n    \"reservation_id\": \"YOUR_RESERVATION_ID\"\n}"
 						},
 						"url": {
 							"raw": "{{ext_payments_url}}/api/v1/payment-intents",

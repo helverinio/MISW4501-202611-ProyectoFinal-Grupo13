@@ -19,7 +19,7 @@ class RegisterPaymentUseCase:
         webhook_url = f"{self.webhook_base_url}/api/v1/payments/webhook"
         
         intent_response = self.external_service.create_payment_intent(
-            amount, currency, description, webhook_url
+            amount, currency, description, webhook_url, reservation_id
         )
         
         if 'error' in intent_response:

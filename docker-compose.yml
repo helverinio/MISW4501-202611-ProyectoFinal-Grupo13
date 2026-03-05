@@ -113,7 +113,7 @@ services:
       FLASK_ENV: development
       DATABASE_URL: postgresql://postgres:postgres@pagos-db:5432/pagos
       EXT_PAYMENTS_URL: http://ext-payments:5001
-      PAGOS_WEBHOOK_URL: http://pagos:5002
+      PAGOS_WEBHOOK_URL: http://gateway:8080
       MQ_HOST: activemq
       MQ_PORT: 61613
       MQ_USERNAME: admin

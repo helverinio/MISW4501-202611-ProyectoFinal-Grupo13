@@ -12,8 +12,8 @@ class CreatePaymentIntentUseCase:
         self.repository = repository
     
     def execute(self, amount: float, currency: str, description: Optional[str] = None,
-                webhook_url: Optional[str] = None) -> PaymentIntent:
-        payment_intent = PaymentIntent.create(amount, currency, description, webhook_url)
+                webhook_url: Optional[str] = None, reservation_id: Optional[str] = None) -> PaymentIntent:
+        payment_intent = PaymentIntent.create(amount, currency, description, webhook_url, reservation_id)
         return self.repository.save(payment_intent)
 
 class MakePaymentUseCase:
@@ -42,17 +42,22 @@ class MakePaymentUseCase:
         if intent.webhook_url:
             thread = threading.Thread(
                 target=self._notify_webhook,
-                args=(intent.webhook_url, payment_intent_id, 'completado')
+                args=(intent.webhook_url, payment_intent_id, 'completado', 
+                      intent.reservation_id, intent.amount, intent.currency)
             )
             thread.start()
         
         return saved_payment
     
-    def _notify_webhook(self, webhook_url: str, payment_intent_id: str, status: str):
+    def _notify_webhook(self, webhook_url: str, payment_intent_id: str, status: str,
+                        reservation_id: Optional[str], amount: float, currency: str):
         try:
             payload = {
                 'payment_intent_id': payment_intent_id,
-                'status': status
+                'status': status,
+                'reservation_id': reservation_id,
+                'amount': amount,
+                'currency': currency
             }
             logger.info(f"[EXT-PAYMENTS] >>> Calling webhook: POST {webhook_url}")
             logger.debug(f"[EXT-PAYMENTS]     Payload: {payload}")

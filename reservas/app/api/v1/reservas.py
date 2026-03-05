@@ -10,6 +10,7 @@ from app.application.use_cases import (
 )
 from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository, SQLAlchemyEstadoRepository
 from app.infrastructure.services import PagosService
+from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 from app.domain.entities.estado import Estado
 
 
@@ -344,3 +345,84 @@ def create_reserva_pms_webhook():
         'estado_nombre': estado_nombre,
         'source': 'PMS'
     }), 201
+
+
+@api_v1_bp.route('/payments/webhook', methods=['POST'])
+def payment_webhook():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    payment_intent_id = data.get('payment_intent_id')
+    status = data.get('status')
+    reservation_id = data.get('reservation_id')
+    amount = data.get('amount')
+    currency = data.get('currency', 'USD')
+    
+    if not payment_intent_id or not status:
+        return jsonify({'error': 'payment_intent_id and status are required'}), 400
+    
+    current_app.logger.info(f"[RESERVAS] Payment webhook received: payment_intent_id={payment_intent_id}, status={status}")
+    
+    if status != 'completado':
+        current_app.logger.info(f"[RESERVAS] Ignoring non-completed payment status: {status}")
+        try:
+            event = PaymentStatusUpdatedEvent.create(
+                payment_intent_id=payment_intent_id,
+                reservation_id=reservation_id or '',
+                status=status,
+                amount=amount or 0,
+                currency=currency
+            )
+            publisher = MessagePublisher.from_config()
+            publisher.publish_payment_status_updated(event.to_dict())
+            current_app.logger.info(f"[RESERVAS] Published PaymentStatusUpdated event for non-completed status")
+        except Exception as e:
+            current_app.logger.error(f"[RESERVAS] Failed to publish PaymentStatusUpdated event: {str(e)}")
+        return jsonify({'message': f'Payment status {status} received, no reservation update needed'}), 200
+    
+    if not reservation_id:
+        current_app.logger.error(f"[RESERVAS] reservation_id is required for completed payments")
+        return jsonify({'error': 'reservation_id is required for completed payments'}), 400
+    
+    estado_repo = SQLAlchemyEstadoRepository()
+    reserva_repo = get_repository()
+    
+    estado_nombre = "Pago recibido"
+    estado = estado_repo.find_by_nombre(estado_nombre)
+    
+    if not estado:
+        current_app.logger.info(f"[RESERVAS] Estado '{estado_nombre}' not found, creating it")
+        estado = Estado.create(nombre=estado_nombre, descripcion="El pago de la reserva ha sido recibido")
+        estado = estado_repo.save(estado)
+        current_app.logger.info(f"[RESERVAS] Created estado '{estado_nombre}' with id {estado.id}")
+    
+    reserva = reserva_repo.find_by_id(reservation_id)
+    if not reserva:
+        current_app.logger.error(f"[RESERVAS] Reservation {reservation_id} not found")
+        return jsonify({'error': 'Reservation not found'}), 404
+    
+    reserva.id_estado = estado.id
+    reserva_repo.update(reserva)
+    current_app.logger.info(f"[RESERVAS] Updated reservation {reservation_id} to estado '{estado_nombre}'")
+    
+    try:
+        event = PaymentStatusUpdatedEvent.create(
+            payment_intent_id=payment_intent_id,
+            reservation_id=reservation_id,
+            status=status,
+            amount=amount or reserva.total,
+            currency=currency
+        )
+        publisher = MessagePublisher.from_config()
+        publisher.publish_payment_status_updated(event.to_dict())
+        current_app.logger.info(f"[RESERVAS] Published PaymentStatusUpdated event for reservation {reservation_id}")
+    except Exception as e:
+        current_app.logger.error(f"[RESERVAS] Failed to publish PaymentStatusUpdated event: {str(e)}")
+    
+    return jsonify({
+        'reservation_id': reserva.id,
+        'estado': estado_nombre,
+        'payment_intent_id': payment_intent_id,
+        'status': status
+    }), 200

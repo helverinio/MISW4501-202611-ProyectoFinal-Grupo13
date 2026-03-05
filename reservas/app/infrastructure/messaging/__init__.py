@@ -1,3 +1,4 @@
-from app.infrastructure.messaging.subscriber import PaymentStatusSubscriber
+from app.infrastructure.messaging.publisher import MessagePublisher
+from app.infrastructure.messaging.events import PaymentStatusUpdatedEvent
 
-__all__ = ['PaymentStatusSubscriber']
+__all__ = ['MessagePublisher', 'PaymentStatusUpdatedEvent']

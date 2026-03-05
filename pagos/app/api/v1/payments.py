@@ -8,7 +8,6 @@ from app.application.use_cases import (
 )
 from app.infrastructure.repositories import SQLAlchemyPaymentRepository
 from app.infrastructure.services import HttpExternalPaymentService
-from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 
 def get_repository():
     return SQLAlchemyPaymentRepository()
@@ -58,6 +57,11 @@ def process_payment(payment_id):
 
 @api_v1_bp.route('/payments/webhook', methods=['POST'])
 def payment_webhook():
+    """
+    DEPRECATED: This webhook is kept for backwards compatibility.
+    The primary webhook is now exposed via the reservas microservice at /api/v1/payments/webhook.
+    Payment status updates are now received via MQ events from reservas.
+    """
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -68,7 +72,7 @@ def payment_webhook():
     if not payment_intent_id or not status:
         return jsonify({'error': 'payment_intent_id and status are required'}), 400
     
-    current_app.logger.info(f"[PAGOS] Webhook received: payment_intent_id={payment_intent_id}, status={status}")
+    current_app.logger.info(f"[PAGOS] Webhook received (deprecated): payment_intent_id={payment_intent_id}, status={status}")
     
     use_case = UpdatePaymentStatusUseCase(get_repository())
     result = use_case.execute(payment_intent_id, status)
@@ -78,14 +82,6 @@ def payment_webhook():
         return jsonify({'error': 'Payment not found'}), 404
     
     current_app.logger.info(f"[PAGOS] Payment status updated to '{status}' for payment {result['id']}")
-    
-    try:
-        event = PaymentStatusUpdatedEvent.from_payment(result)
-        publisher = MessagePublisher.from_config()
-        publisher.publish_payment_status_updated(event.to_dict())
-        current_app.logger.info(f"[PAGOS] Published PaymentStatusUpdated event for payment {result['id']}")
-    except Exception as e:
-        current_app.logger.error(f"[PAGOS] Failed to publish PaymentStatusUpdated event: {str(e)}")
     
     return jsonify(result), 200
 

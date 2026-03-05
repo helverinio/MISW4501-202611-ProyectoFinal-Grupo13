@@ -11,14 +11,15 @@ class HttpExternalPaymentService(ExternalPaymentService):
         self.base_url = base_url
     
     def create_payment_intent(self, amount: float, currency: str, description: Optional[str] = None,
-                              webhook_url: Optional[str] = None) -> Dict[str, Any]:
+                              webhook_url: Optional[str] = None, reservation_id: Optional[str] = None) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/api/v1/payment-intents"
             payload = {
                 'amount': amount,
                 'currency': currency,
                 'description': description,
-                'webhook_url': webhook_url
+                'webhook_url': webhook_url,
+                'reservation_id': reservation_id
             }
             logger.info(f"[PAGOS] >>> Calling ext-payments: POST {url}")
             logger.debug(f"[PAGOS]     Payload: {payload}")

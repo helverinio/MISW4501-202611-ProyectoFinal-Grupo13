@@ -11,11 +11,12 @@ class PaymentIntent:
     description: Optional[str]
     status: str
     webhook_url: Optional[str]
+    reservation_id: Optional[str]
     created_at: datetime
     
     @staticmethod
     def create(amount: float, currency: str, description: Optional[str] = None, 
-               webhook_url: Optional[str] = None) -> 'PaymentIntent':
+               webhook_url: Optional[str] = None, reservation_id: Optional[str] = None) -> 'PaymentIntent':
         return PaymentIntent(
             id=str(uuid.uuid4()),
             amount=amount,
@@ -23,6 +24,7 @@ class PaymentIntent:
             description=description,
             status='pending',
             webhook_url=webhook_url,
+            reservation_id=reservation_id,
             created_at=datetime.utcnow()
         )
 

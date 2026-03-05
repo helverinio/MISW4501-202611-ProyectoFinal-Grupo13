@@ -209,3 +209,6 @@ class ReservasService:
 
     def delete_notificacion(self, notificacion_id: str) -> Dict[str, Any]:
         return self._request('DELETE', f'notificaciones/{notificacion_id}')
+
+    def payment_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'payments/webhook', data)

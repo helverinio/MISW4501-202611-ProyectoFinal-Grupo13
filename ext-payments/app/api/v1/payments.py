@@ -26,12 +26,13 @@ def create_payment_intent():
     currency = data.get('currency', 'USD')
     description = data.get('description')
     webhook_url = data.get('webhook_url')
+    reservation_id = data.get('reservation_id')
     
     if amount is None:
         return jsonify({'error': 'amount is required'}), 400
     
     use_case = CreatePaymentIntentUseCase(get_intent_repository())
-    intent = use_case.execute(amount, currency, description, webhook_url)
+    intent = use_case.execute(amount, currency, description, webhook_url, reservation_id)
     
     return jsonify({
         'id': intent.id,
@@ -40,6 +41,7 @@ def create_payment_intent():
         'description': intent.description,
         'status': intent.status,
         'webhook_url': intent.webhook_url,
+        'reservation_id': intent.reservation_id,
         'created_at': intent.created_at.isoformat()
     }), 201
 

@@ -13,6 +13,7 @@ class SQLAlchemyPaymentIntentRepository(PaymentIntentRepository):
             description=payment_intent.description,
             status=payment_intent.status,
             webhook_url=payment_intent.webhook_url,
+            reservation_id=payment_intent.reservation_id,
             created_at=payment_intent.created_at
         )
         db.session.add(model)
@@ -41,6 +42,7 @@ class SQLAlchemyPaymentIntentRepository(PaymentIntentRepository):
             description=model.description,
             status=model.status,
             webhook_url=model.webhook_url,
+            reservation_id=model.reservation_id,
             created_at=model.created_at
         )
 

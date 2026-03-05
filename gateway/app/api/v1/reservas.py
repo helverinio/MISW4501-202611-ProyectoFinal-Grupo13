@@ -68,3 +68,12 @@ def create_reserva_pms_webhook():
         return jsonify({'error': 'No data provided'}), 400
     result = get_service().create_reserva_pms_webhook(data)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/payments/webhook', methods=['POST'])
+def payment_webhook():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().payment_webhook(data)
+    return jsonify(result['data']), result['status_code']
