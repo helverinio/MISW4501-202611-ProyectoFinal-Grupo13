@@ -10,6 +10,10 @@ class Config:
     MQ_PORT = int(os.environ.get('MQ_PORT', '61613'))
     MQ_USERNAME = os.environ.get('MQ_USERNAME', 'admin')
     MQ_PASSWORD = os.environ.get('MQ_PASSWORD', 'admin')
+    
+    # Dead Letter Queue Configuration
+    MQ_MAX_RETRIES = int(os.environ.get('MQ_MAX_RETRIES', '3'))
+    MQ_DLQ_TOPIC = os.environ.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ')
 
 class DevelopmentConfig(Config):
     DEBUG = True
