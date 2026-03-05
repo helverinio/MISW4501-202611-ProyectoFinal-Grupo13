@@ -18,7 +18,7 @@
           </elementProp>
           <elementProp name="PAYMENT_ID" elementType="Argument">
             <stringProp name="Argument.name">PAYMENT_ID</stringProp>
-            <stringProp name="Argument.value">74fc5b92-c475-4326-bd3e-3c533006b200</stringProp>
+            <stringProp name="Argument.value">2d9d76b0-d7ce-49a0-a8a8-67053362f67e</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -36,7 +36,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">10000</longProp>
         </SyncTimer>
@@ -103,7 +103,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -140,7 +140,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
