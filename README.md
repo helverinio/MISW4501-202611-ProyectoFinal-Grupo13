@@ -39,4 +39,10 @@ docker-compose up --build
 jmeter -n -t concurrent_payment_test.jmx -l results/raw_results.jtl -e -o results/html-report
 ```
 
+### To run the resilience test flow:
+```bash
+docker-compose stop pagos
+docker-compose start pagos
+```
+
 This will start all services and their databases.
