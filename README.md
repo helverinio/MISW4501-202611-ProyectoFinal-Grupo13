@@ -45,4 +45,7 @@ docker-compose stop pagos
 docker-compose start pagos
 ```
 
-This will start all services and their databases.
+### This will reset the databases clearing all data.
+```bash
+docker-compose down -v
+```
