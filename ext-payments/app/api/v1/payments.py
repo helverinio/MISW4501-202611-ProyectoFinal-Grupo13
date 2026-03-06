@@ -16,6 +16,12 @@ def get_payment_repository():
 def get_intent_repository():
     return SQLAlchemyPaymentIntentRepository()
 
+
+@api_v1_bp.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'healthy', 'service': 'ext-payments'}), 200
+
+
 @api_v1_bp.route('/payment-intents', methods=['POST'])
 def create_payment_intent():
     data = request.get_json()

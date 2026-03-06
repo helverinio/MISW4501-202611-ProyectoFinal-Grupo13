@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "pagos-resilience-test-flow",
+		"name": "Pagos Resilience Test Flow",
+		"description": "# Pagos Microservice Resilience Test\n\nThis collection tests the system's resilience when the Pagos microservice is unavailable during payment processing.\n\n## Test Scenario:\n1. **Make Reservation** - Create a reservation and get the payment_intent_id\n2. **MANUAL STEP: Turn OFF Pagos microservice**\n3. **Process Payment in Ext-Service** - Complete the payment externally\n4. **Wait 5 minutes** - Allow time for retry mechanisms\n5. **MANUAL STEP: Turn ON Pagos microservice**\n6. **Verify Payment Status** - Confirm payment was updated in Pagos\n7. **Verify Reservation Status** - Confirm reservation status changed\n\n## How to Turn Off/On Pagos Microservice:\n\n### Using Docker Compose:\n```bash\n# Turn OFF (stop)\ndocker-compose stop pagos\n\n# Turn ON (start)\ndocker-compose start pagos\n```\n\n### Using Docker directly:\n```bash\n# Turn OFF\ndocker stop misw4501-202611-proyectofinal-grupo13-pagos-1\n\n# Turn ON\ndocker start misw4501-202611-proyectofinal-grupo13-pagos-1\n```",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url_gateway",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "base_url_reservas",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "base_url_pagos",
+			"value": "http://localhost:5002",
+			"type": "string"
+		},
+		{
+			"key": "base_url_ext_payments",
+			"value": "http://localhost:5001",
+			"type": "string"
+		},
+		{
+			"key": "reservation_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "payment_intent_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "payment_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "test-user-001",
+			"type": "string"
+		},
+		{
+			"key": "room_id",
+			"value": "test-room-001",
+			"type": "string"
+		},
+		{
+			"key": "country_id",
+			"value": "test-country-001",
+			"type": "string"
+		},
+		{
+			"key": "estado_id",
+			"value": "test-estado-001",
+			"type": "string"
+		},
+		{
+			"key": "fecha_ingreso",
+			"value": "2026-03-15T14:00:00.000Z",
+			"type": "string"
+		},
+		{
+			"key": "fecha_salida",
+			"value": "2026-03-18T11:00:00.000Z",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Step 0 - Setup",
+			"item": [
+				{
+					"name": "0.1 Health Check - Reservas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reservas service is healthy\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is acceptable\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				},
+				{
+					"name": "0.2 Health Check - Pagos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Pagos service is healthy\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is acceptable\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "0.3 Health Check - Ext-Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ext-Payments service is healthy\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response confirms healthy status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.equal('healthy');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_ext_payments}}/api/v1/health",
+							"host": ["{{base_url_ext_payments}}"],
+							"path": ["api", "v1", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 1 - Make Reservation",
+			"item": [
+				{
+					"name": "1.1 Acquire Room Hold",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Room hold acquired successfully\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.id) {",
+									"        pm.collectionVariables.set(\"hold_id\", jsonData.id);",
+									"        console.log(\"Hold ID saved: \" + jsonData.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Dates are now editable in collection variables",
+									"// Edit fecha_ingreso and fecha_salida in the Variables tab",
+									"var fechaIngreso = pm.collectionVariables.get(\"fecha_ingreso\");",
+									"var fechaSalida = pm.collectionVariables.get(\"fecha_salida\");",
+									"",
+									"console.log(\"Using dates from collection variables:\");",
+									"console.log(\"  Check-in: \" + fechaIngreso);",
+									"console.log(\"  Check-out: \" + fechaSalida);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_usuario\": \"{{user_id}}\",\n    \"fecha_ingreso\": \"{{fecha_ingreso}}\",\n    \"fecha_salida\": \"{{fecha_salida}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/habitaciones/{{room_id}}/hold",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "habitaciones", "{{room_id}}", "hold"]
+						}
+					}
+				},
+				{
+					"name": "1.2 Create Reservation (Get Payment Intent ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reservation created successfully\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Response contains reservation ID\", function () {",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});",
+									"",
+									"pm.test(\"Response contains payment info\", function () {",
+									"    pm.expect(jsonData).to.have.property('payment');",
+									"});",
+									"",
+									"// Save variables for later steps",
+									"pm.collectionVariables.set(\"reservation_id\", jsonData.id);",
+									"console.log(\"Reservation ID: \" + jsonData.id);",
+									"",
+									"if (jsonData.payment) {",
+									"    pm.collectionVariables.set(\"payment_id\", jsonData.payment.payment_id);",
+									"    pm.collectionVariables.set(\"payment_intent_id\", jsonData.payment.payment_intent_id);",
+									"    console.log(\"Payment ID: \" + jsonData.payment.payment_id);",
+									"    console.log(\"Payment Intent ID: \" + jsonData.payment.payment_intent_id);",
+									"    console.log(\"Payment Status: \" + jsonData.payment.payment_status);",
+									"}",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"STEP 1 COMPLETE - Reservation Created\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Reservation ID: \" + jsonData.id);",
+									"console.log(\"Payment Intent ID: \" + (jsonData.payment ? jsonData.payment.payment_intent_id : 'N/A'));",
+									"console.log(\"\\n>>> NEXT: Turn OFF Pagos microservice <<<\");",
+									"console.log(\"Run: docker-compose stop pagos\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha_ingreso\": \"{{fecha_ingreso}}\",\n    \"fecha_salida\": \"{{fecha_salida}}\",\n    \"total\": 500.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"{{user_id}}\",\n    \"id_pais\": \"{{country_id}}\",\n    \"id_habitacion\": \"{{room_id}}\",\n    \"id_estado\": \"{{estado_id}}\",\n    \"payment_method\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas"]
+						}
+					}
+				},
+				{
+					"name": "1.3 Verify Initial Reservation Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reservation retrieved successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"initial_estado_id\", jsonData.id_estado);",
+									"console.log(\"Initial Reservation Estado ID: \" + jsonData.id_estado);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas/{{reservation_id}}",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas", "{{reservation_id}}"]
+						}
+					}
+				},
+				{
+					"name": "1.4 Verify Initial Payment Status in Pagos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Payment retrieved successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"initial_payment_status\", jsonData.status);",
+									"console.log(\"Initial Payment Status in Pagos: \" + jsonData.status);",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"READY FOR STEP 2\");",
+									"console.log(\"========================================\");",
+									"console.log(\">>> NOW: Turn OFF Pagos microservice <<<\");",
+									"console.log(\"Run: docker-compose stop pagos\");",
+									"console.log(\"Then proceed to Step 3\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments/{{payment_id}}",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments", "{{payment_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 2 - MANUAL: Turn OFF Pagos",
+			"item": [
+				{
+					"name": "2.1 Verify Pagos is DOWN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This request should FAIL or timeout when Pagos is down",
+									"pm.test(\"Pagos service should be unavailable\", function () {",
+									"    // Accept connection refused, timeout, or any error",
+									"    pm.expect(pm.response.code).to.not.equal(200);",
+									"});",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"Pagos service is DOWN (expected)\");",
+									"console.log(\"Proceed to Step 3 - Process Payment\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 3 - Process Payment (Pagos DOWN)",
+			"item": [
+				{
+					"name": "3.1 Process Payment in Ext-Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Payment processed in Ext-Payments\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Payment status is completed\", function () {",
+									"    pm.expect(jsonData.status).to.equal('completed');",
+									"});",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"PAYMENT PROCESSED IN EXT-PAYMENTS\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Payment ID: \" + jsonData.id);",
+									"console.log(\"Status: \" + jsonData.status);",
+									"console.log(\"\\nThe webhook will be called to Gateway -> Reservas\");",
+									"console.log(\"Reservas will publish MQ event for Pagos\");",
+									"console.log(\"But Pagos is DOWN - event will be queued\");",
+									"console.log(\"\\n>>> NEXT: Wait 5 minutes <<<\");",
+									"console.log(\"Then turn ON Pagos microservice\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_intent_id\": \"{{payment_intent_id}}\",\n    \"payment_method\": \"card\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url_ext_payments}}/api/v1/payments",
+							"host": ["{{base_url_ext_payments}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				},
+				{
+					"name": "3.2 Verify Reservation Updated (Webhook worked)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reservation retrieved successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var initialEstado = pm.collectionVariables.get(\"initial_estado_id\");",
+									"",
+									"// The reservation should be updated even when Pagos is down",
+									"// because the webhook goes through Gateway -> Reservas",
+									"console.log(\"Current Estado ID: \" + jsonData.id_estado);",
+									"console.log(\"Initial Estado ID: \" + initialEstado);",
+									"",
+									"if (jsonData.id_estado !== initialEstado) {",
+									"    console.log(\"SUCCESS: Reservation status changed!\");",
+									"    pm.collectionVariables.set(\"reservation_updated_while_pagos_down\", \"true\");",
+									"} else {",
+									"    console.log(\"Reservation status NOT changed yet\");",
+									"    pm.collectionVariables.set(\"reservation_updated_while_pagos_down\", \"false\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas/{{reservation_id}}",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas", "{{reservation_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 4 - Wait 5 Minutes",
+			"item": [
+				{
+					"name": "4.1 Wait Notification",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"\\n========================================\");",
+									"console.log(\"WAITING PERIOD\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Wait approximately 5 minutes before proceeding.\");",
+									"console.log(\"This allows time for:\");",
+									"console.log(\"  - MQ message retention\");",
+									"console.log(\"  - Any retry mechanisms\");",
+									"console.log(\"\\nAfter waiting:\");",
+									"console.log(\"1. Turn ON Pagos: docker-compose start pagos\");",
+									"console.log(\"2. Wait ~30 seconds for Pagos to connect to MQ\");",
+									"console.log(\"3. Proceed to Step 5 for verification\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This is just an info request - no actual test",
+									"console.log(\"Proceed to turn ON Pagos and verify\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas/{{reservation_id}}",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas", "{{reservation_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 5 - MANUAL: Turn ON Pagos",
+			"item": [
+				{
+					"name": "5.1 Verify Pagos is UP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Pagos service is available\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"Pagos service is UP!\");",
+									"console.log(\"Pagos should now process queued MQ messages\");",
+									"console.log(\"Wait ~30 seconds for message processing\");",
+									"console.log(\"Then proceed to Step 6\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 6 - Verify Payment Status Updated",
+			"item": [
+				{
+					"name": "6.1 Get Payment Status from Pagos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Payment retrieved successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var initialStatus = pm.collectionVariables.get(\"initial_payment_status\");",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"PAYMENT STATUS VERIFICATION\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Payment ID: \" + jsonData.id);",
+									"console.log(\"Initial Status: \" + initialStatus);",
+									"console.log(\"Current Status: \" + jsonData.status);",
+									"",
+									"pm.test(\"Payment status was updated via MQ\", function () {",
+									"    pm.expect(jsonData.status).to.equal('completado');",
+									"});",
+									"",
+									"if (jsonData.status === 'completado') {",
+									"    console.log(\"\\nSUCCESS: Payment status updated to 'completado'!\");",
+									"    console.log(\"The MQ message was processed after Pagos came back up.\");",
+									"} else {",
+									"    console.log(\"\\nWARNING: Payment status not updated yet.\");",
+									"    console.log(\"Wait a bit more and retry, or check MQ/logs.\");",
+									"}",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments/{{payment_id}}",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments", "{{payment_id}}"]
+						}
+					}
+				},
+				{
+					"name": "6.2 Alternative - Get Payment by Reservation ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Payment for reservation found\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"console.log(\"Payment by Reservation lookup:\");",
+									"console.log(\"  Status: \" + jsonData.status);",
+									"console.log(\"  Updated At: \" + jsonData.updated_at);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_pagos}}/api/v1/payments/reservation/{{reservation_id}}",
+							"host": ["{{base_url_pagos}}"],
+							"path": ["api", "v1", "payments", "reservation", "{{reservation_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Step 7 - Verify Reservation Updated",
+			"item": [
+				{
+					"name": "7.1 Get Final Reservation Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reservation retrieved successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var initialEstado = pm.collectionVariables.get(\"initial_estado_id\");",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"RESERVATION STATUS VERIFICATION\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Reservation ID: \" + jsonData.id);",
+									"console.log(\"Initial Estado ID: \" + initialEstado);",
+									"console.log(\"Final Estado ID: \" + jsonData.id_estado);",
+									"",
+									"pm.test(\"Reservation status was updated\", function () {",
+									"    pm.expect(jsonData.id_estado).to.not.equal(initialEstado);",
+									"});",
+									"",
+									"console.log(\"\\n========================================\");",
+									"console.log(\"TEST COMPLETE\");",
+									"console.log(\"========================================\");",
+									"console.log(\"Summary:\");",
+									"console.log(\"  - Reservation created with payment intent\");",
+									"console.log(\"  - Pagos was turned OFF\");",
+									"console.log(\"  - Payment processed in Ext-Payments\");",
+									"console.log(\"  - Webhook updated Reservas (even with Pagos down)\");",
+									"console.log(\"  - MQ event published for Pagos\");",
+									"console.log(\"  - After Pagos came back, MQ event processed\");",
+									"console.log(\"  - Payment status in Pagos updated\");",
+									"console.log(\"========================================\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas/{{reservation_id}}",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas", "{{reservation_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Cleanup (Optional)",
+			"item": [
+				{
+					"name": "Delete Test Reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    console.log(\"Test reservation cleaned up successfully\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_reservas}}/api/v1/reservas/{{reservation_id}}",
+							"host": ["{{base_url_reservas}}"],
+							"path": ["api", "v1", "reservas", "{{reservation_id}}"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

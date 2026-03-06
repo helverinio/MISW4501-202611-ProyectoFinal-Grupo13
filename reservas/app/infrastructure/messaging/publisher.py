@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class MessagePublisher:
-    TOPIC_PAYMENT_STATUS_UPDATED = '/topic/PaymentStatusUpdated'
+    QUEUE_PAYMENT_STATUS_UPDATED = '/queue/PaymentStatusUpdated'
     
     def __init__(self, host: str = None, port: int = None, username: str = None, password: str = None):
         self.host = host
@@ -52,7 +52,7 @@ class MessagePublisher:
             return False
     
     def publish_payment_status_updated(self, event_data: dict) -> bool:
-        return self.publish(self.TOPIC_PAYMENT_STATUS_UPDATED, event_data)
+        return self.publish(self.QUEUE_PAYMENT_STATUS_UPDATED, event_data)
     
     def disconnect(self):
         if self._connection and self._connection.is_connected():

@@ -106,7 +106,7 @@ class PaymentStatusListener(stomp.ConnectionListener):
 
 
 class PaymentStatusSubscriber:
-    TOPIC_PAYMENT_STATUS_UPDATED = '/topic/PaymentStatusUpdated'
+    QUEUE_PAYMENT_STATUS_UPDATED = '/queue/PaymentStatusUpdated'
     
     def __init__(self, app, host: str, port: int, username: str, password: str,
                  max_retries: int = 3, dlq_topic: str = '/topic/PaymentStatusUpdated.DLQ'):
@@ -180,18 +180,18 @@ class PaymentStatusSubscriber:
                     connection=self._connection,
                     max_retries=self.max_retries,
                     dlq_topic=self.dlq_topic,
-                    source_topic=self.TOPIC_PAYMENT_STATUS_UPDATED
+                    source_topic=self.QUEUE_PAYMENT_STATUS_UPDATED
                 )
                 self._connection.set_listener('payment_status', listener)
                 self._connection.connect(self.username, self.password, wait=True)
                 # Manual ACK mode: messages must be explicitly acknowledged
                 # If not ACK'd, broker will redeliver on consumer disconnect
                 self._connection.subscribe(
-                    destination=self.TOPIC_PAYMENT_STATUS_UPDATED,
+                    destination=self.QUEUE_PAYMENT_STATUS_UPDATED,
                     id='reservas-payment-subscriber',
                     ack='client'  # Requires manual ack() call
                 )
-                logger.info(f"[MQ] Subscribed to {self.TOPIC_PAYMENT_STATUS_UPDATED} (max_retries={self.max_retries}, dlq={self.dlq_topic})")
+                logger.info(f"[MQ] Subscribed to {self.QUEUE_PAYMENT_STATUS_UPDATED} (max_retries={self.max_retries}, dlq={self.dlq_topic})")
                 
                 while self._connection.is_connected():
                     import time
