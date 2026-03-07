@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Accessibility Audit Report</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; padding: 2rem; max-width: 1200px; margin: 0 auto; font-size: 16px; }
+    h1 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    .header { background: #f5f5f5; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+    .stat { padding: 1rem; border-radius: 8px; text-align: center; }
+    .critical { background: #fee; color: #c00; }
+    .major { background: #fff3e0; color: #f90; }
+    .minor { background: #e8f5e8; color: #2e7d32; }
+    .pass { background: #e3f2fd; color: #1565c0; }
+    .issue { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    .severity-badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
+    .critical-badge { background: #fee; color: #c00; }
+    .major-badge { background: #fff3e0; color: #f90; }
+    .minor-badge { background: #e8f5e8; color: #2e7d32; }
+    .recommendation { background: #f0f7ff; padding: 1rem; border-radius: 4px; margin-top: 0.5rem; }
+    .meta { color: #555; font-size: 0.95rem; margin: 0.5rem 0; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <h1>Accessibility Audit Report</h1>
+  
+  <div class="header">
+    <p><strong>Project:</strong> TravelHub</p>
+    <p><strong>Date:</strong> 03/06/2026, 11:25:37 PM</p>
+    <p><strong>Standard:</strong> WCAG 2.1 AA</p>
+    <p><strong>Nodes scanned:</strong> 5</p>
+  </div>
+  
+  <div class="summary">
+    <div class="stat critical">
+      <h3>Critical</h3>
+      <p style="font-size: 2rem; margin: 0;">9</p>
+    </div>
+    <div class="stat major">
+      <h3>Major</h3>
+      <p style="font-size: 2rem; margin: 0;">1</p>
+    </div>
+    <div class="stat minor">
+      <h3>Minor</h3>
+      <p style="font-size: 2rem; margin: 0;">3</p>
+    </div>
+    <div class="stat pass">
+      <h3>Total Issues</h3>
+      <p style="font-size: 2rem; margin: 0;">13</p>
+    </div>
+  </div>
+  
+  <h2>Detected Issues (13)</h2>
+  
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 4.5:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Your Room Number (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 4.5:1 for normal text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Text opacity reduces contrast: 80%</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Your Room Number (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">80% opacity</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Set opacity to 100%</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Avoid using opacity on text as it reduces contrast. Use solid colors instead.
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 3:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 3:1 for large text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 4.5:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 4.5:1 for normal text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Text opacity reduces contrast: 80%</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">80% opacity</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Set opacity to 100%</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Avoid using opacity on text as it reduces contrast. Use solid colors instead.
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 4.5:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 4.5:1 for normal text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 4.5:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 4.5:1 for normal text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Text opacity reduces contrast: 80%</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">80% opacity</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Set opacity to 100%</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Avoid using opacity on text as it reduces contrast. Use solid colors instead.
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Low text contrast: 1.00:1 (requires 4.5:1)</h3>
+        <span class="severity-badge critical-badge">
+          CRITICAL
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (TEXT)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.3 Contrast (Minimum)</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">1.00:1</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Try #B3B3B3</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Increase contrast to at least 4.5:1 for normal text. Current: #FFFFFF, background: #FFFFFF
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Color used as the only visual indicator</h3>
+        <span class="severity-badge major-badge">
+          MAJOR
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Text (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.1 Use of Color</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">Text contains "success"</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">Add icon or additional styling</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> Add an additional visual cue (icon, underline, label)
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Font size could be improved: 12px</h3>
+        <span class="severity-badge minor-badge">
+          MINOR
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Home (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.4 Resize text</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">12px</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">14–16px</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> For body text, 14–16px is recommended
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Font size could be improved: 12px</h3>
+        <span class="severity-badge minor-badge">
+          MINOR
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Bookings (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.4 Resize text</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">12px</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">14–16px</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> For body text, 14–16px is recommended
+      </div>
+    </div>
+  
+    <div class="issue">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Font size could be improved: 12px</h3>
+        <span class="severity-badge minor-badge">
+          MINOR
+        </span>
+      </div>
+      <p class="meta">
+        Layer: Profile (Text)
+      </p>
+      <p class="meta"><strong>WCAG:</strong> 1.4.4 Resize text</p>
+      
+        <p class="meta">
+          <strong>Current:</strong> <span style="color: #d32f2f; font-weight: bold;">12px</span> → 
+          <strong>Suggested:</strong> <span style="color: #2e7d32; font-weight: bold;">14–16px</span>
+        </p>
+      
+      <div class="recommendation">
+        <strong>Recommendation:</strong> For body text, 14–16px is recommended
+      </div>
+    </div>
+  
+  
+  <p style="margin-top: 2rem; color: #999; font-size: 0.85rem; text-align: center;">
+    Generated by Accessibility Auditor for Figma
+  </p>
+</body>
+</html>
+  
