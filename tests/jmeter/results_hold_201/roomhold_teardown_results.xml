@@ -1,3 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,Encoding,IdleTime,Connect
-1772843936703,39,Check Room Hold Status,200,OK,Teardown - Verify and Cleanup 1-1,text,true,,330,329,1,1,http://localhost:8081/api/v1/habitaciones/ca1efcda-dd53-4645-a610-f1d4278c12c5/hold/check,39,UTF-8,0,2
-1772843936756,165,Release Winning Hold (Cleanup),404,NOT FOUND,Teardown - Verify and Cleanup 1-1,text,false,,193,191,1,1,http://localhost:8081/api/v1/holds/NO_HOLD,165,UTF-8,0,0
