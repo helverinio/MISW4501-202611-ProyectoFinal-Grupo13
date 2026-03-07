@@ -13,7 +13,7 @@
 		},
 		{
 			"key": "base_url_reservas",
-			"value": "http://localhost:5000",
+			"value": "http://localhost:8081",
 			"type": "string"
 		},
 		{
