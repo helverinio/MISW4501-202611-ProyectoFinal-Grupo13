@@ -1,0 +1,502 @@
+<html>
+
+  <head>
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: 'nest'
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
+      rel="stylesheet">
+    <style>
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme:
+        {
+          extend:
+          {
+            fontFamily:
+            {
+              'sans': ['Inter', 'system-ui', 'sans-serif']
+            },
+            colors:
+            {
+              primary:
+              {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                900: '#0c4a6e'
+              },
+              secondary:
+              {
+                50: '#f8fafc',
+                100: '#f1f5f9',
+                200: '#e2e8f0',
+                300: '#cbd5e1',
+                400: '#94a3b8',
+                500: '#64748b',
+                600: '#475569',
+                700: '#334155',
+                800: '#1e293b',
+                900: '#0f172a'
+              },
+              success:
+              {
+                50: '#f0fdf4',
+                500: '#22c55e',
+                600: '#16a34a'
+              },
+              warning:
+              {
+                50: '#fffbeb',
+                500: '#f59e0b',
+                600: '#d97706'
+              },
+              error:
+              {
+                50: '#fef2f2',
+                500: '#ef4444',
+                600: '#dc2626'
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+
+  <body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header id="header"
+      class="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div
+              class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+              <i class="fa-solid fa-cube text-white text-sm"></i></div><span
+              class="ml-3 text-xl font-bold text-secondary-900">Design System
+              TravelHub<br></span>
+          </div>
+          <nav class="hidden md:flex space-x-8"><a href="#colors"
+              class="text-secondary-600 hover:text-primary-500 transition-colors">Colors</a><a
+              href="#typography"
+              class="text-secondary-600 hover:text-primary-500 transition-colors">Typography</a><a
+              href="#components"
+              class="text-secondary-600 hover:text-primary-500 transition-colors">Components</a><a
+              href="#forms"
+              class="text-secondary-600 hover:text-primary-500 transition-colors">Forms</a>
+          </nav>
+        </div>
+      </div>
+    </header><!-- Hero Section -->
+    <section id="hero"
+      class="bg-gradient-to-br from-primary-50 to-primary-100 py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold text-secondary-900 mb-6">
+          Design System TravelHub</h1>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center"></div>
+      </div>
+    </section><!-- Color Palette -->
+    <section id="colors" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            Paleta de Colores</h2>
+          <p class="text-lg text-secondary-600">Colores principales y
+            secundarios para crear jerarquías visuales</p>
+        </div><!-- Primary Colors -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores
+            Primarios</h3>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="text-center">
+              <div class="w-full h-20 bg-primary-50 rounded-lg mb-3 border">
+              </div>
+              <div class="text-sm font-mono text-secondary-600">primary-50</div>
+              <div class="text-xs text-secondary-400">#f0f9ff</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-primary-100 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">primary-100
+              </div>
+              <div class="text-xs text-secondary-400">#e0f2fe</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-primary-500 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">primary-500
+              </div>
+              <div class="text-xs text-secondary-400">#0ea5e9</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-primary-600 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">primary-600
+              </div>
+              <div class="text-xs text-secondary-400">#0284c7</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-primary-900 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">primary-900
+              </div>
+              <div class="text-xs text-secondary-400">#0c4a6e</div>
+            </div>
+          </div>
+        </div><!-- Secondary Colors -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores
+            Secundarios</h3>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="text-center">
+              <div class="w-full h-20 bg-secondary-100 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">secondary-100
+              </div>
+              <div class="text-xs text-secondary-400">#f1f5f9</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-secondary-300 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">secondary-300
+              </div>
+              <div class="text-xs text-secondary-400">#cbd5e1</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-secondary-500 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">secondary-500
+              </div>
+              <div class="text-xs text-secondary-400">#64748b</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-secondary-700 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">secondary-700
+              </div>
+              <div class="text-xs text-secondary-400">#334155</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-secondary-900 rounded-lg mb-3"></div>
+              <div class="text-sm font-mono text-secondary-600">secondary-900
+              </div>
+              <div class="text-xs text-secondary-400">#0f172a</div>
+            </div>
+          </div>
+        </div><!-- Status Colors -->
+        <div>
+          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores de
+            Estado</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center">
+              <div class="w-full h-20 bg-success-500 rounded-lg mb-3"></div>
+              <div class="text-sm font-semibold text-secondary-900">Success
+              </div>
+              <div class="text-xs text-secondary-400">#22c55e</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-warning-500 rounded-lg mb-3"></div>
+              <div class="text-sm font-semibold text-secondary-900">Warning
+              </div>
+              <div class="text-xs text-secondary-400">#f59e0b</div>
+            </div>
+            <div class="text-center">
+              <div class="w-full h-20 bg-error-500 rounded-lg mb-3"></div>
+              <div class="text-sm font-semibold text-secondary-900">Error</div>
+              <div class="text-xs text-secondary-400">#ef4444</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- Typography -->
+    <section id="typography" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            Tipografía</h2>
+          <p class="text-lg text-secondary-600">Sistema tipográfico basado en
+            Inter para una lectura óptima</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <!-- Headings -->
+          <div>
+            <h3 class="text-xl font-bold text-secondary-900 mb-6">Títulos</h3>
+            <div class="space-y-4">
+              <div>
+                <h1 class="text-4xl font-bold text-secondary-900">Heading 1</h1>
+                <p class="text-sm text-secondary-400 mt-1">4xl / Bold / 36px</p>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-secondary-900">Heading 2</h2>
+                <p class="text-sm text-secondary-400 mt-1">3xl / Bold / 30px</p>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-secondary-900">Heading 3</h3>
+                <p class="text-sm text-secondary-400 mt-1">2xl / Bold / 24px</p>
+              </div>
+              <div>
+                <h4 class="text-xl font-semibold text-secondary-900">Heading 4
+                </h4>
+                <p class="text-sm text-secondary-400 mt-1">xl / Semibold / 20px
+                </p>
+              </div>
+            </div>
+          </div><!-- Body Text -->
+          <div>
+            <h3 class="text-xl font-bold text-secondary-900 mb-6">Texto de
+              Cuerpo</h3>
+            <div class="space-y-4">
+              <div>
+                <p class="text-lg text-secondary-900">Body Large</p>
+                <p class="text-sm text-secondary-400 mt-1">lg / Regular / 18px
+                </p>
+              </div>
+              <div>
+                <p class="text-base text-secondary-900">Body Regular</p>
+                <p class="text-sm text-secondary-400 mt-1">base / Regular / 16px
+                </p>
+              </div>
+              <div>
+                <p class="text-sm text-secondary-600">Body Small</p>
+                <p class="text-sm text-secondary-400 mt-1">sm / Regular / 14px
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-secondary-500">Caption</p>
+                <p class="text-sm text-secondary-400 mt-1">xs / Regular / 12px
+                </p>
+              </div>
+            </div>
+          </div>
+        </div><!-- Font Weights -->
+        <div class="mt-12">
+          <h3 class="text-xl font-bold text-secondary-900 mb-6">Pesos de Fuente
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center p-6 bg-gray-50 rounded-lg">
+              <p class="text-lg font-light text-secondary-900 mb-2">Light</p>
+              <p class="text-sm text-secondary-500">300</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg">
+              <p class="text-lg font-normal text-secondary-900 mb-2">Regular</p>
+              <p class="text-sm text-secondary-500">400</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-lg">
+              <p class="text-lg font-medium text-secondary-900 mb-2">Medium</p>
+              <p class="text-sm text-secondary-500">500</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- Components -->
+    <section id="components" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            Componentes</h2>
+          <p class="text-lg text-secondary-600">Elementos de interfaz
+            reutilizables y consistentes</p>
+        </div><!-- Buttons -->
+        <div class="mb-16">
+          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Botones</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Primary Buttons -->
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-secondary-700">Primarios
+              </h4><button
+                class="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors">
+                Primary Button
+              </button><button
+                class="w-full bg-primary-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors"><i
+                  class="fa-solid fa-plus mr-2"></i>With Icon
+              </button>
+            </div><!-- Secondary Buttons -->
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-secondary-700">Secundarios
+              </h4><button
+                class="w-full border border-secondary-300 text-secondary-700 px-6 py-3 rounded-lg font-semibold hover:bg-secondary-50 transition-colors">
+                Secondary Button
+              </button><button
+                class="w-full text-primary-500 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+                Text Button
+              </button>
+            </div><!-- Status Buttons -->
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-secondary-700">Estados</h4>
+              <button
+                class="w-full bg-success-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-success-600 transition-colors">
+                Success
+              </button><button
+                class="w-full bg-error-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-error-600 transition-colors">
+                Danger
+              </button>
+            </div>
+          </div>
+        </div><!-- Cards -->
+        <div class="mb-16">
+          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Tarjetas</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              class="bg-white rounded-xl border border-secondary-200 p-6 hover:shadow-lg transition-shadow">
+              <div
+                class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                <i class="fa-solid fa-chart-line text-primary-500"></i></div>
+              <h4 class="text-lg font-semibold text-secondary-900 mb-2">Card
+                Title</h4>
+              <p class="text-secondary-600 mb-4">Lorem ipsum dolor sit amet
+                consectetur adipiscing elit.</p><button
+                class="text-primary-500 font-semibold hover:text-primary-600 transition-colors">
+                Learn More <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </div>
+            <div
+              class="bg-white rounded-xl border border-secondary-200 p-6 hover:shadow-lg transition-shadow">
+              <div
+                class="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center mb-4">
+                <i class="fa-solid fa-shield-check text-success-500"></i></div>
+              <h4 class="text-lg font-semibold text-secondary-900 mb-2">Feature
+                Card</h4>
+              <p class="text-secondary-600 mb-4">Sed do eiusmod tempor
+                incididunt ut labore et dolore magna.</p><button
+                class="text-primary-500 font-semibold hover:text-primary-600 transition-colors">
+                Explore <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </div>
+            <div
+              class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl p-6 text-white">
+              <div
+                class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
+                <i class="fa-solid fa-star text-white"></i></div>
+              <h4 class="text-lg font-semibold mb-2">Premium Card</h4>
+              <p class="text-primary-50 mb-4">Ut enim ad minim veniam quis
+                nostrud exercitation.</p><button
+                class="bg-white text-primary-500 px-4 py-2 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div><!-- Badges -->
+        <div>
+          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Badges y Tags
+          </h3>
+          <div class="flex flex-wrap gap-4"><span
+              class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">Primary</span><span
+              class="bg-success-100 text-success-700 px-3 py-1 rounded-full text-sm font-medium">Success</span><span
+              class="bg-warning-100 text-warning-700 px-3 py-1 rounded-full text-sm font-medium">Warning</span><span
+              class="bg-error-100 text-error-700 px-3 py-1 rounded-full text-sm font-medium">Error</span><span
+              class="bg-secondary-100 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">Neutral</span><span
+              class="border border-secondary-300 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">Outlined</span>
+          </div>
+        </div>
+      </div>
+    </section><!-- Forms -->
+    <section id="forms" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            Formularios</h2>
+          <p class="text-lg text-secondary-600">Elementos de entrada y controles
+            de formulario</p>
+        </div>
+        <div class="max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Input Fields -->
+            <div class="space-y-6">
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-2">Input
+                  Field</label><input type="text" placeholder="Enter text..."
+                  class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+              </div>
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-2">Select
+                  Dropdown</label><select
+                  class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+                  <option>Choose option...</option>
+                  <option>Option 1</option>
+                  <option>Option 2</option>
+                </select></div>
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-2">Textarea</label><textarea rows="4" placeholder="Enter message..." class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
+              </div>
+            </div><!-- Checkboxes and Radio -->
+            <div class="space-y-6">
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-4">Checkboxes</label>
+                <div class="space-y-3"><label class="flex items-center"><input
+                      type="checkbox"
+                      class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
+                      class="ml-3 text-secondary-700">Option
+                      1</span></label><label class="flex items-center"><input
+                      type="checkbox" checked=""
+                      class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
+                      class="ml-3 text-secondary-700">Option 2</span></label>
+                </div>
+              </div>
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-4">Radio
+                  Buttons</label>
+                <div class="space-y-3"><label class="flex items-center"><input
+                      type="radio" name="radio"
+                      class="w-4 h-4 text-primary-500 border-secondary-300 focus:ring-primary-500"><span
+                      class="ml-3 text-secondary-700">Choice
+                      A</span></label><label class="flex items-center"><input
+                      type="radio" name="radio" checked=""
+                      class="w-4 h-4 text-primary-500 border-secondary-300 focus:ring-primary-500"><span
+                      class="ml-3 text-secondary-700">Choice B</span></label>
+                </div>
+              </div>
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-2">Toggle
+                  Switch</label><label
+                  class="relative inline-flex items-center cursor-pointer"><input
+                    type="checkbox" class="sr-only peer">
+                  <div
+                    class="w-11 h-6 bg-secondary-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500">
+                  </div>
+                </label></div>
+            </div>
+          </div><!-- Form Example -->
+          <div class="mt-12 bg-gray-50 rounded-xl p-8">
+            <h3 class="text-xl font-bold text-secondary-900 mb-6">Ejemplo de
+              Formulario</h3>
+            <form class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div><label
+                    class="block text-sm font-semibold text-secondary-700 mb-2">Nombre</label><input
+                    type="text" placeholder="Tu nombre"
+                    class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+                </div>
+                <div><label
+                    class="block text-sm font-semibold text-secondary-700 mb-2">Email</label><input
+                    type="email" placeholder="tu@email.com"
+                    class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+                </div>
+              </div>
+              <div><label
+                  class="block text-sm font-semibold text-secondary-700 mb-2">Mensaje</label><textarea rows="4" placeholder="Tu mensaje..." class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
+              </div>
+              <div class="flex items-center"><input type="checkbox"
+                  class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
+                  class="ml-3 text-sm text-secondary-600">Acepto los términos y
+                  condiciones</span></div><button type="submit"
+                class="bg-primary-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors">
+                Enviar Mensaje
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section><!-- Footer -->
+  </body>
+
+</html>
