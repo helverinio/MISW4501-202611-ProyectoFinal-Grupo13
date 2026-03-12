@@ -1,502 +1,443 @@
-<html>
-
-  <head>
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design System</title>
+    <title>TravelHub Design System V2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      window.FontAwesomeConfig = {
-        autoReplaceSvg: 'nest'
-      };
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
     </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
-      rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      ::-webkit-scrollbar
-      {
-        display: none;
-      }
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', system-ui, sans-serif; }
     </style>
     <script>
-      tailwind.config = {
-        theme:
-        {
-          extend:
-          {
-            fontFamily:
-            {
-              'sans': ['Inter', 'system-ui', 'sans-serif']
-            },
-            colors:
-            {
-              primary:
-              {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                500: '#0ea5e9',
-                600: '#0284c7',
-                700: '#0369a1',
-                900: '#0c4a6e'
-              },
-              secondary:
-              {
-                50: '#f8fafc',
-                100: '#f1f5f9',
-                200: '#e2e8f0',
-                300: '#cbd5e1',
-                400: '#94a3b8',
-                500: '#64748b',
-                600: '#475569',
-                700: '#334155',
-                800: '#1e293b',
-                900: '#0f172a'
-              },
-              success:
-              {
-                50: '#f0fdf4',
-                500: '#22c55e',
-                600: '#16a34a'
-              },
-              warning:
-              {
-                50: '#fffbeb',
-                500: '#f59e0b',
-                600: '#d97706'
-              },
-              error:
-              {
-                50: '#fef2f2',
-                500: '#ef4444',
-                600: '#dc2626'
-              }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        },
+                        success: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669'
+                        },
+                        warning: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        },
+                        error: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626'
+                        }
+                    },
+                    boxShadow: {
+                        soft: '0 12px 32px rgba(15, 23, 42, 0.08)'
+                    }
+                }
             }
-          }
-        }
-      }
+        };
     </script>
-  </head>
+</head>
+<body class="bg-secondary-50 font-sans text-secondary-900">
+    <header class="sticky top-0 z-50 border-b border-secondary-200 bg-white/95 backdrop-blur">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white shadow-soft">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-bold">TravelHub Design System</p>
+                    <p class="text-sm text-secondary-500">Version 2</p>
+                </div>
+            </div>
+            <nav class="hidden items-center gap-6 text-sm font-medium text-secondary-600 md:flex">
+                <a href="#colors" class="hover:text-primary-600">Colores</a>
+                <a href="#typography" class="hover:text-primary-600">Tipografia</a>
+                <a href="#components" class="hover:text-primary-600">Base UI</a>
+                <a href="#web-components" class="hover:text-primary-600">Portal Web</a>
+                <a href="#admin-components" class="hover:text-primary-600">Admin</a>
+                <a href="#mobile-components" class="hover:text-primary-600">Movil</a>
+            </nav>
+        </div>
+    </header>
 
-  <body class="bg-gray-50 font-sans">
-    <!-- Header -->
-    <header id="header"
-      class="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-              <i class="fa-solid fa-cube text-white text-sm"></i></div><span
-              class="ml-3 text-xl font-bold text-secondary-900">Design System
-              TravelHub<br></span>
-          </div>
-          <nav class="hidden md:flex space-x-8"><a href="#colors"
-              class="text-secondary-600 hover:text-primary-500 transition-colors">Colors</a><a
-              href="#typography"
-              class="text-secondary-600 hover:text-primary-500 transition-colors">Typography</a><a
-              href="#components"
-              class="text-secondary-600 hover:text-primary-500 transition-colors">Components</a><a
-              href="#forms"
-              class="text-secondary-600 hover:text-primary-500 transition-colors">Forms</a>
-          </nav>
-        </div>
-      </div>
-    </header><!-- Hero Section -->
-    <section id="hero"
-      class="bg-gradient-to-br from-primary-50 to-primary-100 py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-secondary-900 mb-6">
-          Design System TravelHub</h1>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center"></div>
-      </div>
-    </section><!-- Color Palette -->
-    <section id="colors" class="py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
-            Paleta de Colores</h2>
-          <p class="text-lg text-secondary-600">Colores principales y
-            secundarios para crear jerarquías visuales</p>
-        </div><!-- Primary Colors -->
-        <div class="mb-12">
-          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores
-            Primarios</h3>
-          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div class="text-center">
-              <div class="w-full h-20 bg-primary-50 rounded-lg mb-3 border">
-              </div>
-              <div class="text-sm font-mono text-secondary-600">primary-50</div>
-              <div class="text-xs text-secondary-400">#f0f9ff</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-primary-100 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">primary-100
-              </div>
-              <div class="text-xs text-secondary-400">#e0f2fe</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-primary-500 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">primary-500
-              </div>
-              <div class="text-xs text-secondary-400">#0ea5e9</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-primary-600 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">primary-600
-              </div>
-              <div class="text-xs text-secondary-400">#0284c7</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-primary-900 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">primary-900
-              </div>
-              <div class="text-xs text-secondary-400">#0c4a6e</div>
-            </div>
-          </div>
-        </div><!-- Secondary Colors -->
-        <div class="mb-12">
-          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores
-            Secundarios</h3>
-          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div class="text-center">
-              <div class="w-full h-20 bg-secondary-100 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">secondary-100
-              </div>
-              <div class="text-xs text-secondary-400">#f1f5f9</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-secondary-300 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">secondary-300
-              </div>
-              <div class="text-xs text-secondary-400">#cbd5e1</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-secondary-500 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">secondary-500
-              </div>
-              <div class="text-xs text-secondary-400">#64748b</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-secondary-700 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">secondary-700
-              </div>
-              <div class="text-xs text-secondary-400">#334155</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-secondary-900 rounded-lg mb-3"></div>
-              <div class="text-sm font-mono text-secondary-600">secondary-900
-              </div>
-              <div class="text-xs text-secondary-400">#0f172a</div>
-            </div>
-          </div>
-        </div><!-- Status Colors -->
-        <div>
-          <h3 class="text-2xl font-bold text-secondary-900 mb-6">Colores de
-            Estado</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="text-center">
-              <div class="w-full h-20 bg-success-500 rounded-lg mb-3"></div>
-              <div class="text-sm font-semibold text-secondary-900">Success
-              </div>
-              <div class="text-xs text-secondary-400">#22c55e</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-warning-500 rounded-lg mb-3"></div>
-              <div class="text-sm font-semibold text-secondary-900">Warning
-              </div>
-              <div class="text-xs text-secondary-400">#f59e0b</div>
-            </div>
-            <div class="text-center">
-              <div class="w-full h-20 bg-error-500 rounded-lg mb-3"></div>
-              <div class="text-sm font-semibold text-secondary-900">Error</div>
-              <div class="text-xs text-secondary-400">#ef4444</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- Typography -->
-    <section id="typography" class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
-            Tipografía</h2>
-          <p class="text-lg text-secondary-600">Sistema tipográfico basado en
-            Inter para una lectura óptima</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <!-- Headings -->
-          <div>
-            <h3 class="text-xl font-bold text-secondary-900 mb-6">Títulos</h3>
-            <div class="space-y-4">
-              <div>
-                <h1 class="text-4xl font-bold text-secondary-900">Heading 1</h1>
-                <p class="text-sm text-secondary-400 mt-1">4xl / Bold / 36px</p>
-              </div>
-              <div>
-                <h2 class="text-3xl font-bold text-secondary-900">Heading 2</h2>
-                <p class="text-sm text-secondary-400 mt-1">3xl / Bold / 30px</p>
-              </div>
-              <div>
-                <h3 class="text-2xl font-bold text-secondary-900">Heading 3</h3>
-                <p class="text-sm text-secondary-400 mt-1">2xl / Bold / 24px</p>
-              </div>
-              <div>
-                <h4 class="text-xl font-semibold text-secondary-900">Heading 4
-                </h4>
-                <p class="text-sm text-secondary-400 mt-1">xl / Semibold / 20px
-                </p>
-              </div>
-            </div>
-          </div><!-- Body Text -->
-          <div>
-            <h3 class="text-xl font-bold text-secondary-900 mb-6">Texto de
-              Cuerpo</h3>
-            <div class="space-y-4">
-              <div>
-                <p class="text-lg text-secondary-900">Body Large</p>
-                <p class="text-sm text-secondary-400 mt-1">lg / Regular / 18px
-                </p>
-              </div>
-              <div>
-                <p class="text-base text-secondary-900">Body Regular</p>
-                <p class="text-sm text-secondary-400 mt-1">base / Regular / 16px
-                </p>
-              </div>
-              <div>
-                <p class="text-sm text-secondary-600">Body Small</p>
-                <p class="text-sm text-secondary-400 mt-1">sm / Regular / 14px
-                </p>
-              </div>
-              <div>
-                <p class="text-xs text-secondary-500">Caption</p>
-                <p class="text-sm text-secondary-400 mt-1">xs / Regular / 12px
-                </p>
-              </div>
-            </div>
-          </div>
-        </div><!-- Font Weights -->
-        <div class="mt-12">
-          <h3 class="text-xl font-bold text-secondary-900 mb-6">Pesos de Fuente
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="text-center p-6 bg-gray-50 rounded-lg">
-              <p class="text-lg font-light text-secondary-900 mb-2">Light</p>
-              <p class="text-sm text-secondary-500">300</p>
-            </div>
-            <div class="text-center p-6 bg-gray-50 rounded-lg">
-              <p class="text-lg font-normal text-secondary-900 mb-2">Regular</p>
-              <p class="text-sm text-secondary-500">400</p>
-            </div>
-            <div class="text-center p-6 bg-gray-50 rounded-lg">
-              <p class="text-lg font-medium text-secondary-900 mb-2">Medium</p>
-              <p class="text-sm text-secondary-500">500</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- Components -->
-    <section id="components" class="py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
-            Componentes</h2>
-          <p class="text-lg text-secondary-600">Elementos de interfaz
-            reutilizables y consistentes</p>
-        </div><!-- Buttons -->
-        <div class="mb-16">
-          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Botones</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Primary Buttons -->
-            <div class="space-y-4">
-              <h4 class="text-lg font-semibold text-secondary-700">Primarios
-              </h4><button
-                class="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors">
-                Primary Button
-              </button><button
-                class="w-full bg-primary-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors"><i
-                  class="fa-solid fa-plus mr-2"></i>With Icon
-              </button>
-            </div><!-- Secondary Buttons -->
-            <div class="space-y-4">
-              <h4 class="text-lg font-semibold text-secondary-700">Secundarios
-              </h4><button
-                class="w-full border border-secondary-300 text-secondary-700 px-6 py-3 rounded-lg font-semibold hover:bg-secondary-50 transition-colors">
-                Secondary Button
-              </button><button
-                class="w-full text-primary-500 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
-                Text Button
-              </button>
-            </div><!-- Status Buttons -->
-            <div class="space-y-4">
-              <h4 class="text-lg font-semibold text-secondary-700">Estados</h4>
-              <button
-                class="w-full bg-success-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-success-600 transition-colors">
-                Success
-              </button><button
-                class="w-full bg-error-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-error-600 transition-colors">
-                Danger
-              </button>
-            </div>
-          </div>
-        </div><!-- Cards -->
-        <div class="mb-16">
-          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Tarjetas</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
-              class="bg-white rounded-xl border border-secondary-200 p-6 hover:shadow-lg transition-shadow">
-              <div
-                class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                <i class="fa-solid fa-chart-line text-primary-500"></i></div>
-              <h4 class="text-lg font-semibold text-secondary-900 mb-2">Card
-                Title</h4>
-              <p class="text-secondary-600 mb-4">Lorem ipsum dolor sit amet
-                consectetur adipiscing elit.</p><button
-                class="text-primary-500 font-semibold hover:text-primary-600 transition-colors">
-                Learn More <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-            <div
-              class="bg-white rounded-xl border border-secondary-200 p-6 hover:shadow-lg transition-shadow">
-              <div
-                class="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center mb-4">
-                <i class="fa-solid fa-shield-check text-success-500"></i></div>
-              <h4 class="text-lg font-semibold text-secondary-900 mb-2">Feature
-                Card</h4>
-              <p class="text-secondary-600 mb-4">Sed do eiusmod tempor
-                incididunt ut labore et dolore magna.</p><button
-                class="text-primary-500 font-semibold hover:text-primary-600 transition-colors">
-                Explore <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-            <div
-              class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl p-6 text-white">
-              <div
-                class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
-                <i class="fa-solid fa-star text-white"></i></div>
-              <h4 class="text-lg font-semibold mb-2">Premium Card</h4>
-              <p class="text-primary-50 mb-4">Ut enim ad minim veniam quis
-                nostrud exercitation.</p><button
-                class="bg-white text-primary-500 px-4 py-2 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div><!-- Badges -->
-        <div>
-          <h3 class="text-2xl font-bold text-secondary-900 mb-8">Badges y Tags
-          </h3>
-          <div class="flex flex-wrap gap-4"><span
-              class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">Primary</span><span
-              class="bg-success-100 text-success-700 px-3 py-1 rounded-full text-sm font-medium">Success</span><span
-              class="bg-warning-100 text-warning-700 px-3 py-1 rounded-full text-sm font-medium">Warning</span><span
-              class="bg-error-100 text-error-700 px-3 py-1 rounded-full text-sm font-medium">Error</span><span
-              class="bg-secondary-100 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">Neutral</span><span
-              class="border border-secondary-300 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">Outlined</span>
-          </div>
-        </div>
-      </div>
-    </section><!-- Forms -->
-    <section id="forms" class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
-            Formularios</h2>
-          <p class="text-lg text-secondary-600">Elementos de entrada y controles
-            de formulario</p>
-        </div>
-        <div class="max-w-4xl mx-auto">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Input Fields -->
-            <div class="space-y-6">
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-2">Input
-                  Field</label><input type="text" placeholder="Enter text..."
-                  class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
-              </div>
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-2">Select
-                  Dropdown</label><select
-                  class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
-                  <option>Choose option...</option>
-                  <option>Option 1</option>
-                  <option>Option 2</option>
-                </select></div>
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-2">Textarea</label><textarea rows="4" placeholder="Enter message..." class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
-              </div>
-            </div><!-- Checkboxes and Radio -->
-            <div class="space-y-6">
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-4">Checkboxes</label>
-                <div class="space-y-3"><label class="flex items-center"><input
-                      type="checkbox"
-                      class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
-                      class="ml-3 text-secondary-700">Option
-                      1</span></label><label class="flex items-center"><input
-                      type="checkbox" checked=""
-                      class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
-                      class="ml-3 text-secondary-700">Option 2</span></label>
+    <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <section class="overflow-hidden rounded-[32px] bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500 px-6 py-16 text-white shadow-soft sm:px-10">
+                <div class="grid gap-8 lg:grid-cols-[1.3fr,0.7fr]">
+                    <div>
+                        <span class="inline-flex items-center rounded-full bg-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em]">TravelHub UI</span>
+                        <h1 class="mt-5 max-w-3xl text-4xl font-extrabold tracking-tight sm:text-5xl">Guia visual para portal web, portal admin y experiencia movil.</h1>
+                        <p class="mt-4 max-w-2xl text-sm leading-7 text-blue-50 sm:text-base">
+                            Esta pagina consolida los patrones que ya existen en los prototipos: paleta azul, superficies limpias, componentes redondeados, estados claros y continuidad entre desktop y movil.
+                        </p>
+                    </div>
+                    <div class="rounded-[28px] border border-white/15 bg-slate-950/20 p-5">
+                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-100"></p>
+                        <ul class="mt-4 space-y-3 text-sm text-blue-50">
+                            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-xs"></i><span>Unificacion de tokens visuales para evitar variaciones entre vistas.</span></li>
+                            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-xs"></i><span>Jerarquia tipografica mas clara para titulos, formularios y metricas.</span></li>
+                            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-xs"></i><span>Separacion explicita entre componentes web y patrones nativos de movil.</span></li>
+                            <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-xs"></i><span>Estados de exito, alerta y error con mejor contraste y consistencia.</span></li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-4">Radio
-                  Buttons</label>
-                <div class="space-y-3"><label class="flex items-center"><input
-                      type="radio" name="radio"
-                      class="w-4 h-4 text-primary-500 border-secondary-300 focus:ring-primary-500"><span
-                      class="ml-3 text-secondary-700">Choice
-                      A</span></label><label class="flex items-center"><input
-                      type="radio" name="radio" checked=""
-                      class="w-4 h-4 text-primary-500 border-secondary-300 focus:ring-primary-500"><span
-                      class="ml-3 text-secondary-700">Choice B</span></label>
-                </div>
-              </div>
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-2">Toggle
-                  Switch</label><label
-                  class="relative inline-flex items-center cursor-pointer"><input
-                    type="checkbox" class="sr-only peer">
-                  <div
-                    class="w-11 h-6 bg-secondary-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500">
-                  </div>
-                </label></div>
-            </div>
-          </div><!-- Form Example -->
-          <div class="mt-12 bg-gray-50 rounded-xl p-8">
-            <h3 class="text-xl font-bold text-secondary-900 mb-6">Ejemplo de
-              Formulario</h3>
-            <form class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div><label
-                    class="block text-sm font-semibold text-secondary-700 mb-2">Nombre</label><input
-                    type="text" placeholder="Tu nombre"
-                    class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
-                </div>
-                <div><label
-                    class="block text-sm font-semibold text-secondary-700 mb-2">Email</label><input
-                    type="email" placeholder="tu@email.com"
-                    class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
-                </div>
-              </div>
-              <div><label
-                  class="block text-sm font-semibold text-secondary-700 mb-2">Mensaje</label><textarea rows="4" placeholder="Tu mensaje..." class="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
-              </div>
-              <div class="flex items-center"><input type="checkbox"
-                  class="w-4 h-4 text-primary-500 border-secondary-300 rounded focus:ring-primary-500"><span
-                  class="ml-3 text-sm text-secondary-600">Acepto los términos y
-                  condiciones</span></div><button type="submit"
-                class="bg-primary-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors">
-                Enviar Mensaje
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section><!-- Footer -->
-  </body>
+        </section>
 
+        <section id="colors" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-secondary-900">Paleta de Colores</h2>
+                <p class="mt-3 text-secondary-600">Colores principales, neutros y estados para una jerarquia clara y consistente.</p>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="mb-5 text-2xl font-bold text-secondary-900">Primarios</h3>
+                <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl border bg-primary-50"></div><p class="font-mono text-sm text-secondary-600">primary-50</p><p class="text-xs text-secondary-400">#EFF6FF</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-primary-100"></div><p class="font-mono text-sm text-secondary-600">primary-100</p><p class="text-xs text-secondary-400">#DBEAFE</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-primary-500"></div><p class="font-mono text-sm text-secondary-600">primary-500</p><p class="text-xs text-secondary-400">#3B82F6</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-primary-600"></div><p class="font-mono text-sm text-secondary-600">primary-600</p><p class="text-xs text-secondary-400">#2563EB</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-primary-900"></div><p class="font-mono text-sm text-secondary-600">primary-900</p><p class="text-xs text-secondary-400">#1E3A8A</p></div>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="mb-5 text-2xl font-bold text-secondary-900">Neutros</h3>
+                <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-secondary-100"></div><p class="font-mono text-sm text-secondary-600">secondary-100</p><p class="text-xs text-secondary-400">#F1F5F9</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-secondary-300"></div><p class="font-mono text-sm text-secondary-600">secondary-300</p><p class="text-xs text-secondary-400">#CBD5E1</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-secondary-500"></div><p class="font-mono text-sm text-secondary-600">secondary-500</p><p class="text-xs text-secondary-400">#64748B</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-secondary-700"></div><p class="font-mono text-sm text-secondary-600">secondary-700</p><p class="text-xs text-secondary-400">#334155</p></div>
+                    <div class="text-center"><div class="mb-3 h-24 rounded-xl bg-secondary-900"></div><p class="font-mono text-sm text-secondary-600">secondary-900</p><p class="text-xs text-secondary-400">#0F172A</p></div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="mb-5 text-2xl font-bold text-secondary-900">Estados</h3>
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="rounded-2xl border border-secondary-200 p-4 text-center"><div class="mb-3 h-24 rounded-xl bg-success-500"></div><p class="font-semibold">Success</p><p class="text-xs text-secondary-400">#10B981</p></div>
+                    <div class="rounded-2xl border border-secondary-200 p-4 text-center"><div class="mb-3 h-24 rounded-xl bg-warning-500"></div><p class="font-semibold">Warning</p><p class="text-xs text-secondary-400">#F59E0B</p></div>
+                    <div class="rounded-2xl border border-secondary-200 p-4 text-center"><div class="mb-3 h-24 rounded-xl bg-error-500"></div><p class="font-semibold">Error</p><p class="text-xs text-secondary-400">#EF4444</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="typography" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-secondary-900">Tipografia</h2>
+                <p class="mt-3 text-secondary-600">Sistema basado en Inter para legibilidad, ritmo y consistencia entre plataformas.</p>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div>
+                    <h3 class="mb-6 text-xl font-bold">Titulos</h3>
+                    <div class="space-y-4">
+                        <div><h1 class="text-5xl font-extrabold">Heading XL</h1><p class="mt-1 text-sm text-secondary-400">5xl / 48px / ExtraBold</p></div>
+                        <div><h2 class="text-4xl font-bold">Heading L</h2><p class="mt-1 text-sm text-secondary-400">4xl / 36px / Bold</p></div>
+                        <div><h3 class="text-3xl font-bold">Heading M</h3><p class="mt-1 text-sm text-secondary-400">3xl / 30px / Bold</p></div>
+                        <div><h4 class="text-xl font-semibold">Heading S</h4><p class="mt-1 text-sm text-secondary-400">xl / 20px / Semibold</p></div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="mb-6 text-xl font-bold">Texto de cuerpo</h3>
+                    <div class="space-y-4">
+                        <div><p class="text-lg text-secondary-900">Body Large para descripciones clave y hero copy.</p><p class="mt-1 text-sm text-secondary-400">lg / 18px / Regular</p></div>
+                        <div><p class="text-base text-secondary-900">Body Regular para contenidos principales y formularios.</p><p class="mt-1 text-sm text-secondary-400">base / 16px / Regular</p></div>
+                        <div><p class="text-sm text-secondary-600">Body Small para metadata de tarjetas y apoyo visual.</p><p class="mt-1 text-sm text-secondary-400">sm / 14px / Regular</p></div>
+                        <div><p class="text-xs text-secondary-500">Caption para ayuda contextual y etiquetas.</p><p class="mt-1 text-sm text-secondary-400">xs / 12px / Regular</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 grid gap-4 md:grid-cols-4">
+                <div class="rounded-2xl bg-secondary-50 p-5 text-center"><p class="text-lg font-light">Light</p><p class="text-sm text-secondary-500">300</p></div>
+                <div class="rounded-2xl bg-secondary-50 p-5 text-center"><p class="text-lg font-normal">Regular</p><p class="text-sm text-secondary-500">400</p></div>
+                <div class="rounded-2xl bg-secondary-50 p-5 text-center"><p class="text-lg font-medium">Medium</p><p class="text-sm text-secondary-500">500</p></div>
+                <div class="rounded-2xl bg-secondary-50 p-5 text-center"><p class="text-lg font-bold">Bold</p><p class="text-sm text-secondary-500">700</p></div>
+            </div>
+        </section>
+
+        <section id="components" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-secondary-900">Componentes Base</h2>
+                <p class="mt-3 text-secondary-600">Botones, tarjetas, badges y controles de formulario reutilizables.</p>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="mb-6 text-2xl font-bold">Botones</h3>
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="space-y-4 rounded-2xl border border-secondary-200 p-5">
+                        <h4 class="text-lg font-semibold text-secondary-700">Primarios</h4>
+                        <button class="w-full rounded-xl bg-primary-600 px-6 py-3 font-semibold text-white hover:bg-primary-700">Primary Button</button>
+                        <button class="w-full rounded-xl bg-primary-600 px-4 py-3 font-medium text-white hover:bg-primary-700"><i class="fa-solid fa-plus mr-2"></i>With Icon</button>
+                    </div>
+                    <div class="space-y-4 rounded-2xl border border-secondary-200 p-5">
+                        <h4 class="text-lg font-semibold text-secondary-700">Secundarios</h4>
+                        <button class="w-full rounded-xl border border-secondary-300 px-6 py-3 font-semibold text-secondary-700 hover:bg-secondary-50">Secondary Button</button>
+                        <button class="w-full rounded-xl px-6 py-3 font-semibold text-primary-600 hover:bg-primary-50">Text Button</button>
+                    </div>
+                    <div class="space-y-4 rounded-2xl border border-secondary-200 p-5">
+                        <h4 class="text-lg font-semibold text-secondary-700">Estados</h4>
+                        <button class="w-full rounded-xl bg-success-500 px-6 py-3 font-semibold text-white hover:bg-success-600">Success</button>
+                        <button class="w-full rounded-xl bg-error-500 px-6 py-3 font-semibold text-white hover:bg-error-600">Danger</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="mb-6 text-2xl font-bold">Tarjetas</h3>
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="rounded-2xl border border-secondary-200 bg-white p-6">
+                        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100"><i class="fa-solid fa-chart-line text-primary-600"></i></div>
+                        <h4 class="text-lg font-semibold">Card Title</h4>
+                        <p class="mt-2 text-secondary-600">Tarjeta informativa para resumenes, features y bloques de onboarding.</p>
+                        <button class="mt-4 font-semibold text-primary-600">Learn More <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                    </div>
+                    <div class="rounded-2xl border border-secondary-200 bg-white p-6">
+                        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-success-100"><i class="fa-solid fa-shield-halved text-success-600"></i></div>
+                        <h4 class="text-lg font-semibold">Feature Card</h4>
+                        <p class="mt-2 text-secondary-600">Tarjeta con icono para beneficios del producto y mensajes de confianza.</p>
+                        <button class="mt-4 font-semibold text-primary-600">Explore <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                    </div>
+                    <div class="rounded-2xl bg-gradient-to-br from-primary-600 to-primary-900 p-6 text-white">
+                        <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20"><i class="fa-solid fa-star"></i></div>
+                        <h4 class="text-lg font-semibold">Premium Card</h4>
+                        <p class="mt-2 text-blue-50">Bloque destacado para CTA, promociones o modulos de alto valor.</p>
+                        <button class="mt-4 rounded-xl bg-white px-4 py-2 font-semibold text-primary-600">Get Started</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="mb-6 text-2xl font-bold">Badges y estados</h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="rounded-full bg-primary-100 px-3 py-1 text-sm font-medium text-primary-700">Primary</span>
+                    <span class="rounded-full bg-success-100 px-3 py-1 text-sm font-medium text-success-600">Success</span>
+                    <span class="rounded-full bg-warning-100 px-3 py-1 text-sm font-medium text-warning-600">Warning</span>
+                    <span class="rounded-full bg-error-100 px-3 py-1 text-sm font-medium text-error-600">Error</span>
+                    <span class="rounded-full bg-secondary-100 px-3 py-1 text-sm font-medium text-secondary-700">Neutral</span>
+                    <span class="rounded-full border border-secondary-300 px-3 py-1 text-sm font-medium text-secondary-700">Outlined</span>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="mb-6 text-2xl font-bold">Formularios</h3>
+                <div class="grid gap-8 lg:grid-cols-2">
+                    <div class="space-y-5 rounded-2xl bg-secondary-50 p-6">
+                        <div><label class="mb-2 block text-sm font-semibold text-secondary-700">Input</label><input type="text" placeholder="Enter text..." class="w-full rounded-xl border border-secondary-300 px-4 py-3 outline-none transition focus:border-primary-600 focus:ring-2 focus:ring-primary-100"></div>
+                        <div><label class="mb-2 block text-sm font-semibold text-secondary-700">Select</label><select class="w-full rounded-xl border border-secondary-300 px-4 py-3 outline-none transition focus:border-primary-600 focus:ring-2 focus:ring-primary-100"><option>Choose option...</option><option>Option 1</option><option>Option 2</option></select></div>
+                        <div><label class="mb-2 block text-sm font-semibold text-secondary-700">Textarea</label><textarea rows="4" placeholder="Enter message..." class="w-full rounded-xl border border-secondary-300 px-4 py-3 outline-none transition focus:border-primary-600 focus:ring-2 focus:ring-primary-100"></textarea></div>
+                    </div>
+                    <div class="space-y-5 rounded-2xl bg-secondary-50 p-6">
+                        <label class="flex items-center gap-3 text-secondary-700"><input type="checkbox" class="rounded border-secondary-300 text-primary-600 focus:ring-primary-500">Checkbox</label>
+                        <label class="flex items-center gap-3 text-secondary-700"><input type="checkbox" checked class="rounded border-secondary-300 text-primary-600 focus:ring-primary-500">Checkbox selected</label>
+                        <label class="flex items-center gap-3 text-secondary-700"><input type="radio" name="radio-demo" class="border-secondary-300 text-primary-600 focus:ring-primary-500">Radio option</label>
+                        <label class="flex items-center gap-3 text-secondary-700"><input type="radio" name="radio-demo" checked class="border-secondary-300 text-primary-600 focus:ring-primary-500">Radio selected</label>
+                        <div>
+                            <p class="mb-2 text-sm font-semibold text-secondary-700">Toggle</p>
+                            <label class="relative inline-flex cursor-pointer items-center">
+                                <input type="checkbox" class="peer sr-only">
+                                <div class="h-6 w-11 rounded-full bg-secondary-300 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-primary-600 peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="web-components" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary-600">Portal Web</p>
+                    <h2 class="mt-2 text-2xl font-bold">Componentes desktop y responsive</h2>
+                </div>
+                <p class="max-w-2xl text-sm text-secondary-500">Pensado para busqueda, reserva y autoservicio del viajero con navegacion horizontal, filtros y tarjetas de contenido.</p>
+            </div>
+            <div class="mt-6 overflow-hidden rounded-[28px] border border-secondary-200">
+                <div class="border-b border-secondary-200 bg-white px-6 py-4">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-600 text-white"><i class="fa-solid fa-bed"></i></div>
+                            <div><p class="text-lg font-bold">TravelHub</p><p class="text-sm text-secondary-500">Portal de reservas</p></div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-secondary-600">
+                            <a href="#" class="text-primary-600">Inicio</a><a href="#">Resultados</a><a href="#">Mis reservas</a><a href="#">Perfil</a><button class="rounded-xl bg-primary-600 px-4 py-2 text-white">Crear cuenta</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid gap-6 bg-secondary-50 p-6 lg:grid-cols-[320px,1fr]">
+                    <aside class="rounded-[24px] bg-white p-5 shadow-soft">
+                        <div class="flex items-center justify-between"><h3 class="text-lg font-bold">Filtros</h3><button class="text-sm font-medium text-primary-600">Limpiar</button></div>
+                        <div class="mt-5 space-y-4">
+                            <div><label class="mb-2 block text-sm font-medium text-secondary-700">Destino</label><input type="text" value="Bogota, Colombia" class="w-full rounded-xl border border-secondary-300 px-4 py-3 text-sm"></div>
+                            <div><label class="mb-2 block text-sm font-medium text-secondary-700">Rango por noche</label><input type="range" class="w-full accent-blue-600" value="55"></div>
+                            <div class="space-y-2 text-sm text-secondary-600">
+                                <label class="flex items-center gap-3"><input type="checkbox" checked class="rounded border-secondary-300 text-primary-600">Desayuno incluido</label>
+                                <label class="flex items-center gap-3"><input type="checkbox" class="rounded border-secondary-300 text-primary-600">Cancelacion gratis</label>
+                                <label class="flex items-center gap-3"><input type="checkbox" checked class="rounded border-secondary-300 text-primary-600">Pago seguro</label>
+                            </div>
+                        </div>
+                    </aside>
+                    <div class="space-y-4">
+                        <article class="grid gap-4 rounded-[24px] bg-white p-4 shadow-soft md:grid-cols-[240px,1fr]">
+                            <div class="rounded-[20px] bg-gradient-to-br from-primary-600 to-cyan-500"></div>
+                            <div>
+                                <div class="flex flex-wrap items-start justify-between gap-3">
+                                    <div><h3 class="text-xl font-bold">Hotel Plaza Central</h3><p class="mt-1 text-sm text-secondary-500">Centro historico, cerca a zonas de negocio</p></div>
+                                    <div class="text-right"><p class="text-sm text-secondary-500">Desde</p><p class="text-2xl font-extrabold text-primary-600">$82</p><p class="text-xs text-secondary-500">por noche</p></div>
+                                </div>
+                                <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                                    <span class="rounded-full bg-primary-100 px-3 py-1 text-primary-700">4.8 rating</span>
+                                    <span class="rounded-full bg-success-100 px-3 py-1 text-success-600">Pago protegido</span>
+                                    <span class="rounded-full bg-warning-100 px-3 py-1 text-warning-600">Ultimas habitaciones</span>
+                                </div>
+                                <div class="mt-4 flex flex-wrap gap-3">
+                                    <button class="rounded-xl border border-secondary-300 px-4 py-2 text-sm font-semibold text-secondary-700">Ver detalles</button>
+                                    <button class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white">Reservar</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-components" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary-600">Admin Portal</p>
+                    <h2 class="mt-2 text-2xl font-bold">Metricas, tablas y acciones operativas</h2>
+                </div>
+                <p class="max-w-2xl text-sm text-secondary-500">El admin mantiene el mismo ADN visual, pero con mayor densidad de informacion y controles de gestion.</p>
+            </div>
+            <div class="mt-6 overflow-hidden rounded-[28px] border border-secondary-200 bg-secondary-50">
+                <div class="grid min-h-[520px] lg:grid-cols-[260px,1fr]">
+                    <aside class="border-b border-secondary-200 bg-white p-5 lg:border-b-0 lg:border-r">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary-900 text-white"><i class="fa-solid fa-hotel"></i></div>
+                            <div><p class="font-bold">TravelHub Admin</p><p class="text-sm text-secondary-500">Operaciones</p></div>
+                        </div>
+                        <nav class="mt-6 space-y-2 text-sm font-medium">
+                            <a href="#" class="flex items-center gap-3 rounded-xl bg-primary-600 px-4 py-3 text-white"><i class="fa-solid fa-chart-line w-4"></i>Dashboard</a>
+                            <a href="#" class="flex items-center gap-3 rounded-xl px-4 py-3 text-secondary-600 hover:bg-secondary-50"><i class="fa-solid fa-calendar-check w-4"></i>Reservas</a>
+                            <a href="#" class="flex items-center gap-3 rounded-xl px-4 py-3 text-secondary-600 hover:bg-secondary-50"><i class="fa-solid fa-money-bill-wave w-4"></i>Pagos</a>
+                            <a href="#" class="flex items-center gap-3 rounded-xl px-4 py-3 text-secondary-600 hover:bg-secondary-50"><i class="fa-solid fa-gear w-4"></i>Configuracion</a>
+                        </nav>
+                    </aside>
+                    <div class="p-6">
+                        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                            <div class="rounded-[24px] bg-white p-5 shadow-soft"><p class="text-sm text-secondary-500">Reservas activas</p><p class="mt-2 text-3xl font-extrabold">1,248</p><p class="mt-2 text-sm font-medium text-success-600">+12% este mes</p></div>
+                            <div class="rounded-[24px] bg-white p-5 shadow-soft"><p class="text-sm text-secondary-500">Ingresos</p><p class="mt-2 text-3xl font-extrabold">$87,420</p><p class="mt-2 text-sm font-medium text-success-600">Crecimiento sostenido</p></div>
+                            <div class="rounded-[24px] bg-white p-5 shadow-soft"><p class="text-sm text-secondary-500">Ocupacion</p><p class="mt-2 text-3xl font-extrabold">78.5%</p><p class="mt-2 text-sm font-medium text-warning-600">Alta demanda fin de semana</p></div>
+                            <div class="rounded-[24px] bg-white p-5 shadow-soft"><p class="text-sm text-secondary-500">Incidencias</p><p class="mt-2 text-3xl font-extrabold">6</p><p class="mt-2 text-sm font-medium text-error-600">Requieren seguimiento</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mobile-components" class="mt-8 rounded-[28px] border border-secondary-200 bg-white p-6 shadow-soft">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary-600">Movil</p>
+                    <h2 class="mt-2 text-2xl font-bold">Patrones de app para reserva rapida</h2>
+                </div>
+                <p class="max-w-2xl text-sm text-secondary-500">Cards compactas, inputs de alto tacto y navegacion inferior para tareas frecuentes.</p>
+            </div>
+            <div class="mt-6 grid gap-6 lg:grid-cols-2">
+                <div class="mx-auto w-full max-w-sm rounded-[40px] bg-secondary-900 p-3 shadow-soft">
+                    <div class="overflow-hidden rounded-[32px] bg-secondary-50">
+                        <div class="bg-white px-5 pb-4 pt-5">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-600 text-white"><i class="fa-solid fa-bed"></i></div>
+                                    <div><p class="font-bold">TravelHub</p><p class="text-xs text-secondary-500">Traveler app</p></div>
+                                </div>
+                                <i class="fa-regular fa-bell text-secondary-400"></i>
+                            </div>
+                            <h3 class="mt-6 text-2xl font-bold tracking-tight">Find your perfect stay</h3>
+                            <p class="mt-2 text-sm text-secondary-500">Busqueda simple y accion primaria visible.</p>
+                        </div>
+                        <div class="space-y-4 px-5 py-5">
+                            <div class="rounded-[24px] bg-white p-4 shadow-soft">
+                                <div class="space-y-4">
+                                    <div class="flex items-start gap-3"><i class="fa-solid fa-location-dot mt-1 text-primary-600"></i><div class="flex-1"><p class="text-xs uppercase tracking-wide text-secondary-400">Destino</p><p class="mt-1 font-semibold text-secondary-900">Bogota</p></div></div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="rounded-2xl bg-secondary-50 p-3"><p class="text-xs uppercase tracking-wide text-secondary-400">Check in</p><p class="mt-1 text-sm font-semibold">18 Mar</p></div>
+                                        <div class="rounded-2xl bg-secondary-50 p-3"><p class="text-xs uppercase tracking-wide text-secondary-400">Guests</p><p class="mt-1 text-sm font-semibold">2 Adultos</p></div>
+                                    </div>
+                                    <button class="w-full rounded-2xl bg-primary-600 py-4 text-sm font-semibold text-white">Buscar hoteles</button>
+                                </div>
+                            </div>
+                            <div class="rounded-[24px] bg-white p-4 shadow-soft">
+                                <div class="flex items-center justify-between"><h4 class="font-bold">Reserva destacada</h4><span class="rounded-full bg-success-100 px-3 py-1 text-xs font-semibold text-success-600">Confirmada</span></div>
+                                <div class="mt-4 rounded-[20px] bg-gradient-to-br from-primary-600 to-cyan-500 p-4 text-white">
+                                    <p class="text-sm text-blue-100">Hotel Andino Collection</p>
+                                    <p class="mt-2 text-xl font-bold">Suite ejecutiva</p>
+                                    <p class="mt-4 text-sm">Check in 20 Mar</p>
+                                </div>
+                                <div class="mt-4 flex gap-3">
+                                    <button class="flex-1 rounded-2xl border border-secondary-300 py-3 text-sm font-semibold text-secondary-700">Detalles</button>
+                                    <button class="flex-1 rounded-2xl bg-secondary-900 py-3 text-sm font-semibold text-white">Check-in</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-4 border-t border-secondary-200 bg-white px-3 py-3 text-center text-xs font-medium text-secondary-500">
+                            <div class="text-primary-600"><i class="fa-solid fa-house block text-base"></i>Inicio</div>
+                            <div><i class="fa-solid fa-magnifying-glass block text-base"></i>Buscar</div>
+                            <div><i class="fa-solid fa-ticket block text-base"></i>Reservas</div>
+                            <div><i class="fa-solid fa-user block text-base"></i>Perfil</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="rounded-[24px] bg-secondary-50 p-5">
+                        <h3 class="text-lg font-bold">Principios mobile</h3>
+                        <div class="mt-4 space-y-3 text-sm text-secondary-600">
+                            <p><span class="font-semibold text-secondary-900">Toque primero:</span> botones de alto minimo generoso y agrupacion por flujo.</p>
+                            <p><span class="font-semibold text-secondary-900">Lectura rapida:</span> encabezados cortos, metadata en caption y CTA dominante.</p>
+                            <p><span class="font-semibold text-secondary-900">Persistencia:</span> navegacion inferior para las cuatro acciones principales.</p>
+                            <p><span class="font-semibold text-secondary-900">Tarjetas:</span> resumen de reserva, estado y siguiente paso en un mismo bloque.</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="rounded-[24px] border border-secondary-200 p-5"><p class="text-sm font-semibold text-secondary-900">Componentes clave</p><ul class="mt-4 space-y-2 text-sm text-secondary-600"><li>Search card modular</li><li>Bottom navigation</li><li>Reservation status card</li><li>Primary full-width button</li></ul></div>
+                        <div class="rounded-[24px] border border-secondary-200 p-5"><p class="text-sm font-semibold text-secondary-900">Tokens tactiles</p><ul class="mt-4 space-y-2 text-sm text-secondary-600"><li>Radio grande: 20 a 32 px</li><li>Sombra ligera para profundidad</li><li>Iconografia simple y consistente</li><li>Contraste alto para estados</li></ul></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
 </html>
