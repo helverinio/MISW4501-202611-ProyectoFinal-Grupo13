@@ -82,25 +82,6 @@
 			"name": "1. Acquire Room Hold",
 			"event": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"// Set dates for tomorrow and day after",
-							"var tomorrow = new Date();",
-							"tomorrow.setDate(tomorrow.getDate() + 1);",
-							"tomorrow.setHours(14, 0, 0, 0);",
-							"",
-							"var dayAfter = new Date();",
-							"dayAfter.setDate(dayAfter.getDate() + 2);",
-							"dayAfter.setHours(11, 0, 0, 0);",
-							"",
-							"pm.collectionVariables.set('fecha_ingreso', tomorrow.toISOString());",
-							"pm.collectionVariables.set('fecha_salida', dayAfter.toISOString());"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
 					"listen": "test",
 					"script": {
 						"exec": [
