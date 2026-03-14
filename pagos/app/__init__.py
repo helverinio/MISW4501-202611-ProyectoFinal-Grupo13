@@ -68,7 +68,7 @@ def create_app(config_name='default'):
     abandonment_scheduler = PaymentAbandonmentScheduler(
         app=app,
         check_interval_seconds=app.config.get('ABANDONMENT_CHECK_INTERVAL', 60),
-        stale_minutes=app.config.get('ABANDONMENT_STALE_MINUTES', 2)
+        stale_minutes=app.config.get('ABANDONMENT_STALE_MINUTES', 20)
     )
     abandonment_scheduler.start()
     
