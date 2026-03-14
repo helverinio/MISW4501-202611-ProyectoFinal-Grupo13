@@ -1,0 +1,12 @@
+- name: Portada
+  href: index.md
+- name: Acceso y autenticacion
+  href: acceso.md
+- name: Busqueda y filtros
+  href: busqueda.md
+- name: Detalle de propiedad
+  href: detalle-propiedad.md
+- name: Reservas y confirmacion
+  href: reservas.md
+- name: Perfil y mensajes
+  href: perfil.md

@@ -1,0 +1,34 @@
+{
+  "metadata": [],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "docfx/**/*.md",
+          "docfx/**/toc.yml"
+        ],
+        "exclude": [
+          "docfx/accesibility/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "docfx/images/**"
+        ]
+      }
+    ],
+    "output": "docs",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appTitle": "TravelHub Manual de Usuario",
+      "_appName": "TravelHub",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

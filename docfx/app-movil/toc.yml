@@ -1,0 +1,10 @@
+- name: Portada
+  href: index.md
+- name: Inicio y acceso
+  href: acceso.md
+- name: Busqueda y detalle
+  href: busqueda.md
+- name: Reservas
+  href: reservas.md
+- name: Notificaciones y ajustes
+  href: notificaciones.md

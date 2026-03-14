@@ -35,6 +35,37 @@
                             900: '#111827'
                         }
                     },
+                    /*colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a'
+                        },
+                        error: {
+                            50: '#fef2f2',
+                            500: '#ef4444',
+                            600: '#dc2626'
+                        },
+                        gray: {
+                            50: '#F9FAFB',
+                            100: '#F3F4F6',
+                            200: '#E5E7EB',
+                            300: '#D1D5DB',
+                            400: '#9CA3AF',
+                            500: '#6B7280',
+                            600: '#4B5563',
+                            700: '#374151',
+                            800: '#1F2937',
+                            900: '#111827'
+                        }
+                    },*/
                     fontFamily: {
                         'inter': ['Inter', 'sans-serif']
                     }
@@ -49,11 +80,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold text-primary">TravelHub</h1>
+            <div id="logo-section" class="flex items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-plane text-white text-sm"></i>
                     </div>
+                    <span class="text-xl font-bold text-gray-900">TravelHub</span>
                 </div>
+            </div>
 
                 <!-- Navigation -->
                 <nav id="main-navigation" class="hidden lg:flex items-center space-x-8">
@@ -66,21 +100,22 @@
                 <!-- Right side controls -->
                 <div class="flex items-center space-x-4">
                     <!-- Language & Currency Selector -->
-                    <div class="hidden sm:flex items-center space-x-2">
-                        <div class="relative">
-                            <button class="flex items-center space-x-1 px-3 py-2 text-sm text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-50">
-                                <i class="fa-solid fa-globe text-gray-400"></i>
-                                <span>EN</span>
-                                <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                            </button>
-                        </div>
-                        <div class="relative">
-                            <button class="flex items-center space-x-1 px-3 py-2 text-sm text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-50">
-                                <span>USD</span>
-                                <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div id="language-currency" class="hidden sm:flex items-center space-x-3">
+                    <select class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option>🇺🇸 English</option>
+                        <option>🇪🇸 Español</option>
+                        <option>🇧🇷 Português</option>
+                    </select>
+                    <select class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option>USD</option>
+                        <option>ARS</option>
+                        <option>CLP</option>
+                        <option>PEN</option>
+                        <option>COP</option>
+                        <option>MXN</option>
+                    </select>
+                </div>
+                
 
                     <!-- User Profile -->
                     <div class="flex items-center space-x-3">
@@ -375,7 +410,7 @@
         <div class="grid md:grid-cols-4 gap-8">
             <div id="footer-brand" class="md:col-span-2">
                 <div class="flex items-center space-x-2 mb-4">
-                    <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                         <i class="fa-solid fa-plane text-white text-sm"></i>
                     </div>
                     <span class="text-xl font-bold">TravelHub</span>

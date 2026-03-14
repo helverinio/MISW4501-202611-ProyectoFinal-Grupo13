@@ -1,0 +1,301 @@
+{
+  "source_base_path": "E:/miso/proyecto/MISW4501-202611-ProyectoFinal-Grupo13",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/README.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/app-movil/acceso.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/acceso.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/app-movil/busqueda.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/busqueda.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/app-movil/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/app-movil/notificaciones.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/notificaciones.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/app-movil/reservas.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/reservas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docfx/app-movil/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/app-movil/toc.html"
+        },
+        ".json": {
+          "relative_path": "docfx/app-movil/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/faq.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/faq.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/glosario.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/glosario.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/manual-intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/manual-intro.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/acceso.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/acceso.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/dashboard.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/dashboard.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/reportes.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/reportes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/reservas.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/reservas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-admin/tarifas.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/tarifas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docfx/portal-admin/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-admin/toc.html"
+        },
+        ".json": {
+          "relative_path": "docfx/portal-admin/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/acceso.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/acceso.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/busqueda.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/busqueda.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/detalle-propiedad.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/detalle-propiedad.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/perfil.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/perfil.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/portal-web/reservas.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/reservas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docfx/portal-web/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/portal-web/toc.html"
+        },
+        ".json": {
+          "relative_path": "docfx/portal-web/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docfx/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/toc.html"
+        },
+        ".json": {
+          "relative_path": "docfx/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docfx/travelhub-introduccion.md",
+      "output": {
+        ".html": {
+          "relative_path": "docfx/travelhub-introduccion.html"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

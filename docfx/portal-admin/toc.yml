@@ -1,0 +1,12 @@
+- name: Portada
+  href: index.md
+- name: Acceso administrativo
+  href: acceso.md
+- name: Dashboard
+  href: dashboard.md
+- name: Reservas
+  href: reservas.md
+- name: Tarifas y configuracion
+  href: tarifas.md
+- name: Reportes
+  href: reportes.md
