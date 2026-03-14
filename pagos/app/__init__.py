@@ -63,5 +63,14 @@ def create_app(config_name='default'):
     )
     subscriber.start()
     
+    # Start background scheduler to mark stale pending payments as abandoned
+    from app.infrastructure.services.payment_abandonment_scheduler import PaymentAbandonmentScheduler
+    abandonment_scheduler = PaymentAbandonmentScheduler(
+        app=app,
+        check_interval_seconds=app.config.get('ABANDONMENT_CHECK_INTERVAL', 60),
+        stale_minutes=app.config.get('ABANDONMENT_STALE_MINUTES', 2)
+    )
+    abandonment_scheduler.start()
+    
     logger.info("Pagos microservice started")
     return app

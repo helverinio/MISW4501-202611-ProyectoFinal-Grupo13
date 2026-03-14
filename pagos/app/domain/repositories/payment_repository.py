@@ -43,3 +43,18 @@ class PaymentRepository(ABC):
         None if payment not found or not in 'pendiente' status.
         """
         pass
+    
+    @abstractmethod
+    def find_stale_pending(self, minutes: int) -> List[Payment]:
+        """
+        Find payments that have been in 'pendiente' status for more than
+        the specified number of minutes.
+        """
+        pass
+    
+    @abstractmethod
+    def mark_as_abandoned(self, payment_id: str) -> Optional[Payment]:
+        """
+        Mark a payment as 'abandonado'.
+        """
+        pass

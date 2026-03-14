@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "payment-abandonment-test",
+		"name": "Payment Abandonment Test Flow",
+		"description": "Test collection to verify that pending payments are automatically marked as 'abandonado' after the configured stale_minutes duration. Run steps 1-4 in sequence, wait for the configured time, then run step 5 to verify abandonment.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "gateway_url",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "reservas_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "pagos_url",
+			"value": "http://localhost:5002",
+			"type": "string"
+		},
+		{
+			"key": "pais_id",
+			"value": "b50da626-7885-4574-b66d-cb6f301c94cf",
+			"type": "string"
+		},
+		{
+			"key": "ciudad_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "hotel_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "habitacion_id",
+			"value": "ca1efcda-dd53-4645-a610-f1d4278c12c5",
+			"type": "string"
+		},
+		{
+			"key": "estado_id",
+			"value": "f107d922-218a-456d-82e2-95505194765d",
+			"type": "string"
+		},
+		{
+			"key": "hold_id",
+			"value": "e75a275c-16d0-4005-a628-db2fcab0668c",
+			"type": "string"
+		},
+		{
+			"key": "reserva_id",
+			"value": "fc13ae64-16f6-4638-9255-9d13610ad770",
+			"type": "string"
+		},
+		{
+			"key": "payment_id",
+			"value": "ebaf30ad-b250-4fda-9212-af6ea99e1307",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "test-user-abandonment-001",
+			"type": "string"
+		},
+		{
+			"key": "fecha_ingreso",
+			"value": "2026-03-15T19:00:00.000Z",
+			"type": "string"
+		},
+		{
+			"key": "fecha_salida",
+			"value": "2026-03-16T16:00:00.000Z",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Acquire Room Hold",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set dates for tomorrow and day after",
+							"var tomorrow = new Date();",
+							"tomorrow.setDate(tomorrow.getDate() + 1);",
+							"tomorrow.setHours(14, 0, 0, 0);",
+							"",
+							"var dayAfter = new Date();",
+							"dayAfter.setDate(dayAfter.getDate() + 2);",
+							"dayAfter.setHours(11, 0, 0, 0);",
+							"",
+							"pm.collectionVariables.set('fecha_ingreso', tomorrow.toISOString());",
+							"pm.collectionVariables.set('fecha_salida', dayAfter.toISOString());"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Room hold acquired successfully', function() {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.id) {",
+							"    pm.collectionVariables.set('hold_id', jsonData.id);",
+							"    console.log('Hold ID: ' + jsonData.id);",
+							"    console.log('Hold expires at: ' + jsonData.expires_at);",
+							"}",
+							"",
+							"pm.test('Hold has expected fields', function() {",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('id_habitacion');",
+							"    pm.expect(jsonData).to.have.property('id_usuario');",
+							"    pm.expect(jsonData).to.have.property('expires_at');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [{"key": "Content-Type", "value": "application/json"}],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id_usuario\": \"{{user_id}}\",\n    \"fecha_ingreso\": \"{{fecha_ingreso}}\",\n    \"fecha_salida\": \"{{fecha_salida}}\",\n    \"hold_duration_minutes\": 30\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/api/v1/habitaciones/{{habitacion_id}}/hold",
+					"host": ["{{gateway_url}}"],
+					"path": ["api", "v1", "habitaciones", "{{habitacion_id}}", "hold"]
+				}
+			}
+		},
+		{
+			"name": "2. Create Reservation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Reservation created successfully', function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.id) {",
+							"    pm.collectionVariables.set('reserva_id', jsonData.id);",
+							"    console.log('Reservation ID: ' + jsonData.id);",
+							"}",
+							"",
+							"if (jsonData.payment && jsonData.payment.payment_id) {",
+							"    pm.collectionVariables.set('payment_id', jsonData.payment.payment_id);",
+							"    console.log('Payment ID: ' + jsonData.payment.payment_id);",
+							"    console.log('Initial Payment Status: ' + jsonData.payment.payment_status);",
+							"}",
+							"",
+							"pm.test('Reservation includes payment info', function() {",
+							"    pm.expect(jsonData).to.have.property('payment');",
+							"    pm.expect(jsonData.payment).to.have.property('payment_id');",
+							"    pm.expect(jsonData.payment).to.have.property('payment_status');",
+							"});",
+							"",
+							"pm.test('Initial payment status is pendiente', function() {",
+							"    pm.expect(jsonData.payment.payment_status).to.equal('pendiente');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [{"key": "Content-Type", "value": "application/json"}],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fecha_ingreso\": \"{{fecha_ingreso}}\",\n    \"fecha_salida\": \"{{fecha_salida}}\",\n    \"total\": 150.00,\n    \"nro_personas\": 2,\n    \"id_usuario\": \"{{user_id}}\",\n    \"id_pais\": \"{{pais_id}}\",\n    \"id_habitacion\": \"{{habitacion_id}}\",\n    \"id_estado\": \"{{estado_id}}\",\n    \"payment_method\": \"card\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/api/v1/reservas",
+					"host": ["{{gateway_url}}"],
+					"path": ["api", "v1", "reservas"]
+				}
+			}
+		},
+		{
+			"name": "3. Verify Initial Reservation Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Reservation retrieved successfully', function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test('Reservation has correct data', function() {",
+							"    pm.expect(jsonData.id).to.equal(pm.collectionVariables.get('reserva_id'));",
+							"    pm.expect(jsonData.id_usuario).to.equal(pm.collectionVariables.get('user_id'));",
+							"    pm.expect(jsonData.id_habitacion).to.equal(pm.collectionVariables.get('habitacion_id'));",
+							"});",
+							"",
+							"console.log('Reservation Details:');",
+							"console.log('- ID: ' + jsonData.id);",
+							"console.log('- Estado ID: ' + jsonData.id_estado);",
+							"console.log('- Total: ' + jsonData.total);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway_url}}/api/v1/reservas/{{reserva_id}}",
+					"host": ["{{gateway_url}}"],
+					"path": ["api", "v1", "reservas", "{{reserva_id}}"]
+				}
+			}
+		},
+		{
+			"name": "4. Verify Initial Payment Status (pendiente)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Payment retrieved successfully', function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test('Payment status is pendiente', function() {",
+							"    pm.expect(jsonData.status).to.equal('pendiente');",
+							"});",
+							"",
+							"pm.test('Payment is linked to correct reservation', function() {",
+							"    pm.expect(jsonData.reservation_id).to.equal(pm.collectionVariables.get('reserva_id'));",
+							"});",
+							"",
+							"console.log('=== INITIAL PAYMENT STATUS ===');",
+							"console.log('Payment ID: ' + jsonData.id);",
+							"console.log('Status: ' + jsonData.status);",
+							"console.log('Created At: ' + jsonData.created_at);",
+							"console.log('Updated At: ' + jsonData.updated_at);",
+							"console.log('');",
+							"console.log('>>> NOW WAIT FOR THE CONFIGURED STALE MINUTES (default 20 min) <<<');",
+							"console.log('>>> Then run step 5 to verify abandonment <<<');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway_url}}/api/v1/payments/{{payment_id}}",
+					"host": ["{{gateway_url}}"],
+					"path": ["api", "v1", "payments", "{{payment_id}}"]
+				}
+			}
+		},
+		{
+			"name": "5. [WAIT] Check Payment Status (run after wait)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Payment retrieved successfully', function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"console.log('=== PAYMENT STATUS AFTER WAIT ===');",
+							"console.log('Payment ID: ' + jsonData.id);",
+							"console.log('Status: ' + jsonData.status);",
+							"console.log('Created At: ' + jsonData.created_at);",
+							"console.log('Updated At: ' + jsonData.updated_at);",
+							"",
+							"pm.test('Payment status is abandonado', function() {",
+							"    pm.expect(jsonData.status).to.equal('abandonado');",
+							"});",
+							"",
+							"if (jsonData.status === 'abandonado') {",
+							"    console.log('');",
+							"    console.log('✅ SUCCESS: Payment was automatically marked as abandonado!');",
+							"} else {",
+							"    console.log('');",
+							"    console.log('⏳ Payment still has status: ' + jsonData.status);",
+							"    console.log('Either wait more time or check the abandonment scheduler configuration.');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway_url}}/api/v1/payments/{{payment_id}}",
+					"host": ["{{gateway_url}}"],
+					"path": ["api", "v1", "payments", "{{payment_id}}"]
+				}
+			}
+		}
+	]
+}
