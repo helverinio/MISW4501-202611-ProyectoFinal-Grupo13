@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime, timedelta
 from app import db
 from app.domain.entities.payment import Payment
 from app.domain.repositories.payment_repository import PaymentRepository
@@ -78,6 +79,23 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
         
         model = PaymentModel.query.get(payment_id)
         return self._to_entity(model) if model else None
+    
+    def find_stale_pending(self, minutes: int) -> List[Payment]:
+        cutoff_time = datetime.utcnow() - timedelta(minutes=minutes)
+        models = PaymentModel.query.filter(
+            PaymentModel.status == 'pendiente',
+            PaymentModel.created_at < cutoff_time
+        ).all()
+        return [self._to_entity(model) for model in models]
+    
+    def mark_as_abandoned(self, payment_id: str) -> Optional[Payment]:
+        model = PaymentModel.query.get(payment_id)
+        if model and model.status == 'pendiente':
+            model.status = 'abandonado'
+            model.updated_at = datetime.utcnow()
+            db.session.commit()
+            return self._to_entity(model)
+        return None
     
     def _to_entity(self, model: PaymentModel) -> Payment:
         return Payment(
