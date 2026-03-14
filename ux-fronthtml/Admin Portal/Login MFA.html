@@ -1,0 +1,317 @@
+<html>
+
+  <head>
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: 'nest'
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet">
+    <style>
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+
+      body
+      {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme:
+        {
+          extend:
+          {
+            colors:
+            {
+              primary:
+              {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8'
+              },
+              success:
+              {
+                500: '#10b981',
+                600: '#059669'
+              }
+            },
+            fontFamily:
+            {
+              'inter': ['Inter', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+
+  <body class="bg-gray-50 min-h-screen font-inter">
+    <!-- Header -->
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="flex items-center">
+                <div id="i505bu-2" data-backend-symbol-id="1THsnPar49UEPELfeo4b"
+                  data-symbol-name="Div" class="flex items-center space-x-2">
+                  <div id="id0g0l"
+                    class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                    <i id="inobr7"
+                      class="fa-solid fa-plane text-white text-sm"></i></div>
+                  <span id="i1r3io"
+                    class="text-xl font-bold text-gray-900">TravelHub</span>
+                </div><span
+                  class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4"><a href="#"
+              class="text-gray-600 hover:text-primary-600 text-sm font-medium transition-colors">
+              Need Help?
+            </a></div>
+        </div>
+      </div>
+    </header><!-- Main Content -->
+    <main id="main-content" class="flex-1">
+      <div
+        class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+          <!-- Login Card -->
+          <div id="login-card" class="bg-white rounded-2xl shadow-lg p-8">
+            <!-- Header -->
+            <div id="login-header" class="text-center mb-8">
+              <div class="flex justify-center mb-4">
+                <div
+                  class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center">
+                  <i class="fas fa-shield-halved text-primary-600 text-2xl"></i>
+                </div>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Admin Portal
+              </h2>
+              <p class="text-gray-600 text-sm">Sign in to manage your hotel
+                properties</p>
+            </div><!-- Login Form -->
+            <form id="login-form" class="space-y-6">
+              <!-- Email Field -->
+              <div id="email-field"><label for="email"
+                  class="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-gray-400 text-sm"></i></div>
+                  <input id="email" name="email" type="email" required=""
+                    placeholder="admin@hotel.com"
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors">
+                </div>
+              </div><!-- Password Field -->
+              <div id="password-field"><label for="password"
+                  class="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400 text-sm"></i></div>
+                  <input id="password" name="password" type="password"
+                    required="" placeholder="Enter your password"
+                    class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"><button
+                    type="button"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center"><i
+                      class="fas fa-eye text-gray-400 text-sm hover:text-gray-600 transition-colors"></i></button>
+                </div>
+              </div><!-- MFA Code Field -->
+              <div id="mfa-field" class="hidden"><label for="mfa-code"
+                  class="block text-sm font-medium text-gray-700 mb-2">
+                  Verification Code
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-mobile-alt text-gray-400 text-sm"></i>
+                  </div><input id="mfa-code" name="mfa-code" type="text"
+                    maxlength="6" placeholder="000000"
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm text-center font-mono tracking-wider transition-colors">
+                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                  Enter the 6-digit code from your authenticator app
+                </p>
+              </div><!-- Remember Me -->
+              <div id="remember-section"
+                class="flex items-center justify-between">
+                <div class="flex items-center"><input id="remember-me"
+                    name="remember-me" type="checkbox"
+                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"><label
+                    for="remember-me" class="ml-2 block text-sm text-gray-700">
+                    Remember me
+                  </label></div>
+                <div class="text-sm"><a href="#"
+                    class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+                    Forgot password?
+                  </a></div>
+              </div><!-- Submit Button -->
+              <div id="submit-section"><button type="submit"
+                  class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"><span
+                    class="absolute left-0 inset-y-0 flex items-center pl-3"><i
+                      class="fas fa-sign-in-alt text-primary-200 group-hover:text-primary-100 text-sm"></i></span>
+                  Sign in to Admin Portal
+                </button></div>
+            </form><!-- Additional Options -->
+            <div id="additional-options"
+              class="mt-6 pt-6 border-t border-gray-100">
+              <div class="text-center">
+                <p class="text-xs text-gray-500 mb-3">
+                  Secure admin access protected by enterprise-grade security
+                </p>
+                <div class="flex justify-center items-center space-x-4">
+                  <div class="flex items-center text-xs text-gray-400"><i
+                      class="fas fa-shield-check mr-1"></i><span>SSL
+                      Encrypted</span></div>
+                  <div class="flex items-center text-xs text-gray-400"><i
+                      class="fas fa-lock mr-1"></i><span>2FA Required</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- Support Section -->
+          <div id="support-section" class="text-center">
+            <p class="text-sm text-gray-600">
+              Having trouble accessing your account?
+              <a href="#"
+                class="font-medium text-primary-600 hover:text-primary-500 transition-colors ml-1">
+                Contact IT Support
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main><!-- Footer -->
+    <footer id="footer" class="bg-white border-t border-gray-100">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center">
+          <div class="flex items-center mb-4 sm:mb-0">
+            <p class="text-sm text-gray-500">
+              © 2024 TravelHub. All rights reserved.
+            </p>
+          </div>
+          <div class="flex items-center space-x-6"><a href="#"
+              class="text-sm text-gray-500 hover:text-gray-700 transition-colors">Privacy
+              Policy</a><a href="#"
+              class="text-sm text-gray-500 hover:text-gray-700 transition-colors">Terms
+              of Service</a><a href="#"
+              class="text-sm text-gray-500 hover:text-gray-700 transition-colors">Security</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', function()
+      {
+        const form = document.getElementById('login-form');
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+        const mfaField = document.getElementById('mfa-field');
+        const mfaInput = document.getElementById('mfa-code');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const eyeIcon = document.querySelector('.fa-eye');
+
+        // Password visibility toggle
+        eyeIcon.addEventListener('click', function()
+        {
+          const type = passwordField.getAttribute('type') ===
+            'password' ? 'text' : 'password';
+          passwordField.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e)
+        {
+          e.preventDefault();
+
+          if (mfaField.classList.contains('hidden'))
+          {
+            // First step - show MFA field
+            mfaField.classList.remove('hidden');
+            submitBtn.innerHTML = `
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-shield-check text-primary-200 group-hover:text-primary-100 text-sm"></i>
+                        </span>
+                        Verify & Sign In
+                    `;
+            mfaInput.focus();
+          }
+          else
+          {
+            // Second step - simulate login
+            submitBtn.innerHTML = `
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-spinner fa-spin text-primary-200 text-sm"></i>
+                        </span>
+                        Signing In...
+                    `;
+            submitBtn.disabled = true;
+
+            setTimeout(() =>
+            {
+              submitBtn.innerHTML = `
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <i class="fas fa-check text-primary-200 text-sm"></i>
+                            </span>
+                            Welcome Back!
+                        `;
+              submitBtn.classList.remove('bg-primary-600',
+                'hover:bg-primary-700');
+              submitBtn.classList.add('bg-success-600');
+            }, 2000);
+          }
+        });
+
+        // MFA code formatting
+        mfaInput.addEventListener('input', function(e)
+        {
+          this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Auto-focus and validation
+        emailField.addEventListener('blur', function()
+        {
+          if (this.value && !this.checkValidity())
+          {
+            this.classList.add('border-red-300', 'focus:ring-red-500',
+              'focus:border-red-500');
+            this.classList.remove('border-gray-300',
+              'focus:ring-primary-500', 'focus:border-primary-500');
+          }
+          else
+          {
+            this.classList.remove('border-red-300',
+              'focus:ring-red-500', 'focus:border-red-500');
+            this.classList.add('border-gray-300',
+              'focus:ring-primary-500', 'focus:border-primary-500');
+          }
+        });
+      });
+    </script>
+  </body>
+
+</html>

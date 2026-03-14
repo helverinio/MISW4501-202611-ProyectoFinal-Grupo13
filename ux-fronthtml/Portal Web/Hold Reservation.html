@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary">TravelHub</h1>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fa-solid fa-headset mr-2"></i>Help
+                        </button>
+                        <button class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fa-solid fa-user mr-2"></i>Account
+                        </button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="progress-bar" class="bg-white border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-success text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="ml-2 text-sm font-medium text-gray-900 hidden sm:block">Search</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-success"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-success text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="ml-2 text-sm font-medium text-gray-900 hidden sm:block">Select</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-success"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-semibold">3</div>
+                        <span class="ml-2 text-sm font-medium text-gray-900 hidden sm:block">Booking</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-gray-300"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">4</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500 hidden sm:block">Payment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div id="countdown-section" class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-center justify-center">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-clock text-orange-600"></i>
+                            <span class="text-orange-800 font-medium">Your reservation is held for</span>
+                            <div id="timer" class="bg-orange-600 text-white px-3 py-1 rounded-md font-bold text-lg">14:32</div>
+                        </div>
+                    </div>
+                    <p class="text-orange-700 text-sm text-center mt-2">Complete your booking to secure this price</p>
+                </div>
+
+                <div id="guest-form-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Guest Information</h2>
+                    
+                    <form class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fa-solid fa-user mr-2 text-primary"></i>
+                                Primary Guest
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter first name">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter last name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fa-solid fa-envelope mr-2 text-primary"></i>
+                                Contact Information
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                    <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your.email@example.com">
+                                    <p class="text-sm text-gray-500 mt-1">Your confirmation will be sent to this email</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                                    <div class="flex">
+                                        <select class="px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-sm">
+                                            <option>+57</option>
+                                            <option>+52</option>
+                                            <option>+54</option>
+                                            <option>+1</option>
+                                        </select>
+                                        <input type="tel" class="flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter phone number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fa-solid fa-comment mr-2 text-primary"></i>
+                                Special Requests
+                            </h3>
+                            <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Any special requests or preferences? (Optional)"></textarea>
+                            <p class="text-sm text-gray-500 mt-1">Special requests cannot be guaranteed but the hotel will do their best to accommodate</p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i class="fa-solid fa-clock mr-2 text-primary"></i>
+                                Arrival Time
+                            </h3>
+                            <select class="w-full md:w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>I don't know yet</option>
+                                <option>12:00 - 13:00</option>
+                                <option>13:00 - 14:00</option>
+                                <option>14:00 - 15:00</option>
+                                <option>15:00 - 16:00</option>
+                                <option>16:00 - 17:00</option>
+                                <option>17:00 - 18:00</option>
+                                <option>18:00 - 19:00</option>
+                                <option>19:00 - 20:00</option>
+                                <option>20:00 - 21:00</option>
+                                <option>21:00 - 22:00</option>
+                                <option>After 22:00</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="sticky top-8">
+                    <div id="booking-summary" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Summary</h3>
+                        
+                        <div class="flex space-x-4 mb-6">
+                            <div class="w-20 h-20 overflow-hidden rounded-lg">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/04f902d21f-2b0ab3d9f0ad5acc40c7.png" alt="luxury hotel exterior modern architecture Colombia" />
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900">Hotel Rosario Plaza</h4>
+                                <div class="flex items-center mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-600 ml-1">4.8 (324)</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Bogotá, Colombia</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">Check-in</span>
+                                <span class="text-sm font-medium">Mar 15, 2024</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">Check-out</span>
+                                <span class="text-sm font-medium">Mar 18, 2024</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">Nights</span>
+                                <span class="text-sm font-medium">3 nights</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">Guests</span>
+                                <span class="text-sm font-medium">2 adults</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-sm text-gray-600">Room type</span>
+                                <span class="text-sm font-medium">Deluxe King</span>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-200 pt-4">
+                            <h4 class="font-medium text-gray-900 mb-3">Price Breakdown</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">3 nights × $125.00</span>
+                                    <span>$375.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm text-success">
+                                    <span>Early bird discount</span>
+                                    <span>-$25.00</span>
+                                </div>
+                                
+                                <div class="mt-4 pt-3 border-t border-gray-100">
+                                    <h5 class="text-sm font-medium text-gray-900 mb-2 flex items-center">
+                                        <i class="fa-solid fa-receipt mr-2 text-gray-600"></i>
+                                        Taxes (Colombia)
+                                    </h5>
+                                    <div class="space-y-1 ml-6">
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-gray-600">IVA (19%)</span>
+                                            <span>$35.63</span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-gray-600">Tourism Tax</span>
+                                            <span>$9.37</span>
+                                        </div>
+                                        <div class="border-t border-gray-200 mt-2 pt-1">
+                                            <div class="flex justify-between text-sm font-medium">
+                                                <span class="text-gray-700">Total taxes</span>
+                                                <span>$45.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-gray-200 pt-3 mt-4">
+                                    <div class="flex justify-between">
+                                        <span class="font-semibold text-gray-900">Total</span>
+                                        <span class="font-semibold text-xl text-gray-900">$395.00</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Includes all taxes and fees</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Currency</span>
+                                <select class="text-sm border border-gray-300 rounded px-2 py-1">
+                                    <option>USD</option>
+                                    <option>COP</option>
+                                    <option>EUR</option>
+                                    <option>ARS</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="trust-elements" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Secure Booking</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-shield-halved text-success mr-3"></i>
+                                <span class="text-sm text-gray-600">SSL encrypted payment</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-calendar-xmark text-success mr-3"></i>
+                                <span class="text-sm text-gray-600">Free cancellation</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-headset text-success mr-3"></i>
+                                <span class="text-sm text-gray-600">24/7 customer support</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="continue-section" class="mt-8 flex justify-center">
+            <button class="bg-primary hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg text-lg w-full md:w-auto min-w-[300px] transition-colors">
+                Continue to Payment
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </main>
+
+    <footer id="footer" class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">TravelHub</h3>
+                    <p class="text-gray-300 text-sm">Your trusted partner for hotel bookings across Latin America.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Support</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white">Cancellation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms</a></li>
+                        <li><a href="#" class="hover:text-white">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-300">
+                <p>&copy; 2024 TravelHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function startCountdown() {
+            let timeLeft = 14 * 60 + 32;
+            
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const timerElement = document.getElementById('timer');
+                
+                if (timerElement) {
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (timerElement) {
+                        timerElement.textContent = '00:00';
+                        timerElement.parentElement.parentElement.classList.add('bg-red-50', 'border-red-200');
+                        timerElement.parentElement.parentElement.classList.remove('bg-orange-50', 'border-orange-200');
+                    }
+                    return;
+                }
+                
+                timeLeft--;
+            }
+            
+            const timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], input[type="text"], input[type="email"], input[type="tel"]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-300', 'bg-red-50');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-300', 'bg-red-50');
+                }
+            });
+            
+            return isValid;
+        }
+
+        window.addEventListener('load', function() {
+            startCountdown();
+            
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('blur', validateForm);
+            });
+            
+            document.querySelector('button[class*="bg-primary"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    console.log('Form valid, proceeding to payment...');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

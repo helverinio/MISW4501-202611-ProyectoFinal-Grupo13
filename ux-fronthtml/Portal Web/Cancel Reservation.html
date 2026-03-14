@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Reservation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-globe text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Hotels</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Destinations</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Deals</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2">
+                        <i class="fa-solid fa-globe text-gray-400"></i>
+                        <span class="text-sm text-gray-600">USD</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-8 h-8 rounded-full object-cover">
+                        <span class="hidden md:inline text-sm font-medium text-gray-900">Maria Rodriguez</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="page-header" class="mb-8">
+            <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                <a href="#" class="hover:text-gray-700">Home</a>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <a href="#" class="hover:text-gray-700">My Reservations</a>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span class="text-gray-900">Cancel Reservation</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Cancel Reservation</h1>
+            <p class="text-gray-600">Review your reservation details and cancellation policy</p>
+        </div>
+
+        <div id="reservation-summary" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex items-center space-x-3 mb-4">
+                <i class="fa-solid fa-info-circle text-warning text-xl"></i>
+                <h2 class="text-xl font-semibold text-gray-900">Reservation Summary</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Casa San Agustin</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center space-x-2 text-gray-600">
+                            <i class="fa-solid fa-hashtag text-gray-400 w-4"></i>
+                            <span>Booking #TH-2024-002</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600">
+                            <i class="fa-solid fa-calendar text-gray-400 w-4"></i>
+                            <span>April 20 - April 25, 2024</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600">
+                            <i class="fa-solid fa-bed text-gray-400 w-4"></i>
+                            <span>Superior Suite</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600">
+                            <i class="fa-solid fa-users text-gray-400 w-4"></i>
+                            <span>2 Guests, 5 Nights</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600">
+                            <i class="fa-solid fa-map-marker-alt text-gray-400 w-4"></i>
+                            <span>Cartagena, Colombia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-3">Payment Summary</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Room Rate (5 nights)</span>
+                            <span class="text-gray-900">$650.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Taxes & Fees</span>
+                            <span class="text-gray-900">$130.00</span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-2 mt-2">
+                            <div class="flex justify-between font-semibold">
+                                <span class="text-gray-900">Total Paid</span>
+                                <span class="text-gray-900">$780.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cancellation-policy" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex items-center space-x-3 mb-4">
+                <i class="fa-solid fa-shield-alt text-primary text-xl"></i>
+                <h2 class="text-xl font-semibold text-gray-900">Cancellation Policy</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-success/5 border border-success/20 rounded-lg p-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-check-circle text-success mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold text-success mb-1">Free Cancellation</h4>
+                            <p class="text-sm text-gray-700">Cancel before April 18, 2024 (48 hours before check-in) for a full refund.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-warning/5 border border-warning/20 rounded-lg p-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-exclamation-triangle text-warning mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold text-warning mb-1">Partial Refund</h4>
+                            <p class="text-sm text-gray-700">Cancel between April 18-19, 2024 (24-48 hours before) and receive 50% refund ($390.00).</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-danger/5 border border-danger/20 rounded-lg p-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-times-circle text-danger mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold text-danger mb-1">No Refund</h4>
+                            <p class="text-sm text-gray-700">Cancel within 24 hours of check-in (after April 19, 2024) - no refund available.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-clock text-primary mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-primary mb-1">Current Status</h4>
+                        <p class="text-sm text-gray-700">You can cancel now and receive a <strong>full refund of $780.00</strong>. Refunds are processed within 5-7 business days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cancellation-reason" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Reason for Cancellation (Optional)</h3>
+            <div class="space-y-3">
+                <label class="flex items-center">
+                    <input type="radio" name="reason" value="change-plans" class="text-primary focus:ring-primary">
+                    <span class="ml-3 text-gray-700">Change in travel plans</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="reason" value="emergency" class="text-primary focus:ring-primary">
+                    <span class="ml-3 text-gray-700">Personal/Family emergency</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="reason" value="work" class="text-primary focus:ring-primary">
+                    <span class="ml-3 text-gray-700">Work-related changes</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="reason" value="health" class="text-primary focus:ring-primary">
+                    <span class="ml-3 text-gray-700">Health concerns</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="reason" value="other" class="text-primary focus:ring-primary">
+                    <span class="ml-3 text-gray-700">Other</span>
+                </label>
+            </div>
+            <div class="mt-4">
+                <textarea placeholder="Additional comments (optional)" class="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div id="cancellation-actions" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-exclamation-triangle text-red-600 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-red-800 mb-1">Important Notice</h4>
+                        <p class="text-sm text-red-700">This action cannot be undone. Once cancelled, you will need to make a new reservation if you wish to stay at this property.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                <button id="keep-reservation-btn" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                    Keep Reservation
+                </button>
+                <button id="confirm-cancel-btn" class="px-6 py-3 bg-danger text-white rounded-lg font-medium hover:bg-red-600 transition-colors">
+                    Confirm Cancellation
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="cancel-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-danger/10 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-times text-danger"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900">Confirm Cancellation</h3>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Are you sure you want to cancel your reservation at Casa San Agustin? You will receive a full refund of $780.00.</p>
+                
+                <div class="flex space-x-3">
+                    <button id="modal-keep-btn" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">
+                        Keep Reservation
+                    </button>
+                    <button id="modal-confirm-btn" class="flex-1 px-4 py-2 bg-danger text-white rounded-lg font-medium hover:bg-red-600">
+                        Yes, Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-check text-success text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Cancellation Confirmed</h3>
+                <p class="text-gray-600 mb-6">Your reservation has been successfully cancelled. A full refund of $780.00 will be processed within 5-7 business days.</p>
+                
+                <button id="success-ok-btn" class="w-full px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-blue-700">
+                    Return to My Reservations
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="bg-gray-900 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-globe text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">TravelHub</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Your trusted partner for hotel bookings across Latin America.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">About Us</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white">Safety</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2024 TravelHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            const keepReservationBtn = document.getElementById('keep-reservation-btn');
+            const cancelModal = document.getElementById('cancel-modal');
+            const successModal = document.getElementById('success-modal');
+            const modalKeepBtn = document.getElementById('modal-keep-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const successOkBtn = document.getElementById('success-ok-btn');
+
+            confirmCancelBtn.addEventListener('click', function() {
+                cancelModal.classList.remove('hidden');
+            });
+
+            keepReservationBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+
+            modalKeepBtn.addEventListener('click', function() {
+                cancelModal.classList.add('hidden');
+            });
+
+            modalConfirmBtn.addEventListener('click', function() {
+                cancelModal.classList.add('hidden');
+                successModal.classList.remove('hidden');
+            });
+
+            successOkBtn.addEventListener('click', function() {
+                successModal.classList.add('hidden');
+                window.history.back();
+            });
+
+            cancelModal.addEventListener('click', function(e) {
+                if (e.target === cancelModal) {
+                    cancelModal.classList.add('hidden');
+                }
+            });
+
+            successModal.addEventListener('click', function(e) {
+                if (e.target === successModal) {
+                    successModal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

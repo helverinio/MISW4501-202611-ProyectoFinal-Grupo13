@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Reservation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'brand-blue': '#0066FF',
+                        'brand-green': '#10B981',
+                        'brand-gray': '#6B7280',
+                        'brand-light': '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-inter bg-gray-50">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="flex items-center justify-between px-4 py-3">
+        <div class="flex items-center space-x-3">
+            <button class="p-2 -ml-2 text-gray-600 hover:text-gray-900">
+                <i class="fa-solid fa-arrow-left text-lg"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900">Edit Reservation</h1>
+        </div>
+        <button class="p-2 -mr-2 text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+        </button>
+    </div>
+</header>
+
+<!-- Current Reservation Summary -->
+<section id="current-reservation" class="bg-white mx-4 mt-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="p-4">
+        <div class="flex items-center space-x-2 mb-3">
+            <i class="fa-solid fa-info-circle text-brand-blue text-sm"></i>
+            <span class="text-sm font-medium text-brand-blue">Current Reservation</span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Hotel Plaza Cartagena</h3>
+        <div class="bg-gray-50 rounded-xl p-3">
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="text-gray-500">Check-in</p>
+                    <p class="font-medium text-gray-900">Dec 15, 2024</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Check-out</p>
+                    <p class="font-medium text-gray-900">Dec 18, 2024</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Guests</p>
+                    <p class="font-medium text-gray-900">2 Adults, 1 Child</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Room Type</p>
+                    <p class="font-medium text-gray-900">Deluxe Ocean View</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Edit Form -->
+<main id="edit-form-main" class="px-4 py-4 pb-24 space-y-6">
+
+    <!-- Dates Section -->
+    <section id="dates-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Dates</h3>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
+                        <div class="relative">
+                            <input type="date" value="2024-12-15" class="w-full px-3 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue">
+                            <i class="fa-solid fa-calendar-days absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
+                        <div class="relative">
+                            <input type="date" value="2024-12-18" class="w-full px-3 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue">
+                            <i class="fa-solid fa-calendar-days absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 rounded-xl p-3">
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-info-circle text-brand-blue text-sm mt-0.5"></i>
+                        <div class="text-sm">
+                            <p class="text-brand-blue font-medium">3 nights selected</p>
+                            <p class="text-gray-600 text-xs mt-1">New dates are subject to availability and pricing changes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guests Section -->
+    <section id="guests-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Guests</h3>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between py-2">
+                    <div>
+                        <p class="font-medium text-gray-900">Adults</p>
+                        <p class="text-sm text-gray-500">Age 18+</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-minus text-sm"></i>
+                        </button>
+                        <span class="text-lg font-medium text-gray-900 w-8 text-center">2</span>
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-plus text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between py-2">
+                    <div>
+                        <p class="font-medium text-gray-900">Children</p>
+                        <p class="text-sm text-gray-500">Age 0-17</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-minus text-sm"></i>
+                        </button>
+                        <span class="text-lg font-medium text-gray-900 w-8 text-center">1</span>
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-plus text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between py-2">
+                    <div>
+                        <p class="font-medium text-gray-900">Infants</p>
+                        <p class="text-sm text-gray-500">Age 0-2</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-minus text-sm"></i>
+                        </button>
+                        <span class="text-lg font-medium text-gray-900 w-8 text-center">0</span>
+                        <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                            <i class="fa-solid fa-plus text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Type Section -->
+    <section id="room-type-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Room Type</h3>
+            
+            <div class="space-y-3">
+                <div class="border-2 border-brand-blue rounded-xl p-3 bg-blue-50">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900">Deluxe Ocean View</h4>
+                            <p class="text-sm text-gray-600 mt-1">King bed, ocean view, balcony</p>
+                            <p class="text-lg font-semibold text-brand-blue mt-2">$140/night</p>
+                        </div>
+                        <div class="w-5 h-5 rounded-full bg-brand-blue flex items-center justify-center">
+                            <i class="fa-solid fa-check text-white text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-3 hover:border-gray-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900">Standard Room</h4>
+                            <p class="text-sm text-gray-600 mt-1">Queen bed, city view</p>
+                            <p class="text-lg font-semibold text-gray-900 mt-2">$95/night</p>
+                        </div>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-3 hover:border-gray-300 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900">Executive Suite</h4>
+                            <p class="text-sm text-gray-600 mt-1">King bed, living area, premium view</p>
+                            <p class="text-lg font-semibold text-gray-900 mt-2">$220/night</p>
+                        </div>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Summary -->
+    <section id="price-summary" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Updated Pricing</h3>
+            
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">3 nights × $140</span>
+                    <span class="font-medium text-gray-900">$420</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Taxes & fees</span>
+                    <span class="font-medium text-gray-900">$63</span>
+                </div>
+                <div class="border-t border-gray-200 pt-3 mt-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-semibold text-gray-900">Total</span>
+                        <span class="text-xl font-bold text-gray-900">$483 USD</span>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 rounded-xl p-3 mt-4">
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-exclamation-triangle text-yellow-600 text-sm mt-0.5"></i>
+                        <div class="text-sm">
+                            <p class="text-yellow-800 font-medium">Price difference: +$63 USD</p>
+                            <p class="text-yellow-700 text-xs mt-1">Additional charges will be processed upon confirmation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Fixed Bottom Action Buttons -->
+<div id="bottom-actions" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4">
+    <div class="flex space-x-3">
+        <button class="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-xl text-sm font-medium">
+            Cancel
+        </button>
+        <button class="flex-1 bg-brand-blue text-white py-3 px-4 rounded-xl text-sm font-medium">
+            Save Changes
+        </button>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-sm">
+        <div class="p-6 text-center">
+            <div class="w-16 h-16 bg-brand-green bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-2xl text-brand-green"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Changes Saved!</h3>
+            <p class="text-gray-600 mb-6">Your reservation has been updated successfully. You will receive a confirmation email shortly.</p>
+            <button class="w-full bg-brand-blue text-white py-3 px-4 rounded-xl text-sm font-medium">
+                Done
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    // Guest counter functionality
+    const guestCounters = document.querySelectorAll('section[id="guests-section"] .flex.items-center.space-x-3');
+    
+    guestCounters.forEach(counter => {
+        const minusBtn = counter.querySelector('button:first-child');
+        const plusBtn = counter.querySelector('button:last-child');
+        const countSpan = counter.querySelector('span');
+        
+        minusBtn.addEventListener('click', function() {
+            let count = parseInt(countSpan.textContent);
+            if (count > 0) {
+                countSpan.textContent = count - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', function() {
+            let count = parseInt(countSpan.textContent);
+            if (count < 10) {
+                countSpan.textContent = count + 1;
+            }
+        });
+    });
+
+    // Room type selection
+    const roomOptions = document.querySelectorAll('#room-type-section .border');
+    
+    roomOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selection from all options
+            roomOptions.forEach(opt => {
+                opt.classList.remove('border-brand-blue', 'bg-blue-50', 'border-2');
+                opt.classList.add('border-gray-200');
+                const checkIcon = opt.querySelector('.fa-check');
+                if (checkIcon) {
+                    checkIcon.parentElement.className = 'w-5 h-5 rounded-full border-2 border-gray-300';
+                }
+            });
+            
+            // Add selection to clicked option
+            this.classList.add('border-brand-blue', 'bg-blue-50', 'border-2');
+            this.classList.remove('border-gray-200');
+            const circle = this.querySelector('.w-5.h-5.rounded-full');
+            circle.className = 'w-5 h-5 rounded-full bg-brand-blue flex items-center justify-center';
+            circle.innerHTML = '<i class="fa-solid fa-check text-white text-xs"></i>';
+        });
+    });
+
+    // Save changes functionality
+    const saveBtn = document.querySelector('button:contains("Save Changes")');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    
+    document.querySelectorAll('button').forEach(button => {
+        if (button.textContent.includes('Save Changes')) {
+            button.addEventListener('click', function() {
+                confirmationModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+        
+        if (button.textContent.includes('Done')) {
+            button.addEventListener('click', function() {
+                confirmationModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                // Simulate navigation back to reservations
+            });
+        }
+    });
+
+    // Date input styling and validation
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Update nights calculation
+            const checkinDate = new Date(dateInputs[0].value);
+            const checkoutDate = new Date(dateInputs[1].value);
+            const diffTime = Math.abs(checkoutDate - checkinDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays > 0) {
+                const nightsInfo = document.querySelector('.text-brand-blue.font-medium');
+                if (nightsInfo) {
+                    nightsInfo.textContent = `${diffDays} nights selected`;
+                }
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
