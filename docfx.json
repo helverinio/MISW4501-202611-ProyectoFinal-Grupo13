@@ -3,19 +3,21 @@
   "build": {
     "content": [
       {
+        "src": "docfx",
         "files": [
-          "docfx/**/*.md",
-          "docfx/**/toc.yml"
+          "**/*.md",
+          "**/toc.yml"
         ],
         "exclude": [
-          "docfx/accesibility/**"
+          "accesibility/**"
         ]
       }
     ],
     "resource": [
       {
+        "src": "docfx",
         "files": [
-          "docfx/images/**"
+          "images/**"
         ]
       }
     ],

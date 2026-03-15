@@ -15,7 +15,7 @@
       "source_relative_path": "docfx/README.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/README.html"
+          "relative_path": "README.html"
         }
       },
       "version": ""
@@ -25,7 +25,7 @@
       "source_relative_path": "docfx/app-movil/acceso.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/acceso.html"
+          "relative_path": "app-movil/acceso.html"
         }
       },
       "version": ""
@@ -35,7 +35,7 @@
       "source_relative_path": "docfx/app-movil/busqueda.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/busqueda.html"
+          "relative_path": "app-movil/busqueda.html"
         }
       },
       "version": ""
@@ -45,7 +45,7 @@
       "source_relative_path": "docfx/app-movil/index.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/index.html"
+          "relative_path": "app-movil/index.html"
         }
       },
       "version": ""
@@ -55,7 +55,7 @@
       "source_relative_path": "docfx/app-movil/notificaciones.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/notificaciones.html"
+          "relative_path": "app-movil/notificaciones.html"
         }
       },
       "version": ""
@@ -65,7 +65,7 @@
       "source_relative_path": "docfx/app-movil/reservas.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/reservas.html"
+          "relative_path": "app-movil/reservas.html"
         }
       },
       "version": ""
@@ -75,10 +75,10 @@
       "source_relative_path": "docfx/app-movil/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "docfx/app-movil/toc.html"
+          "relative_path": "app-movil/toc.html"
         },
         ".json": {
-          "relative_path": "docfx/app-movil/toc.json"
+          "relative_path": "app-movil/toc.json"
         }
       },
       "version": ""
@@ -88,7 +88,7 @@
       "source_relative_path": "docfx/faq.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/faq.html"
+          "relative_path": "faq.html"
         }
       },
       "version": ""
@@ -98,7 +98,7 @@
       "source_relative_path": "docfx/glosario.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/glosario.html"
+          "relative_path": "glosario.html"
         }
       },
       "version": ""
@@ -108,7 +108,7 @@
       "source_relative_path": "docfx/images/admin-dashboard-overview.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/admin-dashboard-overview.png"
+          "relative_path": "images/admin-dashboard-overview.png"
         }
       },
       "version": ""
@@ -118,7 +118,7 @@
       "source_relative_path": "docfx/images/admin-login.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/admin-login.png"
+          "relative_path": "images/admin-login.png"
         }
       },
       "version": ""
@@ -128,7 +128,7 @@
       "source_relative_path": "docfx/images/admin-rate-management.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/admin-rate-management.png"
+          "relative_path": "images/admin-rate-management.png"
         }
       },
       "version": ""
@@ -138,7 +138,7 @@
       "source_relative_path": "docfx/images/admin-reservations.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/admin-reservations.png"
+          "relative_path": "images/admin-reservations.png"
         }
       },
       "version": ""
@@ -148,7 +148,7 @@
       "source_relative_path": "docfx/images/admin-revenue-reports.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/admin-revenue-reports.png"
+          "relative_path": "images/admin-revenue-reports.png"
         }
       },
       "version": ""
@@ -158,7 +158,7 @@
       "source_relative_path": "docfx/images/movil-booking-confirmed.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/movil-booking-confirmed.png"
+          "relative_path": "images/movil-booking-confirmed.png"
         }
       },
       "version": ""
@@ -168,7 +168,7 @@
       "source_relative_path": "docfx/images/movil-login-form.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/movil-login-form.png"
+          "relative_path": "images/movil-login-form.png"
         }
       },
       "version": ""
@@ -178,7 +178,7 @@
       "source_relative_path": "docfx/images/movil-profile-details.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/movil-profile-details.png"
+          "relative_path": "images/movil-profile-details.png"
         }
       },
       "version": ""
@@ -188,7 +188,7 @@
       "source_relative_path": "docfx/images/movil-search-results.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/movil-search-results.png"
+          "relative_path": "images/movil-search-results.png"
         }
       },
       "version": ""
@@ -198,7 +198,7 @@
       "source_relative_path": "docfx/images/web-booking-confirmation.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-booking-confirmation.png"
+          "relative_path": "images/web-booking-confirmation.png"
         }
       },
       "version": ""
@@ -208,7 +208,7 @@
       "source_relative_path": "docfx/images/web-home-search.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-home-search.png"
+          "relative_path": "images/web-home-search.png"
         }
       },
       "version": ""
@@ -218,7 +218,7 @@
       "source_relative_path": "docfx/images/web-home.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-home.png"
+          "relative_path": "images/web-home.png"
         }
       },
       "version": ""
@@ -228,7 +228,7 @@
       "source_relative_path": "docfx/images/web-login.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-login.png"
+          "relative_path": "images/web-login.png"
         }
       },
       "version": ""
@@ -238,7 +238,7 @@
       "source_relative_path": "docfx/images/web-property-details.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-property-details.png"
+          "relative_path": "images/web-property-details.png"
         }
       },
       "version": ""
@@ -248,7 +248,7 @@
       "source_relative_path": "docfx/images/web-search-results.png",
       "output": {
         "resource": {
-          "relative_path": "docfx/images/web-search-results.png"
+          "relative_path": "images/web-search-results.png"
         }
       },
       "version": ""
@@ -258,7 +258,7 @@
       "source_relative_path": "docfx/index.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/index.html"
+          "relative_path": "index.html"
         }
       },
       "version": ""
@@ -268,7 +268,7 @@
       "source_relative_path": "docfx/manual-intro.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/manual-intro.html"
+          "relative_path": "manual-intro.html"
         }
       },
       "version": ""
@@ -278,7 +278,7 @@
       "source_relative_path": "docfx/portal-admin/acceso.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/acceso.html"
+          "relative_path": "portal-admin/acceso.html"
         }
       },
       "version": ""
@@ -288,7 +288,7 @@
       "source_relative_path": "docfx/portal-admin/dashboard.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/dashboard.html"
+          "relative_path": "portal-admin/dashboard.html"
         }
       },
       "version": ""
@@ -298,7 +298,7 @@
       "source_relative_path": "docfx/portal-admin/index.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/index.html"
+          "relative_path": "portal-admin/index.html"
         }
       },
       "version": ""
@@ -308,7 +308,7 @@
       "source_relative_path": "docfx/portal-admin/reportes.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/reportes.html"
+          "relative_path": "portal-admin/reportes.html"
         }
       },
       "version": ""
@@ -318,7 +318,7 @@
       "source_relative_path": "docfx/portal-admin/reservas.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/reservas.html"
+          "relative_path": "portal-admin/reservas.html"
         }
       },
       "version": ""
@@ -328,7 +328,7 @@
       "source_relative_path": "docfx/portal-admin/tarifas.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/tarifas.html"
+          "relative_path": "portal-admin/tarifas.html"
         }
       },
       "version": ""
@@ -338,10 +338,10 @@
       "source_relative_path": "docfx/portal-admin/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-admin/toc.html"
+          "relative_path": "portal-admin/toc.html"
         },
         ".json": {
-          "relative_path": "docfx/portal-admin/toc.json"
+          "relative_path": "portal-admin/toc.json"
         }
       },
       "version": ""
@@ -351,7 +351,7 @@
       "source_relative_path": "docfx/portal-web/acceso.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/acceso.html"
+          "relative_path": "portal-web/acceso.html"
         }
       },
       "version": ""
@@ -361,7 +361,7 @@
       "source_relative_path": "docfx/portal-web/busqueda.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/busqueda.html"
+          "relative_path": "portal-web/busqueda.html"
         }
       },
       "version": ""
@@ -371,7 +371,7 @@
       "source_relative_path": "docfx/portal-web/detalle-propiedad.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/detalle-propiedad.html"
+          "relative_path": "portal-web/detalle-propiedad.html"
         }
       },
       "version": ""
@@ -381,7 +381,7 @@
       "source_relative_path": "docfx/portal-web/index.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/index.html"
+          "relative_path": "portal-web/index.html"
         }
       },
       "version": ""
@@ -391,7 +391,7 @@
       "source_relative_path": "docfx/portal-web/perfil.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/perfil.html"
+          "relative_path": "portal-web/perfil.html"
         }
       },
       "version": ""
@@ -401,7 +401,7 @@
       "source_relative_path": "docfx/portal-web/reservas.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/reservas.html"
+          "relative_path": "portal-web/reservas.html"
         }
       },
       "version": ""
@@ -411,10 +411,10 @@
       "source_relative_path": "docfx/portal-web/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "docfx/portal-web/toc.html"
+          "relative_path": "portal-web/toc.html"
         },
         ".json": {
-          "relative_path": "docfx/portal-web/toc.json"
+          "relative_path": "portal-web/toc.json"
         }
       },
       "version": ""
@@ -424,10 +424,10 @@
       "source_relative_path": "docfx/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "docfx/toc.html"
+          "relative_path": "toc.html"
         },
         ".json": {
-          "relative_path": "docfx/toc.json"
+          "relative_path": "toc.json"
         }
       },
       "version": ""
@@ -437,7 +437,7 @@
       "source_relative_path": "docfx/travelhub-introduccion.md",
       "output": {
         ".html": {
-          "relative_path": "docfx/travelhub-introduccion.html"
+          "relative_path": "travelhub-introduccion.html"
         }
       },
       "version": ""
