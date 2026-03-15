@@ -4,7 +4,7 @@
 
 La pantalla `Revenue Reports` permite revisar el desempeno economico del portafolio o de una propiedad.
 
-## Elementos visibles en el prototipo
+## Elementos principales
 
 - Titulo `Revenue Reports`.
 - Botones `Export PDF` y `Export Excel`.
@@ -24,7 +24,7 @@ La pantalla `Revenue Reports` permite revisar el desempeno economico del portafo
 **Resultado esperado**  
 El administrador obtiene un reporte actualizado del desempeno economico.
 
-`[AGREGAR CAPTURA: admin-revenue-reports]`
+![admin revenue reports](../images/admin-revenue-reports.png)
 
 ## Uso sugerido de los reportes
 

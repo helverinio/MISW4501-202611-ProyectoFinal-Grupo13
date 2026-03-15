@@ -2,7 +2,7 @@
 
 Bienvenido al manual funcional de **TravelHub**, la plataforma de reservas hoteleras orientada a clientes, administradores y aliados operativos.
 
-Este sitio fue organizado para servir como guia navegable de uso diario. Cada seccion explica tareas frecuentes con lenguaje claro, pasos concretos y notas de validacion cuando el flujo debe confirmarse contra el prototipo HTML.
+Este sitio fue organizado para servir como guia navegable de uso diario. Cada seccion explica tareas frecuentes con lenguaje claro, pasos concretos y orientacion practica para cada plataforma.
 
 ## En esta documentacion encontrara
 
@@ -23,17 +23,13 @@ Este sitio fue organizado para servir como guia navegable de uso diario. Cada se
 
 ## Alcance del manual
 
-Este manual describe el uso funcional de TravelHub con base en los prototipos HTML disponibles en:
+Este manual describe el uso funcional de TravelHub con base en las pantallas revisadas para:
 
-- `./ux-fronthtml/Portal Web`
-- `./ux-fronthtml/Movil`
-- `./ux-fronthtml/Admin Portal`
+- `Portal Web`
+- `Movil`
+- `Admin Portal`
 
-Cuando una accion o etiqueta no puede confirmarse por completo en el prototipo, se deja una nota de validacion con uno de estos marcadores:
-
-- `[AGREGAR CAPTURA: nombre-pantalla]`
-- `[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
-- `[VALIDAR CON PROTOTIPO]`
+La documentacion esta organizada para que el usuario pueda recorrer de forma secuencial los procesos de acceso, busqueda, reserva, seguimiento y administracion operativa.
 
 ## Acceso rapido
 

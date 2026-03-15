@@ -104,6 +104,156 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/admin-dashboard-overview.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/admin-dashboard-overview.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/admin-login.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/admin-login.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/admin-rate-management.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/admin-rate-management.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/admin-reservations.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/admin-reservations.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/admin-revenue-reports.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/admin-revenue-reports.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/movil-booking-confirmed.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/movil-booking-confirmed.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/movil-login-form.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/movil-login-form.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/movil-profile-details.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/movil-profile-details.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/movil-search-results.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/movil-search-results.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-booking-confirmation.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-booking-confirmation.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-home-search.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-home-search.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-home.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-home.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-login.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-login.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-property-details.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-property-details.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docfx/images/web-search-results.png",
+      "output": {
+        "resource": {
+          "relative_path": "docfx/images/web-search-results.png"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "docfx/index.md",
       "output": {

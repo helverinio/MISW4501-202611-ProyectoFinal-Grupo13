@@ -16,32 +16,29 @@ Cuando el usuario abre la app, TravelHub presenta una experiencia centrada en bu
 **Resultado esperado**  
 El usuario entra a la pantalla principal de busqueda o a la vista de inicio del viajero.
 
-`[AGREGAR CAPTURA: movil-login-form]`
+![Movil Login Form](../images/movil-login-form.png)
 
 ## Registro de usuario
 
-La app incluye la pantalla `Create Account 2`, lo que indica un flujo explicito de creacion de cuenta.
+La app incluye una pantalla de creacion de cuenta con campos para nombre completo, correo, contrasena y confirmacion de contrasena.
 
 ### Paso a paso
 
 1. Seleccione la opcion para crear cuenta.
-2. Complete los campos solicitados.
-3. Acepte las condiciones si la pantalla lo exige.
-4. Confirme el registro.
+2. Ingrese su nombre completo y correo electronico.
+3. Cree una contrasena y confirmela.
+4. Acepte los terminos requeridos.
+5. Presione el boton para completar el registro.
 
 **Resultado esperado**  
-La cuenta queda creada o pendiente de validacion, segun la regla del sistema.
-
-`[AGREGAR CAPTURA: movil-create-account]`
+La cuenta queda creada y el usuario puede continuar con el acceso a la aplicacion.
 
 ## Navegacion movil
 
-En el prototipo movil se observan elementos frecuentes de navegacion:
+En la aplicacion movil se observan elementos frecuentes de navegacion:
 
 - Encabezado con TravelHub.
 - Acceso a notificaciones.
 - Acceso al perfil.
 - Regreso a pantallas previas.
 - Navegacion entre busqueda, reservas y detalle.
-
-`[VALIDAR CON PROTOTIPO]` si existe un menu inferior o navegacion por pestanas.

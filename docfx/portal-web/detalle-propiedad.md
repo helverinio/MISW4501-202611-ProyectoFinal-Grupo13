@@ -4,7 +4,7 @@
 
 La pantalla `Property Details` permite revisar la informacion completa de un hotel antes de reservar.
 
-## Informacion visible en el prototipo
+## Informacion disponible
 
 - Nombre del hotel.
 - Ubicacion.
@@ -23,7 +23,7 @@ La pantalla `Property Details` permite revisar la informacion completa de un hot
 **Resultado esperado**  
 El usuario identifica si la propiedad cumple con sus necesidades de viaje.
 
-`[AGREGAR CAPTURA: web-property-details]`
+![web property details](../images/web-property-details.png)
 
 ## Seleccion de fechas, capacidad y tarifa
 
@@ -38,11 +38,12 @@ El usuario identifica si la propiedad cumple con sus necesidades de viaje.
 **Resultado esperado**  
 La propiedad y la tarifa quedan listas para pasar al proceso de reserva.
 
-> [!WARNING]
-> Si la pantalla muestra varias tarifas o politicas de cancelacion, se recomienda validar el texto exacto antes de publicar la version final del manual.
-
 ## Estado de reserva en espera
 
-El prototipo incluye una pantalla `Hold Reservation`, lo que sugiere que algunas reservas pueden quedar retenidas temporalmente.
+TravelHub puede mostrar una pantalla de reserva en espera antes de la confirmacion final. En este estado, la plataforma conserva temporalmente la seleccion realizada mientras termina la validacion del proceso.
 
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
+### Recomendacion de uso
+
+1. Revise el estado mostrado en pantalla.
+2. Confirme si la reserva requiere una accion adicional.
+3. Espere la confirmacion final o regrese a sus reservas para consultar el resultado.

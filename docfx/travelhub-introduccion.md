@@ -21,21 +21,18 @@ Segun el tipo de acceso, un usuario puede:
 
 ### Portal web
 
-Esta orientado al cliente que navega desde computador o navegador movil. En el prototipo se observan pantallas como `Home`, `Home Search`, `Search Results`, `Property Details`, `Booking Confirmation`, `My Reservations`, `Modify Reservation` y `Cancel Reservation`.
+Esta orientado al cliente que navega desde computador o navegador movil. Incluye pantallas como `Home`, `Home Search`, `Search Results`, `Property Details`, `Booking Confirmation`, `My Reservations`, `Modify Reservation` y `Cancel Reservation`.
 
 ### App movil
 
-Esta orientada al cliente que gestiona su viaje desde el telefono. El prototipo incluye vistas como `Search Home`, `Search Results`, `Booking`, `Booking Pending`, `Booking Confirmed`, `My Reservations`, `Reservation Details`, `Profile Details` y pantallas de check-in.
+Esta orientada al cliente que gestiona su viaje desde el telefono. Incluye vistas como `Search Home`, `Search Results`, `Booking`, `Booking Pending`, `Booking Confirmed`, `My Reservations`, `Reservation Details`, `Profile Details` y pantallas de check-in.
 
 ### Portal administrativo
 
-Esta orientado al personal que supervisa la operacion del hotel o portafolio. El prototipo muestra `Admin Login`, `Login MFA`, `Dashboard`, `Reservations`, `Reservation Details`, `Revenue Reports` y `Rate Management`.
+Esta orientado al personal que supervisa la operacion del hotel o portafolio. Incluye `Admin Login`, `Login MFA`, `Dashboard`, `Reservations`, `Reservation Details`, `Revenue Reports` y `Rate Management`.
 
 ## Recomendacion de uso
 
 - Use el portal web cuando necesite una vista amplia de busqueda y comparacion.
 - Use la app movil para consultar reservas y estados en movimiento.
 - Use el portal administrativo para monitorear reservas, ingresos y configuraciones operativas.
-
-> [!WARNING]
-> Si alguna accion operativa no esta visible en el prototipo, documente el proceso real despues de validarlo con las pantallas HTML o con el equipo funcional.

@@ -20,7 +20,7 @@ La pantalla `Admin Login` muestra un acceso reforzado con correo, contrasena y c
 **Resultado esperado**  
 El usuario entra al panel administrativo de TravelHub.
 
-`[AGREGAR CAPTURA: admin-login]`
+![admin login](../images/admin-login.png)
 
 ## Validaciones relevantes
 
@@ -28,6 +28,3 @@ El usuario entra al panel administrativo de TravelHub.
 - Contrasena valida.
 - Codigo MFA vigente.
 - Mensaje de error si el acceso no es exitoso.
-
-> [!WARNING]
-> Antes de cerrar la documentacion final, confirme si el segundo factor se captura en la misma pantalla o en `Login MFA`.

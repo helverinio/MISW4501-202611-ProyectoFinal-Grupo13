@@ -4,7 +4,7 @@
 
 La pantalla `Dashboard Overview` centraliza indicadores de desempeno y accesos rapidos a la operacion.
 
-## Elementos visibles en el prototipo
+## Elementos principales
 
 - Menu lateral con `Dashboard`, `Reservations`, `Properties`, `Guests`, `Revenue`, `Settings` y `Logout`.
 - Selector de rango de tiempo.
@@ -21,14 +21,12 @@ La pantalla `Dashboard Overview` centraliza indicadores de desempeno y accesos r
 **Resultado esperado**  
 El administrador obtiene una vision rapida del rendimiento operativo.
 
-`[AGREGAR CAPTURA: admin-dashboard-overview]`
+![admin dashboard overview](../images/admin-dashboard-overview.png)
 
 ## Gestion operativa basica
 
 Desde el dashboard, el usuario puede identificar:
 
-- Alertas o notificaciones pendientes.
+- Alertas o notificaciones activas.
 - Cambios recientes en reservas.
 - Necesidad de entrar a reportes o reservas.
-
-`[VALIDAR CON PROTOTIPO]` si existen widgets adicionales con accion directa.

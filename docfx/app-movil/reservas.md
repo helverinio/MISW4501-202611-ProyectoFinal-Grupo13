@@ -16,7 +16,7 @@ La reserva queda registrada y la app muestra un estado de confirmacion o de espe
 
 ## Confirmacion de estado
 
-### Estados identificados en el prototipo
+### Estados disponibles
 
 | Pantalla | Significado esperado |
 | --- | --- |
@@ -24,7 +24,7 @@ La reserva queda registrada y la app muestra un estado de confirmacion o de espe
 | `Booking Confirmed` | La reserva fue exitosa |
 | `Reservation Details` | Vista detallada de una reserva existente |
 
-`[AGREGAR CAPTURA: movil-booking-confirmed]`
+![movil booking confirmed](../images/movil-booking-confirmed.png)
 
 ## Visualizacion de reservas
 
@@ -45,6 +45,3 @@ El usuario consulta facilmente su itinerario y estado de viaje.
 2. Ingrese a `Edit Reservation` si requiere cambios.
 3. Ingrese a `Cancel Reservation 2` si requiere cancelarla.
 4. Confirme la accion.
-
-> [!WARNING]
-> Documente las restricciones reales de edicion o cancelacion solo despues de validarlas con el prototipo.

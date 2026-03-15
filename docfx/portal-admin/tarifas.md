@@ -4,7 +4,7 @@
 
 La pantalla `Rate Management` en `Settings` permite administrar valores y condiciones de habitaciones.
 
-### Elementos visibles en el prototipo
+### Elementos principales
 
 - Selector de propiedad.
 - Botones `Rate History`, `Add Room Type`, `Seasonal Rates` y `Bulk Update`.
@@ -23,23 +23,19 @@ La pantalla `Rate Management` en `Settings` permite administrar valores y condic
 **Resultado esperado**  
 Las tarifas del alojamiento quedan actualizadas para la operacion.
 
-`[AGREGAR CAPTURA: admin-rate-management]`
+![rate management](../images/admin-rate-management.png)
 
 ## Aplicacion de descuentos
 
-El prototipo sugiere manejo de tarifas estacionales y ajustes masivos, lo que puede incluir descuentos.
+La seccion de tarifas permite trabajar con ajustes estacionales y actualizaciones masivas para adaptar la oferta comercial de cada propiedad.
 
-### Recomendacion de documentacion
+### Uso recomendado
 
-1. Validar si existe campo explicito de descuento porcentual o valor fijo.
-2. Validar si los descuentos se aplican por tipo de habitacion, propiedad o temporada.
-3. Documentar el flujo final solo despues de revisar la totalidad del HTML.
-
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
+1. Seleccione la propiedad.
+2. Revise la tarifa base del tipo de habitacion.
+3. Utilice las opciones de temporada o actualizacion masiva cuando necesite aplicar cambios amplios.
+4. Confirme la actualizacion antes de salir de la pantalla.
 
 ## Gestion operativa basica
 
 Desde `Settings`, el administrador tambien puede ajustar parametros que impactan la disponibilidad y la comercializacion.
-
-> [!NOTE]
-> Si el producto final separa tarifas, politicas y configuracion general en paginas distintas, conviene dividir esta seccion en subcapitulos adicionales.

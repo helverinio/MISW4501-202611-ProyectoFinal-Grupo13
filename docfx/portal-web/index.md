@@ -10,7 +10,7 @@ El portal web de TravelHub permite al cliente buscar hospedajes, revisar informa
 - Como reservar, confirmar, modificar o cancelar.
 - Como consultar el perfil y los mensajes visibles del sistema.
 
-## Pantallas de referencia del prototipo
+## Pantallas principales
 
 - `Home`
 - `Home Search`
@@ -25,6 +25,6 @@ El portal web de TravelHub permite al cliente buscar hospedajes, revisar informa
 - `Payment Pending`
 - `Payment Cancelled`
 
-`[AGREGAR CAPTURA: web-home]`
+![web home](../images/web-home.png)
 
-Continue con los temas del menu lateral para revisar cada flujo.
+Continua con los temas del menu lateral para revisar cada flujo.

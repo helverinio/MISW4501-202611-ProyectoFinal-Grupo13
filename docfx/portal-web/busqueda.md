@@ -4,7 +4,7 @@
 
 Desde las pantallas `Home` y `Home Search`, el usuario puede buscar hoteles usando criterios basicos.
 
-### Campos visibles en el prototipo
+### Campos principales
 
 - Destino
 - Check-in
@@ -23,18 +23,18 @@ Desde las pantallas `Home` y `Home Search`, el usuario puede buscar hoteles usan
 **Resultado esperado**  
 El sistema muestra una lista de resultados disponibles para los criterios definidos.
 
-`[AGREGAR CAPTURA: web-home-search]`
+![web home search](../images/web-home-search.png)
 
 ## Resultados de busqueda
 
-En la vista `Search Results`, el usuario debe poder:
+En la vista `Search Results`, el usuario puede:
 
 - Comparar propiedades disponibles.
 - Revisar precios y ubicacion.
 - Entrar al detalle de un hotel.
 - Ajustar filtros de busqueda.
 
-`[AGREGAR CAPTURA: web-search-results]`
+![web search results](../images/web-search-results.png)
 
 ## Uso de filtros
 
@@ -52,9 +52,6 @@ En la vista `Search Results`, el usuario debe poder:
 **Resultado esperado**  
 La busqueda queda acotada segun las preferencias del usuario.
 
-> [!NOTE]
-> Los nombres exactos de los filtros deben confirmarse con la pantalla HTML `Search Results`.
-
 ## Mensajes y estados relacionados con la busqueda
 
 Durante la busqueda, el portal puede presentar:
@@ -62,5 +59,3 @@ Durante la busqueda, el portal puede presentar:
 - Mensajes de ausencia de resultados.
 - Alertas de fechas invalidas.
 - Avisos sobre disponibilidad limitada.
-
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`

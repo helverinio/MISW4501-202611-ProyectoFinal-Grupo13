@@ -42,6 +42,4 @@ Despues, abra en el navegador la URL local que muestre DocFX.
 ## Recomendaciones de mantenimiento
 
 - Guardar capturas en `docfx/images/`.
-- Reemplazar los marcadores `[AGREGAR CAPTURA: ...]` por imagenes reales.
-- Validar los textos marcados como `[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`.
 - Mantener actualizados los `toc.yml` cuando se agreguen nuevas paginas.

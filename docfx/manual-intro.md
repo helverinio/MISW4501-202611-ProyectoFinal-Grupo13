@@ -15,7 +15,7 @@ El manual busca:
 
 ## Alcance
 
-La documentacion cubre los procesos visibles en los prototipos funcionales y se enfoca en actividades frecuentes del usuario final. No incluye:
+La documentacion cubre los procesos funcionales visibles de la plataforma y se enfoca en actividades frecuentes del usuario final. No incluye:
 
 - Documentacion de APIs.
 - Configuracion tecnica de infraestructura.
@@ -37,7 +37,7 @@ Para mantener consistencia, en este documento se usan las siguientes convencione
 | **Resultado esperado** | Resultado que el usuario debe observar al terminar |
 | **Nota** | Aclaracion util antes o despues de una accion |
 | **Advertencia** | Riesgo, restriccion o punto que requiere cuidado |
-| `[AGREGAR CAPTURA: ...]` | Espacio reservado para una imagen del prototipo o sistema |
+| Imagen de apoyo | Referencia visual de la pantalla descrita |
 
 ## Requisitos basicos para usar TravelHub
 
@@ -51,4 +51,4 @@ Antes de utilizar la plataforma, se recomienda contar con:
 - Medio de pago valido, si el flujo lo requiere.
 
 > [!NOTE]
-> Algunas funciones, como confirmaciones por correo, estados de pago o check-in digital, deben validarse con el entorno final y las reglas del negocio.
+> El contenido de este manual se concentra en la experiencia de uso y en las acciones que el usuario realiza dentro de TravelHub.

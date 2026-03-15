@@ -4,7 +4,7 @@
 
 La pantalla `All Reservations` permite administrar reservas de forma centralizada.
 
-### Filtros visibles en el prototipo
+### Filtros disponibles
 
 - Guest
 - Property
@@ -23,13 +23,13 @@ La pantalla `All Reservations` permite administrar reservas de forma centralizad
 **Resultado esperado**  
 La tabla o listado muestra solo las reservas que cumplen los criterios.
 
-`[AGREGAR CAPTURA: admin-reservations]`
+![admin reservations](../images/admin-reservations.png)
 
 ## Visualizacion de detalle de reserva
 
 La pantalla `Reservation Details` presenta la informacion ampliada de una reserva especifica.
 
-### Informacion visible en el prototipo
+### Informacion disponible
 
 - Numero de reserva.
 - Estado, por ejemplo `Pending Confirmation`.
@@ -53,16 +53,11 @@ La pantalla `Reservation Details` presenta la informacion ampliada de una reserv
 3. Presione `Confirm` para aprobar o `Reject` para rechazar.
 4. Verifique el mensaje de resultado.
 
-> [!WARNING]
-> Valide si el rechazo exige motivo, comentario o confirmacion adicional.
-
 ## Mensajes del sistema y validaciones relevantes
 
-Se recomienda documentar mensajes como:
+El sistema puede mostrar mensajes como:
 
 - Reserva confirmada con exito.
 - Reserva rechazada.
 - Error de validacion por datos incompletos.
 - Cambio de estado no permitido.
-
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`

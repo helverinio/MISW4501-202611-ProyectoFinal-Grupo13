@@ -96,7 +96,7 @@
 <li>Complete la accion de pago o confirmacion.</li>
 </ol>
 <p><strong>Resultado esperado</strong><br>
-El sistema genera una reserva en estado confirmado o pendiente.</p>
+El sistema genera la reserva y muestra su estado correspondiente dentro del flujo de compra.</p>
 <h2 id="confirmacion-de-reserva">Confirmacion de reserva</h2>
 <p>Las pantallas <code>Booking Confirmation</code>, <code>Payment Pending</code> y <code>Payment Cancelled</code> muestran distintos resultados del proceso.</p>
 <h3 id="posibles-estados-observados">Posibles estados observados</h3>
@@ -123,11 +123,11 @@ El sistema genera una reserva en estado confirmado o pendiente.</p>
 </tbody>
 </table>
 <h3 id="resultado-esperado">Resultado esperado</h3>
-<p>El usuario visualiza un numero de reserva, resumen del hotel, fechas, datos del huesped y total pagado o pendiente.</p>
-<p><code>[AGREGAR CAPTURA: web-booking-confirmation]</code></p>
+<p>El usuario visualiza un numero de reserva, resumen del hotel, fechas, datos del huesped y el estado de pago o confirmacion.</p>
+<p><img src="../images/web-booking-confirmation.png" alt="web booking confirmation"></p>
 <h2 id="consulta-de-mis-reservas">Consulta de mis reservas</h2>
 <p>La pantalla <code>My Reservations</code> centraliza las reservas del usuario.</p>
-<h3 id="funciones-visibles-en-el-prototipo">Funciones visibles en el prototipo</h3>
+<h3 id="funciones-disponibles">Funciones disponibles</h3>
 <ul>
 <li>Filtros por <code>All Reservations</code>, <code>Upcoming</code>, <code>Past</code> y <code>Cancelled</code>.</li>
 <li>Busqueda por texto.</li>
@@ -152,10 +152,6 @@ El usuario encuentra y gestiona facilmente sus reservas.</p>
 <li>Ajuste fechas, ocupacion o condiciones permitidas.</li>
 <li>Confirme el cambio.</li>
 </ol>
-<div class="NOTE">
-<h5>Note</h5>
-<p>El alcance exacto de la modificacion debe validarse en la pantalla <code>Modify Reservation</code>.</p>
-</div>
 <h2 id="cancelacion-de-reservas">Cancelacion de reservas</h2>
 <h3 id="paso-a-paso-3">Paso a paso</h3>
 <ol>
@@ -168,7 +164,7 @@ El usuario encuentra y gestiona facilmente sus reservas.</p>
 La reserva cambia a estado cancelado y el usuario recibe un mensaje de confirmacion.</p>
 <div class="WARNING">
 <h5>Warning</h5>
-<p>Verifique si existen penalidades, devoluciones parciales o condiciones de tarifa antes de documentar el flujo final.</p>
+<p>Antes de confirmar una cancelacion, revise las condiciones de la tarifa y el estado actual de la reserva.</p>
 </div>
 
 </article>

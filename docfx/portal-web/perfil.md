@@ -10,11 +10,9 @@ En el portal web se observan accesos al perfil desde la cabecera y desde la opci
 - Revisar preferencias de cuenta.
 - Confirmar idioma o moneda cuando aplique.
 
-`[AGREGAR CAPTURA: web-account-preferences]`
-
 ## Navegacion asociada al perfil
 
-Los elementos visibles en el prototipo incluyen:
+Los elementos visibles en esta seccion incluyen:
 
 - Foto o avatar del usuario.
 - Nombre visible de cuenta.
@@ -31,12 +29,4 @@ Durante el uso del portal, el cliente puede encontrar mensajes como:
 - Pago cancelado.
 - Confirmacion de correo enviado.
 
-### Recomendacion de documentacion
-
-Para cada mensaje final, agregue:
-
-1. Nombre de la pantalla.
-2. Condicion que lo activa.
-3. Accion recomendada para el usuario.
-
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
+Estos mensajes ayudan al usuario a entender el resultado de sus acciones y a decidir si debe continuar, esperar o volver a intentar el proceso.

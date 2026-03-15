@@ -43,4 +43,4 @@ El usuario accede al inicio correspondiente de TravelHub.
 3. Confirme que la reserva este en estado modificable.
 4. Si el sistema no permite cambios, registre la restriccion y siga el procedimiento operativo.
 
-`[VALIDAR CON PROTOTIPO]` si existe un mensaje explicito de bloqueo, penalidad o condicion de tarifa.
+En estos casos, se recomienda revisar la politica de la tarifa seleccionada y el estado actual de la reserva antes de intentar un nuevo cambio.

@@ -31,13 +31,13 @@ Desde `Search Results`, el usuario puede revisar opciones y entrar al detalle de
 3. Seleccione el alojamiento de interes.
 4. Abra el detalle para continuar.
 
-`[AGREGAR CAPTURA: movil-search-results]`
+![movil search results](../images/movil-search-results.png)
 
 ## Detalle del alojamiento
 
-La app cuenta con vistas relacionadas con detalle de reserva y hotel. Esta seccion debe consolidarse con base en la pantalla final elegida por el equipo funcional.
+La app muestra la informacion esencial del alojamiento antes de continuar con la reserva.
 
-### Aspectos a documentar
+### Informacion visible
 
 - Fotos o imagen principal.
 - Nombre del hotel.
@@ -46,4 +46,9 @@ La app cuenta con vistas relacionadas con detalle de reserva y hotel. Esta secci
 - Calificacion.
 - Informacion relevante para reservar.
 
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
+### Paso a paso
+
+1. Abra un alojamiento desde `Search Results`.
+2. Revise la imagen principal y el nombre del hotel.
+3. Verifique habitacion, fechas y condiciones de la estancia.
+4. Continue al proceso de reserva si la opcion se ajusta a su viaje.

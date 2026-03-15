@@ -10,7 +10,7 @@ El portal administrativo de TravelHub permite gestionar reservas, revisar indica
 - Como revisar tarifas, descuentos y reportes.
 - Como identificar mensajes del sistema y validaciones relevantes.
 
-## Pantallas de referencia del prototipo
+## Pantallas principales
 
 - `Login`
 - `Login MFA`
@@ -21,4 +21,4 @@ El portal administrativo de TravelHub permite gestionar reservas, revisar indica
 - `Settings`
 - `Reviews`
 
-`[AGREGAR CAPTURA: admin-dashboard]`
+![admin dashboard](../images/admin-dashboard-overview.png)

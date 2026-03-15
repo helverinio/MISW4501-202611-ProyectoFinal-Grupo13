@@ -10,7 +10,7 @@
 4. Complete la accion de pago o confirmacion.
 
 **Resultado esperado**  
-El sistema genera una reserva en estado confirmado o pendiente.
+El sistema genera la reserva y muestra su estado correspondiente dentro del flujo de compra.
 
 ## Confirmacion de reserva
 
@@ -26,15 +26,15 @@ Las pantallas `Booking Confirmation`, `Payment Pending` y `Payment Cancelled` mu
 
 ### Resultado esperado
 
-El usuario visualiza un numero de reserva, resumen del hotel, fechas, datos del huesped y total pagado o pendiente.
+El usuario visualiza un numero de reserva, resumen del hotel, fechas, datos del huesped y el estado de pago o confirmacion.
 
-`[AGREGAR CAPTURA: web-booking-confirmation]`
+![web booking confirmation](../images/web-booking-confirmation.png)
 
 ## Consulta de mis reservas
 
 La pantalla `My Reservations` centraliza las reservas del usuario.
 
-### Funciones visibles en el prototipo
+### Funciones disponibles
 
 - Filtros por `All Reservations`, `Upcoming`, `Past` y `Cancelled`.
 - Busqueda por texto.
@@ -61,9 +61,6 @@ El usuario encuentra y gestiona facilmente sus reservas.
 4. Ajuste fechas, ocupacion o condiciones permitidas.
 5. Confirme el cambio.
 
-> [!NOTE]
-> El alcance exacto de la modificacion debe validarse en la pantalla `Modify Reservation`.
-
 ## Cancelacion de reservas
 
 ### Paso a paso
@@ -77,4 +74,4 @@ El usuario encuentra y gestiona facilmente sus reservas.
 La reserva cambia a estado cancelado y el usuario recibe un mensaje de confirmacion.
 
 > [!WARNING]
-> Verifique si existen penalidades, devoluciones parciales o condiciones de tarifa antes de documentar el flujo final.
+> Antes de confirmar una cancelacion, revise las condiciones de la tarifa y el estado actual de la reserva.

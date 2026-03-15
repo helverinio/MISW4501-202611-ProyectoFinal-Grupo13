@@ -10,7 +10,7 @@ La app movil de TravelHub permite al cliente buscar alojamientos, reservar y con
 - Como administrar reservas, perfil y notificaciones.
 - Como documentar el flujo de check-in con QR si aplica.
 
-## Pantallas de referencia del prototipo
+## Pantallas principales
 
 - `Login Form`
 - `Create Account 2`
@@ -27,4 +27,4 @@ La app movil de TravelHub permite al cliente buscar alojamientos, reservar y con
 - `Check-in Confirmation`
 - `Check-in Confirmation 2`
 
-`[AGREGAR CAPTURA: movil-home]`
+![movil login form](../images/movil-login-form.png)

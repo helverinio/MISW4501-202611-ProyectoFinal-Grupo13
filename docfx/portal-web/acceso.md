@@ -16,35 +16,35 @@ Explicar como un cliente ingresa al portal web, crea una cuenta o recupera el ac
 **Resultado esperado**  
 El usuario entra al entorno principal del portal y puede comenzar una busqueda o revisar sus reservas.
 
-`[AGREGAR CAPTURA: web-login]`
+![web login](../images/web-login.png)
 
 ## Registro de usuario
 
-El prototipo web entregado no muestra una pantalla independiente de registro. Por esta razon, la documentacion deja el flujo como validacion pendiente.
+La pantalla `Login` incorpora una vista de creacion de cuenta con la opcion `Create Account`.
 
-### Paso a paso propuesto para validar
+### Paso a paso
 
-1. Identifique si desde `Login` existe un boton como `Create account`, `Register` o equivalente.
-2. Confirme los campos obligatorios.
-3. Valide si el sistema envia correo de activacion o permite acceso inmediato.
+1. Abra la pantalla `Login`.
+2. Seleccione `Create Account`.
+3. Ingrese los datos solicitados para el registro.
+4. Cree y confirme la contrasena.
+5. Finalice el proceso para habilitar el acceso a la plataforma.
 
-`[DESCRIBIR AQUI EL FLUJO REAL SEGUN HTML]`
+**Resultado esperado**  
+El usuario crea su cuenta y queda listo para iniciar sesion en TravelHub.
 
 ## Recuperacion de contrasena
 
 ### Paso a paso
 
-1. Abra la pantalla de inicio de sesion.
-2. Seleccione la opcion de recuperacion de contrasena, si se encuentra visible.
-3. Ingrese el correo registrado.
-4. Revise el mensaje de confirmacion y siga las instrucciones enviadas al correo.
-
-> [!NOTE]
-> El enlace exacto y el texto del mensaje deben validarse contra la version final del prototipo o del producto.
+1. Abra la pantalla `Login`.
+2. Seleccione `Forgot password?`.
+3. Ingrese el correo asociado a la cuenta.
+4. Siga las instrucciones de recuperacion indicadas por la plataforma.
 
 ## Navegacion principal despues del acceso
 
-En el prototipo del portal web se observan opciones de navegacion como:
+En el portal web se observan opciones de navegacion como:
 
 - `Traveler Home`
 - `Search Results`
