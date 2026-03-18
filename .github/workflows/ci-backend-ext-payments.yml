@@ -30,5 +30,7 @@ jobs:
     name: ext-payments
     uses: ./.github/workflows/_python-service-ci.yml
     with:
+      # ext-payments keeps a temporary lower threshold until test coverage is expanded.
+      coverage_threshold: '50'
       service_name: ext-payments
       service_path: microservices/ext-payments

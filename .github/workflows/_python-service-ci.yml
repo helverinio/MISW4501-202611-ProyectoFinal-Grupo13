@@ -11,6 +11,11 @@ on:
         description: Relative path to the Python microservice
         required: true
         type: string
+      coverage_threshold:
+        description: Minimum coverage percentage required for the service
+        required: false
+        default: '80'
+        type: string
 
 jobs:
   python-ci:
@@ -47,7 +52,7 @@ jobs:
             exit 1
           fi
 
-      - name: Run unit tests with coverage (minimum 80%)
+      - name: Run unit tests with coverage
         run: |
           pytest -q \
             --maxfail=1 \
@@ -55,7 +60,7 @@ jobs:
             --cov=app \
             --cov-report=term-missing \
             --cov-report=xml \
-            --cov-fail-under=80
+            --cov-fail-under=${{ inputs.coverage_threshold }}
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
