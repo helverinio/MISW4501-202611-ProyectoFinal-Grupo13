@@ -57,9 +57,15 @@ Cada workflow backend:
 3. Verifica que existan tests Python (`test_*.py` o `*_test.py`).
 4. Ejecuta pruebas unitarias con cobertura:
    - `--cov=app`
-   - `--cov-fail-under=80`
-5. Falla si no hay tests o si cobertura < 80%.
+  - `--cov-fail-under=<threshold por servicio>`
+5. Falla si no hay tests o si cobertura queda por debajo del umbral configurado para ese servicio.
 6. Publica `coverage.xml` como artifact.
+
+Umbrales actuales:
+- reservas: 80
+- pagos: 80
+- gateway: 80
+- ext-payments: 50
 
 ### Frontends web (Angular)
 Cada workflow frontend:
@@ -146,6 +152,7 @@ Required checks en `develop`:
 
 - Los microservicios Python exponen código fuente bajo carpeta `app`.
 - La cobertura esperada se mide sobre `app` y debe ser >= 80%.
+- Excepción actual: `ext-payments` usa umbral temporal de 50%.
 - Si un backend no tiene tests aún, el workflow falla por diseño para evitar merges con calidad insuficiente.
 - Los frontends Angular usan Node 20 y npm lockfile.
 - La app móvil todavía no existe en el repositorio actual.
