@@ -1,0 +1,34 @@
+name: Frontend CI - web-client
+
+on:
+  # GitFlow push branches for CI validation.
+  push:
+    branches:
+      - develop
+      - feature/**
+      - release/**
+      - hotfix/**
+    # Run only when web-client or its CI definitions change.
+    paths:
+      - frontends/web-client/**
+      - .github/workflows/ci-frontend-web-client.yml
+      - .github/workflows/_frontend-ci.yml
+  # PR validation gates into integration and production branches.
+  pull_request:
+    branches:
+      - develop
+      - main
+    # Run only when web-client or its CI definitions change.
+    paths:
+      - frontends/web-client/**
+      - .github/workflows/ci-frontend-web-client.yml
+      - .github/workflows/_frontend-ci.yml
+
+jobs:
+  web-client-ci:
+    # Calls the shared frontend CI template.
+    name: web-client
+    uses: ./.github/workflows/_frontend-ci.yml
+    with:
+      app_name: web-client
+      app_path: frontends/web-client

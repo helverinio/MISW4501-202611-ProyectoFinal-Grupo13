@@ -1,0 +1,48 @@
+name: Reusable Frontend CI
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: Frontend display name
+        required: true
+        type: string
+      app_path:
+        description: Relative path to the frontend app
+        required: true
+        type: string
+
+jobs:
+  frontend-ci:
+    # Reusable job for Angular frontends: install, lint, test, build.
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.app_path }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: ${{ inputs.app_path }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        env:
+          CI: 'true'
+        run: npm run test -- --watch=false
+
+      - name: Build app
+        run: npm run build

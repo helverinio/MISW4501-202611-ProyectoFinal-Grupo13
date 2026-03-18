@@ -1,0 +1,36 @@
+name: Backend CI - ext-payments
+
+on:
+  # GitFlow push branches for CI validation.
+  push:
+    branches:
+      - develop
+      - feature/**
+      - release/**
+      - hotfix/**
+    # Run only when ext-payments or its CI definitions change.
+    paths:
+      - microservices/ext-payments/**
+      - .github/workflows/ci-backend-ext-payments.yml
+      - .github/workflows/_python-service-ci.yml
+  # PR validation gates into integration and production branches.
+  pull_request:
+    branches:
+      - develop
+      - main
+    # Run only when ext-payments or its CI definitions change.
+    paths:
+      - microservices/ext-payments/**
+      - .github/workflows/ci-backend-ext-payments.yml
+      - .github/workflows/_python-service-ci.yml
+
+jobs:
+  ext-payments-ci:
+    # Calls the shared Python CI template to avoid duplication.
+    name: ext-payments
+    uses: ./.github/workflows/_python-service-ci.yml
+    with:
+      # ext-payments keeps a temporary lower threshold until test coverage is expanded.
+      coverage_threshold: '50'
+      service_name: ext-payments
+      service_path: microservices/ext-payments

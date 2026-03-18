@@ -83,7 +83,7 @@ services:
   # Microservices
   reservas:
     build:
-      context: ./reservas
+      context: ./microservices/reservas
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -111,7 +111,7 @@ services:
 
   ext-payments:
     build:
-      context: ./ext-payments
+      context: ./microservices/ext-payments
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -125,7 +125,7 @@ services:
 
   pagos:
     build:
-      context: ./pagos
+      context: ./microservices/pagos
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -151,7 +151,7 @@ services:
 
   gateway:
     build:
-      context: ./gateway
+      context: ./microservices/gateway
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
