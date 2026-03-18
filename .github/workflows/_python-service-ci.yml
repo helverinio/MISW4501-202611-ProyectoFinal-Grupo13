@@ -1,0 +1,65 @@
+name: Reusable Python Service CI
+
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        description: Service display name
+        required: true
+        type: string
+      service_path:
+        description: Relative path to the Python microservice
+        required: true
+        type: string
+
+jobs:
+  python-ci:
+    # Reusable job for Python microservices: deps, tests, and coverage gate.
+    name: Python CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.service_path }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # Conservative default test stack when not pinned in service requirements.
+          pip install pytest pytest-cov
+
+      - name: Verify unit tests exist
+        run: |
+          TEST_FILES=$(find . -type f \( -name "test_*.py" -o -name "*_test.py" \) | wc -l)
+          if [ "$TEST_FILES" -eq 0 ]; then
+            echo "::error::No Python unit tests found for '${{ inputs.service_name }}'."
+            echo "::error::Add tests under this service path (e.g., tests/ or test_*.py)."
+            exit 1
+          fi
+
+      - name: Run unit tests with coverage (minimum 80%)
+        run: |
+          pytest -q \
+            --maxfail=1 \
+            --disable-warnings \
+            --cov=app \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --cov-fail-under=80
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ inputs.service_name }}
+          path: ${{ inputs.service_path }}/coverage.xml
+          if-no-files-found: error
