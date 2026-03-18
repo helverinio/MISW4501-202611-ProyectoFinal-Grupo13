@@ -83,7 +83,7 @@ services:
   # Reservas instances (scaled for load balancing)
   reservas-1:
     build:
-      context: ./reservas
+      context: ./microservices/reservas
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -109,7 +109,7 @@ services:
 
   reservas-2:
     build:
-      context: ./reservas
+      context: ./microservices/reservas
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -135,7 +135,7 @@ services:
 
   reservas-3:
     build:
-      context: ./reservas
+      context: ./microservices/reservas
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -161,7 +161,7 @@ services:
 
   ext-payments:
     build:
-      context: ./ext-payments
+      context: ./microservices/ext-payments
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -175,7 +175,7 @@ services:
 
   pagos:
     build:
-      context: ./pagos
+      context: ./microservices/pagos
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -202,7 +202,7 @@ services:
   # Gateway instances (scaled for load balancing)
   gateway-1:
     build:
-      context: ./gateway
+      context: ./microservices/gateway
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -219,7 +219,7 @@ services:
 
   gateway-2:
     build:
-      context: ./gateway
+      context: ./microservices/gateway
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
@@ -236,7 +236,7 @@ services:
 
   gateway-3:
     build:
-      context: ./gateway
+      context: ./microservices/gateway
       dockerfile: Dockerfile
     environment:
       FLASK_ENV: development
