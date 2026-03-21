@@ -21,30 +21,9 @@ on:
     # Keep PR trigger broad so required checks are always reported.
 
 jobs:
-  detect-changes:
-    name: Detect web-admin changes
-    runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.filter.outputs.changed }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Detect changed paths
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            changed:
-              - 'frontends/web-admin/**'
-              - '.github/workflows/ci-frontend-web-admin.yml'
-              - '.github/workflows/_frontend-ci.yml'
-
   web-admin-ci:
     # Calls the shared frontend CI template.
     name: web-admin
-    needs: detect-changes
-    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
     uses: ./.github/workflows/_frontend-ci.yml
     with:
       app_name: web-admin
