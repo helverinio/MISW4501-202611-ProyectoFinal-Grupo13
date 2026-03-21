@@ -50,7 +50,7 @@ En `push`, cada workflow usa `paths` para ejecutarse solo cuando cambia su compo
 
 Además, cada workflow incluye detección de cambios por job para reforzar esta regla:
 - en `push`, ejecuta CI solo si cambió su componente;
-- en `pull_request`, ejecuta CI siempre para validar integración completa antes del merge a `develop` o `main`.
+- en `pull_request`, ejecuta CI completo en eventos `opened`, `reopened` y `ready_for_review` para validar integración antes del merge a `develop` o `main`.
 
 Con esto, un commit en `feature/docs` que solo cambie documentación no ejecuta pipelines de backend/frontend.
 
