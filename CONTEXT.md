@@ -25,7 +25,7 @@ El sistema actual presenta múltiples problemas:
 - Incumplimiento parcial de estándares de seguridad (PCI-DSS)
 - Alta tasa de abandono (25-30%)
 
-Estos problemas afectan directamente ingresos, experiencia de usuario y confiabilidad del sistema. :contentReference[oaicite:0]{index=0}
+Estos problemas afectan directamente ingresos, experiencia de usuario y confiabilidad del sistema.
 
 ---
 
@@ -44,7 +44,7 @@ El objetivo de negocio es:
 
 - Incrementar ingresos en un 25%
 - Reducir costos operativos en un 15%
-- Disminuir abandono de carrito al 8-10% :contentReference[oaicite:1]{index=1}
+- Disminuir abandono de carrito al 8-10%
 
 ---
 
@@ -65,6 +65,44 @@ Este sistema está diseñado bajo principios de:
 - **Inventory (PMS Integration)**
 - **User / Customer**
 - **Notifications**
+
+## 🛠️ Stack Tecnológico Implementado
+
+| Capa | Tecnología |
+|------|------------|
+| Lenguaje | Python 3.11 |
+| Framework web | Flask 3.0 |
+| ORM | SQLAlchemy 2.0.23 + Flask-SQLAlchemy 3.1.1 |
+| Migraciones | Flask-Migrate 4.0.4 |
+| Servidor WSGI | gunicorn (workers=4, threads=4, worker-class=gthread) |
+| Base de datos | PostgreSQL (una instancia por microservicio) |
+| Cache / Locking | Redis (redis-py 4.6.0) |
+| Message Broker | ActiveMQ via STOMP (stomp.py 8.1.0) |
+| Balanceador | Nginx (modo escalado) |
+| Contenedores | Docker + Docker Compose |
+
+## 🔧 Microservicios Reales
+
+| Servicio | Puerto | Responsabilidad |
+|----------|--------|-----------------|
+| `gateway` | 8081 | Reverse proxy, único punto de entrada público |
+| `reservas` | 5000 | Catálogo + holds + reservas + pagos shadow + notificaciones |
+| `pagos` | 5002 | Orquestación interna de pagos, lifecycle, abandonment scheduler |
+| `ext-payments` | 5001 | Simulación de PSP externo (Stripe/MercadoPago) |
+
+## 🔑 Patrones de Resiliencia Implementados
+
+| Patrón | Servicio | Config real |
+|--------|----------|-------------|
+| Redis Distributed Lock | `reservas` | TTL=30s, release Lua atómico, clave: `room_hold_lock:{id}:{in}:{out}` |
+| Redis Cache (holds) | `reservas` | TTL dinámico (= duration del hold, default 15 min) |
+| Circuit Breaker | `reservas→pagos`, `pagos→ext-payments` | 5 fallos→OPEN, 30s→HALF_OPEN, 2 éxitos→CLOSED |
+| Idempotency Guard | `pagos` | Un payment por `reservation_id` |
+| Optimistic Lock | `pagos` | `UPDATE WHERE status='pendiente'` |
+| Message Retry + DLQ | `reservas`, `pagos` | 3 reintentos via header, luego `/topic/PaymentStatusUpdated.DLQ` |
+| Payment Abandonment | `pagos` | Scheduler cada 60s, umbral 20 min |
+
+---
 
 ---
 

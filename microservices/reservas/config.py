@@ -4,12 +4,16 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     PAGOS_SERVICE_URL = os.environ.get('PAGOS_SERVICE_URL', 'http://pagos:5002')
+    DB_SCHEMA = os.environ.get('DB_SCHEMA')
     
     # Message Queue Configuration (Amazon MQ compatible)
     MQ_HOST = os.environ.get('MQ_HOST', 'activemq')
     MQ_PORT = int(os.environ.get('MQ_PORT', '61613'))
     MQ_USERNAME = os.environ.get('MQ_USERNAME', 'admin')
     MQ_PASSWORD = os.environ.get('MQ_PASSWORD', 'admin')
+    # Optional TLS support for Amazon MQ (kept disabled by default for local compatibility)
+    MQ_USE_SSL = os.environ.get('MQ_USE_SSL', 'false').lower() == 'true'
+    MQ_CA_CERT_PATH = os.environ.get('MQ_CA_CERT_PATH')
     
     # Dead Letter Queue Configuration
     MQ_MAX_RETRIES = int(os.environ.get('MQ_MAX_RETRIES', '3'))

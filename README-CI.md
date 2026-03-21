@@ -46,7 +46,13 @@ Todos los workflows de componente se disparan en:
   - develop
   - main
 
-Además, cada workflow usa `paths` para ejecutarse solo cuando cambia su componente (o su propio YAML/reusable asociado).
+En `push`, cada workflow usa `paths` para ejecutarse solo cuando cambia su componente (o su propio YAML/reusable asociado).
+
+En `pull_request`, el workflow se dispara siempre para reportar el check requerido. Luego, cada job de componente evalúa cambios y:
+- ejecuta CI completo si su componente cambió,
+- queda en `skipped` si no hubo cambios de ese componente.
+
+Este patrón evita PR bloqueados por checks requeridos "pendientes" cuando no aplica ejecutar un componente.
 
 ## 4) Qué valida cada tipo
 
