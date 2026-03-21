@@ -18,6 +18,10 @@ on:
     branches:
       - develop
       - main
+    types:
+      - opened
+      - reopened
+      - ready_for_review
     # Keep PR trigger broad so required checks are always reported.
 
 jobs:
@@ -44,7 +48,7 @@ jobs:
     # Calls the shared Python CI template to avoid duplication.
     name: pagos
     needs: detect-changes
-    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
+    if: github.event_name == 'pull_request' || needs.detect-changes.outputs.changed == 'true'
     uses: ./.github/workflows/_python-service-ci.yml
     with:
       service_name: pagos
