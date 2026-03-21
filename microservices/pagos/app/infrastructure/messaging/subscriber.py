@@ -109,7 +109,8 @@ class PaymentStatusSubscriber:
     QUEUE_PAYMENT_STATUS_UPDATED = '/queue/PaymentStatusUpdated'
     
     def __init__(self, app, host: str, port: int, username: str, password: str,
-                 max_retries: int = 3, dlq_topic: str = '/topic/PaymentStatusUpdated.DLQ'):
+                 max_retries: int = 3, dlq_topic: str = '/topic/PaymentStatusUpdated.DLQ',
+                 use_ssl: bool = False, ca_cert_path: Optional[str] = None):
         self.app = app
         self.host = host
         self.port = port
@@ -117,6 +118,8 @@ class PaymentStatusSubscriber:
         self.password = password
         self.max_retries = max_retries
         self.dlq_topic = dlq_topic
+        self.use_ssl = use_ssl
+        self.ca_cert_path = ca_cert_path
         self._connection = None
         self._thread = None
 
@@ -131,7 +134,9 @@ class PaymentStatusSubscriber:
                 username=current_app.config.get('MQ_USERNAME', 'admin'),
                 password=current_app.config.get('MQ_PASSWORD', 'admin'),
                 max_retries=current_app.config.get('MQ_MAX_RETRIES', 3),
-                dlq_topic=current_app.config.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ')
+                dlq_topic=current_app.config.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ'),
+                use_ssl=current_app.config.get('MQ_USE_SSL', False),
+                ca_cert_path=current_app.config.get('MQ_CA_CERT_PATH')
             )
 
     def _handle_payment_status_updated(self, message: dict):
@@ -158,6 +163,11 @@ class PaymentStatusSubscriber:
         def run_subscriber():
             try:
                 self._connection = stomp.Connection([(self.host, self.port)])
+                if self.use_ssl:
+                    ssl_options = {'for_hosts': [(self.host, self.port)]}
+                    if self.ca_cert_path:
+                        ssl_options['ca_certs'] = self.ca_cert_path
+                    self._connection.set_ssl(**ssl_options)
                 listener = PaymentStatusListener(
                     app=self.app,
                     handler=self._handle_payment_status_updated,

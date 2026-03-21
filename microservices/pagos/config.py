@@ -4,6 +4,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     EXT_PAYMENTS_URL = os.environ.get('EXT_PAYMENTS_URL', 'http://ext-payments:5001')
+    DB_SCHEMA = os.environ.get('DB_SCHEMA')
     # Webhook URL now points to gateway which routes to reservas
     PAGOS_WEBHOOK_URL = os.environ.get('PAGOS_WEBHOOK_URL', 'http://gateway:5000')
     
@@ -12,6 +13,9 @@ class Config:
     MQ_PORT = int(os.environ.get('MQ_PORT', '61613'))
     MQ_USERNAME = os.environ.get('MQ_USERNAME', 'admin')
     MQ_PASSWORD = os.environ.get('MQ_PASSWORD', 'admin')
+    # Optional TLS support for Amazon MQ (kept disabled by default for local compatibility)
+    MQ_USE_SSL = os.environ.get('MQ_USE_SSL', 'false').lower() == 'true'
+    MQ_CA_CERT_PATH = os.environ.get('MQ_CA_CERT_PATH')
     
     # Dead Letter Queue Configuration
     MQ_MAX_RETRIES = int(os.environ.get('MQ_MAX_RETRIES', '3'))

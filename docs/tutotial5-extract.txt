@@ -1,0 +1,476 @@
+Resumen 
+Tutorial #5 – AWS Code 
+Deploy con AWS Fargate 
+Tutorial de AWS CodePipeline sobre AWS Elastic Beanstalk 
+URL 
+devops-aws-code-deploy-con-AWS-fargate 
+Categoría 
+devops 
+Tags 
+devops 
+Estado 
+Autor(es) 
+Completado 
+Equipo de tutores curso de DevOps  
+Mario José Villamizar Cano 
+Introducción  
+Nombre: 
+Tutorial #5 - AWS Code Deploy con AWS 
+Fargate 
+Duración: 
+90 minutos  
+Profesor responsable 
+Mario Villamizar 
+Pre-Requisitos: 
+Python + Flask + Git + Docker + Elastic Container 
+Register + GitHub + AWS Codebuild + 
+CodePipeline 
+Objetivos 
+Al finalizar el tutorial el estudiante estará en capacidad de: 
+● Aprovisionar servicios de AWS CodeDeploy, Amazon ECS y crear un despliegue de entrega continua 
+(CD) y Blue/Green 
+Requisitos para desarrollar el tutorial 
+En particular se utilizarán los siguientes recursos:   
+1. Cuenta de AWS Academy 
+2. Conocimientos en Python, Flask, Git, Docker, Elastic Container Register, GitHub, AWS CodeBuild, AWS 
+Codepipeline y la consola de administración web de AWS  
+AWS Fargate 
+AWS Fargate es un servicio que permite la implementación de contenedores de una forma sencilla sin la 
+administración de Servidores o Clusters. Con AWS Fargate solo debe concentrarse en el desarrollo de la 
+aplicación ya que Fargate se encargará de la implementación y ejecución de esta. 
+AWS Fargate es compatible con Amazon ECS donde se podrán ejecutar contenedores sin la necesidad de 
+crear instancias en Amazon EC2. 
+Amazon ECS (Elastic Container Service)  
+Amazon ECS es un servicio que permite la administración de contenedores y permite un rápido 
+escalamiento y facilidad en la ejecución y administración de contenedores Docker en un cluster. 
+Amazon ECS permite el lanzamiento de aplicaciones basadas en contenedores con llamadas a la API. 
+Amazon ECS es compatible con AWS CodeDeploy y tener despliegues Blue/Green lo cual permite tener en 
+producción 2 versiones de una aplicación y realizar testeo sobre la nueva versión. Si se requiere, puede 
+realizar rollback en caso de fallas o modificaciones necesarias. 
+Amazon ECS se ejecuta en la región de su preferencia y simplifica la ejecución de contenedores con alta 
+disponibilidad en diversas zonas de disponibilidad dentro de la misma región. Al crear un cluster en ECS 
+podrá crear definiciones de tareas, las cuales especifican las imágenes de contenedor que se ejecutarán 
+dentro de los clusters. Puede almacenar las imágenes de contenedor utilizando el servicio de Amazon ECS. 
+Repositorio 
+El código de la aplicación lo encuentra en el siguiente repositorio de GitHub: 
+https://github.com/WeimarG/taller_codedeploy_fargate.git 
+La aplicación es una pequeña API en Python y Flask con dos endpoints.   
+Endpoint  
+/  
+Descripción  
+Lista la información de todos los héroes registrados en plataforma.   
+Método  
+GET  
+Retorno  
+application/json, con todos los héroes registrados en plataforma.   
+Parámetros del Endpoint  
+Ninguno  
+Endpoint  
+/<int:id_heroe>  
+Descripción  
+Permite recuperar la información de un héroe registrado en 
+plataforma.  
+Método  
+GET  
+Retorno  
+application/json. Con un diccionario que representa la información 
+de un héroe.  
+Parámetros del Endpoint  
+Ninguno.  
+Actividad 1 – Creación de ROL CodeDeploy – ECS  
+Para realizar una implementación Blue/Green utilizando los servicios CodeDeploy y Amazon 
+ECS, se requieren un conjunto de permisos para actualizar el servicio creado en Amazon ECS. 
+Para proporcionar estos permisos se debe asignar un rol de IAM en el servicio de Amazon ECS. 
+Para iniciar con la creación del Rol, ingrese a la consola de administración de AWS y en el menú 
+servicios busque y seleccione IAM. 
+Se abrirá una nueva ventana, en el panel izquierdo seleccione la opción Roles y a continuación de 
+clic en el botón Crear rol. 
+Nuevamente se abrirá una nueva ventana, seleccione la opción Servicio de AWS. 
+Dentro de las opciones de caso de uso, despliegue la lista y seleccione CodeDeploy, a 
+continuación, seleccione la opción CodeDeploy – ECS. Continúe con el botón Siguiente. 
+En la siguiente fase se deben asignar las políticas que tendrá el Rol para su correcto 
+funcionamiento. Por defecto se asigna la política AWSCodeDeployRoleForECS. 
+De clic en Siguiente. 
+Asigne un nombre al Rol y de clic en el botón Crear rol. 
+Busque su Rol y selecciónelo, podrá observar el resumen de la configuración que tiene. 
+Diríjase a la pestaña Permisos y de clic en el botón Agregar permisos, asociar políticas 
+Busque y asigne las siguientes políticas al Rol. 
+● ElasticLoadBalancingFullAccess 
+● AmazonECS_FullAccess 
+Finalice dando clic en el botón “Agregar Permisos” 
+Podrá observar en el resumen del Rol las políticas que tiene asignadas. 
+Actividad 2 – Creación de imagen y cargue a Amazon ECR 
+En la barra de búsqueda de la consola de AWS busque y seleccione ECR (Elastic Container 
+Registry) 
+En la ventana principal de Amazon ECR seleccione el botón “Crear” 
+En la nueva ventana, debe configurar el nombre del repositorio, adicional, puede habilitar el 
+escaneo de imágenes y el cifrado KMS. 
+De clic en el botón “Crear” para continuar con el proceso. 
+A continuación, observará el listado de repositorios creados y el Identificador URI (Uniform 
+Resource Identifier) de cada uno de los repositorios.  
+Almacene el URI de su repositorio ya que este debe ser declarado en al archivo buildspec.yml. 
+Al ingresar a su repositorio verá el botón “Ver comandos de envío”. Estos comandos deben ser 
+declarados en el archivo buildspec.yml 
+Para este ejercicio, estos comandos deberán ser ejecutados en su máquina local para la creación 
+de la imagen y posterior cargue al repositorio ECR. 
+Abra una consola en su máquina y diríjase a la ruta donde se encuentra su código (para este caso 
+el código de prueba clonado). 
+A continuación, inicie sesión en AWS ECR utilizando el primer comando. 
+Nota: Si presenta algún error al iniciar sesión o al hacer el push, debe asignar los permisos necesarios al usuario que 
+usa para AWS CLI. Diríjase al servicio de IAM en la consola de AWS, seleccione su usuario y asigne la política 
+AmazonEC2ContainerRegistryPowerUser 
+Cree la imagen docker con el segundo comando. 
+Nota: Tenga en cuenta que Fargate utiliza contenedores en instancias x86_64 por lo que si la 
+arquitectura del sistema operativo donde está realizando el build es diferente, la ejecución de la task 
+fallará. Si este es el caso, debe ejecutar el siguiente comando en lugar del anterior: 
+docker buildx build --platform linux/amd64 -t python_app . 
+Recuerde que para ejecutar el comando docker build, debe tener creado en su repositorio el 
+archivo Dockerfile. 
+Al finalizar la compilación, ejecute el tercer comando para crear una etiqueta a la imagen que 
+acaba de crear. 
+Por último, realice el push de la imagen con el cuarto comando. 
+Después de finalizado el push, diríjase a su repositorio de ECR y refresque la página. Podrá 
+observar la imagen que acaba de cargar. 
+Actividad 3 – Creación de Application Load Balancer y Target Groups 
+En la barra de búsqueda de la consola de AWS busque y seleccione EC2. 
+En la sección Equilibrio de carga, seleccione la opción “Grupos de destino” y a continuación, 
+seleccione el botón “Crear un grupo de destino”. 
+En la nueva ventana seleccione Direcciones IP para el tipo de destino. Adicional, asigne un 
+nombre para el grupo de destino, elija una VPC (que debe ser la misma donde luego aloje el 
+balanceador de carga) y defina el protocolo y puerto que usa su aplicación (para este caso, 
+HTTP y el puerto 5000), por último, de clic en Siguiente. 
+En la siguiente ventana deje los valores por defecto y de clic en el botón Crear un grupo de 
+destino. 
+Cree un segundo grupo  de destino con las mismas características del anterior, solo modifique 
+el nombre. 
+A continuación, cree el balanceador de carga de aplicación. 
+En la sección Equilibrio de carga, seleccione la opción Balanceadores de carga y a continuación, 
+seleccione el botón Crear balanceador de carga. 
+Se abrirá una nueva ventana, seleccione la opción “Crear balanceador de carga” 
+De click en el botón “Crear” en la opción de “Balanceador de carga de aplicaciones” 
+En la sección Configuración básica, asigne un nombre al balanceador y deje las demás opciones 
+por defecto. 
+En la sección Mapeo de red seleccione su VPC y las subredes que desea utilizar en el 
+balanceador. 
+En la sección Grupos de seguridad, seleccione el grupo de seguridad que desee o cree uno 
+nuevo con las reglas necesarias para la conexión a su aplicación. En este caso se usará un 
+grupo de seguridad que permita todo el tráfico in/out. 
+En la sección Agentes de escucha y direccionamiento, agregue dos agentes de escucha: el primero 
+con el puerto 80 y asigne el target-group-1 (creado anteriormente), y el segundo agente con el 
+puerto 8080 y asigne el target-group-2 (creado anteriormente) 
+Por último, de clic en el botón Crear balanceador de carga. 
+Actividad 4 – Creación de Task Definition y Cluster sobre AWS ECS 
+En la barra de búsqueda de la consola de AWS busque y seleccione ECS (Elastic Container 
+Service). 
+En la esquina superior izquierda encontrará un menú de opciones, seleccione la opción 
+Clústeres y seleccione el botón “Crear Clúster” 
+En la nueva ventana, agregue un nombre para el Clúster y deje los siguientes campos por defecto. 
+Finalice dando clic en el botón Crear. 
+Después de creado el Clúster, proceda con la creación de la definición de la tarea la cuál 
+especifica la información del contenedor para la aplicación, recursos y puertos del host. 
+En la ventana principal de ECS seleccione la opción Definiciones de tareas. 
+De clic en el botón Crear una nueva definición de tarea. 
+En la nueva ventana deberá configurar la tarea y la definición de la tarea.  
+En la primera sección de configuración, agregue un nombre para la tarea y debe seleccionar el 
+entorno de la aplicación, para este caso, seleccione la opción AWS Fargate (sin servidor). 
+Seleccione el Sistema operativo/arquitectura como Linux/X86_64. 
+En la sección tamaño de tarea, seleccione la cantidad de memoria y CPU que esta usará. Debe 
+asignar un rol para la ejecución de la tarea, con este rol se extraerán las imágenes del contenedor 
+y publicarán los registros en CloudWatch. 
+Si aún no cuenta con un rol para la ejecución de tareas en ECS debe proceder con la creación de 
+este, para esto seleccione la opción Create new role. 
+ 
+En la sección Contenedor:1 agregue un nombre para el contenedor, la URI (ruta) de la imagen que 
+subió con anterioridad al repositorio de ECR y el puerto definido para su aplicación (para este 
+caso el puerto 5000). 
+Para identificar la URI de su imagen, diríjase a ECR, seleccione su repositorio y en las 
+propiedades de la imagen seleccione la opción Copiar URI. 
+ 
+Deje los demás valores por defecto y de clic en el botón Crear. 
+Al finalizar la configuración observará una ventana con la información de su Definición de tarea, 
+en esta ventana podrá observar el rol que se creó, guarde este nombre ya que posteriormente se 
+le deben asignar diferentes permisos para el correcto funcionamiento. 
+Después de creado el Clúster y la definición de tarea, debe proceder con la creación del Servicio 
+en el cual se especifica cuántas copias de la definición de tarea se ejecutarán, el tipo de 
+despliegue (para este caso blue/green) y el balanceador de carga que utilizará en el despliegue 
+para la distribución de tráfico. 
+Diríjase nuevamente a la sección de Clústeres y seleccione el que creó anteriormente. 
+Al abrir las propiedades del clúster encontrará diferentes pestañas con los detalles de 
+configuración. 
+Seleccione la pestaña Servicios y de clic en el botón Crear. 
+Aparecerá la configuración del servicio. Seleccione la familia de definición de tareas creada 
+ 
+En la sección “Configuración de implementación”, elija “réplica” y la cantidad de tareas que 
+correrán en su cluster. 
+ 
+A continuación, debe configurar el tipo de despliegue en las opciones de implementación, para 
+este ejemplo el despliegue será Blue/Green 
+Diríjase a la sección Redes y asigne la VPC, Subredes y el grupo de seguridad. 
+Por defecto, el servicio creará un nuevo Grupo de Seguridad, sobre este deberá modificar las 
+reglas de entrada para que esté permitido el tráfico por el puerto que usa su contenedor (en este 
+caso, puerto 5000). 
+Por otro lado, si no desea crear un nuevo grupo de seguridad y utilizar uno ya creado, 
+seleccione la opción “utilizar un grupo de seguridad existente” y elija el grupo de seguridad de la 
+lista desplegable. 
+En la sección Equilibrio de carga seleccione la opción Balanceador de carga de aplicaciones y 
+seleccione el Balanceador de carga, los agentes de escucha y los grupos de destino creados en 
+la actividad 3, los cuales permitirán hacer el despliegue Blue/Green de la aplicación. 
+En la sección Agentes de escucha, seleccione el puerto 80 como Producción y el 8080 como 
+Prueba. 
+En la sección Grupos de destino, seleccione los grupos de destino creados en la actividad 3 los 
+cuales permitirán hacer el despliegue Blue/Green de la aplicación. 
+Deje los siguientes valores y configuración por defecto y nuevamente de clic en Crear. 
+Al finalizar podrá ver la implementación del servicio y las tareas en ejecución que corresponden 
+a los contenedores corriendo la aplicación.  
+Puede acceder a la aplicación a través del DNS name de su balanceador de carga. 
+Diríjase al Target-group-1 y en la pestaña Targets observará las IP privadas que corresponden a 
+los contenedores a los cuales se redirige el tráfico del balanceador 
+Ya que el tipo de implementación configurado fue Blue/Green, en el servicio ECS se creará 
+automáticamente una aplicación en CodeDeploy. Puede observarla ingresando a la consola de 
+administración de AWS, busque y seleccione CodeDeploy. 
+A continuación, seleccione la opción Aplicaciones y haga click en “Crear la aplicación”. 
+Se profundizará más sobre CodeDeploy en los siguientes pasos. 
+Actividad 5 – Configuración de archivos buildspec.yml, appspec.json y 
+taskdef.json 
+buildspec.yml 
+Este archivo especifica los comandos de CodeBuild que ejecutará durante cada fase de la 
+compilación.  
+● pre_build: Comandos antes de compilar.  
+En esta sección se define el inicio de sesión a Amazon ECR. (utilice el URI de su repositorio)  
+● build: Comandos durante la compilación.  
+Se definen los comandos para la creación de la imagen del contenedor   
+● post_build: Comandos después de la compilación  
+Se define el comando para realizar el push de la imagen al repositorio de ECR.  
+● artifacts: archivos de salida del build los cuales servirán como entrada al proceso de 
+despliegue. 
+❖ imagedefinition.json: archivo que describe el nombre del contenedor y la ruta de la 
+imagen 
+❖ imageDetail: archivo que describe la ruta de la imagen. (se usará en la creación del 
+Pipeline) 
+❖ appspec.json: archivo que define la implementación de una aplicación en CodeDeploy 
+❖ taskdef.json: especifica cómo debe crearse la definición de tarea en ECS. 
+Los valores que debe modificar en el archivo buildspec.yml se encuentran especificados en su 
+repositorio ECR en la opción Ver comandos de envío 
+ 
+Adicional, deberá construir y definir los artefactos imagedefinition.json, imageDetails.json, 
+appspec.json y taskdef.json 
+appspec.json 
+Este archivo determina: 
+● El archivo taskdefinition con su ARN 
+● El contenedor y puerto que estarán en las tareas y a los cuales el loadbalancer redirige el 
+tráfico. 
+ 
+Los valores que debe modificar en el archivo appspec.json son:  
+ 
+● ContainerName (creado en la actividad 4) 
+● ContainerPort 
+ 
+ 
+taskdef.json 
+Este archivo contiene toda la definición de tareas que utiliza ECS, en él se especifica: 
+● El Rol para la ejecución de tareas en ECS (creado en la actividad 4, el ARN se encuentra en la 
+descripción el rol en IAM) 
+● Puerto y protocolo del contenedor (para este caso TCP 5000) 
+● Nombre del contenedor (contenedor creado en la actividad 4) 
+● Nombre de la imagen de contenedor (dejar por defecto el valor: “<IMAGE1_NAME>”) 
+● Compatibilidad (para este caso Fargate) 
+● Recursos de contenedor (CPU y Memoria) 
+● Modo de la red (awsvpc) 
+● Familia (Nombre de la tarea creada en ECS) 
+Actividad 6 – Creación de repositorio en GitHub 
+Inicie sesión en su cuenta de GitHub y en la barra superior de GitHub seleccione el botón (+) y 
+de clic en la opción “New repository” 
+En la nueva ventana asigné un nombre a su repositorio y seleccione si el repositorio será 
+público o privado, para este caso seleccione la opción Público y finalice dando clic en el botón 
+“Create repository”. 
+Cree un repositorio local con el código de su aplicación  
+Nota: Para profundizar más sobre este paso, revise los manuales anteriores de GitHub & AWS CodeBuild  
+ 
+Prepare todos los archivos de la aplicación y realice un push de estos al repositorio de GitHub. 
+ 
+ 
+Actividad 7 – Creación de Proyecto CodeBuild - Continuous Integration 
+En la barra de búsqueda de la consola de AWS busque y seleccione CodeBuild. 
+ 
+ 
+ 
+En la ventana principal de CodeBuild de clic en el botón “Crear el Proyecto de compilación” 
+ 
+ 
+Agregue un nombre y descripción para el proyecto.  
+ 
+Agregue el origen del código de su aplicación y el repositorio, para este caso se utilizará como 
+origen GitHub que es donde se almacenó con anterioridad el código de la aplicación de prueba. 
+ 
+El entorno será una imagen administrada con sistema operativo Ubuntu. Para este caso, 
+adicional, en la sección configuración adicional debe seleccionar la opción “Privilegiado” ya que 
+se creará una imagen de Docker. 
+Seleccione la opción nuevo rol de servicio el cual tendrá los permisos de acceso a los recursos 
+necesarios. 
+ 
+ 
+El archivo BuildSpec.yml puede estar dentro del código fuente o puede especificarlo en el 
+momento de la creación del proyecto. 
+Se recomienda que el archivo tenga el nombre buildspec.yml en caso de que requiera usar otro 
+nombre para diferenciar varias compilaciones, debe especificar este nombre en el momento que 
+cree el proyecto de CodeBuild. 
+Para obtener más información de la construcción y sintaxis de BuildSpec diríjase al siguiente 
+enlace: 
+https://docs.aws.amazon.com/es_es/codebuild/latest/userguide/build-spec-ref.html 
+Para este ejemplo, se especificará que el archivo de compilación está dentro del código fuente. 
+ 
+Las siguientes opciones de la configuración son opcionales, como la configuración del lote y el 
+almacenamiento de los logs (registros). 
+Finalice dando clic en el botón “Crear el proyecto de compilación” 
+NOTA: De forma predeterminada el rol que acaba de crear no tiene los permisos necesarios para 
+acceder a ECR (Envío de imagen al repositorio), por lo cual, se debe crear una política con los 
+permisos necesarios de acceso a ECR y asignarla al rol. 
+Diríjase al servicio IAM de AWS y de clic en la opción “Roles”. 
+Busque el rol que acaba de crear, para este caso, “codebuild-CodeBuild-app-python-service-role” y 
+selecciónelo. 
+A continuación, diríjase a la sección “Permisos” y seleccione la opción “Añadir permisos” >> Crear 
+política insertada 
+Se abrirá una ventana para la configuración de la nueva política. 
+Diríjase a la sección de “Servicio” y busque el servicio de “Elastic Container Registry”. 
+ 
+En la sección de “Acciones permitido” seleccione las siguientes opciones: 
+BatchCheckLayerAvailability (Lectura): otorga permiso para verificar la disponibilidad de múltiples capas 
+de imágenes en un registro y repositorio específicos 
+GetAuthoizationToken (Lectura): otorga permiso para recuperar un token que es válido para un registro 
+específico durante 12 horas 
+InitiateLayerUpload (Escritura): otorga permiso para notificar a Amazon ECR que tiene la intención de 
+cargar una capa de imagen. 
+PutImage (Escritura): otorga permiso para crear o actualizar el manifiesto de imagen asociado con una 
+imagen 
+CompleteLayerUpload (Escritura): otorga permiso para informar a Amazon ECR que se ha completado la 
+carga de la capa de imagen para un registro, un nombre de repositorio y un ID de carga especificados. 
+UploadLayerPart (Escritura): otorga permiso para cargar una parte de la capa de imagen en Amazon ECR 
+ 
+ 
+Por último, en la sección de recursos, seleccione la opción “Todos”. 
+ 
+De clic en el botón “Siguiente”. 
+Se mostrará una ventana con el review de la configuración de la política. Agregue un Nombre a 
+la política y Finalice dando clic en el botón “Crear política” 
+ 
+Al finalizar observará que la nueva política ya está asignada a su rol. 
+ 
+Actividad 8 – Creación de canalización (Pipeline – Continuous Delivery) 
+En la barra de búsqueda de la consola de AWS busque y seleccione CodePipeline. 
+ 
+
+En la ventana principal de AWS CodePipeline selección el botón “Crear la canalización”
+En la siguiente ventana debe asignar un nombre a su nuevo flujo de trabajo (canalización), el 
+modo de ejecución “Reemplazadas” y seleccionar la opción Nuevo rol de servicio. 
+Este rol permitirá que CodePipeline tenga acceso a los recursos necesarios para la integración 
+continua y la entrega continua con los servicios de GitHub, CodeBuild, CodeDeploy, ECR y ECS. 
+CodePipeline asignará automáticamente el nombre del rol, si usted lo desea puede cambiar este 
+nombre y personalizarlo. 
+Nota: Si ya cuenta con un rol creado que tenga los permisos necesarios puede seleccionar la opción Rol 
+de servicio existente. 
+CodePipeline crea por defecto un nuevo Bucket de S3 para almacenar los artefactos. Los 
+artefactos son la descripción de un conjunto de acciones con la finalidad de permitir que los 
+procesos finalicen correctamente.  
+El nombre del bucket se crea automáticamente con la siguiente estructura, codepipeline-región
+12345EXAMPLE, dónde región es la región de AWS en la que se creó el pipeline y 12345EXAMPLE 
+es un número aleatorio de 12 dígitos que garantiza que el nombre del bucket sea único. 
+En la sección “Configuración avanzada” podrá modificar algunas características del 
+almacenamiento de los artefactos. Si ya cuenta con un bucket de S3 puede elegirlo para 
+almacenar los artefactos allí, por otro lado, puede seleccionar si la clave de cifrado es 
+administrada por usted o por AWS. En este caso los valores se dejarán por defecto.  
+Por último, de clic en el botón siguiente. 
+En la nueva ventana debe seleccionar el origen del código de la aplicación, para este caso será 
+“GitHub (a través de GitHub App)” y conceder acceso a AWS CodePipeline para conectarse al 
+repositorio. 
+Dentro de la etapa de origen encontrará una sección para cambiar las opciones de detección de 
+cambios en el código de la aplicación y en el repositorio. Las opciones disponibles para la 
+detección de los cambios son Webhooks de GitHub y AWS CodePipeline, para este caso se 
+dejarán los valores por defecto. Por último, de clic en el botón siguiente. 
+En la siguiente ventana se encontrará la sección de compilación donde se podrá seleccionar dos 
+opciones de proveedor (AWS CodeBuild y Jenkins), para este caso se utilizará AWS CodeBuild. 
+Después de seleccionado el proveedor se habilitarán nuevas opciones como la región y la 
+selección del proyecto de compilación. Si ya cuenta con un proyecto creado en CodeBuild puede 
+buscarlo, en caso contrario deberá crear un nuevo proyecto dando clic en el botón “Crear el 
+proyecto” 
+ 
+De clic en el botón “siguiente”. 
+En la siguiente ventana podrá configurar la etapa de pruebas. Para este caso de uso las 
+omitiremos. 
+ 
+ 
+En la siguiente ventana se procederá con la configuración de la etapa de implementación, en esta 
+sección se deberá seleccionar el proveedor de implementación, para este caso se seleccionará 
+Amazon ECS (Blue/green) ya que sobre este servicio fue donde se desplego por primera vez la 
+aplicación (Actividad 4). 
+Después de seleccionar el proveedor se debe configurar el nombre de la aplicación de AWS 
+CodeDeploy, y el grupo de implementación de AWS CodeDeploy, los cuales se crearon 
+automáticamente en la actividad 4. 
+Después de finalizada la configuración del Pipeline, aparecerá una ventana en la que se muestra 
+el proceso que lleva flujo de trabajo, iniciando por la identificación de los cambios en el 
+repositorio de GitHub, la compilación del proyecto en CodeBuild y por último, el despliegue de la 
+aplicación a través del servicio Elastic Beanstalk. 
+A continuación, deberá asignar los artefactos de entrada para la etapa de implementación, los 
+cuales corresponden a los archivos taskdef.json y appspec.json que se crearon anteriormente y 
+el artefacto con los detalles de la imagen “imageDetail.json” el cual está definido en el archivo 
+buildspec.yml. 
+Por último, en la casilla “Texto de marcador de posición en la definición de tarea”, debe colocar el 
+mismo valor de imagen que definió en el archivo taskdef.json. 
+En la última página se mostrará el resumen de la configuración del Pipeline, si está conforme 
+con ella, de clic en el botón “Crear la canalización”. 
+ 
+Después de finalizada la configuración del Pipeline observara una ventana como la siguiente en la cual se 
+observa el proceso que lleva el flujo de trabajo. 
+ 
+ 
+ 
+Después de completado la etapa de Build o construcción (etapa 2), diríjase a CodeDeploy para observar 
+la distribución del tráfico entre la versión anterior de la aplicación (Blue) y la nueva versión (Green) que 
+acaba de lanzar. 
+ 
+Al finalizar la transferencia de todo el tráfico a la nueva versión de la aplicación, el pipeline finalizará. 
+ 
+Si el proceso termina correctamente observará una imagen como la siguiente. 
+ 
+ 
+ 
+ 
+ 
+ 
+Actividad 9 – Despliegue Blue/Green 
+ 
+Realice una modificación en el código de la aplicación y realice un nuevo push al repositorio. 
+ 
+ 
+El Pipeline iniciará nuevamente y en CodeDeploy podrá observar la distribución de tráfico. 
+ 
+Por último, acceda a la aplicación a través del DNS de su balanceador de carga. 
+Refresque la página varias veces, hasta que acceda a la nueva versión de su aplicación. 
+Al finalizar la transferencia del tráfico solo podrá acceder a la nueva versión de la aplicación. Si 
+requiere hacer roll back, de clic en el botón 
+Referencias 
+[1] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/welcome-introducing
+artifacts.html 
+[2] https://aws.amazon.com/es/codepipeline/faqs/?nc=sn&loc=5 
+[3] https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html 
+[4] https://docs.aws.amazon.com/es_es/codecommit/latest/userguide/getting-started.html#getting
+started-create-repo 
+[5] https://docs.aws.amazon.com/es_es/codecommit/latest/userguide/setting-up-git-remote
+codecommit.html#setting-up-git-remote-codecommit-prereq 
+[6] https://docs.aws.amazon.com/es_es/codecommit/latest/userguide/setting-up-git-remote
+codecommit.html#setting-up-git-remote-codecommit-install 
+[7] https://docs.aws.amazon.com/codebuild/latest/userguide/sample-elastic-beanstalk.html 
+[8] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/welcome-introducing
+artifacts.html 
+[9] https://aws.amazon.com/es/codebuild/ 
+[10] https://docs.docker.com/docker-hub/ 
+[11] https://docs.aws.amazon.com/es_es/codecommit/latest/userguide/troubleshooting-ch.html 
+[12] https://docs.aws.amazon.com/es_es/codebuild/latest/userguide/sample-docker.html 
+[13] https://docs.aws.amazon.com/es_es/codecommit/latest/userguide/setting-up-https-windows.html 
+[14] https://docs.aws.amazon.com/es_es/AmazonECS/latest/developerguide/create-blue-green.html 
+[15] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/file-reference.html 
+[16] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/tutorials-ecs-ecr
+codedeploy.html 
+[17] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/file-reference.html#file
+reference-ecs-bluegreen 
+[18] https://docs.aws.amazon.com/es_es/codepipeline/latest/userguide/tutorials-ecs-ecr
+codedeploy.html 

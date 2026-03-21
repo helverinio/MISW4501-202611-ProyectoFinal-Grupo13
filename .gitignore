@@ -208,3 +208,13 @@ __marimo__/
 
 # JMeter test results
 tests/jmeter/results/
+
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform lock: keep versioned for reproducible provider resolution
+.terraform.lock.hcl

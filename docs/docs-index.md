@@ -38,6 +38,7 @@ Este documento sirve como mapa de navegación para humanos e IA.
 ## ⚙️ Ejecución / Setup
 
 - docs/runbooks/local-setup.md
+- docs/runbooks/aws-ecs-deployment.md
 
 ---
 

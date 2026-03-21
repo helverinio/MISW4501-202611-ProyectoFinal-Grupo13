@@ -59,7 +59,9 @@ def create_app(config_name='default'):
         username=app.config.get('MQ_USERNAME', 'admin'),
         password=app.config.get('MQ_PASSWORD', 'admin'),
         max_retries=app.config.get('MQ_MAX_RETRIES', 3),
-        dlq_topic=app.config.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ')
+        dlq_topic=app.config.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ'),
+        use_ssl=app.config.get('MQ_USE_SSL', False),
+        ca_cert_path=app.config.get('MQ_CA_CERT_PATH')
     )
     subscriber.start()
     

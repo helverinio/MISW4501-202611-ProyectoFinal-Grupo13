@@ -11,11 +11,21 @@ logger = logging.getLogger(__name__)
 class MessagePublisher:
     TOPIC_PAYMENT_STATUS_UPDATED = '/topic/PaymentStatusUpdated'
     
-    def __init__(self, host: str = None, port: int = None, username: str = None, password: str = None):
+    def __init__(
+        self,
+        host: str = None,
+        port: int = None,
+        username: str = None,
+        password: str = None,
+        use_ssl: bool = False,
+        ca_cert_path: Optional[str] = None,
+    ):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
+        self.use_ssl = use_ssl
+        self.ca_cert_path = ca_cert_path
         self._connection: Optional[stomp.Connection] = None
     
     @classmethod
@@ -24,14 +34,21 @@ class MessagePublisher:
             host=current_app.config.get('MQ_HOST', 'activemq'),
             port=current_app.config.get('MQ_PORT', 61613),
             username=current_app.config.get('MQ_USERNAME', 'admin'),
-            password=current_app.config.get('MQ_PASSWORD', 'admin')
+            password=current_app.config.get('MQ_PASSWORD', 'admin'),
+            use_ssl=current_app.config.get('MQ_USE_SSL', False),
+            ca_cert_path=current_app.config.get('MQ_CA_CERT_PATH')
         )
     
     def _get_connection(self) -> stomp.Connection:
         if self._connection is None or not self._connection.is_connected():
             self._connection = stomp.Connection([(self.host, self.port)])
+            if self.use_ssl:
+                ssl_options = {'for_hosts': [(self.host, self.port)]}
+                if self.ca_cert_path:
+                    ssl_options['ca_certs'] = self.ca_cert_path
+                self._connection.set_ssl(**ssl_options)
             self._connection.connect(self.username, self.password, wait=True)
-            logger.info(f"[MQ] Connected to ActiveMQ at {self.host}:{self.port}")
+            logger.info(f"[MQ] Connected to ActiveMQ at {self.host}:{self.port} (ssl={self.use_ssl})")
         return self._connection
     
     def publish(self, destination: str, message: dict, headers: dict = None) -> bool:
