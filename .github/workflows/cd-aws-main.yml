@@ -1,0 +1,231 @@
+name: CD AWS - main
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cd-aws-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: true
+      TF_VAR_aws_region: us-east-1
+      TF_VAR_github_repository: ${{ github.repository }}
+
+    steps:
+      - name: Checkout merged commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        working-directory: infra/aws/terraform
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: infra/aws/terraform
+        run: terraform apply -auto-approve
+
+      - name: Capture Terraform outputs
+        working-directory: infra/aws/terraform
+        run: terraform output -json > tf-outputs.json
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push backend images
+        shell: bash
+        working-directory: .
+        run: |
+          set -euo pipefail
+          TF_OUTPUTS="infra/aws/terraform/tf-outputs.json"
+
+          build_and_push() {
+            local service="$1"
+            local path="$2"
+            local repo
+            repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
+
+            echo "Building $service -> $repo:${GITHUB_SHA}"
+            docker build -t "$repo:${GITHUB_SHA}" "$path"
+            docker tag "$repo:${GITHUB_SHA}" "$repo:latest"
+            docker push "$repo:${GITHUB_SHA}"
+            docker push "$repo:latest"
+          }
+
+          build_and_push gateway microservices/gateway
+          build_and_push reservas microservices/reservas
+          build_and_push pagos microservices/pagos
+          build_and_push ext-payments microservices/ext-payments
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            frontends/web-client/package-lock.json
+            frontends/web-admin/package-lock.json
+
+      - name: Build Angular frontends
+        shell: bash
+        run: |
+          set -euo pipefail
+          pushd frontends/web-client
+          npm ci
+          npm run build -- --configuration production
+          popd
+
+          pushd frontends/web-admin
+          npm ci
+          npm run build -- --configuration production
+          popd
+
+      - name: Publish frontends to S3 and invalidate CloudFront
+        shell: bash
+        run: |
+          set -euo pipefail
+          TF_OUTPUTS="infra/aws/terraform/tf-outputs.json"
+
+          WEB_CLIENT_BUCKET=$(jq -r '.frontend_buckets.value["web-client"]' "$TF_OUTPUTS")
+          WEB_ADMIN_BUCKET=$(jq -r '.frontend_buckets.value["web-admin"]' "$TF_OUTPUTS")
+          WEB_CLIENT_DIST=$(jq -r '.frontend_cloudfront_distribution_ids.value["web-client"]' "$TF_OUTPUTS")
+          WEB_ADMIN_DIST=$(jq -r '.frontend_cloudfront_distribution_ids.value["web-admin"]' "$TF_OUTPUTS")
+
+          WEB_CLIENT_DIST_DIR=$(find frontends/web-client/dist -type d -name browser | head -n 1)
+          WEB_ADMIN_DIST_DIR=$(find frontends/web-admin/dist -type d -name browser | head -n 1)
+
+          aws s3 sync "$WEB_CLIENT_DIST_DIR/" "s3://$WEB_CLIENT_BUCKET/" --delete
+          aws s3 sync "$WEB_ADMIN_DIST_DIR/" "s3://$WEB_ADMIN_BUCKET/" --delete
+
+          aws cloudfront create-invalidation --distribution-id "$WEB_CLIENT_DIST" --paths '/*'
+          aws cloudfront create-invalidation --distribution-id "$WEB_ADMIN_DIST" --paths '/*'
+
+      - name: Deploy ECS services with CodeDeploy blue-green
+        shell: bash
+        run: |
+          set -euo pipefail
+          TF_OUTPUTS="infra/aws/terraform/tf-outputs.json"
+
+          AWS_REGION=$(jq -r '.aws_region.value' "$TF_OUTPUTS")
+          EXEC_ROLE_ARN=$(jq -r '.ecs_task_execution_role_arn.value' "$TF_OUTPUTS")
+          TASK_ROLE_ARN=$(jq -r '.ecs_task_role_arn.value' "$TF_OUTPUTS")
+          SECRET_ARN=$(jq -r '.app_config_secret_arn.value' "$TF_OUTPUTS")
+          INTERNAL_ALB_DNS=$(jq -r '.internal_alb_dns_name.value' "$TF_OUTPUTS")
+          PUBLIC_ALB_DNS=$(jq -r '.public_alb_dns_name.value' "$TF_OUTPUTS")
+          REDIS_HOST=$(jq -r '.redis_primary_endpoint.value' "$TF_OUTPUTS")
+          MQ_HOST=$(jq -r '.mq_host.value' "$TF_OUTPUTS")
+          MQ_PORT=$(jq -r '.mq_port.value' "$TF_OUTPUTS")
+
+          render_taskdef() {
+            local service="$1"
+            local image_uri="$2"
+            local family="$3"
+            local log_group="$4"
+            local template="infra/aws/terraform/taskdefs/${service}.json.tpl"
+            local output_file="/tmp/${service}-taskdef.json"
+
+            python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT"
+import pathlib
+import sys
+
+(template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
+ log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
+ mq_port) = sys.argv[1:]
+
+content = pathlib.Path(template_path).read_text()
+replacements = {
+    "__FAMILY__": family,
+    "__EXEC_ROLE_ARN__": exec_role,
+    "__TASK_ROLE_ARN__": task_role,
+    "__IMAGE_URI__": image_uri,
+    "__SECRET_ARN__": secret_arn,
+    "__LOG_GROUP__": log_group,
+    "__AWS_REGION__": aws_region,
+    "__INTERNAL_ALB_DNS__": internal_alb_dns,
+    "__PUBLIC_ALB_DNS__": public_alb_dns,
+    "__REDIS_HOST__": redis_host,
+    "__MQ_HOST__": mq_host,
+    "__MQ_PORT__": mq_port,
+}
+for key, value in replacements.items():
+    content = content.replace(key, value)
+pathlib.Path(output_path).write_text(content)
+PY
+
+            echo "$output_file"
+          }
+
+          deploy_service() {
+            local service="$1"
+            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status attempts
+
+            image_repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
+            family=$(jq -r --arg s "$service" '.service_families.value[$s]' "$TF_OUTPUTS")
+            log_group=$(jq -r --arg s "$service" '.log_groups.value[$s]' "$TF_OUTPUTS")
+            app_name=$(jq -r --arg s "$service" '.codedeploy_apps.value[$s]' "$TF_OUTPUTS")
+            group_name=$(jq -r --arg s "$service" '.codedeploy_deployment_groups.value[$s]' "$TF_OUTPUTS")
+            port=$(jq -r --arg s "$service" '.service_ports.value[$s]' "$TF_OUTPUTS")
+            image_uri="$image_repo:${GITHUB_SHA}"
+
+            taskdef_file=$(render_taskdef "$service" "$image_uri" "$family" "$log_group")
+            taskdef_arn=$(aws ecs register-task-definition --cli-input-json "file://$taskdef_file" --query 'taskDefinition.taskDefinitionArn' --output text)
+
+            appspec_file="/tmp/${service}-appspec.json"
+            jq -n --arg taskdef "$taskdef_arn" --arg container "$service" --argjson port "$port" '{version:1,Resources:[{TargetService:{Type:"AWS::ECS::Service",Properties:{TaskDefinition:$taskdef,LoadBalancerInfo:{ContainerName:$container,ContainerPort:$port},PlatformVersion:"LATEST"}}}]}' > "$appspec_file"
+
+            deploy_input_file="/tmp/${service}-deployment.json"
+            jq -n --arg app "$app_name" --arg group "$group_name" --arg desc "Deploy ${service} ${GITHUB_SHA}" --arg content "$(cat "$appspec_file")" '{applicationName:$app,deploymentGroupName:$group,description:$desc,revision:{revisionType:"AppSpecContent",appSpecContent:{content:$content}}}' > "$deploy_input_file"
+
+            deployment_id=$(aws deploy create-deployment --cli-input-json "file://$deploy_input_file" --query 'deploymentId' --output text)
+            echo "Started deployment for $service: $deployment_id"
+
+            attempts=0
+            while true; do
+              status=$(aws deploy get-deployment --deployment-id "$deployment_id" --query 'deploymentInfo.status' --output text)
+              echo "$service deployment status: $status"
+
+              if [ "$status" = "Succeeded" ]; then
+                break
+              fi
+
+              if [ "$status" = "Failed" ] || [ "$status" = "Stopped" ]; then
+                echo "Deployment for $service failed with status $status"
+                exit 1
+              fi
+
+              attempts=$((attempts + 1))
+              if [ "$attempts" -ge 80 ]; then
+                echo "Timed out waiting for deployment of $service"
+                exit 1
+              fi
+
+              sleep 15
+            done
+          }
+
+          deploy_service ext-payments
+          deploy_service pagos
+          deploy_service reservas
+          deploy_service gateway

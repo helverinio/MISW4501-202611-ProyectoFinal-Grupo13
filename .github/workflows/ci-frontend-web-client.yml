@@ -1,0 +1,51 @@
+name: Frontend CI - web-client
+
+on:
+  # GitFlow push branches for CI validation.
+  push:
+    branches:
+      - develop
+      - feature/**
+      - release/**
+      - hotfix/**
+    # Run only when web-client or its CI definitions change.
+    paths:
+      - frontends/web-client/**
+      - .github/workflows/ci-frontend-web-client.yml
+      - .github/workflows/_frontend-ci.yml
+  # PR validation gates into integration and production branches.
+  pull_request:
+    branches:
+      - develop
+      - main
+    # Keep PR trigger broad so required checks are always reported.
+
+jobs:
+  detect-changes:
+    name: Detect web-client changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'frontends/web-client/**'
+              - '.github/workflows/ci-frontend-web-client.yml'
+              - '.github/workflows/_frontend-ci.yml'
+
+  web-client-ci:
+    # Calls the shared frontend CI template.
+    name: web-client
+    needs: detect-changes
+    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
+    uses: ./.github/workflows/_frontend-ci.yml
+    with:
+      app_name: web-client
+      app_path: frontends/web-client

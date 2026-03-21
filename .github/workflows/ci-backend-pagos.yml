@@ -1,0 +1,51 @@
+name: Backend CI - pagos
+
+on:
+  # GitFlow push branches for CI validation.
+  push:
+    branches:
+      - develop
+      - feature/**
+      - release/**
+      - hotfix/**
+    # Run only when pagos or its CI definitions change.
+    paths:
+      - microservices/pagos/**
+      - .github/workflows/ci-backend-pagos.yml
+      - .github/workflows/_python-service-ci.yml
+  # PR validation gates into integration and production branches.
+  pull_request:
+    branches:
+      - develop
+      - main
+    # Keep PR trigger broad so required checks are always reported.
+
+jobs:
+  detect-changes:
+    name: Detect pagos changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'microservices/pagos/**'
+              - '.github/workflows/ci-backend-pagos.yml'
+              - '.github/workflows/_python-service-ci.yml'
+
+  pagos-ci:
+    # Calls the shared Python CI template to avoid duplication.
+    name: pagos
+    needs: detect-changes
+    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
+    uses: ./.github/workflows/_python-service-ci.yml
+    with:
+      service_name: pagos
+      service_path: microservices/pagos

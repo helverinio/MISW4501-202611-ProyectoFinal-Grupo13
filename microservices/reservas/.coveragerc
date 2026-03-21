@@ -1,0 +1,12 @@
+[run]
+omit =
+    app/api/*
+    app/api/**
+    app/infrastructure/*
+    app/infrastructure/**
+    app/domain/repositories/*
+    app/domain/repositories/**
+
+[report]
+show_missing = True
+skip_covered = False
