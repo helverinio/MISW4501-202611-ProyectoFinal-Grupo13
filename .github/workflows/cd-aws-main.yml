@@ -147,32 +147,32 @@ jobs:
             local output_file="/tmp/${service}-taskdef.json"
 
             python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT"
-import pathlib
-import sys
+            import pathlib
+            import sys
 
-(template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
- log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
- mq_port) = sys.argv[1:]
+            (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
+             log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
+             mq_port) = sys.argv[1:]
 
-content = pathlib.Path(template_path).read_text()
-replacements = {
-    "__FAMILY__": family,
-    "__EXEC_ROLE_ARN__": exec_role,
-    "__TASK_ROLE_ARN__": task_role,
-    "__IMAGE_URI__": image_uri,
-    "__SECRET_ARN__": secret_arn,
-    "__LOG_GROUP__": log_group,
-    "__AWS_REGION__": aws_region,
-    "__INTERNAL_ALB_DNS__": internal_alb_dns,
-    "__PUBLIC_ALB_DNS__": public_alb_dns,
-    "__REDIS_HOST__": redis_host,
-    "__MQ_HOST__": mq_host,
-    "__MQ_PORT__": mq_port,
-}
-for key, value in replacements.items():
-    content = content.replace(key, value)
-pathlib.Path(output_path).write_text(content)
-PY
+            content = pathlib.Path(template_path).read_text()
+            replacements = {
+              "__FAMILY__": family,
+              "__EXEC_ROLE_ARN__": exec_role,
+              "__TASK_ROLE_ARN__": task_role,
+              "__IMAGE_URI__": image_uri,
+              "__SECRET_ARN__": secret_arn,
+              "__LOG_GROUP__": log_group,
+              "__AWS_REGION__": aws_region,
+              "__INTERNAL_ALB_DNS__": internal_alb_dns,
+              "__PUBLIC_ALB_DNS__": public_alb_dns,
+              "__REDIS_HOST__": redis_host,
+              "__MQ_HOST__": mq_host,
+              "__MQ_PORT__": mq_port,
+            }
+            for key, value in replacements.items():
+              content = content.replace(key, value)
+            pathlib.Path(output_path).write_text(content)
+            PY
 
             echo "$output_file"
           }
