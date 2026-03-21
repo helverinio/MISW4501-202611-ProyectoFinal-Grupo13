@@ -48,7 +48,11 @@ Todos los workflows de componente se disparan en:
 
 En `push`, cada workflow usa `paths` para ejecutarse solo cuando cambia su componente (o su propio YAML/reusable asociado).
 
-En `pull_request`, el workflow se dispara siempre y ejecuta su CI completo para validar integración antes del merge a `develop` o `main`.
+Además, cada workflow incluye detección de cambios por job para reforzar esta regla:
+- en `push`, ejecuta CI solo si cambió su componente;
+- en `pull_request`, ejecuta CI siempre para validar integración completa antes del merge a `develop` o `main`.
+
+Con esto, un commit en `feature/docs` que solo cambie documentación no ejecuta pipelines de backend/frontend.
 
 ## 4) Qué valida cada tipo
 
