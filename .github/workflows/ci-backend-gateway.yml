@@ -18,16 +18,33 @@ on:
     branches:
       - develop
       - main
-    # Run only when gateway or its CI definitions change.
-    paths:
-      - microservices/gateway/**
-      - .github/workflows/ci-backend-gateway.yml
-      - .github/workflows/_python-service-ci.yml
+    # Keep PR trigger broad so required checks are always reported.
 
 jobs:
+  detect-changes:
+    name: Detect gateway changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'microservices/gateway/**'
+              - '.github/workflows/ci-backend-gateway.yml'
+              - '.github/workflows/_python-service-ci.yml'
+
   gateway-ci:
     # Calls the shared Python CI template to avoid duplication.
     name: gateway
+    needs: detect-changes
+    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
     uses: ./.github/workflows/_python-service-ci.yml
     with:
       service_name: gateway

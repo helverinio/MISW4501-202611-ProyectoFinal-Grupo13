@@ -18,16 +18,33 @@ on:
     branches:
       - develop
       - main
-    # Run only when ext-payments or its CI definitions change.
-    paths:
-      - microservices/ext-payments/**
-      - .github/workflows/ci-backend-ext-payments.yml
-      - .github/workflows/_python-service-ci.yml
+    # Keep PR trigger broad so required checks are always reported.
 
 jobs:
+  detect-changes:
+    name: Detect ext-payments changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'microservices/ext-payments/**'
+              - '.github/workflows/ci-backend-ext-payments.yml'
+              - '.github/workflows/_python-service-ci.yml'
+
   ext-payments-ci:
     # Calls the shared Python CI template to avoid duplication.
     name: ext-payments
+    needs: detect-changes
+    if: github.event_name != 'pull_request' || needs.detect-changes.outputs.changed == 'true'
     uses: ./.github/workflows/_python-service-ci.yml
     with:
       # ext-payments keeps a temporary lower threshold until test coverage is expanded.
