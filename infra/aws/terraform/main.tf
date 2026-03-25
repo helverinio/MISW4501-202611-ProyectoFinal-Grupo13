@@ -150,9 +150,11 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each = aws_subnet.public
+  for_each = {
+    for index, _cidr in var.public_subnet_cidrs : index => true
+  }
 
-  subnet_id      = each.value.id
+  subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.public.id
 }
 
@@ -458,8 +460,8 @@ resource "aws_ecr_repository" "services" {
 }
 
 resource "aws_ecr_lifecycle_policy" "services" {
-  for_each   = aws_ecr_repository.services
-  repository = each.value.name
+  for_each   = local.service_configs
+  repository = aws_ecr_repository.services[each.key].name
 
   policy = jsonencode({
     rules = [
@@ -738,9 +740,9 @@ resource "aws_s3_bucket" "frontends" {
 }
 
 resource "aws_s3_bucket_public_access_block" "frontends" {
-  for_each = aws_s3_bucket.frontends
+  for_each = local.frontend_configs
 
-  bucket                  = each.value.id
+  bucket                  = aws_s3_bucket.frontends[each.key].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -748,7 +750,7 @@ resource "aws_s3_bucket_public_access_block" "frontends" {
 }
 
 resource "aws_cloudfront_origin_access_control" "frontends" {
-  for_each = aws_s3_bucket.frontends
+  for_each = local.frontend_configs
 
   name                              = "${local.name_prefix}-${each.key}-oac"
   description                       = "OAC for ${each.key} frontend bucket"
@@ -758,14 +760,14 @@ resource "aws_cloudfront_origin_access_control" "frontends" {
 }
 
 resource "aws_cloudfront_distribution" "frontends" {
-  for_each = aws_s3_bucket.frontends
+  for_each = local.frontend_configs
 
   enabled             = true
   default_root_object = "index.html"
   price_class         = var.frontend_price_class
 
   origin {
-    domain_name              = each.value.bucket_regional_domain_name
+    domain_name              = aws_s3_bucket.frontends[each.key].bucket_regional_domain_name
     origin_id                = each.key
     origin_access_control_id = aws_cloudfront_origin_access_control.frontends[each.key].id
   }
@@ -811,9 +813,9 @@ resource "aws_cloudfront_distribution" "frontends" {
 }
 
 resource "aws_s3_bucket_policy" "frontends" {
-  for_each = aws_s3_bucket.frontends
+  for_each = local.frontend_configs
 
-  bucket = each.value.id
+  bucket = aws_s3_bucket.frontends[each.key].id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -824,7 +826,7 @@ resource "aws_s3_bucket_policy" "frontends" {
           Service = "cloudfront.amazonaws.com"
         }
         Action   = ["s3:GetObject"]
-        Resource = "${each.value.arn}/*"
+        Resource = "${aws_s3_bucket.frontends[each.key].arn}/*"
         Condition = {
           StringEquals = {
             "AWS:SourceArn" = aws_cloudfront_distribution.frontends[each.key].arn
