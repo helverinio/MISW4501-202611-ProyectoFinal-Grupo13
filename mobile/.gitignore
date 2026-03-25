@@ -1,0 +1,71 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+debug.keystore
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# Gradle files
+.gradle/
+build/
+*.gradle
+gradle.properties
+# gradlew and gradlew.bat are needed for EAS build
+# gradlew
+# gradlew.bat
+
+# Android Studio generated files and folders
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+proguard-rules.pro
+
+# Local configuration file
+local.properties
+
+# Android generated files
+android/app/src/main/res/drawable*/
+android/app/build/
+android/build/
+android/
+
+# Generated image assets
+**/splashscreen_logo.png
+**/ic_launcher*.png
+**/ic_launcher*.webp
+
+

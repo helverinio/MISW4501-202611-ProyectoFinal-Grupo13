@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "CharlotteMasonAlaManoMobile",
+    "slug": "CharlotteMasonAlaManoMobile",
+    "version": "1.0.2",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
+        }
+      ]
+    ],
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "scheme": "charlottemasonalamano",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.orlandoarnedo.charlottemasonalamanomobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.orlandoarnedo.CharlotteMasonAlaManoMobile",
+      "versionCode": 3,
+      "targetSdkVersion": 35,
+      "compileSdkVersion": 35,
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "xxxxx-xxxxx-xxxx-xxxx-xxxxx"
+      },
+      "REACT_APP_CALLER_ID": "NVJLDHNVIOJMVPM541V6D4V65V1D65FV4DF6V4DF6V4D651V",
+      "REACT_APP_ENV": "prod",
+
+      "REACT_APP_HASH_SALT": "PdsNVJvfLDHNVIOJfvfMVPM541V6D4V6vfv5V1D65FV4DFvf6V4DF6V4D651VDB",
+      "REACT_APP_BACKEND_URL": "https://oa-charlottemason-prod-backend.azurewebsites.net"
+    },
+    "owner": "grupo13"
+  }
+}
