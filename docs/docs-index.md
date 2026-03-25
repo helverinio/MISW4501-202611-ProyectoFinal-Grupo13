@@ -39,6 +39,7 @@ Este documento sirve como mapa de navegación para humanos e IA.
 
 - docs/runbooks/local-setup.md
 - docs/runbooks/aws-ecs-deployment.md
+- docs/runbooks/aws-codepipeline-terraform.md
 
 ---
 

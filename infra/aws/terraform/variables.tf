@@ -118,3 +118,39 @@ variable "enable_codedeploy" {
   type        = bool
   default     = true
 }
+
+variable "enable_aws_native_cicd" {
+  description = "Create an AWS-native CI/CD pipeline with CodePipeline + CodeBuild."
+  type        = bool
+  default     = false
+}
+
+variable "cicd_main_branch" {
+  description = "Main branch that triggers deployments after merge."
+  type        = string
+  default     = "main"
+}
+
+variable "github_connection_arn" {
+  description = "Existing CodeStar/CodeConnections ARN for GitHub. Leave empty to let Terraform create one."
+  type        = string
+  default     = ""
+}
+
+variable "backend_services" {
+  description = "Backend services that are built and pushed to ECR by the AWS native pipeline."
+  type        = list(string)
+  default     = ["reservas", "pagos", "ext-payments"]
+}
+
+variable "frontend_apps" {
+  description = "Frontend apps that are built and published to S3 + CloudFront by the AWS native pipeline."
+  type        = list(string)
+  default     = ["web-client", "web-admin"]
+}
+
+variable "deployment_order" {
+  description = "CodeDeploy order for backend services. Keep dependencies first."
+  type        = list(string)
+  default     = ["ext-payments", "pagos", "reservas"]
+}
