@@ -39,6 +39,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
           aws-region: us-east-2
+          role-duration-seconds: 3600
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -234,11 +235,14 @@ jobs:
                 exit 1
               fi
 
-              sleep 15
+              sleep 5
             done
           }
 
-          deploy_service ext-payments
-          deploy_service pagos
-          deploy_service reservas
-          deploy_service gateway
+          deploy_service ext-payments &
+          deploy_service pagos &
+          deploy_service reservas &
+          deploy_service gateway &
+          
+          wait
+          echo "All deployments completed successfully"
