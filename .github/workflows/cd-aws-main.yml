@@ -169,8 +169,8 @@ jobs:
               local placeholder="$1"
               local value="$2"
               local escaped
-              escaped=$(printf '%s' "$value" | sed -e 's/[\\/&]/\\\\&/g')
-              sed -i "s/${placeholder}/${escaped}/g" "$output_file"
+              escaped=$(printf '%s' "$value" | sed -e 's/[\\|&]/\\&/g')
+              sed -i "s|${placeholder}|${escaped}|g" "$output_file"
             }
 
             replace_placeholder "__FAMILY__" "$family"
