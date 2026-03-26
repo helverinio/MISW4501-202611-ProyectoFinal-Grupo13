@@ -50,4 +50,4 @@ docker-compose start pagos
 docker-compose down -v
 ```
 
-test 6
+test 7
