@@ -62,7 +62,7 @@ jobs:
 
       - name: Terraform apply
         working-directory: infra/aws/terraform
-        run: terraform apply -auto-approve
+        run: terraform apply -lock-timeout=15m -auto-approve
 
       - name: Capture Terraform outputs
         working-directory: infra/aws/terraform
