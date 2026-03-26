@@ -19,6 +19,7 @@ jobs:
   deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     env:
       TF_IN_AUTOMATION: true
       TF_VAR_aws_region: us-east-2
@@ -144,6 +145,8 @@ jobs:
         run: |
           set -euo pipefail
           TF_OUTPUTS="infra/aws/terraform/tf-outputs.json"
+          DEPLOY_TIMEOUT_SECONDS=$((3 * 60 * 60))
+          DEPLOY_DEADLINE=$(( $(date +%s) + DEPLOY_TIMEOUT_SECONDS ))
 
           AWS_REGION=$(jq -r '.aws_region.value' "$TF_OUTPUTS")
           EXEC_ROLE_ARN=$(jq -r '.ecs_task_execution_role_arn.value' "$TF_OUTPUTS")
@@ -191,7 +194,7 @@ jobs:
 
           deploy_service() {
             local service="$1"
-            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status attempts
+            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status
 
             image_repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
             family=$(jq -r --arg s "$service" '.service_families.value[$s]' "$TF_OUTPUTS")
@@ -213,7 +216,6 @@ jobs:
             deployment_id=$(aws deploy create-deployment --cli-input-json "file://$deploy_input_file" --query 'deploymentId' --output text)
             echo "Started deployment for $service: $deployment_id"
 
-            attempts=0
             while true; do
               status=$(aws deploy get-deployment --deployment-id "$deployment_id" --query 'deploymentInfo.status' --output text)
               echo "$service deployment status: $status"
@@ -227,8 +229,7 @@ jobs:
                 exit 1
               fi
 
-              attempts=$((attempts + 1))
-              if [ "$attempts" -ge 80 ]; then
+              if [ "$(date +%s)" -ge "$DEPLOY_DEADLINE" ]; then
                 echo "Timed out waiting for deployment of $service"
                 exit 1
               fi
