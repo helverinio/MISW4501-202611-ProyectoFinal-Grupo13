@@ -163,33 +163,28 @@ jobs:
             local template="infra/aws/terraform/taskdefs/${service}.json.tpl"
             local output_file="/tmp/${service}-taskdef.json"
 
-            python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT"
-            import pathlib
-            import sys
+            cp "$template" "$output_file"
 
-            (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
-             log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
-             mq_port) = sys.argv[1:]
-
-            content = pathlib.Path(template_path).read_text()
-            replacements = {
-              "__FAMILY__": family,
-              "__EXEC_ROLE_ARN__": exec_role,
-              "__TASK_ROLE_ARN__": task_role,
-              "__IMAGE_URI__": image_uri,
-              "__SECRET_ARN__": secret_arn,
-              "__LOG_GROUP__": log_group,
-              "__AWS_REGION__": aws_region,
-              "__INTERNAL_ALB_DNS__": internal_alb_dns,
-              "__PUBLIC_ALB_DNS__": public_alb_dns,
-              "__REDIS_HOST__": redis_host,
-              "__MQ_HOST__": mq_host,
-              "__MQ_PORT__": mq_port,
+            replace_placeholder() {
+              local placeholder="$1"
+              local value="$2"
+              local escaped
+              escaped=$(printf '%s' "$value" | sed -e 's/[\\/&]/\\\\&/g')
+              sed -i "s/${placeholder}/${escaped}/g" "$output_file"
             }
-            for key, value in replacements.items():
-              content = content.replace(key, value)
-            pathlib.Path(output_path).write_text(content)
-            PY
+
+            replace_placeholder "__FAMILY__" "$family"
+            replace_placeholder "__EXEC_ROLE_ARN__" "$EXEC_ROLE_ARN"
+            replace_placeholder "__TASK_ROLE_ARN__" "$TASK_ROLE_ARN"
+            replace_placeholder "__IMAGE_URI__" "$image_uri"
+            replace_placeholder "__SECRET_ARN__" "$SECRET_ARN"
+            replace_placeholder "__LOG_GROUP__" "$log_group"
+            replace_placeholder "__AWS_REGION__" "$AWS_REGION"
+            replace_placeholder "__INTERNAL_ALB_DNS__" "$INTERNAL_ALB_DNS"
+            replace_placeholder "__PUBLIC_ALB_DNS__" "$PUBLIC_ALB_DNS"
+            replace_placeholder "__REDIS_HOST__" "$REDIS_HOST"
+            replace_placeholder "__MQ_HOST__" "$MQ_HOST"
+            replace_placeholder "__MQ_PORT__" "$MQ_PORT"
 
             echo "$output_file"
           }
