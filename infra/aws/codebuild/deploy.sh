@@ -15,7 +15,7 @@ IFS=',' read -r -a DEPLOY_ORDER <<< "$DEPLOY_ORDER_RAW"
 terraform_apply_and_capture_outputs() {
   pushd "$TF_DIR" >/dev/null
   terraform init
-  terraform apply -auto-approve
+  terraform apply -lock-timeout=15m -auto-approve
   terraform output -json > tf-outputs.json
   popd >/dev/null
 }

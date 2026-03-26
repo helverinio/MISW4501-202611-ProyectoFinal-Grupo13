@@ -344,7 +344,7 @@ resource "aws_elasticache_subnet_group" "main" {
 resource "aws_db_instance" "postgres" {
   identifier                 = "${local.name_prefix}-postgres"
   engine                     = "postgres"
-  engine_version             = "15.8"
+  engine_version             = "15"
   instance_class             = var.rds_instance_class
   allocated_storage          = 20
   max_allocated_storage      = 100

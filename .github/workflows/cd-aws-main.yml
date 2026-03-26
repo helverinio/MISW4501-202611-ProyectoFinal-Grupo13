@@ -19,6 +19,7 @@ jobs:
   deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     env:
       TF_IN_AUTOMATION: true
       TF_VAR_aws_region: us-east-2
@@ -38,6 +39,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
           aws-region: us-east-2
+          role-duration-seconds: 3600
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -62,7 +64,7 @@ jobs:
 
       - name: Terraform apply
         working-directory: infra/aws/terraform
-        run: terraform apply -auto-approve
+        run: terraform apply -lock-timeout=15m -auto-approve
 
       - name: Capture Terraform outputs
         working-directory: infra/aws/terraform
@@ -144,6 +146,8 @@ jobs:
         run: |
           set -euo pipefail
           TF_OUTPUTS="infra/aws/terraform/tf-outputs.json"
+          DEPLOY_TIMEOUT_SECONDS=$((3 * 60 * 60))
+          DEPLOY_DEADLINE=$(( $(date +%s) + DEPLOY_TIMEOUT_SECONDS ))
 
           AWS_REGION=$(jq -r '.aws_region.value' "$TF_OUTPUTS")
           EXEC_ROLE_ARN=$(jq -r '.ecs_task_execution_role_arn.value' "$TF_OUTPUTS")
@@ -163,40 +167,35 @@ jobs:
             local template="infra/aws/terraform/taskdefs/${service}.json.tpl"
             local output_file="/tmp/${service}-taskdef.json"
 
-            python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT"
-            import pathlib
-            import sys
+            cp "$template" "$output_file"
 
-            (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
-             log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
-             mq_port) = sys.argv[1:]
-
-            content = pathlib.Path(template_path).read_text()
-            replacements = {
-              "__FAMILY__": family,
-              "__EXEC_ROLE_ARN__": exec_role,
-              "__TASK_ROLE_ARN__": task_role,
-              "__IMAGE_URI__": image_uri,
-              "__SECRET_ARN__": secret_arn,
-              "__LOG_GROUP__": log_group,
-              "__AWS_REGION__": aws_region,
-              "__INTERNAL_ALB_DNS__": internal_alb_dns,
-              "__PUBLIC_ALB_DNS__": public_alb_dns,
-              "__REDIS_HOST__": redis_host,
-              "__MQ_HOST__": mq_host,
-              "__MQ_PORT__": mq_port,
+            replace_placeholder() {
+              local placeholder="$1"
+              local value="$2"
+              local escaped
+              escaped=$(printf '%s' "$value" | sed -e 's/[\\|&]/\\&/g')
+              sed -i "s|${placeholder}|${escaped}|g" "$output_file"
             }
-            for key, value in replacements.items():
-              content = content.replace(key, value)
-            pathlib.Path(output_path).write_text(content)
-            PY
+
+            replace_placeholder "__FAMILY__" "$family"
+            replace_placeholder "__EXEC_ROLE_ARN__" "$EXEC_ROLE_ARN"
+            replace_placeholder "__TASK_ROLE_ARN__" "$TASK_ROLE_ARN"
+            replace_placeholder "__IMAGE_URI__" "$image_uri"
+            replace_placeholder "__SECRET_ARN__" "$SECRET_ARN"
+            replace_placeholder "__LOG_GROUP__" "$log_group"
+            replace_placeholder "__AWS_REGION__" "$AWS_REGION"
+            replace_placeholder "__INTERNAL_ALB_DNS__" "$INTERNAL_ALB_DNS"
+            replace_placeholder "__PUBLIC_ALB_DNS__" "$PUBLIC_ALB_DNS"
+            replace_placeholder "__REDIS_HOST__" "$REDIS_HOST"
+            replace_placeholder "__MQ_HOST__" "$MQ_HOST"
+            replace_placeholder "__MQ_PORT__" "$MQ_PORT"
 
             echo "$output_file"
           }
 
           deploy_service() {
             local service="$1"
-            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status attempts
+            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status
 
             image_repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
             family=$(jq -r --arg s "$service" '.service_families.value[$s]' "$TF_OUTPUTS")
@@ -218,7 +217,6 @@ jobs:
             deployment_id=$(aws deploy create-deployment --cli-input-json "file://$deploy_input_file" --query 'deploymentId' --output text)
             echo "Started deployment for $service: $deployment_id"
 
-            attempts=0
             while true; do
               status=$(aws deploy get-deployment --deployment-id "$deployment_id" --query 'deploymentInfo.status' --output text)
               echo "$service deployment status: $status"
@@ -232,17 +230,19 @@ jobs:
                 exit 1
               fi
 
-              attempts=$((attempts + 1))
-              if [ "$attempts" -ge 80 ]; then
+              if [ "$(date +%s)" -ge "$DEPLOY_DEADLINE" ]; then
                 echo "Timed out waiting for deployment of $service"
                 exit 1
               fi
 
-              sleep 15
+              sleep 5
             done
           }
 
-          deploy_service ext-payments
-          deploy_service pagos
-          deploy_service reservas
-          deploy_service gateway
+          deploy_service ext-payments &
+          deploy_service pagos &
+          deploy_service reservas &
+          deploy_service gateway &
+          
+          wait
+          echo "All deployments completed successfully"
