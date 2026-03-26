@@ -16,16 +16,17 @@ export const AuthService = {
       var hashedPwd = password;
 
       const response = await customAxios.post(url, {
-        email: email,
-        password: hashedPwd,
+        usuario: email,
+        contrasena: hashedPwd,
       });
 
       if (response.status === 200) {
-        await AsyncStorage.setItem('_x', JSON.stringify(response.data.token));
+        await AsyncStorage.setItem('_x', JSON.stringify(response.data.access_token));
+        await AsyncStorage.setItem('_c', JSON.stringify(response.data.refresh_token));
 
-        console.log('response.data.token', response.data.token);
+        console.log('response.data.access_token', response.data.access_token);
 
-         useUserStore.getState().setUser(response.data);
+        useUserStore.getState().setUser(response.data.usuario);
 
         // await AsyncStorage.setItem('_c', JSON.stringify(response.data.refreshToken));
         // await AsyncStorage.setItem('_lang', response.data.language);

@@ -9,7 +9,7 @@ const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'http://10.0.2.2:5000'; // For Android emulator
+  backendUrl = 'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
