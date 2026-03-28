@@ -329,7 +329,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.destinations.subtitle': 'Descubre las ubicaciones más buscadas en América Latina',
 
     // Home Search Page
-    'homeSearch.nav.travelerHome': 'Inicio del Viajero',
+    'homeSearch.nav.travelerHome': 'Inicio',
     'homeSearch.nav.searchResults': 'Resultados de Búsqueda',
     'homeSearch.nav.myReservations': 'Mis Reservas',
     'homeSearch.nav.accountPreferences': 'Cuenta y Preferencias',
