@@ -1,36 +1,46 @@
-
-    <header id="header" class="bg-white shadow-sm border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <div id="logo-section" class="flex items-center">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                        <i class="fa-solid fa-plane text-white text-sm"></i>
-                    </div>
-                    <span class="text-xl font-bold text-gray-900">TravelHub</span>
-                </div>
-            </div>
-            
-            <div id="header-actions" class="flex items-center space-x-4">
-                <div id="language-currency" class="hidden sm:flex items-center space-x-3">
-                    <select (ngModelChange)="onLanguageChange($event)"
-                            [ngModel]="currentLanguage()"
-                            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                            @for (lang of languages; track lang.value) {
-                            <option [value]="lang.value">{{ lang.label }}</option>
-                            }
-                    </select>
-                    <select (ngModelChange)="currency.set($event)" [ngModel]="currency()" class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                            @for (curr of currencies; track curr) {
-                            <option [value]="curr">{{ curr }}</option>
-                            }
-                    </select>
-                </div>
-                
-                <div id="auth-links" class="flex items-center space-x-3">
-                    <button class="text-sm bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 font-medium transition-colors" routerLink="/">{{ t('nav.backToHome') }}</button>
-                </div>
-            </div>
+<header id="header" class="bg-white shadow-sm border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div id="logo-section" class="flex items-center">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-plane text-white text-sm"></i>
+          </div>
+          <span class="text-xl font-bold text-gray-900">TravelHub</span>
         </div>
+      </div>
+
+      <div id="header-actions" class="flex items-center space-x-4">
+        <div id="language-currency" class="hidden sm:flex items-center space-x-3">
+          <select
+            (ngModelChange)="onLanguageChange($event)"
+            [ngModel]="currentLanguage()"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            @for (lang of languages; track lang.value) {
+              <option [value]="lang.value">{{ lang.label }}</option>
+            }
+          </select>
+          <select
+            (ngModelChange)="currency.set($event)"
+            [ngModel]="currency()"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            @for (curr of currencies; track curr) {
+              <option [value]="curr">{{ curr }}</option>
+            }
+          </select>
+        </div>
+
+        <div id="auth-links" class="flex items-center space-x-3">
+          <button
+            class="text-sm bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 font-medium transition-colors"
+            routerLink="/"
+          >
+            {{ t('nav.backToHome') }}
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </header>

@@ -68,5 +68,3 @@ export class LoginPageComponent {
     return this.i18n.t('auth.error.unexpected');
   }
 }
-
-

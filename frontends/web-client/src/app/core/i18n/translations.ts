@@ -96,7 +96,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Book now',
     'nav.dashboard': 'Dashboard',
     'nav.logout': 'Logout',
-    'footer.description': 'Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.',
+    'footer.description':
+      'Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.',
     'footer.company': 'Company',
     'footer.about': 'About',
     'footer.aboutUs': 'About Us',
@@ -114,19 +115,24 @@ export const translations: Record<LanguageCode, Translation> = {
     // Home Page
     'home.hero.title': 'Welcome to TravelHub',
     'home.hero.welcomeTo': 'Welcome to',
-    'home.hero.subtitle': 'Discover amazing hotels across Latin America with secure booking, free cancellation, and 24/7 support.',
+    'home.hero.subtitle':
+      'Discover amazing hotels across Latin America with secure booking, free cancellation, and 24/7 support.',
     'home.hero.badge.secure': 'Secure Payment',
-    'home.hero.badge.secureDesc': 'Your payment information is protected with industry-leading security',
+    'home.hero.badge.secureDesc':
+      'Your payment information is protected with industry-leading security',
     'home.hero.badge.free': 'Free cancellation',
-    'home.hero.badge.freeDesc': 'Cancel or modify your booking without penalties on most properties',
+    'home.hero.badge.freeDesc':
+      'Cancel or modify your booking without penalties on most properties',
     'home.hero.badge.support': '24/7 support',
     'home.hero.badge.supportDesc': 'Get help anytime with our dedicated customer support team',
     'home.hero.cta': "I'm a Traveler",
     'home.hero.ctaHint': 'Start exploring amazing destinations',
     'home.features.title': 'Why Choose TravelHub?',
-    'home.features.subtitle': 'Experience the best of Latin America with our carefully curated hotel selection and seamless booking process.',
+    'home.features.subtitle':
+      'Experience the best of Latin America with our carefully curated hotel selection and seamless booking process.',
     'home.features.localExpertise': 'Local expertise',
-    'home.features.localExpertiseDesc': 'Handpicked properties across Latin America with local insights',
+    'home.features.localExpertiseDesc':
+      'Handpicked properties across Latin America with local insights',
     'home.features.instantBooking': 'Instant Booking',
     'home.features.instantBookingDesc': 'Quick and easy reservations in just a few clicks',
     'home.features.bestRates': 'Best Rates',
@@ -167,7 +173,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'dashboard.billing': 'Billing',
     'dashboard.billingDesc': 'Track invoices and payment updates with secure sessions.',
     'dashboard.support': 'Support',
-    'dashboard.supportDesc': 'Get direct assistance and priority support from the traveler console.',
+    'dashboard.supportDesc':
+      'Get direct assistance and priority support from the traveler console.',
 
     // Auth Errors
     'auth.error.invalidCredentials': 'Invalid credentials. Check your email and password.',
@@ -184,7 +191,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Reservar ahora',
     'nav.dashboard': 'Panel de Control',
     'nav.logout': 'Cerrar Sesión',
-    'footer.description': 'Tu socio de confianza para reservas de hoteles en América Latina. Seguro, simple y confiable.',
+    'footer.description':
+      'Tu socio de confianza para reservas de hoteles en América Latina. Seguro, simple y confiable.',
     'footer.company': 'Empresa',
     'footer.about': 'Acerca de',
     'footer.aboutUs': 'Sobre nosotros',
@@ -202,19 +210,25 @@ export const translations: Record<LanguageCode, Translation> = {
     // Home Page
     'home.hero.title': 'Bienvenido a TravelHub',
     'home.hero.welcomeTo': 'Bienvenido a',
-    'home.hero.subtitle': 'Descubre hoteles increíbles en América Latina con reserva segura, cancelación gratuita y soporte 24/7.',
+    'home.hero.subtitle':
+      'Descubre hoteles increíbles en América Latina con reserva segura, cancelación gratuita y soporte 24/7.',
     'home.hero.badge.secure': 'Pago Seguro',
-    'home.hero.badge.secureDesc': 'Tu información de pago está protegida con seguridad de nivel líder en la industria',
+    'home.hero.badge.secureDesc':
+      'Tu información de pago está protegida con seguridad de nivel líder en la industria',
     'home.hero.badge.free': 'Cancelación gratuita',
-    'home.hero.badge.freeDesc': 'Cancela o modifica tu reserva sin penalizaciones en la mayoría de propiedades',
+    'home.hero.badge.freeDesc':
+      'Cancela o modifica tu reserva sin penalizaciones en la mayoría de propiedades',
     'home.hero.badge.support': 'Soporte 24/7',
-    'home.hero.badge.supportDesc': 'Obtén ayuda en cualquier momento con nuestro equipo de soporte dedicado',
+    'home.hero.badge.supportDesc':
+      'Obtén ayuda en cualquier momento con nuestro equipo de soporte dedicado',
     'home.hero.cta': 'Soy un viajero',
     'home.hero.ctaHint': 'Comienza a explorar destinos increíbles',
     'home.features.title': '¿Por qué elegir TravelHub?',
-    'home.features.subtitle': 'Vive lo mejor de América Latina con nuestra selección de hoteles cuidadosamente curada y un proceso de reserva sin fricciones.',
+    'home.features.subtitle':
+      'Vive lo mejor de América Latina con nuestra selección de hoteles cuidadosamente curada y un proceso de reserva sin fricciones.',
     'home.features.localExpertise': 'Experiencia local',
-    'home.features.localExpertiseDesc': 'Propiedades seleccionadas en toda América Latina con conocimiento local',
+    'home.features.localExpertiseDesc':
+      'Propiedades seleccionadas en toda América Latina con conocimiento local',
     'home.features.instantBooking': 'Reserva Instantánea',
     'home.features.instantBookingDesc': 'Reservas rápidas y sencillas en solo unos clics',
     'home.features.bestRates': 'Mejores Tarifas',
@@ -253,9 +267,11 @@ export const translations: Record<LanguageCode, Translation> = {
     'dashboard.myTrips': 'Mis viajes',
     'dashboard.myTripsDesc': 'Revisa reservas y cambios en un solo lugar.',
     'dashboard.billing': 'Facturación',
-    'dashboard.billingDesc': 'Seguimiento de facturas y actualizaciones de pago con sesiones seguras.',
+    'dashboard.billingDesc':
+      'Seguimiento de facturas y actualizaciones de pago con sesiones seguras.',
     'dashboard.support': 'Soporte',
-    'dashboard.supportDesc': 'Obtén asistencia directa y soporte prioritario desde la consola del viajero.',
+    'dashboard.supportDesc':
+      'Obtén asistencia directa y soporte prioritario desde la consola del viajero.',
 
     // Auth Errors
     'auth.error.invalidCredentials': 'Credenciales inválidas. Verifica tu email y contraseña.',
@@ -272,7 +288,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Reservar agora',
     'nav.dashboard': 'Painel de Controle',
     'nav.logout': 'Sair',
-    'footer.description': 'Seu parceiro de confiança para reservas de hotéis na América Latina. Seguro, simples e confiável.',
+    'footer.description':
+      'Seu parceiro de confiança para reservas de hotéis na América Latina. Seguro, simples e confiável.',
     'footer.company': 'Empresa',
     'footer.about': 'Sobre',
     'footer.aboutUs': 'Sobre nós',
@@ -290,19 +307,25 @@ export const translations: Record<LanguageCode, Translation> = {
     // Home Page
     'home.hero.title': 'Bem-vindo ao TravelHub',
     'home.hero.welcomeTo': 'Bem-vindo ao',
-    'home.hero.subtitle': 'Descubra hotéis incríveis na América Latina com reserva segura, cancelamento gratuito e suporte 24/7.',
+    'home.hero.subtitle':
+      'Descubra hotéis incríveis na América Latina com reserva segura, cancelamento gratuito e suporte 24/7.',
     'home.hero.badge.secure': 'Pagamento Seguro',
-    'home.hero.badge.secureDesc': 'Suas informações de pagamento são protegidas com segurança de nível líder do setor',
+    'home.hero.badge.secureDesc':
+      'Suas informações de pagamento são protegidas com segurança de nível líder do setor',
     'home.hero.badge.free': 'Cancelamento gratuito',
-    'home.hero.badge.freeDesc': 'Cancele ou modifique sua reserva sem penalidades na maioria das propriedades',
+    'home.hero.badge.freeDesc':
+      'Cancele ou modifique sua reserva sem penalidades na maioria das propriedades',
     'home.hero.badge.support': 'Suporte 24/7',
-    'home.hero.badge.supportDesc': 'Receba ajuda a qualquer momento com nossa equipe de suporte dedicada',
+    'home.hero.badge.supportDesc':
+      'Receba ajuda a qualquer momento com nossa equipe de suporte dedicada',
     'home.hero.cta': 'Sou um viajante',
     'home.hero.ctaHint': 'Comece a explorar destinos incríveis',
     'home.features.title': 'Por que escolher a TravelHub?',
-    'home.features.subtitle': 'Experimente o melhor da América Latina com nossa seleção cuidadosa de hotéis e um processo de reserva sem fricção.',
+    'home.features.subtitle':
+      'Experimente o melhor da América Latina com nossa seleção cuidadosa de hotéis e um processo de reserva sem fricção.',
     'home.features.localExpertise': 'Experiência local',
-    'home.features.localExpertiseDesc': 'Propriedades selecionadas na América Latina com conhecimento local',
+    'home.features.localExpertiseDesc':
+      'Propriedades selecionadas na América Latina com conhecimento local',
     'home.features.instantBooking': 'Reserva Instantânea',
     'home.features.instantBookingDesc': 'Reservas rápidas e fáceis em apenas alguns cliques',
     'home.features.bestRates': 'Melhores Tarifas',
@@ -343,14 +366,13 @@ export const translations: Record<LanguageCode, Translation> = {
     'dashboard.billing': 'Faturamento',
     'dashboard.billingDesc': 'Rastreie faturas e atualizações de pagamento com sessões seguras.',
     'dashboard.support': 'Suporte',
-    'dashboard.supportDesc': 'Obtenha assistência direta e suporte prioritário no console do viajante.',
+    'dashboard.supportDesc':
+      'Obtenha assistência direta e suporte prioritário no console do viajante.',
 
     // Auth Errors
-    'auth.error.invalidCredentials':
-      'Credenciais inválidas. Verifique seu email e senha.',
+    'auth.error.invalidCredentials': 'Credenciais inválidas. Verifique seu email e senha.',
     'auth.error.connectionError':
       'Não foi possível conectar ao serviço de autenticação. Verifique a configuração do backend.',
-    'auth.error.unexpected':
-      'Erro inesperado na autenticação. Por favor tente novamente.',
+    'auth.error.unexpected': 'Erro inesperado na autenticação. Por favor tente novamente.',
   },
 };

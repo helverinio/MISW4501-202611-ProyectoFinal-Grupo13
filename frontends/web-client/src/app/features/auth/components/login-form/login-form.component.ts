@@ -54,5 +54,3 @@ export class LoginFormComponent {
     return this.i18n.t(key as any);
   }
 }
-
-

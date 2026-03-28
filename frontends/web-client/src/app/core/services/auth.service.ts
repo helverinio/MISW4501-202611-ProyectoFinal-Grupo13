@@ -19,12 +19,10 @@ export class AuthService {
   constructor(private readonly http: HttpClient) {}
 
   login(payload: LoginRequest): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, payload)
-      .pipe(
-        tap((response) => this.persistSession(response)),
-        catchError((error) => throwError(() => error)),
-      );
+    return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, payload).pipe(
+      tap((response) => this.persistSession(response)),
+      catchError((error) => throwError(() => error)),
+    );
   }
 
   logout(): Observable<void> {
