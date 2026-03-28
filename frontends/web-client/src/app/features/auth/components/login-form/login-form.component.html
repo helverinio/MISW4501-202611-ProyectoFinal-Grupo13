@@ -1,32 +1,89 @@
-<section class="login-form-shell">
-  <header>
-    <h1>Welcome back</h1>
-    <p>Sign in with your TravelHub credentials.</p>
-  </header>
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5">
+  @if (errorMessage) {
+    <div class="rounded-lg bg-error/10 p-3 text-sm text-error border border-error/20">
+      {{ errorMessage }}
+    </div>
+  }
 
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <label for="usuario">User</label>
-    <input id="usuario" type="text" formControlName="usuario" placeholder="your.username" />
-    @if (form.controls.usuario.invalid && form.controls.usuario.touched) {
-      <p class="form-error">User is required.</p>
+  <div>
+    <label for="usuario" class="block text-sm font-medium text-gray-700 mb-1.5">
+      {{ t('login.form.email') }}
+    </label>
+    <input
+      id="usuario"
+      type="email"
+      formControlName="usuario"
+      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm placeholder-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
+      [placeholder]="t('login.form.emailPlaceholder')"
+      [class.border-error]="form.get('usuario')?.invalid && form.get('usuario')?.touched"
+    />
+    @if (form.get('usuario')?.errors?.['required'] && form.get('usuario')?.touched) {
+      <p class="mt-1 text-xs text-error">{{ t('login.form.errors.emailRequired') }}</p>
     }
+  </div>
 
-    <label for="contrasena">Password</label>
-    <input id="contrasena" type="password" formControlName="contrasena" placeholder="Enter your password" />
-    @if (form.controls.contrasena.invalid && form.controls.contrasena.touched) {
-      <p class="form-error">Password is required and must have at least 6 characters.</p>
+  <div>
+    <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1.5">
+      {{ t('login.form.password') }}
+    </label>
+    <div class="relative">
+      <input
+        id="contrasena"
+        [type]="passwordVisible ? 'text' : 'password'"
+        formControlName="contrasena"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm placeholder-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors pr-10"
+        [placeholder]="t('login.form.passwordPlaceholder')"
+        [class.border-error]="form.get('contrasena')?.invalid && form.get('contrasena')?.touched"
+      />
+      <button
+        type="button"
+        (click)="togglePasswordVisibility()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+        [attr.aria-label]="passwordVisible ? t('login.form.password') : t('login.form.password')"
+      >
+        @if (!passwordVisible) {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        } @else {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-4.753 4.753m4.753-4.753L3.596 3.039m10.858 10.858L21.944 21.944M9.172 9.172L21 21" />
+          </svg>
+        }
+      </button>
+    </div>
+    @if (form.get('contrasena')?.errors?.['required'] && form.get('contrasena')?.touched) {
+      <p class="mt-1 text-xs text-error">{{ t('login.form.errors.passwordRequired') }}</p>
     }
-
-    @if (errorMessage) {
-      <p class="api-error" role="alert">{{ errorMessage }}</p>
+    @if (form.get('contrasena')?.errors?.['minlength'] && form.get('contrasena')?.touched) {
+      <p class="mt-1 text-xs text-error">{{ t('login.form.errors.passwordMinLength') }}</p>
     }
+  </div>
 
-    <button type="submit" [disabled]="loading">
-      @if (!loading) {
-        <span>Sign in</span>
-      } @else {
-        <span>Signing in...</span>
-      }
-    </button>
-  </form>
-</section>
+  <div class="flex items-center justify-between pt-1">
+    <label for="remember" class="flex items-center gap-2 cursor-pointer">
+      <input
+        id="remember"
+        type="checkbox"
+        class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+      />
+      <span class="text-sm text-gray-600">{{ t('login.form.rememberMe') }}</span>
+    </label>
+    <a href="#" class="text-sm text-primary hover:text-primary/80 transition-colors">
+      {{ t('login.form.forgotPassword') }}
+    </a>
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="loading || form.invalid"
+    class="w-full rounded-lg bg-primary text-white font-semibold py-2.5 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+  >
+    @if (loading) {
+      {{ t('login.form.signingIn') }}
+    } @else {
+      {{ t('login.form.signInButton') }}
+    }
+  </button>
+</form>

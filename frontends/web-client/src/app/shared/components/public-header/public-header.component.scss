@@ -1,11 +1,16 @@
 .public-header {
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom: 1px solid var(--color-border);
-  left: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   position: sticky;
-  right: 0;
   top: 0;
   z-index: 30;
+}
+
+.public-header__container {
+  margin: 0 auto;
+  max-width: 80rem;
+  padding: 0 1rem;
 }
 
 .public-header__content {
@@ -21,36 +26,51 @@
   gap: 1rem;
 }
 
-.public-header__actions a {
-  color: var(--color-slate-700);
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-decoration: none;
+.public-header__selectors {
+  align-items: center;
+  display: none;
+  gap: 0.75rem;
 }
 
-.public-header__actions a:hover,
-.public-header__actions a.is-active {
-  color: var(--color-slate-900);
+.public-header__select {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s;
 }
 
-.public-header__actions .cta {
-  background: var(--color-brand-600);
-  border-radius: 999px;
+.public-header__select:focus {
+  border-color: #3b82f6;
+  outline: none;
+  ring: 2px solid rgba(59, 130, 246, 0.1);
+}
+
+.public-header__back {
+  background: #3b82f6;
+  border: none;
+  border-radius: 0.5rem;
   color: white;
-  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: background 0.2s;
 }
 
-.public-header__actions .cta:hover {
-  background: var(--color-brand-700);
-  color: white;
+.public-header__back:hover {
+  background: #2563eb;
+}
+
+@media (min-width: 640px) {
+  .public-header__selectors {
+    display: flex;
+  }
 }
 
 @media (max-width: 640px) {
-  .public-header__actions {
-    gap: 0.65rem;
-  }
-
-  .public-header__actions a {
-    font-size: 0.85rem;
+  .public-header__back {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
   }
 }

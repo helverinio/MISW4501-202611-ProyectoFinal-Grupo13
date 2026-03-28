@@ -1,11 +1,30 @@
 <header class="public-header">
-  <div class="container public-header__content">
-    <app-brand-logo />
+  <div class="public-header__container">
+    <div class="public-header__content">
+      <app-brand-logo />
 
-    <nav class="public-header__actions" aria-label="Public navigation">
-      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-      <a routerLink="/login" routerLinkActive="is-active">Sign in</a>
-      <a class="cta" routerLink="/login">Book now</a>
-    </nav>
+      <div class="public-header__actions">
+        <div class="public-header__selectors">
+          <select
+            (ngModelChange)="onLanguageChange($event)"
+            [ngModel]="currentLanguage()"
+            class="public-header__select"
+          >
+            @for (lang of languages; track lang.value) {
+              <option [value]="lang.value">{{ lang.label }}</option>
+            }
+          </select>
+          <select (ngModelChange)="currency.set($event)" [ngModel]="currency()" class="public-header__select">
+            @for (curr of currencies; track curr) {
+              <option [value]="curr">{{ curr }}</option>
+            }
+          </select>
+        </div>
+
+        <button class="public-header__back" type="button" routerLink="/">
+          {{ t('nav.backToHome') }}
+        </button>
+      </div>
+    </div>
   </div>
 </header>

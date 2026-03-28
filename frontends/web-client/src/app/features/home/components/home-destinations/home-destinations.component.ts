@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { I18nService } from '../../../../core/services/i18n.service';
 
 interface Destination {
   city: string;
@@ -12,6 +13,12 @@ interface Destination {
   styleUrl: './home-destinations.component.scss',
 })
 export class HomeDestinationsComponent {
+  private readonly i18n = inject(I18nService);
+
+  protected t(key: string): string {
+    return this.i18n.t(key as any);
+  }
+
   protected readonly destinations: Destination[] = [
     {
       city: 'Buenos Aires',

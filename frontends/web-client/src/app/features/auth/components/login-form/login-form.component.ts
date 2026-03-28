@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { LoginRequest } from '../../../../core/models/auth.models';
+import { I18nService } from '../../../../core/services/i18n.service';
 
 interface LoginForm {
   usuario: FormControl<string>;
@@ -16,6 +17,8 @@ interface LoginForm {
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
+  private readonly i18n = inject(I18nService);
+
   @Input({ required: true }) loading = false;
   @Input() errorMessage = '';
 
@@ -32,6 +35,12 @@ export class LoginFormComponent {
     }),
   });
 
+  protected passwordVisible = false;
+
+  protected togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
   protected submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -40,4 +49,10 @@ export class LoginFormComponent {
 
     this.loginSubmit.emit(this.form.getRawValue());
   }
+
+  protected t(key: string): string {
+    return this.i18n.t(key as any);
+  }
 }
+
+

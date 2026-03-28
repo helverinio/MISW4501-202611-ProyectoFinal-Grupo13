@@ -1,12 +1,37 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
+import { I18nService } from '../../../core/services/i18n.service';
+import { LanguageCode } from '../../../core/i18n/translations';
 
 @Component({
   selector: 'app-public-header',
-  imports: [RouterLink, RouterLinkActive, BrandLogoComponent],
+  imports: [CommonModule, FormsModule, RouterLink, BrandLogoComponent],
   templateUrl: './public-header.component.html',
   styleUrl: './public-header.component.scss',
 })
-export class PublicHeaderComponent {}
+export class PublicHeaderComponent {
+  private readonly i18n = inject(I18nService);
+
+  protected readonly currentLanguage = this.i18n.currentLanguage;
+  protected readonly currency = signal<string>('ARS');
+
+  readonly languages: Array<{ label: string; value: LanguageCode }> = [
+    { label: '🇺🇸 English', value: 'en' },
+    { label: '🇪🇸 Español', value: 'es' },
+    { label: '🇧🇷 Português', value: 'pt' },
+  ];
+
+  readonly currencies: string[] = ['USD', 'ARS', 'CLP', 'PEN', 'COP', 'MXN'];
+
+  protected onLanguageChange(lang: LanguageCode): void {
+    this.i18n.setLanguage(lang);
+  }
+
+  protected t(key: string): string {
+    return this.i18n.t(key as any);
+  }
+}
