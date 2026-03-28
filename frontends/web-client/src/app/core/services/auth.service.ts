@@ -11,10 +11,11 @@ export class AuthService {
   private readonly refreshTokenKey = 'travelhub.refresh_token';
   private readonly userKey = 'travelhub.user';
 
+  private readonly accessTokenState = signal<string | null>(localStorage.getItem(this.accessTokenKey));
   private readonly currentUserState = signal<AuthUser | null>(this.readStoredUser());
 
   readonly currentUser = this.currentUserState.asReadonly();
-  readonly isAuthenticated = computed(() => this.hasToken());
+  readonly isAuthenticated = computed(() => !!this.accessTokenState());
 
   constructor(private readonly http: HttpClient) {}
 
@@ -26,7 +27,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    if (!this.hasToken()) {
+    if (!this.getAccessToken()) {
       this.clearSession();
       return of(void 0);
     }
@@ -42,13 +43,14 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(this.accessTokenKey);
+    return this.accessTokenState();
   }
 
   clearSession(): void {
     localStorage.removeItem(this.accessTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
     localStorage.removeItem(this.userKey);
+    this.accessTokenState.set(null);
     this.currentUserState.set(null);
   }
 
@@ -56,6 +58,7 @@ export class AuthService {
     localStorage.setItem(this.accessTokenKey, response.access_token);
     localStorage.setItem(this.refreshTokenKey, response.refresh_token);
     localStorage.setItem(this.userKey, JSON.stringify(response.usuario));
+    this.accessTokenState.set(response.access_token);
     this.currentUserState.set(response.usuario);
   }
 
@@ -71,9 +74,5 @@ export class AuthService {
       this.clearSession();
       return null;
     }
-  }
-
-  private hasToken(): boolean {
-    return !!this.getAccessToken();
   }
 }

@@ -1,0 +1,58 @@
+<header id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div id="logo-section" class="flex items-center">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-plane text-white text-sm"></i>
+          </div>
+          <span class="text-xl font-bold text-gray-900">TravelHub</span>
+        </div>
+      </div>
+
+      <nav id="main-navigation" class="hidden lg:flex items-center space-x-8">
+        <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">Traveler Home</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">Search Results</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">My Reservations</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">Account & Preferences</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <div id="language-currency" class="hidden sm:flex items-center space-x-3">
+          <select
+            (ngModelChange)="onLanguageChange($event)"
+            [ngModel]="currentLanguage()"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            @for (lang of languages; track lang.value) {
+              <option [value]="lang.value">{{ lang.label }}</option>
+            }
+          </select>
+          <select
+            (ngModelChange)="currency.set($event)"
+            [ngModel]="currency()"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            @for (curr of currencies; track curr) {
+              <option [value]="curr">{{ curr }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <button class="flex items-center space-x-2 text-sm text-gray-700 hover:text-gray-900" type="button">
+              <img
+                class="h-8 w-8 rounded-full"
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
+                alt="Profile"
+              />
+              <span class="hidden sm:block">{{ currentUser()?.nombre || currentUser()?.usuario || 'Sarah' }}</span>
+              <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

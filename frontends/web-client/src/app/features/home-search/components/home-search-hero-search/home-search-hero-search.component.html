@@ -1,0 +1,80 @@
+<section id="hero-section" class="bg-gradient-to-br from-blue-600 to-primary h-[600px] relative overflow-hidden">
+  <div class="absolute inset-0">
+    <img
+      class="w-full h-full object-cover opacity-20"
+      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5cf3c6e393-88dbb14219cb8ba2cc8b.png"
+      alt="beautiful tropical beach resort with palm trees and crystal clear water, luxury hotel in background, aerial view"
+    />
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+    <div class="text-center w-full">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Find your perfect getaway</h1>
+      <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto">
+        Discover amazing hotels across Latin America with unbeatable prices and instant booking
+      </p>
+
+      <div id="search-bar" class="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Where to?</label>
+            <div class="relative">
+              <i class="fa-solid fa-location-dot absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="text"
+                [(ngModel)]="destination"
+                placeholder="City or hotel name"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+              />
+            </div>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
+            <div class="relative">
+              <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="date"
+                [(ngModel)]="checkInDate"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+              />
+            </div>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
+            <div class="relative">
+              <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="date"
+                [(ngModel)]="checkOutDate"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+              />
+            </div>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Guests</label>
+            <div class="relative">
+              <i class="fa-solid fa-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <select
+                [(ngModel)]="guests"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+              >
+                @for (option of guestOptions; track option) {
+                  <option [value]="option">{{ option }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6">
+          <button
+            class="w-full bg-primary text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-primary-dark transition-colors"
+            type="button"
+            (click)="onSearchHotels()"
+          >
+            <i class="fa-solid fa-magnifying-glass mr-2"></i>
+            Search Hotels
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

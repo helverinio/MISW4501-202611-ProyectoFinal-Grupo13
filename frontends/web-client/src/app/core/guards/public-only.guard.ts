@@ -11,5 +11,5 @@ export const publicOnlyGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/app']);
+  return router.createUrlTree(['/app/home-search']);
 };
