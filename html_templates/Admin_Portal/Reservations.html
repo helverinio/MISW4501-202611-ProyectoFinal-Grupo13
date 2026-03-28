@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-hotel text-white text-sm"></i>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full">
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-900">Admin User</p>
+                            <p class="text-xs text-gray-500">Hotel Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-chart-line w-5 mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+                    <i class="fas fa-calendar-check w-5 mr-3"></i>
+                    Reservations
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-hotel w-5 mr-3"></i>
+                    Properties
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    Guests
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-dollar-sign w-5 mr-3"></i>
+                    Revenue
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-cog w-5 mr-3"></i>
+                    Settings
+                </a>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                        <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="flex-1 p-4 sm:p-6 lg:p-8">
+            <div id="reservations-header" class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">All Reservations</h1>
+                        <p class="text-gray-600 text-sm">Manage and monitor all hotel reservations</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                        <button class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Reservation
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-download mr-2"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filters-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    <div id="guest-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Guest</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Search guest..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            <i class="fas fa-search absolute right-3 top-3 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="property-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Property</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">All Properties</option>
+                            <option value="grand-hotel">Grand Hotel Plaza</option>
+                            <option value="sunset-beach">Sunset Beach Resort</option>
+                            <option value="city-center">City Center Hotel</option>
+                            <option value="mountain-lodge">Mountain Lodge</option>
+                            <option value="boutique-inn">Boutique Inn</option>
+                        </select>
+                    </div>
+                    
+                    <div id="checkin-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Check-in Date</label>
+                        <input type="date" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div id="checkout-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Check-out Date</label>
+                        <input type="date" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div id="status-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">All Status</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="pending">Pending</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div id="filter-actions" class="col-span-1 flex items-end space-x-2">
+                        <button class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-filter mr-2"></i>
+                            Filter
+                        </button>
+                        <button class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reservations-stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+                <div id="total-reservations-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-primary-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Total Reservations</h3>
+                    <p class="text-3xl font-bold text-gray-900">1,248</p>
+                </div>
+
+                <div id="confirmed-reservations-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-success-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-circle text-success-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Confirmed</h3>
+                    <p class="text-3xl font-bold text-gray-900">986</p>
+                </div>
+
+                <div id="pending-reservations-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Pending</h3>
+                    <p class="text-3xl font-bold text-gray-900">187</p>
+                </div>
+
+                <div id="cancelled-reservations-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Cancelled</h3>
+                    <p class="text-3xl font-bold text-gray-900">75</p>
+                </div>
+            </div>
+
+            <div id="reservations-table-section" class="bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-1">Reservations List</h2>
+                            <p class="text-sm text-gray-600">Complete list of all reservations</p>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option>25 per page</option>
+                                <option>50 per page</option>
+                                <option>100 per page</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Guest</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">Property</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Check-in</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Check-out</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">Nights</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservations-table-body" class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-medium text-primary-600">#RES-001</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Guest" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
+                                            <p class="text-xs text-gray-500">sarah.j@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 hidden lg:table-cell">
+                                    <p class="text-sm text-gray-900">Grand Hotel Plaza</p>
+                                    <p class="text-xs text-gray-500">Deluxe Suite #205</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm text-gray-900">Jan 15, 2024</p>
+                                    <p class="text-xs text-gray-500">3:00 PM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden md:table-cell">
+                                    <p class="text-sm text-gray-900">Jan 18, 2024</p>
+                                    <p class="text-xs text-gray-500">11:00 AM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell">
+                                    <p class="text-sm text-gray-900">3</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-900">$450</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        Confirmed
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-eye text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-medium text-primary-600">#RES-002</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Guest" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Michael Chen</p>
+                                            <p class="text-xs text-gray-500">m.chen@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 hidden lg:table-cell">
+                                    <p class="text-sm text-gray-900">Sunset Beach Resort</p>
+                                    <p class="text-xs text-gray-500">Ocean View Room #312</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm text-gray-900">Jan 20, 2024</p>
+                                    <p class="text-xs text-gray-500">3:00 PM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden md:table-cell">
+                                    <p class="text-sm text-gray-900">Jan 25, 2024</p>
+                                    <p class="text-xs text-gray-500">11:00 AM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell">
+                                    <p class="text-sm text-gray-900">5</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-900">$825</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        Pending
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-eye text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-medium text-primary-600">#RES-003</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Guest" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Emma Rodriguez</p>
+                                            <p class="text-xs text-gray-500">emma.r@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 hidden lg:table-cell">
+                                    <p class="text-sm text-gray-900">City Center Hotel</p>
+                                    <p class="text-xs text-gray-500">Standard Room #105</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm text-gray-900">Jan 12, 2024</p>
+                                    <p class="text-xs text-gray-500">3:00 PM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden md:table-cell">
+                                    <p class="text-sm text-gray-900">Jan 14, 2024</p>
+                                    <p class="text-xs text-gray-500">11:00 AM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell">
+                                    <p class="text-sm text-gray-900">2</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-900">$280</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        Completed
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-eye text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-medium text-primary-600">#RES-004</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Guest" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">James Wilson</p>
+                                            <p class="text-xs text-gray-500">j.wilson@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 hidden lg:table-cell">
+                                    <p class="text-sm text-gray-900">Mountain Lodge</p>
+                                    <p class="text-xs text-gray-500">Family Suite #401</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm text-gray-900">Jan 22, 2024</p>
+                                    <p class="text-xs text-gray-500">3:00 PM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden md:table-cell">
+                                    <p class="text-sm text-gray-900">Jan 28, 2024</p>
+                                    <p class="text-xs text-gray-500">11:00 AM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell">
+                                    <p class="text-sm text-gray-900">6</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-900">$990</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        Confirmed
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-eye text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6">
+                                    <input type="checkbox" class="w-4 h-4 text-primary-600 rounded border-gray-300">
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="text-sm font-medium text-primary-600">#RES-005</span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Guest" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Lisa Anderson</p>
+                                            <p class="text-xs text-gray-500">lisa.a@email.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 hidden lg:table-cell">
+                                    <p class="text-sm text-gray-900">Boutique Inn</p>
+                                    <p class="text-xs text-gray-500">Premium Room #201</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm text-gray-900">Jan 18, 2024</p>
+                                    <p class="text-xs text-gray-500">3:00 PM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden md:table-cell">
+                                    <p class="text-sm text-gray-900">Jan 20, 2024</p>
+                                    <p class="text-xs text-gray-500">11:00 AM</p>
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell">
+                                    <p class="text-sm text-gray-900">2</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <p class="text-sm font-semibold text-gray-900">$340</p>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-times-circle mr-1"></i>
+                                        Cancelled
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-eye text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="pagination-section" class="p-6 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row items-center justify-between">
+                        <p class="text-sm text-gray-600 mb-4 sm:mb-0">Showing 1 to 5 of 1,248 reservations</p>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">1</button>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">2</button>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">3</button>
+                            <span class="px-2 text-gray-500">...</span>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">50</button>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button id="mobile-menu-toggle" class="lg:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center z-50">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+</body>
+</html>

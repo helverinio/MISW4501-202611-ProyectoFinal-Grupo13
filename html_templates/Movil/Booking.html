@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .countdown-timer {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter pb-20">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900">Complete Booking</h1>
+                    <p class="text-xs text-gray-500">Secure your reservation</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <i class="fa-solid fa-shield-halved text-success text-lg"></i>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Countdown Timer -->
+<section id="countdown-timer" class="countdown-timer">
+    <div class="max-w-md mx-auto px-4 py-3">
+        <div class="flex items-center justify-between text-white">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-clock text-sm"></i>
+                <span class="text-sm font-medium">Room reserved for</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <span id="timer-minutes" class="text-lg font-bold">14</span>
+                <span class="text-sm">:</span>
+                <span id="timer-seconds" class="text-lg font-bold">52</span>
+                <span class="text-sm font-medium ml-1">min</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Summary -->
+<section id="booking-summary" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-start space-x-4">
+            <div class="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d96da3f2d7-b2a5b3724142e5bf2425.png" alt="luxury hotel room with king bed and city view in Mexico City" />
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-gray-900 text-sm">Hotel Plaza Central</h3>
+                <p class="text-xs text-gray-600 mb-1">Standard Double Room</p>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.5 (324)</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                    <p>Dec 15 - Dec 18, 2024</p>
+                    <p>3 nights • 2 guests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Guest Information Form -->
+<section id="guest-info-form" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Guest Information</h2>
+        
+        <form class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter first name" />
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter last name" />
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter email address" />
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                <div class="flex space-x-2">
+                    <select class="w-20 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                        <option>+52</option>
+                        <option>+1</option>
+                        <option>+57</option>
+                        <option>+54</option>
+                    </select>
+                    <input type="tel" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Phone number" />
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Special Requests</label>
+                <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent h-20 resize-none" placeholder="Any special requests or notes..."></textarea>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Price Breakdown -->
+<section id="price-breakdown" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Price Breakdown</h2>
+        
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-700">Room rate (3 nights)</span>
+                <span class="text-sm font-medium text-gray-900">$195.00</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-700">Taxes & fees</span>
+                <span class="text-sm font-medium text-gray-900">$23.40</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1">
+                    <span class="text-sm text-gray-700">Service fee</span>
+                    <i class="fa-solid fa-circle-info text-gray-400 text-xs"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-900">$8.50</span>
+            </div>
+            
+            <div class="flex items-center justify-between text-success">
+                <span class="text-sm font-medium">Early bird discount</span>
+                <span class="text-sm font-medium">-$15.00</span>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-gray-900">Total</span>
+                    <span class="text-lg font-bold text-gray-900">$211.90</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Includes all taxes and fees</p>
+            </div>
+        </div>
+        
+        <!-- Currency Selector -->
+        <div class="mt-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-700">Currency</span>
+                <select class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option>USD ($)</option>
+                    <option>MXN ($)</option>
+                    <option>COP ($)</option>
+                    <option>ARS ($)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Elements -->
+<section id="trust-elements" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
+                <i class="fa-solid fa-shield-halved text-success text-lg"></i>
+                <div>
+                    <p class="text-xs font-medium text-gray-900">Secure Payment</p>
+                    <p class="text-xs text-gray-600">SSL Protected</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
+                <i class="fa-solid fa-calendar-xmark text-blue-600 text-lg"></i>
+                <div>
+                    <p class="text-xs font-medium text-gray-900">Free Cancellation</p>
+                    <p class="text-xs text-gray-600">Until 24h before</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 p-3 bg-purple-50 rounded-lg">
+                <i class="fa-solid fa-clock text-purple-600 text-lg"></i>
+                <div>
+                    <p class="text-xs font-medium text-gray-900">Instant Confirmation</p>
+                    <p class="text-xs text-gray-600">Immediate booking</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 p-3 bg-orange-50 rounded-lg">
+                <i class="fa-solid fa-headset text-orange-600 text-lg"></i>
+                <div>
+                    <p class="text-xs font-medium text-gray-900">24/7 Support</p>
+                    <p class="text-xs text-gray-600">Always available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Terms and Conditions -->
+<section id="terms-conditions" class="bg-white">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-start space-x-3">
+            <input type="checkbox" id="terms" class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
+            <label for="terms" class="text-xs text-gray-600 leading-relaxed">
+                I agree to the <a href="#" class="text-primary underline">Terms and Conditions</a> and <a href="#" class="text-primary underline">Privacy Policy</a>. I understand the cancellation policy and confirm that all information provided is accurate.
+            </label>
+        </div>
+    </div>
+</section>
+
+<!-- Continue to Payment CTA -->
+<div id="payment-cta" class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 shadow-lg max-w-md mx-auto">
+    <div class="px-4 py-4">
+        <button class="w-full bg-primary text-white py-4 rounded-lg font-semibold text-base hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Continue to Payment</span>
+        </button>
+        <p class="text-xs text-gray-500 text-center mt-2">
+            <i class="fa-solid fa-lock text-xs mr-1"></i>
+            Your payment information is secure and encrypted
+        </p>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+    <div class="flex items-center justify-around py-2">
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-xs font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            <span class="text-xs font-medium mt-1">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-xs font-medium mt-1">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-primary">
+            <i class="fa-regular fa-calendar text-xl"></i>
+            <span class="text-xs font-medium mt-1">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-user text-xl"></i>
+            <span class="text-xs font-medium mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+window.addEventListener('load', function() {
+    let minutes = 14;
+    let seconds = 52;
+    
+    const timerMinutes = document.getElementById('timer-minutes');
+    const timerSeconds = document.getElementById('timer-seconds');
+    
+    function updateTimer() {
+        if (seconds === 0) {
+            if (minutes === 0) {
+                return;
+            }
+            minutes--;
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+        
+        timerMinutes.textContent = minutes.toString().padStart(2, '0');
+        timerSeconds.textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    setInterval(updateTimer, 1000);
+});
+</script>
+
+</body>
+</html>

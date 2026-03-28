@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Reservation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-globe text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Hotels</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Destinations</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">Deals</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2">
+                        <i class="fa-solid fa-globe text-gray-400"></i>
+                        <span class="text-sm text-gray-600">USD</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-8 h-8 rounded-full object-cover">
+                        <span class="hidden md:inline text-sm font-medium text-gray-900">Maria Rodriguez</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="page-header" class="mb-8">
+            <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                <a href="#" class="hover:text-gray-700">Home</a>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <a href="#" class="hover:text-gray-700">My Reservations</a>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span class="text-gray-900">Modify Reservation</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Modify Reservation</h1>
+            <p class="text-gray-600">Update your booking details quickly and easily</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div id="current-reservation" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Current Reservation</h2>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="px-3 py-1 bg-success/10 text-success rounded-full text-sm font-medium">Confirmed</span>
+                        <span class="text-sm text-gray-500">Booking #TH-2024-001</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Hotel Rosewood Cartagena</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-calendar text-gray-400"></i>
+                            <span>Mar 15 - Mar 18, 2024</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bed text-gray-400"></i>
+                            <span>Deluxe Ocean View</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-users text-gray-400"></i>
+                            <span>2 Guests, 3 Nights</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-map-marker-alt text-gray-400"></i>
+                            <span>Cartagena, Colombia</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modification-form" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Update Booking Details</h2>
+                    
+                    <div id="date-modification" class="mb-8">
+                        <h3 class="text-base font-medium text-gray-900 mb-4 flex items-center">
+                            <i class="fa-solid fa-calendar mr-2 text-primary"></i>
+                            Change Dates
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check-in Date</label>
+                                <div class="relative">
+                                    <input type="date" value="2024-03-15" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check-out Date</label>
+                                <div class="relative">
+                                    <input type="date" value="2024-03-18" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-start space-x-2">
+                                <i class="fa-solid fa-info-circle text-primary mt-0.5"></i>
+                                <div class="text-sm text-blue-800">
+                                    <p class="font-medium">Date change available</p>
+                                    <p>You can modify your dates up to 24 hours before check-in at no extra cost.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="guest-modification" class="mb-8">
+                        <h3 class="text-base font-medium text-gray-900 mb-4 flex items-center">
+                            <i class="fa-solid fa-users mr-2 text-primary"></i>
+                            Change Guests
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fa-solid fa-user text-gray-400"></i>
+                                    <span class="text-gray-900">Adults</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <button class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" onclick="updateGuests('adults', -1)">
+                                        <i class="fa-solid fa-minus text-sm"></i>
+                                    </button>
+                                    <span id="adults-count" class="w-8 text-center font-medium">2</span>
+                                    <button class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" onclick="updateGuests('adults', 1)">
+                                        <i class="fa-solid fa-plus text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fa-solid fa-child text-gray-400"></i>
+                                    <span class="text-gray-900">Children</span>
+                                    <span class="text-xs text-gray-500">(2-12 years)</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <button class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" onclick="updateGuests('children', -1)">
+                                        <i class="fa-solid fa-minus text-sm"></i>
+                                    </button>
+                                    <span id="children-count" class="w-8 text-center font-medium">0</span>
+                                    <button class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" onclick="updateGuests('children', 1)">
+                                        <i class="fa-solid fa-plus text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="room-modification" class="mb-8">
+                        <h3 class="text-base font-medium text-gray-900 mb-4 flex items-center">
+                            <i class="fa-solid fa-bed mr-2 text-primary"></i>
+                            Room Options
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center p-4 border-2 border-primary bg-blue-50 rounded-lg">
+                                <input type="radio" name="room" value="deluxe" checked class="text-primary focus:ring-primary">
+                                <div class="ml-3 flex-1">
+                                    <div class="font-medium text-gray-900">Deluxe Ocean View</div>
+                                    <div class="text-sm text-gray-600">Current selection • King bed • Ocean view</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-900">$150/night</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary">
+                                <input type="radio" name="room" value="superior" class="text-primary focus:ring-primary">
+                                <div class="ml-3 flex-1">
+                                    <div class="font-medium text-gray-900">Superior Suite</div>
+                                    <div class="text-sm text-gray-600">Separate living area • King bed • City view</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-900">$220/night</div>
+                                    <div class="text-sm text-green-600">+$70/night</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary">
+                                <input type="radio" name="room" value="standard" class="text-primary focus:ring-primary">
+                                <div class="ml-3 flex-1">
+                                    <div class="font-medium text-gray-900">Standard Room</div>
+                                    <div class="text-sm text-gray-600">Queen bed • Garden view</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-900">$120/night</div>
+                                    <div class="text-sm text-red-600">-$30/night</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="form-actions" class="flex flex-col sm:flex-row gap-3">
+                        <button class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                            Cancel Changes
+                        </button>
+                        <button class="flex-1 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            Update Reservation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div id="price-summary" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-24">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Price Summary</h3>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Original booking</span>
+                            <span class="text-gray-900">$450.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Room upgrade</span>
+                            <span class="text-green-600">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Date change fee</span>
+                            <span class="text-green-600">Free</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Additional guests</span>
+                            <span class="text-gray-900">$0.00</span>
+                        </div>
+                        <hr class="border-gray-200">
+                        <div class="flex justify-between font-semibold text-lg">
+                            <span class="text-gray-900">New total</span>
+                            <span class="text-gray-900">$450.00</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-3 rounded-lg mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check-circle text-green-600"></i>
+                            <span class="text-sm font-medium text-green-800">No additional charges</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-gray-500 space-y-1">
+                        <p>• Free cancellation until 24h before check-in</p>
+                        <p>• Modification fees may apply for some changes</p>
+                        <p>• Prices include taxes and fees</p>
+                    </div>
+                </div>
+
+                <div id="support-card" class="bg-blue-50 rounded-lg p-6 mt-6">
+                    <h4 class="font-semibold text-gray-900 mb-2">Need Help?</h4>
+                    <p class="text-sm text-gray-600 mb-4">Our support team is available 24/7 to assist with your reservation changes.</p>
+                    <button class="w-full px-4 py-2 bg-primary text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors">
+                        <i class="fa-solid fa-phone mr-2"></i>
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<footer id="footer" class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div id="footer-brand" class="md:col-span-2">
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-plane text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold">TravelHub</span>
+                </div>
+                <p class="text-gray-400 mb-4">Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.</p>
+                <div class="flex space-x-4">
+                    <i class="fa-brands fa-facebook text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-twitter text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-instagram text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-linkedin text-gray-400 hover:text-white cursor-pointer"></i>
+                </div>
+            </div>
+            
+            <div id="footer-links-1">
+                <h4 class="font-semibold mb-4">Company</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                    <li><a href="#" class="hover:text-white">Press</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div id="footer-links-2">
+                <h4 class="font-semibold mb-4">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white">Trust & Safety</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 TravelHub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        function updateGuests(type, change) {
+            const element = document.getElementById(type + '-count');
+            let currentCount = parseInt(element.textContent);
+            let newCount = currentCount + change;
+            
+            if (type === 'adults' && newCount < 1) newCount = 1;
+            if (type === 'children' && newCount < 0) newCount = 0;
+            if (newCount > 6) newCount = 6;
+            
+            element.textContent = newCount;
+            updatePriceSummary();
+        }
+
+        function updatePriceSummary() {
+            const adults = parseInt(document.getElementById('adults-count').textContent);
+            const children = parseInt(document.getElementById('children-count').textContent);
+            
+            let additionalGuestFee = 0;
+            if (adults > 2) {
+                additionalGuestFee = (adults - 2) * 25 * 3;
+            }
+            
+            const additionalGuestElement = document.querySelector('#price-summary .space-y-3 div:nth-child(4) span:last-child');
+            additionalGuestElement.textContent = additionalGuestFee > 0 ? `$${additionalGuestFee}.00` : '$0.00';
+            
+            const newTotal = 450 + additionalGuestFee;
+            const totalElement = document.querySelector('#price-summary .font-semibold.text-lg span:last-child');
+            totalElement.textContent = `$${newTotal}.00`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'blue-primary': '#2563eb',
+                        'blue-hover': '#1d4ed8',
+                        'green-success': '#10b981',
+                        'gray-text': '#6b7280',
+                        'gray-border': '#e5e7eb'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-inter bg-white">
+
+    <div id="mobile-app-container" class="max-w-sm mx-auto bg-white min-h-screen">
+        
+        <!-- Header -->
+        <header id="header" class="px-6 pt-8 pb-4">
+            <div class="flex items-center justify-center mb-8">
+                <div class="text-2xl font-bold text-blue-primary">
+                    <i class="fa-solid fa-suitcase-rolling mr-2"></i>
+                    TravelHub
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div id="tab-navigation" class="px-6 mb-6">
+            <div class="flex bg-gray-100 rounded-lg p-1">
+                <button id="login-tab" class="flex-1 py-3 text-center text-sm font-medium rounded-md text-gray-text transition-all">
+                    Iniciar Sesión
+                </button>
+                <button id="signup-tab" class="flex-1 py-3 text-center text-sm font-medium rounded-md bg-white text-blue-primary shadow-sm transition-all">
+                    Crear Cuenta
+                </button>
+            </div>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signup-form" class="px-6">
+            <form class="space-y-5">
+                
+                <!-- Full Name Input -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Nombre completo</label>
+                    <div class="relative">
+                        <input type="text" 
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="Juan Pérez">
+                        <i class="fa-regular fa-user absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Correo electrónico</label>
+                    <div class="relative">
+                        <input type="email" 
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="tu@email.com">
+                        <i class="fa-regular fa-envelope absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Phone Input -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Número de teléfono</label>
+                    <div class="relative">
+                        <input type="tel" 
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="+52 123 456 7890">
+                        <i class="fa-solid fa-phone absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Contraseña</label>
+                    <div class="relative">
+                        <input type="password" id="signup-password-input"
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="••••••••">
+                        <button type="button" id="toggle-signup-password" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="mt-2 space-y-1">
+                        <div class="flex items-center text-xs">
+                            <div id="length-check" class="w-4 h-4 rounded-full border border-gray-border mr-2 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-xs text-green-success hidden"></i>
+                            </div>
+                            <span class="text-gray-text">Mínimo 8 caracteres</span>
+                        </div>
+                        <div class="flex items-center text-xs">
+                            <div id="uppercase-check" class="w-4 h-4 rounded-full border border-gray-border mr-2 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-xs text-green-success hidden"></i>
+                            </div>
+                            <span class="text-gray-text">Una letra mayúscula</span>
+                        </div>
+                        <div class="flex items-center text-xs">
+                            <div id="number-check" class="w-4 h-4 rounded-full border border-gray-border mr-2 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-xs text-green-success hidden"></i>
+                            </div>
+                            <span class="text-gray-text">Un número</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Confirmar contraseña</label>
+                    <div class="relative">
+                        <input type="password" id="confirm-password-input"
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="••••••••">
+                        <button type="button" id="toggle-confirm-password" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <p id="password-match" class="text-xs text-gray-text mt-1 hidden">Las contraseñas no coinciden</p>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Fecha de nacimiento</label>
+                    <div class="relative">
+                        <input type="date" 
+                               class="w-full px-4 py-3 border border-gray-border rounded-lg focus:ring-2 focus:ring-blue-primary focus:border-transparent outline-none text-gray-900"
+                               max="2005-12-31">
+                        <i class="fa-regular fa-calendar absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Marketing Consent -->
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" id="marketing-consent" class="w-4 h-4 text-blue-primary border-gray-border rounded focus:ring-blue-primary mt-1">
+                    <label for="marketing-consent" class="text-sm text-gray-text">
+                        Quiero recibir ofertas especiales, promociones y noticias de viaje por email
+                    </label>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" id="terms-consent" class="w-4 h-4 text-blue-primary border-gray-border rounded focus:ring-blue-primary mt-1" required>
+                    <label for="terms-consent" class="text-sm text-gray-text">
+                        Acepto los <button type="button" class="text-blue-primary font-medium underline">términos y condiciones</button> y la <button type="button" class="text-blue-primary font-medium underline">política de privacidad</button>
+                    </label>
+                </div>
+
+                <!-- Create Account Button -->
+                <button type="submit" id="create-account-btn" class="w-full bg-gray-300 text-gray-500 font-medium py-3 rounded-lg transition-colors shadow-sm cursor-not-allowed" disabled>
+                    Crear Cuenta
+                </button>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-border"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-text">o continúa con</span>
+                    </div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="space-y-3">
+                    <button type="button" class="w-full flex items-center justify-center px-4 py-3 border border-gray-border rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fa-brands fa-google text-red-500 mr-3"></i>
+                        <span class="text-gray-900 font-medium">Google</span>
+                    </button>
+                    <button type="button" class="w-full flex items-center justify-center px-4 py-3 border border-gray-border rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fa-brands fa-facebook text-blue-600 mr-3"></i>
+                        <span class="text-gray-900 font-medium">Facebook</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Trust Elements -->
+        <div id="trust-elements" class="px-6 mt-8 pb-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-6 mb-4">
+                    <div class="flex items-center text-xs text-gray-text">
+                        <i class="fa-solid fa-shield-halved text-green-success mr-1"></i>
+                        <span>Seguro</span>
+                    </div>
+                    <div class="flex items-center text-xs text-gray-text">
+                        <i class="fa-solid fa-lock text-green-success mr-1"></i>
+                        <span>Encriptado</span>
+                    </div>
+                    <div class="flex items-center text-xs text-gray-text">
+                        <i class="fa-solid fa-certificate text-green-success mr-1"></i>
+                        <span>Certificado</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-text">Tus datos están protegidos con encriptación de nivel bancario</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Password toggle functionality
+        const toggleSignupPassword = document.getElementById('toggle-signup-password');
+        const signupPasswordInput = document.getElementById('signup-password-input');
+        
+        toggleSignupPassword.addEventListener('click', function() {
+            const type = signupPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupPasswordInput.setAttribute('type', type);
+            
+            const icon = this.querySelector('i');
+            if (type === 'password') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+
+        // Confirm password toggle
+        const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+        const confirmPasswordInput = document.getElementById('confirm-password-input');
+        
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+            
+            const icon = this.querySelector('i');
+            if (type === 'password') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+
+        // Password validation
+        const lengthCheck = document.getElementById('length-check');
+        const uppercaseCheck = document.getElementById('uppercase-check');
+        const numberCheck = document.getElementById('number-check');
+        const passwordMatch = document.getElementById('password-match');
+        const createAccountBtn = document.getElementById('create-account-btn');
+        const termsConsent = document.getElementById('terms-consent');
+
+        function validatePassword() {
+            const password = signupPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            // Length check
+            if (password.length >= 8) {
+                lengthCheck.classList.add('bg-green-success', 'border-green-success');
+                lengthCheck.querySelector('i').classList.remove('hidden');
+            } else {
+                lengthCheck.classList.remove('bg-green-success', 'border-green-success');
+                lengthCheck.querySelector('i').classList.add('hidden');
+            }
+            
+            // Uppercase check
+            if (/[A-Z]/.test(password)) {
+                uppercaseCheck.classList.add('bg-green-success', 'border-green-success');
+                uppercaseCheck.querySelector('i').classList.remove('hidden');
+            } else {
+                uppercaseCheck.classList.remove('bg-green-success', 'border-green-success');
+                uppercaseCheck.querySelector('i').classList.add('hidden');
+            }
+            
+            // Number check
+            if (/[0-9]/.test(password)) {
+                numberCheck.classList.add('bg-green-success', 'border-green-success');
+                numberCheck.querySelector('i').classList.remove('hidden');
+            } else {
+                numberCheck.classList.remove('bg-green-success', 'border-green-success');
+                numberCheck.querySelector('i').classList.add('hidden');
+            }
+            
+            // Password match
+            if (confirmPassword && password !== confirmPassword) {
+                passwordMatch.classList.remove('hidden');
+                passwordMatch.classList.add('text-red-500');
+                confirmPasswordInput.classList.add('border-red-300');
+            } else {
+                passwordMatch.classList.add('hidden');
+                confirmPasswordInput.classList.remove('border-red-300');
+            }
+            
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const password = signupPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const isPasswordValid = password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password);
+            const isPasswordMatch = password === confirmPassword && confirmPassword !== '';
+            const isTermsAccepted = termsConsent.checked;
+            
+            if (isPasswordValid && isPasswordMatch && isTermsAccepted) {
+                createAccountBtn.disabled = false;
+                createAccountBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                createAccountBtn.classList.add('bg-blue-primary', 'text-white', 'hover:bg-blue-hover');
+            } else {
+                createAccountBtn.disabled = true;
+                createAccountBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                createAccountBtn.classList.remove('bg-blue-primary', 'text-white', 'hover:bg-blue-hover');
+            }
+        }
+
+        signupPasswordInput.addEventListener('input', validatePassword);
+        confirmPasswordInput.addEventListener('input', validatePassword);
+        termsConsent.addEventListener('change', updateSubmitButton);
+
+        // Tab switching (back to login)
+        const loginTab = document.getElementById('login-tab');
+        loginTab.addEventListener('click', function() {
+            window.history.back();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-bed text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-bold text-gray-900">TravelHub</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="p-2 text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                </button>
+                <div class="w-8 h-8 rounded-full overflow-hidden">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Profile" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Search Section -->
+<main id="main-content" class="max-w-md mx-auto">
+    <!-- Hero Section -->
+    <section id="hero-section" class="px-4 pt-6 pb-4">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Find your perfect stay</h1>
+            <p class="text-gray-600 text-sm">Discover amazing hotels in Latin America</p>
+        </div>
+    </section>
+
+    <!-- Search Bar -->
+    <section id="search-section" class="px-4 mb-8">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- City Input -->
+            <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-location-dot text-primary text-lg"></i>
+                    <div class="flex-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Destination</label>
+                        <input type="text" placeholder="Where are you going?" class="w-full text-base font-medium text-gray-900 bg-transparent border-none outline-none mt-1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Check-in/Check-out -->
+            <div class="flex">
+                <div class="flex-1 p-4 border-r border-gray-100">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-regular fa-calendar text-primary text-lg"></i>
+                        <div>
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Check-in</label>
+                            <input type="date" class="w-full text-sm font-medium text-gray-900 bg-transparent border-none outline-none mt-1">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 p-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-regular fa-calendar text-primary text-lg"></i>
+                        <div>
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Check-out</label>
+                            <input type="date" class="w-full text-sm font-medium text-gray-900 bg-transparent border-none outline-none mt-1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guests -->
+            <div class="p-4 border-t border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-users text-primary text-lg"></i>
+                    <div class="flex-1">
+                        <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Guests</label>
+                        <select class="w-full text-base font-medium text-gray-900 bg-transparent border-none outline-none mt-1">
+                            <option>1 Adult</option>
+                            <option>2 Adults</option>
+                            <option>2 Adults, 1 Child</option>
+                            <option>3 Adults</option>
+                            <option>Family (4+)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="p-4 bg-gray-50">
+                <button class="w-full bg-primary text-white font-semibold py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Search Hotels</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section id="popular-destinations" class="px-4 mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900">Popular Destinations</h2>
+            <button class="text-primary text-sm font-medium">View all</button>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                <div class="h-24 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                <div class="p-3">
+                    <h3 class="font-semibold text-gray-900 text-sm">Mexico City</h3>
+                    <p class="text-xs text-gray-500 mt-1">From $45/night</p>
+                </div>
+            </div>
+            <div class="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                <div class="h-24 bg-gradient-to-br from-green-400 to-green-600"></div>
+                <div class="p-3">
+                    <h3 class="font-semibold text-gray-900 text-sm">Buenos Aires</h3>
+                    <p class="text-xs text-gray-500 mt-1">From $38/night</p>
+                </div>
+            </div>
+            <div class="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                <div class="h-24 bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                <div class="p-3">
+                    <h3 class="font-semibold text-gray-900 text-sm">Bogotá</h3>
+                    <p class="text-xs text-gray-500 mt-1">From $32/night</p>
+                </div>
+            </div>
+            <div class="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                <div class="h-24 bg-gradient-to-br from-orange-400 to-orange-600"></div>
+                <div class="p-3">
+                    <h3 class="font-semibold text-gray-900 text-sm">São Paulo</h3>
+                    <p class="text-xs text-gray-500 mt-1">From $42/night</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recently Viewed -->
+    <section id="recently-viewed" class="px-4 mb-8">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Recently Viewed</h2>
+        <div class="space-y-3">
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
+                <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-building text-gray-400 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 text-sm">Hotel Plaza Central</h3>
+                    <p class="text-xs text-gray-500 mt-1">Mexico City • 4.5 ⭐</p>
+                    <p class="text-sm font-semibold text-primary mt-1">$65/night</p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                </button>
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center space-x-3">
+                <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-building text-gray-400 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 text-sm">Boutique Recoleta</h3>
+                    <p class="text-xs text-gray-500 mt-1">Buenos Aires • 4.7 ⭐</p>
+                    <p class="text-sm font-semibold text-primary mt-1">$48/night</p>
+                </div>
+                <button class="p-2 text-red-500">
+                    <i class="fa-solid fa-heart text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges -->
+    <section id="trust-badges" class="px-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <h3 class="text-sm font-semibold text-gray-900 mb-3 text-center">Why choose TravelHub?</h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="flex flex-col items-center space-y-2">
+                    <div class="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-success text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-700">Secure Payment</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-xmark text-primary text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-700">Free Cancellation</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-headset text-orange-600 text-lg"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-700">24/7 Support</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+    <div class="flex items-center justify-around py-2">
+        <button class="flex flex-col items-center p-2 text-primary">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-xs font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            <span class="text-xs font-medium mt-1">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-xs font-medium mt-1">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-calendar text-xl"></i>
+            <span class="text-xs font-medium mt-1">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-user text-xl"></i>
+            <span class="text-xs font-medium mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<div class="h-20"></div>
+
+</body>
+</html>
