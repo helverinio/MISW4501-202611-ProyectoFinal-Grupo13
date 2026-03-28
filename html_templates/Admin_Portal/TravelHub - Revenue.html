@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-hotel text-white text-sm"></i>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full">
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-900">Admin User</p>
+                            <p class="text-xs text-gray-500">Hotel Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-chart-line w-5 mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-calendar-check w-5 mr-3"></i>
+                    Reservations
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-hotel w-5 mr-3"></i>
+                    Properties
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    Guests
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+                    <i class="fas fa-dollar-sign w-5 mr-3"></i>
+                    Revenue
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-cog w-5 mr-3"></i>
+                    Settings
+                </a>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                        <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="flex-1 p-4 sm:p-6 lg:p-8">
+            <div id="revenue-header" class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Revenue Reports</h1>
+                        <p class="text-gray-600 text-sm">Track and analyze revenue performance across all properties</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-file-pdf mr-2 text-red-600"></i>
+                            Export PDF
+                        </button>
+                        <button class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-file-excel mr-2"></i>
+                            Export Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filters-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-filter text-primary-600 mr-2"></i>
+                    Filters
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div id="date-from-filter">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                        <input type="date" value="2024-01-01" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div id="date-to-filter">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                        <input type="date" value="2024-12-31" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div id="property-filter">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Property</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option>All Properties</option>
+                            <option>Grand Hotel Plaza</option>
+                            <option>Sunset Beach Resort</option>
+                            <option>City Center Hotel</option>
+                            <option>Mountain Lodge</option>
+                        </select>
+                    </div>
+                    <div id="currency-filter">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option>USD ($)</option>
+                            <option>COP (COL$)</option>
+                            <option>ARS (AR$)</option>
+                            <option>MXN (MX$)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors">
+                        <i class="fas fa-sync mr-2"></i>
+                        Apply Filters
+                    </button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-redo mr-2"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div id="summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div id="total-revenue-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-primary-600 text-xl"></i>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            +12.5%
+                        </span>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-600 mb-1">Total Revenue</h3>
+                    <p class="text-3xl font-bold text-gray-900">$284,650</p>
+                    <p class="text-xs text-gray-500 mt-2">vs. last period</p>
+                </div>
+
+                <div id="avg-booking-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-success-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chart-line text-success-600 text-xl"></i>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            +8.3%
+                        </span>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-600 mb-1">Avg. Booking Value</h3>
+                    <p class="text-3xl font-bold text-gray-900">$485</p>
+                    <p class="text-xs text-gray-500 mt-2">vs. last period</p>
+                </div>
+
+                <div id="bookings-count-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-orange-600 text-xl"></i>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            +15.2%
+                        </span>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-600 mb-1">Total Bookings</h3>
+                    <p class="text-3xl font-bold text-gray-900">587</p>
+                    <p class="text-xs text-gray-500 mt-2">vs. last period</p>
+                </div>
+
+                <div id="occupancy-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-percentage text-purple-600 text-xl"></i>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            <i class="fas fa-arrow-down mr-1"></i>
+                            -2.1%
+                        </span>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-600 mb-1">Occupancy Rate</h3>
+                    <p class="text-3xl font-bold text-gray-900">78.4%</p>
+                    <p class="text-xs text-gray-500 mt-2">vs. last period</p>
+                </div>
+            </div>
+
+            <div id="monthly-chart-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Monthly Revenue Trend</h3>
+                        <p class="text-sm text-gray-600">Revenue performance across 2024</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+                        <button class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-xs font-medium">2024</button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200">2023</button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200">2022</button>
+                    </div>
+                </div>
+                <div id="monthly-revenue-chart" style="height: 400px"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div id="property-breakdown-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Revenue by Property</h3>
+                    <div id="property-revenue-chart" style="height: 350px"></div>
+                </div>
+
+                <div id="payment-status-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Status</h3>
+                    <div id="payment-status-chart" style="height: 350px"></div>
+                </div>
+            </div>
+
+            <div id="revenue-table-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Detailed Revenue Report</h3>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200">
+                            <i class="fas fa-sort mr-1"></i>
+                            Sort
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">Month</th>
+                                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">Bookings</th>
+                                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">Revenue</th>
+                                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">Avg. Value</th>
+                                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">January</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">48</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$22,340</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$465</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        +12.3%
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">February</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">52</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$24,680</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$475</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        +10.5%
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">March</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">58</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$28,120</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$485</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        +13.9%
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">April</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">45</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$21,150</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$470</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-arrow-down mr-1"></i>
+                                        -5.2%
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">May</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">62</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$30,380</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$490</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        +18.4%
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 text-sm font-medium text-gray-900">June</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">68</td>
+                                <td class="py-4 px-4 text-sm font-semibold text-gray-900">$33,660</td>
+                                <td class="py-4 px-4 text-sm text-gray-700">$495</td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                        <i class="fas fa-arrow-up mr-1"></i>
+                                        +10.8%
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            try {
+                var monthlyData = [{
+                    type: 'scatter',
+                    mode: 'lines',
+                    x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    y: [22340, 24680, 28120, 21150, 30380, 33660, 31240, 29850, 32100, 35420, 38950, 42180],
+                    line: { color: '#2563eb', width: 3 },
+                    fill: 'tozeroy',
+                    fillcolor: 'rgba(37, 99, 235, 0.1)',
+                    name: 'Revenue'
+                }];
+
+                var monthlyLayout = {
+                    title: { text: '', font: { size: 0 } },
+                    xaxis: { title: 'Month', showgrid: false },
+                    yaxis: { title: 'Revenue ($)', tickprefix: '$' },
+                    margin: { t: 20, r: 20, b: 60, l: 70 },
+                    plot_bgcolor: '#ffffff',
+                    paper_bgcolor: '#ffffff',
+                    showlegend: false,
+                    hovermode: 'x unified'
+                };
+
+                Plotly.newPlot('monthly-revenue-chart', monthlyData, monthlyLayout, {responsive: true, displayModeBar: false, displaylogo: false});
+
+                var propertyData = [{
+                    type: 'bar',
+                    x: ['Grand Hotel', 'Sunset Beach', 'City Center', 'Mountain Lodge'],
+                    y: [85400, 72300, 58200, 68750],
+                    marker: { color: ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6'] }
+                }];
+
+                var propertyLayout = {
+                    title: { text: '', font: { size: 0 } },
+                    xaxis: { title: '' },
+                    yaxis: { title: 'Revenue ($)', tickprefix: '$' },
+                    margin: { t: 20, r: 20, b: 80, l: 70 },
+                    plot_bgcolor: '#ffffff',
+                    paper_bgcolor: '#ffffff',
+                    showlegend: false
+                };
+
+                Plotly.newPlot('property-revenue-chart', propertyData, propertyLayout, {responsive: true, displayModeBar: false, displaylogo: false});
+
+                var paymentData = [{
+                    type: 'pie',
+                    labels: ['Paid', 'Pending', 'Refunded'],
+                    values: [245800, 32400, 6450],
+                    marker: { colors: ['#10b981', '#f59e0b', '#ef4444'] },
+                    hole: 0.4,
+                    textinfo: 'label+percent',
+                    textposition: 'outside'
+                }];
+
+                var paymentLayout = {
+                    title: { text: '', font: { size: 0 } },
+                    margin: { t: 20, r: 20, b: 20, l: 20 },
+                    plot_bgcolor: '#ffffff',
+                    paper_bgcolor: '#ffffff',
+                    showlegend: true,
+                    legend: { orientation: 'h', y: -0.1 }
+                };
+
+                Plotly.newPlot('payment-status-chart', paymentData, paymentLayout, {responsive: true, displayModeBar: false, displaylogo: false});
+            } catch(e) {
+                console.error('Chart rendering error:', e);
+            }
+        });
+    </script>
+</body>
+</html>

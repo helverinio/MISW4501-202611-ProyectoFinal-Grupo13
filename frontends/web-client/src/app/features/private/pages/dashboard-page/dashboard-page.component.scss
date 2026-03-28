@@ -1,0 +1,36 @@
+.dashboard-shell {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid #dbeafe;
+  border-radius: 1rem;
+  box-shadow: 0 18px 40px -30px rgba(15, 23, 42, 0.5);
+  padding: 1.4rem;
+}
+
+.dashboard-shell h1 {
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+
+.dashboard-shell p {
+  color: #475569;
+}
+
+.dashboard-shell__cards {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.2rem;
+}
+
+.dashboard-shell__cards article {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.8rem;
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-shell__cards {
+    grid-template-columns: 1fr;
+  }
+}

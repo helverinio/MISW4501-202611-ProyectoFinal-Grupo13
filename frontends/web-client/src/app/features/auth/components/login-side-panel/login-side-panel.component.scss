@@ -1,0 +1,29 @@
+.login-side-panel {
+  background:
+    linear-gradient(150deg, rgba(2, 132, 199, 0.95) 0%, rgba(14, 116, 144, 0.95) 100%), #0f172a;
+  border-radius: 1rem;
+  color: white;
+  min-height: 100%;
+  padding: 1.6rem;
+}
+
+.login-side-panel h2 {
+  font-size: 1.9rem;
+  margin-bottom: 0.7rem;
+}
+
+.login-side-panel p {
+  color: #e2e8f0;
+  margin-bottom: 1.1rem;
+}
+
+.login-side-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.login-side-panel li {
+  border-top: 1px solid rgba(226, 232, 240, 0.35);
+  padding: 0.7rem 0;
+}
