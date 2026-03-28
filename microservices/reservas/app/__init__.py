@@ -31,6 +31,14 @@ def create_app(config_name='default'):
     db.init_app(app)
     migrate.init_app(app, db)
     
+    # Initialize Usuarios Auth Service
+    try:
+        from app.infrastructure.services import init_usuarios_auth_service
+        init_usuarios_auth_service(app.config)
+        logger.info("Usuarios auth service initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize Usuarios auth service: {str(e)}")
+    
     global redis_lock_service
     try:
         from app.infrastructure.services import init_redis_lock_service

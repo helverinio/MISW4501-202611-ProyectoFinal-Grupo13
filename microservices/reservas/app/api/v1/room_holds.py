@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import request, jsonify, current_app
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.config.constants import DEFAULT_HOLD_DURATION_MINUTES
 from app.application.use_cases import (
     AcquireRoomHoldUseCase, GetRoomHoldUseCase, CheckRoomHoldUseCase,
@@ -28,7 +29,8 @@ def parse_datetime(date_str):
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>/hold', methods=['POST'])
-def acquire_room_hold(habitacion_id):
+@require_token
+def acquire_room_hold(habitacion_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -141,7 +143,8 @@ def _execute_hold_acquisition(
 
 
 @api_v1_bp.route('/holds/<hold_id>', methods=['GET'])
-def get_room_hold(hold_id):
+@require_token
+def get_room_hold(hold_id, current_usuario=None):
     lock_service = get_lock_service()
     
     if lock_service:
@@ -170,7 +173,8 @@ def get_room_hold(hold_id):
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>/hold/check', methods=['POST'])
-def check_room_hold(habitacion_id):
+@require_token
+def check_room_hold(habitacion_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -219,7 +223,8 @@ def check_room_hold(habitacion_id):
 
 
 @api_v1_bp.route('/holds/<hold_id>', methods=['DELETE'])
-def release_room_hold(hold_id):
+@require_token
+def release_room_hold(hold_id, current_usuario=None):
     lock_service = get_lock_service()
     
     if lock_service:
@@ -236,7 +241,8 @@ def release_room_hold(hold_id):
 
 
 @api_v1_bp.route('/holds/cleanup', methods=['POST'])
-def cleanup_expired_holds():
+@require_token
+def cleanup_expired_holds(current_usuario=None):
     use_case = CleanupExpiredHoldsUseCase(get_repository())
     deleted_count = use_case.execute()
 

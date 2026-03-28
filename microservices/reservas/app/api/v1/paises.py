@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreatePaisUseCase, GetPaisUseCase, GetAllPaisesUseCase,
     UpdatePaisUseCase, DeletePaisUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/paises', methods=['POST'])
-def create_pais():
+@require_token
+def create_pais(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -31,7 +33,8 @@ def create_pais():
 
 
 @api_v1_bp.route('/paises/<pais_id>', methods=['GET'])
-def get_pais(pais_id):
+@require_token
+def get_pais(pais_id, current_usuario=None):
     use_case = GetPaisUseCase(get_repository())
     pais = use_case.execute(pais_id)
 
@@ -45,7 +48,8 @@ def get_pais(pais_id):
 
 
 @api_v1_bp.route('/paises', methods=['GET'])
-def get_all_paises():
+@require_token
+def get_all_paises(current_usuario=None):
     use_case = GetAllPaisesUseCase(get_repository())
     paises = use_case.execute()
 
@@ -56,7 +60,8 @@ def get_all_paises():
 
 
 @api_v1_bp.route('/paises/<pais_id>', methods=['PUT'])
-def update_pais(pais_id):
+@require_token
+def update_pais(pais_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -74,7 +79,8 @@ def update_pais(pais_id):
 
 
 @api_v1_bp.route('/paises/<pais_id>', methods=['DELETE'])
-def delete_pais(pais_id):
+@require_token
+def delete_pais(pais_id, current_usuario=None):
     use_case = DeletePaisUseCase(get_repository())
     deleted = use_case.execute(pais_id)
 
