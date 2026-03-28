@@ -1,8 +1,8 @@
 <section id="recently-viewed" class="py-16 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between mb-8">
-      <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Recently Viewed</h2>
-      <a href="#" class="text-primary hover:text-primary-dark font-medium">View All</a>
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900">{{ t('homeSearch.recent.title') }}</h2>
+      <a href="#" class="text-primary hover:text-primary-dark font-medium">{{ t('homeSearch.recent.viewAll') }}</a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -23,9 +23,9 @@
             <div class="flex items-center justify-between">
               <div>
                 <span class="text-2xl font-bold text-gray-900">{{ hotel.nightlyPrice }}</span>
-                <span class="text-gray-600">/night</span>
+                <span class="text-gray-600">{{ t('homeSearch.recent.perNight') }}</span>
               </div>
-              <span class="text-xs text-success">{{ hotel.cancellationText }}</span>
+              <span class="text-xs text-success">{{ t('homeSearch.recent.freeCancellation') }}</span>
             </div>
           </div>
         </div>

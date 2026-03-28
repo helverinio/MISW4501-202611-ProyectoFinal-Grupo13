@@ -19,15 +19,11 @@ export class HomeSearchHeaderComponent {
   protected readonly currentUser = this.authService.currentUser;
   protected readonly currency = signal<string>('USD');
 
-  protected readonly languages: Array<{ label: string; value: LanguageCode }> = [
-    { label: '🇺🇸 English', value: 'en' },
-    { label: '🇪🇸 Español', value: 'es' },
-    { label: '🇧🇷 Português', value: 'pt' },
-  ];
-
-  protected readonly currencies: string[] = ['USD', 'ARS', 'CLP', 'PEN', 'COP', 'MXN'];
-
   protected onLanguageChange(lang: LanguageCode): void {
     this.i18n.setLanguage(lang);
+  }
+
+  protected t(key: string): string {
+    return this.i18n.t(key as any);
   }
 }

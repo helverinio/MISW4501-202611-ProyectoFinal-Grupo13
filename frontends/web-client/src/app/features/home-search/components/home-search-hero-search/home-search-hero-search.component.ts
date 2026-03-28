@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { I18nService } from '../../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-home-search-hero-search',
@@ -8,18 +10,26 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './home-search-hero-search.component.scss',
 })
 export class HomeSearchHeroSearchComponent {
+  private readonly i18n = inject(I18nService);
+
   protected destination = '';
   protected checkInDate = this.getDateOffset(1);
   protected checkOutDate = this.getDateOffset(7);
-  protected guests = '1 Guest';
+  protected guests = this.t('homeSearch.hero.guest1');
 
-  protected readonly guestOptions: string[] = [
-    '1 Guest',
-    '2 Guests',
-    '3 Guests',
-    '4 Guests',
-    '5+ Guests',
-  ];
+  protected guestOptions(): string[] {
+    return [
+      this.t('homeSearch.hero.guest1'),
+      this.t('homeSearch.hero.guest2'),
+      this.t('homeSearch.hero.guest3'),
+      this.t('homeSearch.hero.guest4'),
+      this.t('homeSearch.hero.guest5Plus'),
+    ];
+  }
+
+  protected t(key: string): string {
+    return this.i18n.t(key as any);
+  }
 
   protected onSearchHotels(): void {
     if (!this.destination.trim()) {
