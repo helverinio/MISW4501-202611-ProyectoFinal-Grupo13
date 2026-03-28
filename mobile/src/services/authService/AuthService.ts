@@ -12,8 +12,7 @@ export const AuthService = {
 
       const url = '/api/v1/auth/login';
 
-      // var hashedPwd = await hashingUtility(password);
-      var hashedPwd = password;
+      const hashedPwd = await hashingUtility(password);
 
       const response = await customAxios.post(url, {
         usuario: email,

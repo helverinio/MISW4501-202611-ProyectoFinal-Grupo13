@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Href } from 'expo-router';
 import { AuthService } from '../services/authService/AuthService';
+import { RegisterService } from '../services/userService/RegisterService';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function LoginScreen() {
@@ -20,9 +21,16 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  // Registration fields
+  const [nombre, setNombre] = useState('');
+  const [usuario, setUsuario] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -54,7 +62,63 @@ export default function LoginScreen() {
 
   const handleCreateAccount = () => {
     setActiveTab('register');
-    // TODO: Navigate to register screen or show register form
+    setError(null);
+    setSuccessMessage(null);
+  };
+
+  const handleRegister = async () => {
+    if (!nombre.trim() || !email.trim() || !usuario.trim() || !password.trim() || !confirmPassword.trim()) {
+      setError('Por favor completa todos los campos');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const result = await RegisterService.send({
+        nombre,
+        email,
+        usuario,
+        contrasena: password,
+      });
+
+      if (result.success) {
+        setSuccessMessage('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+        // Clear registration fields
+        setNombre('');
+        setUsuario('');
+        setConfirmPassword('');
+        // Switch to login tab after a brief delay
+        setTimeout(() => {
+          setActiveTab('login');
+          setSuccessMessage(null);
+        }, 2000);
+      } else {
+        setError(result.error?.message || 'Error al crear la cuenta. Intenta de nuevo.');
+      }
+    } catch (err) {
+      setError('Ocurrió un error inesperado. Intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTabChange = (tab: 'login' | 'register') => {
+    setActiveTab(tab);
+    setError(null);
+    setSuccessMessage(null);
   };
 
   return (
@@ -79,7 +143,7 @@ export default function LoginScreen() {
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[styles.tab, activeTab === 'login' && styles.activeTab]}
-              onPress={() => setActiveTab('login')}
+              onPress={() => handleTabChange('login')}
             >
               <Text style={[styles.tabText, activeTab === 'login' && styles.activeTabText]}>
                 Iniciar Sesión
@@ -87,7 +151,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.tab, activeTab === 'register' && styles.activeTab]}
-              onPress={handleCreateAccount}
+              onPress={() => handleTabChange('register')}
             >
               <Text style={[styles.tabText, activeTab === 'register' && styles.activeTabText]}>
                 Crear Cuenta
@@ -97,78 +161,199 @@ export default function LoginScreen() {
 
           {/* Form */}
           <View style={styles.form}>
-            {/* Email Field */}
-            <Text style={styles.inputLabel}>Correo electrónico</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="tu@email.com"
-                placeholderTextColor="#999"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                editable={!isLoading}
-              />
-              <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
-            </View>
-
-            {/* Password Field */}
-            <Text style={styles.inputLabel}>Contraseña</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#999"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-                autoCapitalize="none"
-                editable={!isLoading}
-              />
-              <TouchableOpacity 
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.inputIcon}
-              >
-                <Ionicons 
-                  name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                  size={20} 
-                  color="#999" 
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Remember Me & Forgot Password */}
-            <View style={styles.optionsRow}>
-              <TouchableOpacity 
-                style={styles.checkboxContainer}
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
-                  {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
+            {activeTab === 'login' ? (
+              <>
+                {/* Email Field */}
+                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="tu@email.com"
+                    placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
                 </View>
-                <Text style={styles.checkboxLabel}>Recordarme</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleForgotPassword}>
-                <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
-              </TouchableOpacity>
-            </View>
 
-            {error && <Text style={styles.errorText}>{error}</Text>}
+                {/* Password Field */}
+                <Text style={styles.inputLabel}>Contraseña</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
 
-            {/* Login Button */}
-            <TouchableOpacity
-              style={[styles.button, isLoading && styles.buttonDisabled]}
-              onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonText}>Iniciar Sesión</Text>
-              )}
-            </TouchableOpacity>
+                {/* Remember Me & Forgot Password */}
+                <View style={styles.optionsRow}>
+                  <TouchableOpacity 
+                    style={styles.checkboxContainer}
+                    onPress={() => setRememberMe(!rememberMe)}
+                  >
+                    <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
+                      {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
+                    </View>
+                    <Text style={styles.checkboxLabel}>Recordarme</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleForgotPassword}>
+                    <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {error && <Text style={styles.errorText}>{error}</Text>}
+
+                {/* Login Button */}
+                <TouchableOpacity
+                  style={[styles.button, isLoading && styles.buttonDisabled]}
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                {/* Registration Form */}
+                {/* Name Field */}
+                <Text style={styles.inputLabel}>Nombre completo</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Juan Pérez"
+                    placeholderTextColor="#999"
+                    value={nombre}
+                    onChangeText={setNombre}
+                    autoCapitalize="words"
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="person-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Email Field */}
+                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="tu@email.com"
+                    placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Username Field */}
+                <Text style={styles.inputLabel}>Nombre de usuario</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="juanperez"
+                    placeholderTextColor="#999"
+                    value={usuario}
+                    onChangeText={setUsuario}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="at-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Password Field */}
+                <Text style={styles.inputLabel}>Contraseña</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Confirm Password Field */}
+                <Text style={styles.inputLabel}>Confirmar contraseña</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showConfirmPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {error && <Text style={styles.errorText}>{error}</Text>}
+                {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
+
+                {/* Register Button */}
+                <TouchableOpacity
+                  style={[styles.button, isLoading && styles.buttonDisabled]}
+                  onPress={handleRegister}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>Crear Cuenta</Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            )}
           </View>
 
           {/* Footer */}
@@ -336,6 +521,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#ff3b30',
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  successText: {
+    color: '#4CAF50',
     fontSize: 14,
     marginBottom: 16,
     textAlign: 'center',
