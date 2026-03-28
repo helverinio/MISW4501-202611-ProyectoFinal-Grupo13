@@ -1,0 +1,54 @@
+.private-header {
+  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.94);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.private-header__content {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-height: 4rem;
+}
+
+.private-header :is(.brand, .brand__text) {
+  color: white;
+}
+
+.private-header .brand__icon {
+  background: #0ea5e9;
+}
+
+.private-header__actions {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.private-header__link,
+.private-header__user {
+  color: #dbeafe;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.private-header__link {
+  text-decoration: none;
+}
+
+.private-header__logout {
+  background: #0ea5e9;
+  border: 0;
+  border-radius: 999px;
+  color: #082f49;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+}
+
+.private-header__logout:hover {
+  background: #38bdf8;
+}

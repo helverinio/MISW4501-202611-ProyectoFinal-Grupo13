@@ -1,0 +1,77 @@
+.login-form-shell {
+  background: white;
+  border: 1px solid #dbeafe;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px -35px rgba(15, 23, 42, 0.8);
+  padding: 1.6rem;
+}
+
+.login-form-shell h1 {
+  color: #0f172a;
+  margin-bottom: 0.35rem;
+}
+
+.login-form-shell p {
+  color: #475569;
+}
+
+.login-form-shell form {
+  display: grid;
+  gap: 0.58rem;
+  margin-top: 1rem;
+}
+
+.login-form-shell label {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.login-form-shell input {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.65rem;
+  font: inherit;
+  padding: 0.66rem 0.74rem;
+}
+
+.login-form-shell input:focus {
+  border-color: #0ea5e9;
+  outline: 2px solid rgba(14, 165, 233, 0.2);
+}
+
+.login-form-shell button {
+  background: #0284c7;
+  border: 0;
+  border-radius: 0.7rem;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 0.4rem;
+  min-height: 2.7rem;
+}
+
+.login-form-shell button:hover:not(:disabled) {
+  background: #0369a1;
+}
+
+.login-form-shell button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-error,
+.api-error {
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin: 0;
+  padding: 0.45rem 0.58rem;
+}
+
+.form-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.api-error {
+  background: #fff7ed;
+  color: #c2410c;
+}

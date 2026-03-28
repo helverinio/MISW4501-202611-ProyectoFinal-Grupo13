@@ -1,0 +1,32 @@
+<section class="login-form-shell">
+  <header>
+    <h1>Welcome back</h1>
+    <p>Sign in with your TravelHub credentials.</p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label for="usuario">User</label>
+    <input id="usuario" type="text" formControlName="usuario" placeholder="your.username" />
+    @if (form.controls.usuario.invalid && form.controls.usuario.touched) {
+      <p class="form-error">User is required.</p>
+    }
+
+    <label for="contrasena">Password</label>
+    <input id="contrasena" type="password" formControlName="contrasena" placeholder="Enter your password" />
+    @if (form.controls.contrasena.invalid && form.controls.contrasena.touched) {
+      <p class="form-error">Password is required and must have at least 6 characters.</p>
+    }
+
+    @if (errorMessage) {
+      <p class="api-error" role="alert">{{ errorMessage }}</p>
+    }
+
+    <button type="submit" [disabled]="loading">
+      @if (!loading) {
+        <span>Sign in</span>
+      } @else {
+        <span>Signing in...</span>
+      }
+    </button>
+  </form>
+</section>

@@ -1,0 +1,11 @@
+<header class="private-header">
+  <div class="container private-header__content">
+    <app-brand-logo />
+
+    <div class="private-header__actions">
+      <a routerLink="/app" class="private-header__link">Dashboard</a>
+      <span class="private-header__user">{{ currentUser()?.nombre || currentUser()?.usuario }}</span>
+      <button type="button" class="private-header__logout" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</header>

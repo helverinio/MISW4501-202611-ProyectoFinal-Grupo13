@@ -1,0 +1,15 @@
+.login-page {
+  padding-block: 2.3rem;
+}
+
+.login-page__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+@media (max-width: 960px) {
+  .login-page__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,6 @@
+<section class="login-page container">
+  <div class="login-page__grid">
+    <app-login-side-panel />
+    <app-login-form [loading]="loading" [errorMessage]="errorMessage" (loginSubmit)="onLogin($event)" />
+  </div>
+</section>

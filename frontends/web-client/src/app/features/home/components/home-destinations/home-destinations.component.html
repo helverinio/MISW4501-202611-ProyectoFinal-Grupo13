@@ -1,0 +1,18 @@
+<section class="destinations">
+  <div class="container">
+    <h2>Popular destinations</h2>
+    <p>Explore the most sought-after spots in Latin America.</p>
+
+    <div class="destinations__grid">
+      @for (destination of destinations; track destination.city) {
+        <article>
+          <img [src]="destination.imageUrl" [alt]="destination.city + ', ' + destination.country" />
+          <div class="destinations__caption">
+            <h3>{{ destination.city }}</h3>
+            <span>{{ destination.country }}</span>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

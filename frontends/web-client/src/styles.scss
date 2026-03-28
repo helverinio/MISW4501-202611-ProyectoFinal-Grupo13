@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-brand-600: #0284c7;
+  --color-brand-700: #0369a1;
+  --color-slate-900: #0f172a;
+  --color-slate-700: #334155;
+  --color-border: #dbe3ec;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+}
+
+body {
+  background: #f8fafc;
+  color: var(--color-slate-900);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+.container {
+  margin-inline: auto;
+  max-width: 72rem;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 1.3rem;
+  }
+}
