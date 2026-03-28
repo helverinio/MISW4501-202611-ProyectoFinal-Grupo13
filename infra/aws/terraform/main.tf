@@ -53,6 +53,17 @@ locals {
       test_port     = 15001
       family        = "${local.name_prefix}-ext-payments"
     }
+    usuarios = {
+      port          = 5003
+      cpu           = 512
+      memory        = 1024
+      desired_count = 1
+      max_count     = 2
+      public        = false
+      prod_port     = 5003
+      test_port     = 15003
+      family        = "${local.name_prefix}-usuarios"
+    }
   }
 
   frontend_configs = {
@@ -408,9 +419,10 @@ locals {
   public_alb_base_url  = "http://${aws_lb.public.dns_name}"
   api_public_url       = "https://${aws_cloudfront_distribution.api.domain_name}"
   internal_service_urls = {
-    reservas      = "http://${aws_lb.internal.dns_name}:${local.service_configs["reservas"].prod_port}"
-    pagos         = "http://${aws_lb.internal.dns_name}:${local.service_configs["pagos"].prod_port}"
+    reservas       = "http://${aws_lb.internal.dns_name}:${local.service_configs["reservas"].prod_port}"
+    pagos          = "http://${aws_lb.internal.dns_name}:${local.service_configs["pagos"].prod_port}"
     "ext-payments" = "http://${aws_lb.internal.dns_name}:${local.service_configs["ext-payments"].prod_port}"
+    usuarios       = "http://${aws_lb.internal.dns_name}:${local.service_configs["usuarios"].prod_port}"
   }
 }
 
@@ -424,14 +436,15 @@ resource "aws_secretsmanager_secret_version" "app_config" {
   secret_id = aws_secretsmanager_secret.app_config.id
 
   secret_string = jsonencode({
-    secret_key               = random_password.secret_key.result
-    mq_username              = var.mq_username
-    mq_password              = local.effective_mq_password
-    reservas_database_url    = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=reservas")}" 
-    pagos_database_url       = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=pagos")}" 
+    secret_key                = random_password.secret_key.result
+    mq_username               = var.mq_username
+    mq_password               = local.effective_mq_password
+    reservas_database_url     = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=reservas")}" 
+    pagos_database_url        = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=pagos")}" 
     ext_payments_database_url = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=ext_payments")}" 
-    public_api_url           = local.api_public_url
-    public_alb_base_url      = local.public_alb_base_url
+    usuarios_database_url     = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=usuarios")}" 
+    public_api_url            = local.api_public_url
+    public_alb_base_url       = local.public_alb_base_url
   })
 }
 
