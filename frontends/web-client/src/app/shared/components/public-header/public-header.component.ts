@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
 import { I18nService } from '../../../core/services/i18n.service';
 import { LanguageCode } from '../../../core/i18n/translations';
 
 @Component({
   selector: 'app-public-header',
-  imports: [CommonModule, FormsModule, RouterLink, BrandLogoComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './public-header.component.html',
   styleUrl: './public-header.component.scss',
 })

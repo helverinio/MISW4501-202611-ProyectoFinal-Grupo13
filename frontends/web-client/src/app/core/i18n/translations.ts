@@ -11,14 +11,21 @@ export interface Translation {
   'footer.description': string;
   'footer.company': string;
   'footer.about': string;
+  'footer.aboutUs': string;
+  'footer.careers': string;
+  'footer.press': string;
   'footer.contact': string;
   'footer.support': string;
   'footer.helpCenter': string;
   'footer.privacy': string;
+  'footer.termsOfService': string;
+  'footer.privacyPolicy': string;
+  'footer.trustAndSafety': string;
   'footer.copyright': string;
 
   // Home Page
   'home.hero.title': string;
+  'home.hero.welcomeTo': string;
   'home.hero.subtitle': string;
   'home.hero.badge.secure': string;
   'home.hero.badge.secureDesc': string;
@@ -27,6 +34,7 @@ export interface Translation {
   'home.hero.badge.support': string;
   'home.hero.badge.supportDesc': string;
   'home.hero.cta': string;
+  'home.hero.ctaHint': string;
   'home.features.title': string;
   'home.features.subtitle': string;
   'home.features.localExpertise': string;
@@ -88,37 +96,45 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Book now',
     'nav.dashboard': 'Dashboard',
     'nav.logout': 'Logout',
-    'footer.description': 'Secure hotel booking in Latin America with real-time availability and free cancellation options.',
+    'footer.description': 'Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.',
     'footer.company': 'Company',
     'footer.about': 'About',
+    'footer.aboutUs': 'About Us',
+    'footer.careers': 'Careers',
+    'footer.press': 'Press',
     'footer.contact': 'Contact',
     'footer.support': 'Support',
-    'footer.helpCenter': 'Help center',
+    'footer.helpCenter': 'Help Center',
     'footer.privacy': 'Privacy',
-    'footer.copyright': '2026 TravelHub. All rights reserved.',
+    'footer.termsOfService': 'Terms of Service',
+    'footer.privacyPolicy': 'Privacy Policy',
+    'footer.trustAndSafety': 'Trust & Safety',
+    'footer.copyright': '© 2026 TravelHub. All rights reserved.',
 
     // Home Page
     'home.hero.title': 'Welcome to TravelHub',
-    'home.hero.subtitle': 'Discover curated hotels across Latin America with secure payment, free cancellation, and support all day.',
-    'home.hero.badge.secure': 'Secure payment',
-    'home.hero.badge.secureDesc': 'Industry-grade tokenized checkout.',
+    'home.hero.welcomeTo': 'Welcome to',
+    'home.hero.subtitle': 'Discover amazing hotels across Latin America with secure booking, free cancellation, and 24/7 support.',
+    'home.hero.badge.secure': 'Secure Payment',
+    'home.hero.badge.secureDesc': 'Your payment information is protected with industry-leading security',
     'home.hero.badge.free': 'Free cancellation',
-    'home.hero.badge.freeDesc': 'Flexible changes in selected properties.',
+    'home.hero.badge.freeDesc': 'Cancel or modify your booking without penalties on most properties',
     'home.hero.badge.support': '24/7 support',
-    'home.hero.badge.supportDesc': 'Fast response from our travel team.',
-    'home.hero.cta': 'I am a traveler',
-    'home.features.title': 'Why choose TravelHub',
-    'home.features.subtitle': 'Seamless booking and local expertise designed for real travelers.',
+    'home.hero.badge.supportDesc': 'Get help anytime with our dedicated customer support team',
+    'home.hero.cta': "I'm a Traveler",
+    'home.hero.ctaHint': 'Start exploring amazing destinations',
+    'home.features.title': 'Why Choose TravelHub?',
+    'home.features.subtitle': 'Experience the best of Latin America with our carefully curated hotel selection and seamless booking process.',
     'home.features.localExpertise': 'Local expertise',
-    'home.features.localExpertiseDesc': 'Handpicked properties and regional insights.',
-    'home.features.instantBooking': 'Instant booking',
-    'home.features.instantBookingDesc': 'Reserve your room in just a few clicks.',
-    'home.features.bestRates': 'Best rates',
-    'home.features.bestRatesDesc': 'Exclusive offers and transparent pricing.',
-    'home.features.mobileReady': 'Mobile ready',
-    'home.features.mobileReadyDesc': 'Optimized experience across every device.',
-    'home.destinations.title': 'Popular destinations',
-    'home.destinations.subtitle': 'Explore the most sought-after spots in Latin America.',
+    'home.features.localExpertiseDesc': 'Handpicked properties across Latin America with local insights',
+    'home.features.instantBooking': 'Instant Booking',
+    'home.features.instantBookingDesc': 'Quick and easy reservations in just a few clicks',
+    'home.features.bestRates': 'Best Rates',
+    'home.features.bestRatesDesc': 'Competitive prices with exclusive deals and discounts',
+    'home.features.mobileReady': 'Mobile Ready',
+    'home.features.mobileReadyDesc': 'Seamless experience across all your devices',
+    'home.destinations.title': 'Popular Destinations',
+    'home.destinations.subtitle': 'Discover the most sought-after locations across Latin America',
 
     // Login Page
     'login.title': 'Welcome to TravelHub',
@@ -168,37 +184,45 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Reservar ahora',
     'nav.dashboard': 'Panel de Control',
     'nav.logout': 'Cerrar Sesión',
-    'footer.description': 'Reserva segura de hoteles en América Latina con disponibilidad en tiempo real y opciones de cancelación gratuita.',
+    'footer.description': 'Tu socio de confianza para reservas de hoteles en América Latina. Seguro, simple y confiable.',
     'footer.company': 'Empresa',
     'footer.about': 'Acerca de',
+    'footer.aboutUs': 'Sobre nosotros',
+    'footer.careers': 'Carreras',
+    'footer.press': 'Prensa',
     'footer.contact': 'Contacto',
     'footer.support': 'Soporte',
     'footer.helpCenter': 'Centro de ayuda',
     'footer.privacy': 'Privacidad',
-    'footer.copyright': '2026 TravelHub. Todos los derechos reservados.',
+    'footer.termsOfService': 'Términos del servicio',
+    'footer.privacyPolicy': 'Política de privacidad',
+    'footer.trustAndSafety': 'Confianza y seguridad',
+    'footer.copyright': '© 2026 TravelHub. Todos los derechos reservados.',
 
     // Home Page
     'home.hero.title': 'Bienvenido a TravelHub',
-    'home.hero.subtitle': 'Descubre hoteles curados en toda América Latina con pago seguro, cancelación gratuita y soporte todo el día.',
-    'home.hero.badge.secure': 'Pago seguro',
-    'home.hero.badge.secureDesc': 'Checkout tokenizado de grado industrial.',
+    'home.hero.welcomeTo': 'Bienvenido a',
+    'home.hero.subtitle': 'Descubre hoteles increíbles en América Latina con reserva segura, cancelación gratuita y soporte 24/7.',
+    'home.hero.badge.secure': 'Pago Seguro',
+    'home.hero.badge.secureDesc': 'Tu información de pago está protegida con seguridad de nivel líder en la industria',
     'home.hero.badge.free': 'Cancelación gratuita',
-    'home.hero.badge.freeDesc': 'Cambios flexibles en propiedades seleccionadas.',
+    'home.hero.badge.freeDesc': 'Cancela o modifica tu reserva sin penalizaciones en la mayoría de propiedades',
     'home.hero.badge.support': 'Soporte 24/7',
-    'home.hero.badge.supportDesc': 'Respuesta rápida de nuestro equipo de viajes.',
+    'home.hero.badge.supportDesc': 'Obtén ayuda en cualquier momento con nuestro equipo de soporte dedicado',
     'home.hero.cta': 'Soy un viajero',
-    'home.features.title': 'Por qué elegir TravelHub',
-    'home.features.subtitle': 'Reserva sin problemas y experiencia local diseñada para viajeros reales.',
+    'home.hero.ctaHint': 'Comienza a explorar destinos increíbles',
+    'home.features.title': '¿Por qué elegir TravelHub?',
+    'home.features.subtitle': 'Vive lo mejor de América Latina con nuestra selección de hoteles cuidadosamente curada y un proceso de reserva sin fricciones.',
     'home.features.localExpertise': 'Experiencia local',
-    'home.features.localExpertiseDesc': 'Propiedades cuidadosamente seleccionadas e información regional.',
-    'home.features.instantBooking': 'Reserva instantánea',
-    'home.features.instantBookingDesc': 'Reserva tu habitación en solo unos pocos clics.',
-    'home.features.bestRates': 'Mejores tarifas',
-    'home.features.bestRatesDesc': 'Ofertas exclusivas y precios transparentes.',
-    'home.features.mobileReady': 'Optimizado para móvil',
-    'home.features.mobileReadyDesc': 'Experiencia optimizada en todos los dispositivos.',
-    'home.destinations.title': 'Destinos populares',
-    'home.destinations.subtitle': 'Explora los lugares más buscados en América Latina.',
+    'home.features.localExpertiseDesc': 'Propiedades seleccionadas en toda América Latina con conocimiento local',
+    'home.features.instantBooking': 'Reserva Instantánea',
+    'home.features.instantBookingDesc': 'Reservas rápidas y sencillas en solo unos clics',
+    'home.features.bestRates': 'Mejores Tarifas',
+    'home.features.bestRatesDesc': 'Precios competitivos con ofertas y descuentos exclusivos',
+    'home.features.mobileReady': 'Listo para Móvil',
+    'home.features.mobileReadyDesc': 'Experiencia fluida en todos tus dispositivos',
+    'home.destinations.title': 'Destinos Populares',
+    'home.destinations.subtitle': 'Descubre las ubicaciones más buscadas en América Latina',
 
     // Login Page
     'login.title': 'Bienvenido a TravelHub',
@@ -248,37 +272,45 @@ export const translations: Record<LanguageCode, Translation> = {
     'nav.bookNow': 'Reservar agora',
     'nav.dashboard': 'Painel de Controle',
     'nav.logout': 'Sair',
-    'footer.description': 'Reserva segura de hotéis na América Latina com disponibilidade em tempo real e opções de cancelamento gratuito.',
+    'footer.description': 'Seu parceiro de confiança para reservas de hotéis na América Latina. Seguro, simples e confiável.',
     'footer.company': 'Empresa',
     'footer.about': 'Sobre',
+    'footer.aboutUs': 'Sobre nós',
+    'footer.careers': 'Carreiras',
+    'footer.press': 'Imprensa',
     'footer.contact': 'Contato',
     'footer.support': 'Suporte',
     'footer.helpCenter': 'Centro de ajuda',
     'footer.privacy': 'Privacidade',
-    'footer.copyright': '2026 TravelHub. Todos os direitos reservados.',
+    'footer.termsOfService': 'Termos de serviço',
+    'footer.privacyPolicy': 'Política de privacidade',
+    'footer.trustAndSafety': 'Confiança e segurança',
+    'footer.copyright': '© 2026 TravelHub. Todos os direitos reservados.',
 
     // Home Page
     'home.hero.title': 'Bem-vindo ao TravelHub',
-    'home.hero.subtitle': 'Descubra hotéis curados em toda a América Latina com pagamento seguro, cancelamento gratuito e suporte o dia todo.',
-    'home.hero.badge.secure': 'Pagamento seguro',
-    'home.hero.badge.secureDesc': 'Checkout tokenizado de nível industrial.',
+    'home.hero.welcomeTo': 'Bem-vindo ao',
+    'home.hero.subtitle': 'Descubra hotéis incríveis na América Latina com reserva segura, cancelamento gratuito e suporte 24/7.',
+    'home.hero.badge.secure': 'Pagamento Seguro',
+    'home.hero.badge.secureDesc': 'Suas informações de pagamento são protegidas com segurança de nível líder do setor',
     'home.hero.badge.free': 'Cancelamento gratuito',
-    'home.hero.badge.freeDesc': 'Mudanças flexíveis em propriedades selecionadas.',
+    'home.hero.badge.freeDesc': 'Cancele ou modifique sua reserva sem penalidades na maioria das propriedades',
     'home.hero.badge.support': 'Suporte 24/7',
-    'home.hero.badge.supportDesc': 'Resposta rápida do nosso time de viagens.',
+    'home.hero.badge.supportDesc': 'Receba ajuda a qualquer momento com nossa equipe de suporte dedicada',
     'home.hero.cta': 'Sou um viajante',
-    'home.features.title': 'Por que escolher TravelHub',
-    'home.features.subtitle': 'Reserva perfeita e experiência local projetada para viajantes reais.',
+    'home.hero.ctaHint': 'Comece a explorar destinos incríveis',
+    'home.features.title': 'Por que escolher a TravelHub?',
+    'home.features.subtitle': 'Experimente o melhor da América Latina com nossa seleção cuidadosa de hotéis e um processo de reserva sem fricção.',
     'home.features.localExpertise': 'Experiência local',
-    'home.features.localExpertiseDesc': 'Propriedades selecionadas à mão e insights regionais.',
-    'home.features.instantBooking': 'Reserva instantânea',
-    'home.features.instantBookingDesc': 'Reserve seu quarto em apenas alguns cliques.',
-    'home.features.bestRates': 'Melhores tarifas',
-    'home.features.bestRatesDesc': 'Ofertas exclusivas e preços transparentes.',
-    'home.features.mobileReady': 'Otimizado para móvel',
-    'home.features.mobileReadyDesc': 'Experiência otimizada em todos os dispositivos.',
-    'home.destinations.title': 'Destinos populares',
-    'home.destinations.subtitle': 'Explore os lugares mais procurados na América Latina.',
+    'home.features.localExpertiseDesc': 'Propriedades selecionadas na América Latina com conhecimento local',
+    'home.features.instantBooking': 'Reserva Instantânea',
+    'home.features.instantBookingDesc': 'Reservas rápidas e fáceis em apenas alguns cliques',
+    'home.features.bestRates': 'Melhores Tarifas',
+    'home.features.bestRatesDesc': 'Preços competitivos com ofertas e descontos exclusivos',
+    'home.features.mobileReady': 'Pronto para Mobile',
+    'home.features.mobileReadyDesc': 'Experiência perfeita em todos os seus dispositivos',
+    'home.destinations.title': 'Destinos Populares',
+    'home.destinations.subtitle': 'Descubra os locais mais procurados na América Latina',
 
     // Login Page
     'login.title': 'Bem-vindo ao TravelHub',

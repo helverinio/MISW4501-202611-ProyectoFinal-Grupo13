@@ -1,72 +1,214 @@
-<section class="login-page">
-  <div class="login-page__grid">
-    <div class="login-page__image" id="auth-image">
-      <div class="login-page__image-wrapper">
+<section id="auth-section" class="bg-white py-16 flex items-center min-h-[calc(100vh-4rem-3rem)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div id="auth-image" class="hidden lg:block order-2">
+        <div class="relative">
         <img
-          class="login-page__photo"
+          class="w-full h-auto max-h-96 object-cover rounded-2xl shadow-2xl"
           src="https://storage.googleapis.com/uxpilot-auth.appspot.com/7a7768b916-14204645714f19159e3b.png"
           alt="elegant hotel reception desk with friendly staff welcoming guests, modern luxury lobby, warm lighting, professional atmosphere"
         />
-        <div class="login-page__badge login-page__badge--secure">
-          <div class="login-page__badge-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
-              <path d="M10 17l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" fill="white" />
-            </svg>
-          </div>
-          <div>
-            <div class="login-page__badge-title">{{ t('login.secure') }}</div>
-            <div class="login-page__badge-subtitle">{{ t('login.secureDesc') }}</div>
-          </div>
-        </div>
-        <div class="login-page__badge login-page__badge--users">
-          <div class="login-page__badge-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-            </svg>
-          </div>
-          <div>
-            <div class="login-page__badge-title">{{ t('login.users') }}</div>
-            <div class="login-page__badge-subtitle">{{ t('login.usersSubtitle') }}</div>
+        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-success-50 rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-shield-check text-success-500"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900">{{ t('login.secure') }}</div>
+              <div class="text-sm text-gray-600">{{ t('login.secureDesc') }}</div>
+            </div>
           </div>
         </div>
+        <div class="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-lg">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-users text-primary-500"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900">{{ t('login.users') }}</div>
+              <div class="text-sm text-gray-600">{{ t('login.usersSubtitle') }}</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="login-page__form-wrapper" id="auth-form-container">
-      <div class="login-page__header">
-        <h1>{{ t('login.title') }}</h1>
-        <p>{{ t('login.subtitle') }}</p>
-      </div>
-
-      <div class="login-page__tabs" id="auth-tabs">
-        <button
-          type="button"
-          [class.is-active]="activeTab() === 'signin'"
-          (click)="setTab('signin')"
-          id="signin-tab"
-          class="login-page__tab"
-        >
-          {{ t('login.signIn') }}
-        </button>
-        <button
-          type="button"
-          [class.is-active]="activeTab() === 'signup'"
-          (click)="setTab('signup')"
-          id="signup-tab"
-          class="login-page__tab"
-        >
-          {{ t('login.createAccount') }}
-        </button>
       </div>
 
-      @if (activeTab() === 'signin') {
-        <app-login-form
-          [loading]="loading()"
-          [errorMessage]="errorMessage()"
-          (loginSubmit)="onLogin($event)"
-        />
-      }
+      <div id="auth-form-container" class="order-1 max-w-md mx-auto lg:mx-0">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ t('login.title') }}</h1>
+          <p class="text-gray-600">{{ t('login.subtitle') }}</p>
+        </div>
+
+        <div id="auth-tabs" class="flex bg-gray-100 rounded-lg p-1 mb-6">
+          <button
+            id="signin-tab"
+            type="button"
+            class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+            [class.bg-white]="activeTab() === 'signin'"
+            [class.text-primary-600]="activeTab() === 'signin'"
+            [class.shadow-sm]="activeTab() === 'signin'"
+            [class.text-gray-500]="activeTab() !== 'signin'"
+            [class.hover:text-gray-700]="activeTab() !== 'signin'"
+            (click)="setTab('signin')"
+          >
+            {{ t('login.signIn') }}
+          </button>
+          <button
+            id="signup-tab"
+            type="button"
+            class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+            [class.bg-white]="activeTab() === 'signup'"
+            [class.text-primary-600]="activeTab() === 'signup'"
+            [class.shadow-sm]="activeTab() === 'signup'"
+            [class.text-gray-500]="activeTab() !== 'signup'"
+            [class.hover:text-gray-700]="activeTab() !== 'signup'"
+            (click)="setTab('signup')"
+          >
+            {{ t('login.createAccount') }}
+          </button>
+        </div>
+
+        <div id="signin-form" class="space-y-6" [class.hidden]="activeTab() !== 'signin'">
+          <app-login-form
+            [loading]="loading()"
+            [errorMessage]="errorMessage()"
+            (loginSubmit)="onLogin($event)"
+          />
+        </div>
+
+        <div id="signup-form" class="space-y-6" [class.hidden]="activeTab() !== 'signup'">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ t('login.createAccount') }}</h2>
+            <p class="text-gray-600">Join TravelHub and start exploring</p>
+          </div>
+
+          <form id="email-signup-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="login-signup-firstname" class="block text-sm font-medium text-gray-700 mb-2">First name</label>
+                <input type="text" id="login-signup-firstname" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="First name" required>
+                <div id="login-firstname-error" class="hidden mt-1 text-sm text-error-500">
+                  <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                  First name is required
+                </div>
+              </div>
+              <div>
+                <label for="login-signup-lastname" class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
+                <input type="text" id="login-signup-lastname" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Last name" required>
+                <div id="login-lastname-error" class="hidden mt-1 text-sm text-error-500">
+                  <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                  Last name is required
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="login-signup-email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+              <input type="email" id="login-signup-email" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your email" required>
+              <div id="login-signup-email-error" class="hidden mt-1 text-sm text-error-500">
+                <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                Please enter a valid email address
+              </div>
+            </div>
+
+            <div>
+              <label for="login-signup-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone number</label>
+              <input type="tel" id="login-signup-phone" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="+1 (555) 123-4567">
+              <div class="mt-1 text-xs text-gray-500">
+                We'll send booking confirmations to this number
+              </div>
+            </div>
+
+            <div>
+              <label for="login-signup-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <div class="relative">
+                <input type="password" id="login-signup-password" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10" placeholder="Create a password" required>
+                <button type="button" id="login-toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <i class="fa-solid fa-eye text-gray-400 hover:text-gray-600"></i>
+                </button>
+              </div>
+              <div id="login-password-strength" class="mt-2 space-y-1">
+                <div class="flex items-center text-xs">
+                  <div class="flex space-x-1 mr-2">
+                    <div id="login-strength-1" class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                    <div id="login-strength-2" class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                    <div id="login-strength-3" class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                    <div id="login-strength-4" class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                  </div>
+                  <span id="login-strength-text" class="text-gray-500">Password strength</span>
+                </div>
+                <ul class="text-xs text-gray-500 space-y-1">
+                  <li id="login-req-length" class="flex items-center">
+                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    At least 8 characters
+                  </li>
+                  <li id="login-req-number" class="flex items-center">
+                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    One number
+                  </li>
+                  <li id="login-req-letter" class="flex items-center">
+                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    One letter
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <label for="login-signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm password</label>
+              <input type="password" id="login-signup-confirm-password" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Confirm your password" required>
+              <div id="login-confirm-password-error" class="hidden mt-1 text-sm text-error-500">
+                <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                Passwords don't match
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <label class="flex items-start">
+                <input type="checkbox" id="login-terms-checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-1" required>
+                <span class="ml-2 text-sm text-gray-600">
+                  I agree to the <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Terms of Service</a> and <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Privacy Policy</a>
+                </span>
+              </label>
+              <label class="flex items-start">
+                <input type="checkbox" id="login-marketing-checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-1">
+                <span class="ml-2 text-sm text-gray-600">
+                  Send me special offers and travel tips via email
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" id="signup-btn" class="w-full bg-primary-500 text-white py-3 px-4 rounded-lg hover:bg-primary-600 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <span id="signup-text">Create Account</span>
+              <i id="signup-loading" class="fa-solid fa-spinner fa-spin hidden ml-2"></i>
+            </button>
+          </form>
+
+          <div class="text-center">
+            <p class="text-sm text-gray-600">
+              Already have an account?
+              <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Sign in here</a>
+            </p>
+          </div>
+
+          <div id="login-trust-indicators" class="mt-8 text-center">
+            <div class="flex items-center justify-center space-x-4 sm:space-x-6 text-xs text-gray-500 flex-wrap gap-2">
+              <div class="flex items-center space-x-1">
+                <i class="fa-solid fa-lock text-success-500"></i>
+                <span>SSL Encrypted</span>
+              </div>
+              <div class="flex items-center space-x-1">
+                <i class="fa-solid fa-shield-check text-success-500"></i>
+                <span>Privacy Protected</span>
+              </div>
+              <div class="flex items-center space-x-1">
+                <i class="fa-solid fa-credit-card text-success-500"></i>
+                <span>Secure Payments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

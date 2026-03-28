@@ -1,17 +1,26 @@
-<section class="destinations">
-  <div class="container">
-    <h2>{{ t('home.destinations.title') }}</h2>
-    <p>{{ t('home.destinations.subtitle') }}</p>
+<section id="destinations-preview" class="py-16 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ t('home.destinations.title') }}</h2>
+      <p class="text-lg text-gray-600">{{ t('home.destinations.subtitle') }}</p>
+    </div>
 
-    <div class="destinations__grid">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       @for (destination of destinations; track destination.city) {
-        <article>
-          <img [src]="destination.imageUrl" [alt]="destination.city + ', ' + destination.country" />
-          <div class="destinations__caption">
-            <h3>{{ destination.city }}</h3>
-            <span>{{ destination.country }}</span>
+        <div [id]="destination.id" class="relative group cursor-pointer">
+          <div class="aspect-w-16 aspect-h-12 rounded-xl overflow-hidden">
+            <img
+              class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              [src]="destination.imageUrl"
+              [alt]="destination.alt"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 text-white">
+              <h3 class="font-semibold text-lg">{{ destination.city }}</h3>
+              <p class="text-sm opacity-90">{{ destination.country }}</p>
+            </div>
           </div>
-        </article>
+        </div>
       }
     </div>
   </div>
