@@ -12,11 +12,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Href } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { AuthService } from '../services/authService/AuthService';
 import { RegisterService } from '../services/userService/RegisterService';
 import { Ionicons } from '@expo/vector-icons';
+import LanguageSelector from '../common/LanguageSelector';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +37,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError('Por favor ingresa correo y contraseña');
+      setError(t('auth.errors.emptyFields'));
       return;
     }
 
@@ -47,10 +50,10 @@ export default function LoginScreen() {
       if (result.success) {
         router.replace('/screens/landing' as Href);
       } else {
-        setError(result.error?.message || 'Error al iniciar sesión. Intenta de nuevo.');
+        setError(result.error?.message || t('auth.errors.loginFailed'));
       }
     } catch (err) {
-      setError('Ocurrió un error inesperado. Intenta de nuevo.');
+      setError(t('auth.errors.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -68,17 +71,17 @@ export default function LoginScreen() {
 
   const handleRegister = async () => {
     if (!nombre.trim() || !email.trim() || !usuario.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError('Por favor completa todos los campos');
+      setError(t('auth.errors.allFieldsRequired'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError(t('auth.errors.passwordMismatch'));
       return;
     }
 
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+      setError(t('auth.errors.passwordLength'));
       return;
     }
 
@@ -95,7 +98,7 @@ export default function LoginScreen() {
       });
 
       if (result.success) {
-        setSuccessMessage('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+        setSuccessMessage(t('auth.registerSuccess'));
         // Clear registration fields
         setNombre('');
         setUsuario('');
@@ -106,10 +109,10 @@ export default function LoginScreen() {
           setSuccessMessage(null);
         }, 2000);
       } else {
-        setError(result.error?.message || 'Error al crear la cuenta. Intenta de nuevo.');
+        setError(result.error?.message || t('auth.errors.registerFailed'));
       }
     } catch (err) {
-      setError('Ocurrió un error inesperado. Intenta de nuevo.');
+      setError(t('auth.errors.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -131,12 +134,17 @@ export default function LoginScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Language Selector */}
+          <View style={styles.languageSelectorContainer}>
+            <LanguageSelector />
+          </View>
+
           {/* Header with Logo */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Ionicons name="navigate" size={24} color="#fff" />
             </View>
-            <Text style={styles.logoText}>TravelHub</Text>
+            <Text style={styles.logoText}>{t('common.appName')}</Text>
           </View>
 
           {/* Tab Navigation */}
@@ -146,7 +154,7 @@ export default function LoginScreen() {
               onPress={() => handleTabChange('login')}
             >
               <Text style={[styles.tabText, activeTab === 'login' && styles.activeTabText]}>
-                Iniciar Sesión
+                {t('auth.login')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -154,7 +162,7 @@ export default function LoginScreen() {
               onPress={() => handleTabChange('register')}
             >
               <Text style={[styles.tabText, activeTab === 'register' && styles.activeTabText]}>
-                Crear Cuenta
+                {t('auth.register')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -164,11 +172,11 @@ export default function LoginScreen() {
             {activeTab === 'login' ? (
               <>
                 {/* Email Field */}
-                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <Text style={styles.inputLabel}>{t('auth.email')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="tu@email.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
                     value={email}
                     onChangeText={setEmail}
@@ -181,7 +189,7 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Password Field */}
-                <Text style={styles.inputLabel}>Contraseña</Text>
+                <Text style={styles.inputLabel}>{t('auth.password')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
@@ -214,10 +222,10 @@ export default function LoginScreen() {
                     <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
                       {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
                     </View>
-                    <Text style={styles.checkboxLabel}>Recordarme</Text>
+                    <Text style={styles.checkboxLabel}>{t('auth.rememberMe')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handleForgotPassword}>
-                    <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
+                    <Text style={styles.forgotPassword}>{t('auth.forgotPassword')}</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -232,7 +240,7 @@ export default function LoginScreen() {
                   {isLoading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                    <Text style={styles.buttonText}>{t('auth.loginButton')}</Text>
                   )}
                 </TouchableOpacity>
               </>
@@ -240,11 +248,11 @@ export default function LoginScreen() {
               <>
                 {/* Registration Form */}
                 {/* Name Field */}
-                <Text style={styles.inputLabel}>Nombre completo</Text>
+                <Text style={styles.inputLabel}>{t('auth.fullName')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Juan Pérez"
+                    placeholder={t('auth.fullNamePlaceholder')}
                     placeholderTextColor="#999"
                     value={nombre}
                     onChangeText={setNombre}
@@ -255,11 +263,11 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Email Field */}
-                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <Text style={styles.inputLabel}>{t('auth.email')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="tu@email.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
                     value={email}
                     onChangeText={setEmail}
@@ -272,11 +280,11 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Username Field */}
-                <Text style={styles.inputLabel}>Nombre de usuario</Text>
+                <Text style={styles.inputLabel}>{t('auth.username')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="juanperez"
+                    placeholder={t('auth.usernamePlaceholder')}
                     placeholderTextColor="#999"
                     value={usuario}
                     onChangeText={setUsuario}
@@ -288,7 +296,7 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Password Field */}
-                <Text style={styles.inputLabel}>Contraseña</Text>
+                <Text style={styles.inputLabel}>{t('auth.password')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
@@ -313,7 +321,7 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Confirm Password Field */}
-                <Text style={styles.inputLabel}>Confirmar contraseña</Text>
+                <Text style={styles.inputLabel}>{t('auth.confirmPassword')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
@@ -349,7 +357,7 @@ export default function LoginScreen() {
                   {isLoading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.buttonText}>Crear Cuenta</Text>
+                    <Text style={styles.buttonText}>{t('auth.registerButton')}</Text>
                   )}
                 </TouchableOpacity>
               </>
@@ -361,19 +369,19 @@ export default function LoginScreen() {
             <View style={styles.securityBadges}>
               <View style={styles.badge}>
                 <Ionicons name="shield-checkmark" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Seguro</Text>
+                <Text style={styles.badgeText}>{t('common.secure')}</Text>
               </View>
               <View style={styles.badge}>
                 <Ionicons name="lock-closed" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Encriptado</Text>
+                <Text style={styles.badgeText}>{t('common.encrypted')}</Text>
               </View>
               <View style={styles.badge}>
                 <Ionicons name="ribbon" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Certificado</Text>
+                <Text style={styles.badgeText}>{t('common.certified')}</Text>
               </View>
             </View>
             <Text style={styles.footerText}>
-              Tus datos están protegidos con encriptación de nivel bancario
+              {t('common.securityMessage')}
             </Text>
           </View>
         </ScrollView>
@@ -395,6 +403,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 40,
+  },
+  languageSelectorContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 16,
   },
   header: {
     alignItems: 'center',

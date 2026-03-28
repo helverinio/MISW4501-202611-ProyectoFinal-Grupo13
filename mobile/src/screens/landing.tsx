@@ -1,24 +1,30 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Href } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LanguageSelector from '../common/LanguageSelector';
 
 export default function LandingPage() {
+  const { t } = useTranslation();
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem('_x');
     await AsyncStorage.removeItem('_c');
-    await AsyncStorage.removeItem('_lang');
     router.replace('/screens/login' as Href);
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.languageContainer}>
+        <LanguageSelector />
+      </View>
       <View style={styles.content}>
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>You have successfully logged in!</Text>
+        <Text style={styles.title}>{t('landing.welcome')}</Text>
+        <Text style={styles.subtitle}>{t('landing.successMessage')}</Text>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Sign Out</Text>
+          <Text style={styles.logoutButtonText}>{t('landing.signOut')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -29,6 +35,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  languageContainer: {
+    alignItems: 'flex-end',
+    paddingHorizontal: 24,
+    paddingTop: 16,
   },
   content: {
     flex: 1,
