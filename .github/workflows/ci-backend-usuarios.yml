@@ -18,6 +18,7 @@ on:
     branches:
       - develop
       - main
+      - feature/srpint1
     types:
       - opened
       - reopened

@@ -91,6 +91,53 @@ export interface Translation {
   'homeSearch.trust.supportTitle': string;
   'homeSearch.trust.supportDesc': string;
 
+  // Search Results Page
+  'searchResults.summary.guests': string;
+  'searchResults.summary.nights': string;
+  'searchResults.summary.modifySearch': string;
+  'searchResults.filters.title': string;
+  'searchResults.filters.clearAll': string;
+  'searchResults.filters.pricePerNight': string;
+  'searchResults.filters.min': string;
+  'searchResults.filters.max': string;
+  'searchResults.filters.amenities': string;
+  'searchResults.filters.guestRating': string;
+  'searchResults.filters.rating45': string;
+  'searchResults.filters.rating40': string;
+  'searchResults.filters.rating35': string;
+  'searchResults.filters.rating30': string;
+  'searchResults.filters.freeCancellation': string;
+  'searchResults.filters.showOnMap': string;
+  'searchResults.amenity.freeWifi': string;
+  'searchResults.amenity.swimmingPool': string;
+  'searchResults.amenity.freeBreakfast': string;
+  'searchResults.amenity.freeParking': string;
+  'searchResults.amenity.fitnessCenter': string;
+  'searchResults.amenity.petFriendly': string;
+  'searchResults.resultsHeader.hotelsFound': string;
+  'searchResults.resultsHeader.in': string;
+  'searchResults.resultsHeader.sortBy': string;
+  'searchResults.sort.popularity': string;
+  'searchResults.sort.priceLowToHigh': string;
+  'searchResults.sort.priceHighToLow': string;
+  'searchResults.sort.guestRating': string;
+  'searchResults.sort.distance': string;
+  'searchResults.card.reviews': string;
+  'searchResults.card.freeCancellation': string;
+  'searchResults.card.nonRefundable': string;
+  'searchResults.card.night': string;
+  'searchResults.card.total': string;
+  'searchResults.card.viewDetails': string;
+  'searchResults.loadMore': string;
+  'searchResults.states.loading': string;
+  'searchResults.states.emptyTitle': string;
+  'searchResults.states.emptyDescription': string;
+  'searchResults.states.clearFilters': string;
+  'searchResults.states.errorTitle': string;
+  'searchResults.states.errorDescription': string;
+  'searchResults.states.retry': string;
+  'searchResults.validation.missingParams': string;
+
   // Login Page
   'login.title': string;
   'login.subtitle': string;
@@ -231,6 +278,56 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.trust.supportTitle': '24/7 Support',
     'homeSearch.trust.supportDesc':
       'Our customer support team is available around the clock to help you',
+
+    // Search Results Page
+    'searchResults.summary.guests': 'Guests',
+    'searchResults.summary.nights': 'nights',
+    'searchResults.summary.modifySearch': 'Modify Search',
+    'searchResults.filters.title': 'Filters',
+    'searchResults.filters.clearAll': 'Clear all',
+    'searchResults.filters.pricePerNight': 'Price per night',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Amenities',
+    'searchResults.filters.guestRating': 'Guest Rating',
+    'searchResults.filters.rating45': '4.5+ Exceptional',
+    'searchResults.filters.rating40': '4.0+ Excellent',
+    'searchResults.filters.rating35': '3.5+ Very Good',
+    'searchResults.filters.rating30': '3.0+ Good',
+    'searchResults.filters.freeCancellation': 'Free cancellation',
+    'searchResults.filters.showOnMap': 'Show on map',
+    'searchResults.amenity.freeWifi': 'Free WiFi',
+    'searchResults.amenity.swimmingPool': 'Swimming Pool',
+    'searchResults.amenity.freeBreakfast': 'Free Breakfast',
+    'searchResults.amenity.freeParking': 'Free Parking',
+    'searchResults.amenity.fitnessCenter': 'Fitness Center',
+    'searchResults.amenity.petFriendly': 'Pet Friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hotels found',
+    'searchResults.resultsHeader.in': 'in',
+    'searchResults.resultsHeader.sortBy': 'Sort by:',
+    'searchResults.sort.popularity': 'Popularity',
+    'searchResults.sort.priceLowToHigh': 'Price (Low to High)',
+    'searchResults.sort.priceHighToLow': 'Price (High to Low)',
+    'searchResults.sort.guestRating': 'Guest Rating',
+    'searchResults.sort.distance': 'Distance',
+    'searchResults.card.reviews': 'reviews',
+    'searchResults.card.freeCancellation': 'Free cancellation',
+    'searchResults.card.nonRefundable': 'Non-refundable rate',
+    'searchResults.card.night': 'night',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'View Details',
+    'searchResults.loadMore': 'Load More Results',
+    'searchResults.states.loading': 'Searching available hotels...',
+    'searchResults.states.emptyTitle': 'No hotels match your filters',
+    'searchResults.states.emptyDescription':
+      'Try adjusting your filters to find more available options.',
+    'searchResults.states.clearFilters': 'Clear filters',
+    'searchResults.states.errorTitle': 'We could not load search results',
+    'searchResults.states.errorDescription':
+      'Please try again in a moment. If the issue persists, verify search criteria.',
+    'searchResults.states.retry': 'Retry',
+    'searchResults.validation.missingParams':
+      'Missing search parameters. Please return to home search and try again.',
 
     // Login Page
     'login.title': 'Welcome to TravelHub',
@@ -375,6 +472,56 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.trust.supportDesc':
       'Nuestro equipo de soporte está disponible todo el día para ayudarte',
 
+    // Search Results Page
+    'searchResults.summary.guests': 'Huéspedes',
+    'searchResults.summary.nights': 'noches',
+    'searchResults.summary.modifySearch': 'Modificar búsqueda',
+    'searchResults.filters.title': 'Filtros',
+    'searchResults.filters.clearAll': 'Limpiar todo',
+    'searchResults.filters.pricePerNight': 'Precio por noche',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Amenidades',
+    'searchResults.filters.guestRating': 'Calificación de huéspedes',
+    'searchResults.filters.rating45': '4.5+ Excepcional',
+    'searchResults.filters.rating40': '4.0+ Excelente',
+    'searchResults.filters.rating35': '3.5+ Muy bueno',
+    'searchResults.filters.rating30': '3.0+ Bueno',
+    'searchResults.filters.freeCancellation': 'Cancelación gratuita',
+    'searchResults.filters.showOnMap': 'Mostrar en mapa',
+    'searchResults.amenity.freeWifi': 'WiFi gratis',
+    'searchResults.amenity.swimmingPool': 'Piscina',
+    'searchResults.amenity.freeBreakfast': 'Desayuno gratis',
+    'searchResults.amenity.freeParking': 'Parqueadero gratis',
+    'searchResults.amenity.fitnessCenter': 'Gimnasio',
+    'searchResults.amenity.petFriendly': 'Pet friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hoteles encontrados',
+    'searchResults.resultsHeader.in': 'en',
+    'searchResults.resultsHeader.sortBy': 'Ordenar por:',
+    'searchResults.sort.popularity': 'Popularidad',
+    'searchResults.sort.priceLowToHigh': 'Precio (Menor a mayor)',
+    'searchResults.sort.priceHighToLow': 'Precio (Mayor a menor)',
+    'searchResults.sort.guestRating': 'Calificación de huéspedes',
+    'searchResults.sort.distance': 'Distancia',
+    'searchResults.card.reviews': 'reseñas',
+    'searchResults.card.freeCancellation': 'Cancelación gratuita',
+    'searchResults.card.nonRefundable': 'Tarifa no reembolsable',
+    'searchResults.card.night': 'noche',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'Ver detalles',
+    'searchResults.loadMore': 'Cargar más resultados',
+    'searchResults.states.loading': 'Buscando hoteles disponibles...',
+    'searchResults.states.emptyTitle': 'No hay hoteles con estos filtros',
+    'searchResults.states.emptyDescription':
+      'Prueba ajustando tus filtros para ver más opciones disponibles.',
+    'searchResults.states.clearFilters': 'Limpiar filtros',
+    'searchResults.states.errorTitle': 'No pudimos cargar los resultados',
+    'searchResults.states.errorDescription':
+      'Intenta de nuevo en unos momentos. Si persiste, verifica los criterios de búsqueda.',
+    'searchResults.states.retry': 'Reintentar',
+    'searchResults.validation.missingParams':
+      'Faltan parámetros de búsqueda. Regresa a inicio y vuelve a buscar.',
+
     // Login Page
     'login.title': 'Bienvenido a TravelHub',
     'login.subtitle': 'Inicia sesión en tu cuenta o crea una nueva',
@@ -518,6 +665,56 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.trust.supportTitle': 'Suporte 24/7',
     'homeSearch.trust.supportDesc':
       'Nossa equipe de suporte está disponível 24 horas para ajudar você',
+
+    // Search Results Page
+    'searchResults.summary.guests': 'Hóspedes',
+    'searchResults.summary.nights': 'noites',
+    'searchResults.summary.modifySearch': 'Modificar busca',
+    'searchResults.filters.title': 'Filtros',
+    'searchResults.filters.clearAll': 'Limpar tudo',
+    'searchResults.filters.pricePerNight': 'Preço por noite',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Comodidades',
+    'searchResults.filters.guestRating': 'Avaliação de hóspedes',
+    'searchResults.filters.rating45': '4.5+ Excepcional',
+    'searchResults.filters.rating40': '4.0+ Excelente',
+    'searchResults.filters.rating35': '3.5+ Muito bom',
+    'searchResults.filters.rating30': '3.0+ Bom',
+    'searchResults.filters.freeCancellation': 'Cancelamento grátis',
+    'searchResults.filters.showOnMap': 'Mostrar no mapa',
+    'searchResults.amenity.freeWifi': 'WiFi grátis',
+    'searchResults.amenity.swimmingPool': 'Piscina',
+    'searchResults.amenity.freeBreakfast': 'Café da manhã grátis',
+    'searchResults.amenity.freeParking': 'Estacionamento grátis',
+    'searchResults.amenity.fitnessCenter': 'Academia',
+    'searchResults.amenity.petFriendly': 'Pet friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hotéis encontrados',
+    'searchResults.resultsHeader.in': 'em',
+    'searchResults.resultsHeader.sortBy': 'Ordenar por:',
+    'searchResults.sort.popularity': 'Popularidade',
+    'searchResults.sort.priceLowToHigh': 'Preço (Menor para maior)',
+    'searchResults.sort.priceHighToLow': 'Preço (Maior para menor)',
+    'searchResults.sort.guestRating': 'Avaliação de hóspedes',
+    'searchResults.sort.distance': 'Distância',
+    'searchResults.card.reviews': 'avaliações',
+    'searchResults.card.freeCancellation': 'Cancelamento grátis',
+    'searchResults.card.nonRefundable': 'Tarifa não reembolsável',
+    'searchResults.card.night': 'noite',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'Ver detalhes',
+    'searchResults.loadMore': 'Carregar mais resultados',
+    'searchResults.states.loading': 'Buscando hotéis disponíveis...',
+    'searchResults.states.emptyTitle': 'Nenhum hotel corresponde aos filtros',
+    'searchResults.states.emptyDescription':
+      'Tente ajustar os filtros para encontrar mais opções disponíveis.',
+    'searchResults.states.clearFilters': 'Limpar filtros',
+    'searchResults.states.errorTitle': 'Não foi possível carregar os resultados',
+    'searchResults.states.errorDescription':
+      'Tente novamente em alguns instantes. Se persistir, revise os critérios de busca.',
+    'searchResults.states.retry': 'Tentar novamente',
+    'searchResults.validation.missingParams':
+      'Faltam parâmetros de busca. Volte para home-search e tente de novo.',
 
     // Login Page
     'login.title': 'Bem-vindo ao TravelHub',

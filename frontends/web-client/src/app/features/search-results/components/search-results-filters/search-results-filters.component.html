@@ -1,0 +1,138 @@
+<aside id="filters-sidebar" class="lg:w-80 flex-shrink-0">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-lg font-semibold text-gray-900">{{ t('searchResults.filters.title') }}</h3>
+      <button
+        (click)="onClearAll()"
+        class="text-sm text-primary hover:text-primary-dark"
+        type="button"
+      >
+        {{ t('searchResults.filters.clearAll') }}
+      </button>
+    </div>
+
+    <div id="price-filter" class="mb-6">
+      <h4 class="font-medium text-gray-900 mb-3">{{ t('searchResults.filters.pricePerNight') }}</h4>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">${{ minPrice }}</span>
+          <span class="text-sm text-gray-600">${{ maxPrice }}+</span>
+        </div>
+        <input
+          (input)="onPriceSliderChange($event)"
+          [value]="selectedMaxPrice"
+          type="range"
+          class="w-full h-2 bg-gray-200 rounded-lg appearance-none slider"
+          [min]="minPrice"
+          [max]="maxPrice"
+        />
+        <div class="flex items-center space-x-2">
+          <input
+            (ngModelChange)="onMinInputChange($event)"
+            [ngModel]="selectedMinPrice"
+            type="number"
+            [placeholder]="t('searchResults.filters.min')"
+            class="w-20 px-2 py-1 text-sm border border-gray-300 rounded"
+          />
+          <span class="text-gray-400">-</span>
+          <input
+            (ngModelChange)="onMaxInputChange($event)"
+            [ngModel]="selectedMaxPrice"
+            type="number"
+            [placeholder]="t('searchResults.filters.max')"
+            class="w-20 px-2 py-1 text-sm border border-gray-300 rounded"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div id="amenities-filter" class="mb-6">
+      <h4 class="font-medium text-gray-900 mb-3">{{ t('searchResults.filters.amenities') }}</h4>
+      <div class="space-y-3">
+        @for (amenity of amenities; track amenity.value) {
+          <label class="flex items-center">
+            <input
+              (change)="onAmenityToggle(amenity.value)"
+              [checked]="isSelectedAmenity(amenity.value)"
+              type="checkbox"
+              class="rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <span class="ml-3 text-sm text-gray-700">{{ t(amenity.labelKey) }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <div id="rating-filter" class="mb-6">
+      <h4 class="font-medium text-gray-900 mb-3">{{ t('searchResults.filters.guestRating') }}</h4>
+      <div class="space-y-2">
+        <label class="flex items-center">
+          <input
+            (change)="onRatingChange(4.5)"
+            [checked]="selectedRating === 4.5"
+            name="rating"
+            type="radio"
+            class="border-gray-300 text-primary focus:ring-primary"
+          />
+          <span class="ml-3 text-sm text-gray-700">{{ t('searchResults.filters.rating45') }}</span>
+        </label>
+        <label class="flex items-center">
+          <input
+            (change)="onRatingChange(4)"
+            [checked]="selectedRating === 4"
+            name="rating"
+            type="radio"
+            class="border-gray-300 text-primary focus:ring-primary"
+          />
+          <span class="ml-3 text-sm text-gray-700">{{ t('searchResults.filters.rating40') }}</span>
+        </label>
+        <label class="flex items-center">
+          <input
+            (change)="onRatingChange(3.5)"
+            [checked]="selectedRating === 3.5"
+            name="rating"
+            type="radio"
+            class="border-gray-300 text-primary focus:ring-primary"
+          />
+          <span class="ml-3 text-sm text-gray-700">{{ t('searchResults.filters.rating35') }}</span>
+        </label>
+        <label class="flex items-center">
+          <input
+            (change)="onRatingChange(3)"
+            [checked]="selectedRating === 3"
+            name="rating"
+            type="radio"
+            class="border-gray-300 text-primary focus:ring-primary"
+          />
+          <span class="ml-3 text-sm text-gray-700">{{ t('searchResults.filters.rating30') }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="cancellation-filter" class="mb-6">
+      <label class="flex items-center">
+        <input
+          (ngModelChange)="onFreeCancellationChange($event)"
+          [ngModel]="freeCancellationOnly"
+          type="checkbox"
+          class="rounded border-gray-300 text-primary focus:ring-primary"
+        />
+        <span class="ml-3 text-sm text-gray-700">{{
+          t('searchResults.filters.freeCancellation')
+        }}</span>
+      </label>
+    </div>
+
+    <div id="map-toggle" class="pt-4 border-t border-gray-200">
+      <button
+        class="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        type="button"
+      >
+        <i class="fa-solid fa-map text-gray-600"></i>
+        <span class="text-sm font-medium text-gray-700">{{
+          t('searchResults.filters.showOnMap')
+        }}</span>
+      </button>
+    </div>
+  </div>
+</aside>

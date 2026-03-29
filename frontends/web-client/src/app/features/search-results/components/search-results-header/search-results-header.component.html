@@ -1,0 +1,25 @@
+<div
+  id="results-header"
+  class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0"
+>
+  <div>
+    <h2 class="text-2xl font-bold text-gray-900">
+      {{ totalHotels }} {{ t('searchResults.resultsHeader.hotelsFound') }}
+    </h2>
+    <p class="text-gray-600">{{ t('searchResults.resultsHeader.in') }} {{ destination }}</p>
+  </div>
+  <div class="flex items-center space-x-4">
+    <span class="text-sm text-gray-600">{{ t('searchResults.resultsHeader.sortBy') }}</span>
+    <select
+      (ngModelChange)="onSortChange($event)"
+      [ngModel]="sortBy"
+      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+    >
+      <option value="popularity">{{ t('searchResults.sort.popularity') }}</option>
+      <option value="priceAsc">{{ t('searchResults.sort.priceLowToHigh') }}</option>
+      <option value="priceDesc">{{ t('searchResults.sort.priceHighToLow') }}</option>
+      <option value="rating">{{ t('searchResults.sort.guestRating') }}</option>
+      <option value="distance">{{ t('searchResults.sort.distance') }}</option>
+    </select>
+  </div>
+</div>

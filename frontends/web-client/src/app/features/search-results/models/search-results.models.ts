@@ -1,0 +1,65 @@
+export interface SearchAvailableHotelsRequest {
+  busqueda: string;
+  fecha_ingreso: string;
+  fecha_salida: string;
+  nro_personas: number;
+}
+
+export interface AvailableRoomApi {
+  habitacion_id: string;
+  tipo: string;
+  nro_habitacion: string;
+  capacidad: number;
+  camas: number;
+}
+
+export interface AvailableHotelApi {
+  hotel_id: string;
+  nombre: string;
+  descripcion: string | null;
+  amenidades: string | null;
+  email: string | null;
+  ciudad: string | null;
+  pais: string | null;
+  total_habitaciones_disponibles: number;
+  habitaciones: AvailableRoomApi[];
+}
+
+export interface SearchAvailableHotelsResponse {
+  total_hoteles: number;
+  busqueda: string;
+  fecha_ingreso: string;
+  fecha_salida: string;
+  nro_personas: number;
+  hoteles: AvailableHotelApi[];
+}
+
+export interface SearchCriteriaVm {
+  destination: string;
+  checkInDate: string;
+  checkOutDate: string;
+  guests: number;
+  nights: number;
+}
+
+export interface HotelResultVm {
+  id: string;
+  name: string;
+  description: string;
+  city: string;
+  country: string;
+  locationText: string;
+  rating: number;
+  reviewsCount: number;
+  amenities: string[];
+  freeCancellation: boolean;
+  cancellationText: string;
+  pricePerNight: number;
+  totalPrice: number;
+  currency: string;
+  imageUrl: string;
+  imageAlt: string;
+  availableRooms: number;
+}
+
+export type SortOption = 'popularity' | 'priceAsc' | 'priceDesc' | 'rating' | 'distance';

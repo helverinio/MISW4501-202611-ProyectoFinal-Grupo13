@@ -1,0 +1,27 @@
+<section id="search-summary" class="bg-white border-b border-gray-200 py-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
+    >
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-location-dot text-primary"></i>
+          <span class="font-medium text-gray-900">{{ criteria.destination }}</span>
+        </div>
+        <div class="flex items-center space-x-4 text-sm text-gray-600">
+          <span>{{ criteria.checkInDate }} - {{ criteria.checkOutDate }}</span>
+          <span>{{ criteria.guests }} {{ t('searchResults.summary.guests') }}</span>
+          <span>{{ criteria.nights }} {{ t('searchResults.summary.nights') }}</span>
+        </div>
+      </div>
+      <button
+        (click)="onModifyClick()"
+        class="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+        type="button"
+      >
+        <i class="fa-solid fa-pencil text-sm"></i>
+        <span>{{ t('searchResults.summary.modifySearch') }}</span>
+      </button>
+    </div>
+  </div>
+</section>
