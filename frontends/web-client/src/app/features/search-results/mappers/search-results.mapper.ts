@@ -45,12 +45,12 @@ function calculateNights(checkInDate: string, checkOutDate: string): number {
 function mapHotelToVm(hotel: AvailableHotelApi, nights: number): HotelResultVm {
   const seed = seededNumber(hotel.hotel_id);
   const imageIndex = seed % PLACEHOLDER_IMAGES.length;
-  const rating = Number((4.0 + ((seed % 10) / 10)).toFixed(1));
+  const rating = Number((4.0 + (seed % 10) / 10).toFixed(1));
   const reviewsCount = 90 + (seed % 280);
   const pricePerNight = 65 + (seed % 140);
   const totalPrice = pricePerNight * nights;
   const freeCancellation = seed % 3 !== 0;
-  const distance = (0.3 + ((seed % 60) / 10)).toFixed(1);
+  const distance = (0.3 + (seed % 60) / 10).toFixed(1);
 
   return {
     id: hotel.hotel_id,

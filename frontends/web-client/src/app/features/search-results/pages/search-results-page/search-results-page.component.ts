@@ -3,10 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { I18nService } from '../../../../core/services/i18n.service';
-import {
-  mapResponseToCriteria,
-  mapResponseToHotels,
-} from '../../mappers/search-results.mapper';
+import { mapResponseToCriteria, mapResponseToHotels } from '../../mappers/search-results.mapper';
 import {
   HotelResultVm,
   SearchAvailableHotelsRequest,
