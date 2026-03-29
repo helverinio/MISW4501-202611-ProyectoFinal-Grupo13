@@ -12,21 +12,32 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Href } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { AuthService } from '../services/authService/AuthService';
+import { RegisterService } from '../services/userService/RegisterService';
 import { Ionicons } from '@expo/vector-icons';
+import LanguageSelector from '../common/LanguageSelector';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Registration fields
+  const [nombre, setNombre] = useState('');
+  const [usuario, setUsuario] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError('Por favor ingresa correo y contraseña');
+      setError(t('auth.errors.emptyFields'));
       return;
     }
 
@@ -39,10 +50,10 @@ export default function LoginScreen() {
       if (result.success) {
         router.replace('/screens/landing' as Href);
       } else {
-        setError(result.error?.message || 'Error al iniciar sesión. Intenta de nuevo.');
+        setError(result.error?.message || t('auth.errors.loginFailed'));
       }
     } catch (err) {
-      setError('Ocurrió un error inesperado. Intenta de nuevo.');
+      setError(t('auth.errors.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +65,63 @@ export default function LoginScreen() {
 
   const handleCreateAccount = () => {
     setActiveTab('register');
-    // TODO: Navigate to register screen or show register form
+    setError(null);
+    setSuccessMessage(null);
+  };
+
+  const handleRegister = async () => {
+    if (!nombre.trim() || !email.trim() || !usuario.trim() || !password.trim() || !confirmPassword.trim()) {
+      setError(t('auth.errors.allFieldsRequired'));
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError(t('auth.errors.passwordMismatch'));
+      return;
+    }
+
+    if (password.length < 6) {
+      setError(t('auth.errors.passwordLength'));
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const result = await RegisterService.send({
+        nombre,
+        email,
+        usuario,
+        contrasena: password,
+      });
+
+      if (result.success) {
+        setSuccessMessage(t('auth.registerSuccess'));
+        // Clear registration fields
+        setNombre('');
+        setUsuario('');
+        setConfirmPassword('');
+        // Switch to login tab after a brief delay
+        setTimeout(() => {
+          setActiveTab('login');
+          setSuccessMessage(null);
+        }, 2000);
+      } else {
+        setError(result.error?.message || t('auth.errors.registerFailed'));
+      }
+    } catch (err) {
+      setError(t('auth.errors.unexpectedError'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTabChange = (tab: 'login' | 'register') => {
+    setActiveTab(tab);
+    setError(null);
+    setSuccessMessage(null);
   };
 
   return (
@@ -67,108 +134,234 @@ export default function LoginScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Language Selector */}
+          <View style={styles.languageSelectorContainer}>
+            <LanguageSelector />
+          </View>
+
           {/* Header with Logo */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Ionicons name="navigate" size={24} color="#fff" />
             </View>
-            <Text style={styles.logoText}>TravelHub</Text>
+            <Text style={styles.logoText}>{t('common.appName')}</Text>
           </View>
 
           {/* Tab Navigation */}
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[styles.tab, activeTab === 'login' && styles.activeTab]}
-              onPress={() => setActiveTab('login')}
+              onPress={() => handleTabChange('login')}
             >
               <Text style={[styles.tabText, activeTab === 'login' && styles.activeTabText]}>
-                Iniciar Sesión
+                {t('auth.login')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.tab, activeTab === 'register' && styles.activeTab]}
-              onPress={handleCreateAccount}
+              onPress={() => handleTabChange('register')}
             >
               <Text style={[styles.tabText, activeTab === 'register' && styles.activeTabText]}>
-                Crear Cuenta
+                {t('auth.register')}
               </Text>
             </TouchableOpacity>
           </View>
 
           {/* Form */}
           <View style={styles.form}>
-            {/* Email Field */}
-            <Text style={styles.inputLabel}>Correo electrónico</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="tu@email.com"
-                placeholderTextColor="#999"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                editable={!isLoading}
-              />
-              <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
-            </View>
-
-            {/* Password Field */}
-            <Text style={styles.inputLabel}>Contraseña</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#999"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-                autoCapitalize="none"
-                editable={!isLoading}
-              />
-              <TouchableOpacity 
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.inputIcon}
-              >
-                <Ionicons 
-                  name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                  size={20} 
-                  color="#999" 
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Remember Me & Forgot Password */}
-            <View style={styles.optionsRow}>
-              <TouchableOpacity 
-                style={styles.checkboxContainer}
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
-                  {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
+            {activeTab === 'login' ? (
+              <>
+                {/* Email Field */}
+                <Text style={styles.inputLabel}>{t('auth.email')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={t('auth.emailPlaceholder')}
+                    placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
                 </View>
-                <Text style={styles.checkboxLabel}>Recordarme</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleForgotPassword}>
-                <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
-              </TouchableOpacity>
-            </View>
 
-            {error && <Text style={styles.errorText}>{error}</Text>}
+                {/* Password Field */}
+                <Text style={styles.inputLabel}>{t('auth.password')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
 
-            {/* Login Button */}
-            <TouchableOpacity
-              style={[styles.button, isLoading && styles.buttonDisabled]}
-              onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonText}>Iniciar Sesión</Text>
-              )}
-            </TouchableOpacity>
+                {/* Remember Me & Forgot Password */}
+                <View style={styles.optionsRow}>
+                  <TouchableOpacity 
+                    style={styles.checkboxContainer}
+                    onPress={() => setRememberMe(!rememberMe)}
+                  >
+                    <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
+                      {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
+                    </View>
+                    <Text style={styles.checkboxLabel}>{t('auth.rememberMe')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleForgotPassword}>
+                    <Text style={styles.forgotPassword}>{t('auth.forgotPassword')}</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {error && <Text style={styles.errorText}>{error}</Text>}
+
+                {/* Login Button */}
+                <TouchableOpacity
+                  style={[styles.button, isLoading && styles.buttonDisabled]}
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>{t('auth.loginButton')}</Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                {/* Registration Form */}
+                {/* Name Field */}
+                <Text style={styles.inputLabel}>{t('auth.fullName')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={t('auth.fullNamePlaceholder')}
+                    placeholderTextColor="#999"
+                    value={nombre}
+                    onChangeText={setNombre}
+                    autoCapitalize="words"
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="person-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Email Field */}
+                <Text style={styles.inputLabel}>{t('auth.email')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={t('auth.emailPlaceholder')}
+                    placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Username Field */}
+                <Text style={styles.inputLabel}>{t('auth.username')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={t('auth.usernamePlaceholder')}
+                    placeholderTextColor="#999"
+                    value={usuario}
+                    onChangeText={setUsuario}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                  <Ionicons name="at-outline" size={20} color="#999" style={styles.inputIcon} />
+                </View>
+
+                {/* Password Field */}
+                <Text style={styles.inputLabel}>{t('auth.password')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Confirm Password Field */}
+                <Text style={styles.inputLabel}>{t('auth.confirmPassword')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor="#999"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showConfirmPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity 
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.inputIcon}
+                  >
+                    <Ionicons 
+                      name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
+                      size={20} 
+                      color="#999" 
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {error && <Text style={styles.errorText}>{error}</Text>}
+                {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
+
+                {/* Register Button */}
+                <TouchableOpacity
+                  style={[styles.button, isLoading && styles.buttonDisabled]}
+                  onPress={handleRegister}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.buttonText}>{t('auth.registerButton')}</Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            )}
           </View>
 
           {/* Footer */}
@@ -176,19 +369,19 @@ export default function LoginScreen() {
             <View style={styles.securityBadges}>
               <View style={styles.badge}>
                 <Ionicons name="shield-checkmark" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Seguro</Text>
+                <Text style={styles.badgeText}>{t('common.secure')}</Text>
               </View>
               <View style={styles.badge}>
                 <Ionicons name="lock-closed" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Encriptado</Text>
+                <Text style={styles.badgeText}>{t('common.encrypted')}</Text>
               </View>
               <View style={styles.badge}>
                 <Ionicons name="ribbon" size={16} color="#4CAF50" />
-                <Text style={styles.badgeText}>Certificado</Text>
+                <Text style={styles.badgeText}>{t('common.certified')}</Text>
               </View>
             </View>
             <Text style={styles.footerText}>
-              Tus datos están protegidos con encriptación de nivel bancario
+              {t('common.securityMessage')}
             </Text>
           </View>
         </ScrollView>
@@ -210,6 +403,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 40,
+  },
+  languageSelectorContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 16,
   },
   header: {
     alignItems: 'center',
@@ -336,6 +533,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#ff3b30',
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  successText: {
+    color: '#4CAF50',
     fontSize: 14,
     marginBottom: 16,
     textAlign: 'center',
