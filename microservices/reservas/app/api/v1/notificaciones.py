@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from datetime import datetime
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateNotificacionUseCase, GetNotificacionUseCase, GetAllNotificacionesUseCase,
     GetNotificacionesByReservaUseCase, UpdateNotificacionUseCase, DeleteNotificacionUseCase
@@ -22,7 +23,8 @@ def parse_datetime(date_str):
 
 
 @api_v1_bp.route('/notificaciones', methods=['POST'])
-def create_notificacion():
+@require_token
+def create_notificacion(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -48,7 +50,8 @@ def create_notificacion():
 
 
 @api_v1_bp.route('/notificaciones/<notificacion_id>', methods=['GET'])
-def get_notificacion(notificacion_id):
+@require_token
+def get_notificacion(notificacion_id, current_usuario=None):
     use_case = GetNotificacionUseCase(get_repository())
     notificacion = use_case.execute(notificacion_id)
 
@@ -65,7 +68,8 @@ def get_notificacion(notificacion_id):
 
 
 @api_v1_bp.route('/notificaciones', methods=['GET'])
-def get_all_notificaciones():
+@require_token
+def get_all_notificaciones(current_usuario=None):
     use_case = GetAllNotificacionesUseCase(get_repository())
     notificaciones = use_case.execute()
 
@@ -79,7 +83,8 @@ def get_all_notificaciones():
 
 
 @api_v1_bp.route('/reservas/<reserva_id>/notificaciones', methods=['GET'])
-def get_notificaciones_by_reserva(reserva_id):
+@require_token
+def get_notificaciones_by_reserva(reserva_id, current_usuario=None):
     use_case = GetNotificacionesByReservaUseCase(get_repository())
     notificaciones = use_case.execute(reserva_id)
 
@@ -93,7 +98,8 @@ def get_notificaciones_by_reserva(reserva_id):
 
 
 @api_v1_bp.route('/notificaciones/<notificacion_id>', methods=['PUT'])
-def update_notificacion(notificacion_id):
+@require_token
+def update_notificacion(notificacion_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -124,7 +130,8 @@ def update_notificacion(notificacion_id):
 
 
 @api_v1_bp.route('/notificaciones/<notificacion_id>', methods=['DELETE'])
-def delete_notificacion(notificacion_id):
+@require_token
+def delete_notificacion(notificacion_id, current_usuario=None):
     use_case = DeleteNotificacionUseCase(get_repository())
     deleted = use_case.execute(notificacion_id)
 

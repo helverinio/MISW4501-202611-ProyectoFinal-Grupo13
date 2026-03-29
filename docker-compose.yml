@@ -104,6 +104,7 @@ services:
     environment:
       FLASK_ENV: development
       DATABASE_URL: postgresql://postgres:postgres@reservas-db:5432/reservas
+      USUARIOS_SERVICE_URL: http://usuarios:5003
       PAGOS_SERVICE_URL: http://pagos:5002
       MQ_HOST: activemq
       MQ_PORT: 61613

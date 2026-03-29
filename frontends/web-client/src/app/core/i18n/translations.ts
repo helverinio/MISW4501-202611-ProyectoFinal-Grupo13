@@ -48,6 +48,49 @@ export interface Translation {
   'home.destinations.title': string;
   'home.destinations.subtitle': string;
 
+  // Home Search Page
+  'homeSearch.nav.travelerHome': string;
+  'homeSearch.nav.searchResults': string;
+  'homeSearch.nav.myReservations': string;
+  'homeSearch.nav.accountPreferences': string;
+  'homeSearch.hero.title': string;
+  'homeSearch.hero.subtitle': string;
+  'homeSearch.hero.whereTo': string;
+  'homeSearch.hero.wherePlaceholder': string;
+  'homeSearch.hero.checkIn': string;
+  'homeSearch.hero.checkOut': string;
+  'homeSearch.hero.guests': string;
+  'homeSearch.hero.searchHotels': string;
+  'homeSearch.hero.guest1': string;
+  'homeSearch.hero.guest2': string;
+  'homeSearch.hero.guest3': string;
+  'homeSearch.hero.guest4': string;
+  'homeSearch.hero.guest5Plus': string;
+  'homeSearch.popular.title': string;
+  'homeSearch.popular.subtitle': string;
+  'homeSearch.popular.price.mexico': string;
+  'homeSearch.popular.price.argentina': string;
+  'homeSearch.popular.price.brazil': string;
+  'homeSearch.popular.price.peru': string;
+  'homeSearch.popular.price.colombia': string;
+  'homeSearch.popular.available.mexico': string;
+  'homeSearch.popular.available.argentina': string;
+  'homeSearch.popular.available.brazil': string;
+  'homeSearch.popular.available.peru': string;
+  'homeSearch.popular.available.colombia': string;
+  'homeSearch.recent.title': string;
+  'homeSearch.recent.viewAll': string;
+  'homeSearch.recent.perNight': string;
+  'homeSearch.recent.freeCancellation': string;
+  'homeSearch.trust.title': string;
+  'homeSearch.trust.subtitle': string;
+  'homeSearch.trust.secureTitle': string;
+  'homeSearch.trust.secureDesc': string;
+  'homeSearch.trust.freeCancellationTitle': string;
+  'homeSearch.trust.freeCancellationDesc': string;
+  'homeSearch.trust.supportTitle': string;
+  'homeSearch.trust.supportDesc': string;
+
   // Login Page
   'login.title': string;
   'login.subtitle': string;
@@ -141,6 +184,53 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.features.mobileReadyDesc': 'Seamless experience across all your devices',
     'home.destinations.title': 'Popular Destinations',
     'home.destinations.subtitle': 'Discover the most sought-after locations across Latin America',
+
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Traveler Home',
+    'homeSearch.nav.searchResults': 'Search Results',
+    'homeSearch.nav.myReservations': 'My Reservations',
+    'homeSearch.nav.accountPreferences': 'Account & Preferences',
+    'homeSearch.hero.title': 'Find your perfect getaway',
+    'homeSearch.hero.subtitle':
+      'Discover amazing hotels across Latin America with unbeatable prices and instant booking',
+    'homeSearch.hero.whereTo': 'Where to?',
+    'homeSearch.hero.wherePlaceholder': 'City or hotel name',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Guests',
+    'homeSearch.hero.searchHotels': 'Search Hotels',
+    'homeSearch.hero.guest1': '1 Guest',
+    'homeSearch.hero.guest2': '2 Guests',
+    'homeSearch.hero.guest3': '3 Guests',
+    'homeSearch.hero.guest4': '4 Guests',
+    'homeSearch.hero.guest5Plus': '5+ Guests',
+    'homeSearch.popular.title': 'Popular Destinations',
+    'homeSearch.popular.subtitle': 'Explore the most loved destinations across Latin America',
+    'homeSearch.popular.price.mexico': 'From $45/night',
+    'homeSearch.popular.price.argentina': 'From $38/night',
+    'homeSearch.popular.price.brazil': 'From $52/night',
+    'homeSearch.popular.price.peru': 'From $42/night',
+    'homeSearch.popular.price.colombia': 'From $35/night',
+    'homeSearch.popular.available.mexico': '347 hotels available',
+    'homeSearch.popular.available.argentina': '289 hotels available',
+    'homeSearch.popular.available.brazil': '412 hotels available',
+    'homeSearch.popular.available.peru': '198 hotels available',
+    'homeSearch.popular.available.colombia': '156 hotels available',
+    'homeSearch.recent.title': 'Recently Viewed',
+    'homeSearch.recent.viewAll': 'View All',
+    'homeSearch.recent.perNight': '/night',
+    'homeSearch.recent.freeCancellation': 'Free cancellation',
+    'homeSearch.trust.title': 'Why choose TravelHub?',
+    'homeSearch.trust.subtitle': 'Your trust and satisfaction are our top priorities',
+    'homeSearch.trust.secureTitle': 'Secure Payment',
+    'homeSearch.trust.secureDesc':
+      'Your payment information is protected with bank-level security and SSL encryption',
+    'homeSearch.trust.freeCancellationTitle': 'Free Cancellation',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancel most bookings free of charge up to 24 hours before check-in',
+    'homeSearch.trust.supportTitle': '24/7 Support',
+    'homeSearch.trust.supportDesc':
+      'Our customer support team is available around the clock to help you',
 
     // Login Page
     'login.title': 'Welcome to TravelHub',
@@ -238,6 +328,53 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.destinations.title': 'Destinos Populares',
     'home.destinations.subtitle': 'Descubre las ubicaciones más buscadas en América Latina',
 
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Inicio',
+    'homeSearch.nav.searchResults': 'Resultados de Búsqueda',
+    'homeSearch.nav.myReservations': 'Mis Reservas',
+    'homeSearch.nav.accountPreferences': 'Cuenta y Preferencias',
+    'homeSearch.hero.title': 'Encuentra tu escapada perfecta',
+    'homeSearch.hero.subtitle':
+      'Descubre hoteles increíbles en América Latina con precios inmejorables y reserva instantánea',
+    'homeSearch.hero.whereTo': '¿A dónde?',
+    'homeSearch.hero.wherePlaceholder': 'Ciudad o nombre del hotel',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Huéspedes',
+    'homeSearch.hero.searchHotels': 'Buscar Hoteles',
+    'homeSearch.hero.guest1': '1 huésped',
+    'homeSearch.hero.guest2': '2 huéspedes',
+    'homeSearch.hero.guest3': '3 huéspedes',
+    'homeSearch.hero.guest4': '4 huéspedes',
+    'homeSearch.hero.guest5Plus': '5+ huéspedes',
+    'homeSearch.popular.title': 'Destinos Populares',
+    'homeSearch.popular.subtitle': 'Explora los destinos más queridos de América Latina',
+    'homeSearch.popular.price.mexico': 'Desde $45/noche',
+    'homeSearch.popular.price.argentina': 'Desde $38/noche',
+    'homeSearch.popular.price.brazil': 'Desde $52/noche',
+    'homeSearch.popular.price.peru': 'Desde $42/noche',
+    'homeSearch.popular.price.colombia': 'Desde $35/noche',
+    'homeSearch.popular.available.mexico': '347 hoteles disponibles',
+    'homeSearch.popular.available.argentina': '289 hoteles disponibles',
+    'homeSearch.popular.available.brazil': '412 hoteles disponibles',
+    'homeSearch.popular.available.peru': '198 hoteles disponibles',
+    'homeSearch.popular.available.colombia': '156 hoteles disponibles',
+    'homeSearch.recent.title': 'Vistos Recientemente',
+    'homeSearch.recent.viewAll': 'Ver todo',
+    'homeSearch.recent.perNight': '/noche',
+    'homeSearch.recent.freeCancellation': 'Cancelación gratuita',
+    'homeSearch.trust.title': '¿Por qué elegir TravelHub?',
+    'homeSearch.trust.subtitle': 'Tu confianza y satisfacción son nuestra prioridad',
+    'homeSearch.trust.secureTitle': 'Pago Seguro',
+    'homeSearch.trust.secureDesc':
+      'Tu información de pago está protegida con seguridad bancaria y cifrado SSL',
+    'homeSearch.trust.freeCancellationTitle': 'Cancelación Gratuita',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancela la mayoría de reservas sin costo hasta 24 horas antes del check-in',
+    'homeSearch.trust.supportTitle': 'Soporte 24/7',
+    'homeSearch.trust.supportDesc':
+      'Nuestro equipo de soporte está disponible todo el día para ayudarte',
+
     // Login Page
     'login.title': 'Bienvenido a TravelHub',
     'login.subtitle': 'Inicia sesión en tu cuenta o crea una nueva',
@@ -334,6 +471,53 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.features.mobileReadyDesc': 'Experiência perfeita em todos os seus dispositivos',
     'home.destinations.title': 'Destinos Populares',
     'home.destinations.subtitle': 'Descubra os locais mais procurados na América Latina',
+
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Início do Viajante',
+    'homeSearch.nav.searchResults': 'Resultados da Busca',
+    'homeSearch.nav.myReservations': 'Minhas Reservas',
+    'homeSearch.nav.accountPreferences': 'Conta e Preferências',
+    'homeSearch.hero.title': 'Encontre sua viagem perfeita',
+    'homeSearch.hero.subtitle':
+      'Descubra hotéis incríveis na América Latina com preços imbatíveis e reserva instantânea',
+    'homeSearch.hero.whereTo': 'Para onde?',
+    'homeSearch.hero.wherePlaceholder': 'Cidade ou nome do hotel',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Hóspedes',
+    'homeSearch.hero.searchHotels': 'Buscar Hotéis',
+    'homeSearch.hero.guest1': '1 hóspede',
+    'homeSearch.hero.guest2': '2 hóspedes',
+    'homeSearch.hero.guest3': '3 hóspedes',
+    'homeSearch.hero.guest4': '4 hóspedes',
+    'homeSearch.hero.guest5Plus': '5+ hóspedes',
+    'homeSearch.popular.title': 'Destinos Populares',
+    'homeSearch.popular.subtitle': 'Explore os destinos mais queridos da América Latina',
+    'homeSearch.popular.price.mexico': 'A partir de $45/noite',
+    'homeSearch.popular.price.argentina': 'A partir de $38/noite',
+    'homeSearch.popular.price.brazil': 'A partir de $52/noite',
+    'homeSearch.popular.price.peru': 'A partir de $42/noite',
+    'homeSearch.popular.price.colombia': 'A partir de $35/noite',
+    'homeSearch.popular.available.mexico': '347 hotéis disponíveis',
+    'homeSearch.popular.available.argentina': '289 hotéis disponíveis',
+    'homeSearch.popular.available.brazil': '412 hotéis disponíveis',
+    'homeSearch.popular.available.peru': '198 hotéis disponíveis',
+    'homeSearch.popular.available.colombia': '156 hotéis disponíveis',
+    'homeSearch.recent.title': 'Vistos Recentemente',
+    'homeSearch.recent.viewAll': 'Ver todos',
+    'homeSearch.recent.perNight': '/noite',
+    'homeSearch.recent.freeCancellation': 'Cancelamento grátis',
+    'homeSearch.trust.title': 'Por que escolher a TravelHub?',
+    'homeSearch.trust.subtitle': 'Sua confiança e satisfação são nossas prioridades',
+    'homeSearch.trust.secureTitle': 'Pagamento Seguro',
+    'homeSearch.trust.secureDesc':
+      'Suas informações de pagamento são protegidas com segurança bancária e criptografia SSL',
+    'homeSearch.trust.freeCancellationTitle': 'Cancelamento Grátis',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancele a maioria das reservas gratuitamente até 24 horas antes do check-in',
+    'homeSearch.trust.supportTitle': 'Suporte 24/7',
+    'homeSearch.trust.supportDesc':
+      'Nossa equipe de suporte está disponível 24 horas para ajudar você',
 
     // Login Page
     'login.title': 'Bem-vindo ao TravelHub',
