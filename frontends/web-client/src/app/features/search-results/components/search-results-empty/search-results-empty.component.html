@@ -1,0 +1,12 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-10 text-center">
+  <i class="fa-solid fa-bed text-gray-400 text-3xl"></i>
+  <h3 class="text-xl font-semibold text-gray-900 mt-4">{{ t('searchResults.states.emptyTitle') }}</h3>
+  <p class="text-gray-600 mt-2">{{ t('searchResults.states.emptyDescription') }}</p>
+  <button
+    (click)="onClearFilters()"
+    class="mt-5 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+    type="button"
+  >
+    {{ t('searchResults.states.clearFilters') }}
+  </button>
+</div>

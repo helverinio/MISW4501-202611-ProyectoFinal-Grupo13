@@ -1,0 +1,64 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+  <div class="flex flex-col lg:flex-row">
+    <div class="lg:w-80 h-64 lg:h-auto overflow-hidden">
+      <img class="w-full h-full object-cover" [src]="hotel.imageUrl" [alt]="hotel.imageAlt" />
+    </div>
+    <div class="flex-1 p-6">
+      <div class="flex flex-col lg:flex-row lg:justify-between">
+        <div class="flex-1">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="text-xl font-semibold text-gray-900">{{ hotel.name }}</h3>
+            <div class="flex items-center ml-4">
+              <div class="flex items-center">
+                <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                <span class="text-sm font-medium text-gray-900 ml-1">{{ hotel.rating }}</span>
+              </div>
+              <span class="text-xs text-gray-500 ml-1"
+                >({{ hotel.reviewsCount }} {{ t('searchResults.card.reviews') }})</span
+              >
+            </div>
+          </div>
+          <p class="text-gray-600 mb-3 flex items-center">
+            <i class="fa-solid fa-location-dot text-gray-400 mr-1"></i>
+            {{ hotel.city }}, {{ hotel.country }} - {{ hotel.locationText }}
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            @for (amenity of hotel.amenities.slice(0, 4); track amenity; let i = $index) {
+              <span
+                class="px-2 py-1 text-xs rounded-full"
+                [class.bg-success]="i === 0"
+                [class.bg-opacity-10]="i < 3"
+                [class.text-success]="i === 0"
+                [class.bg-primary]="i === 1"
+                [class.text-primary]="i === 1"
+                [class.bg-warning]="i === 2"
+                [class.text-warning]="i === 2"
+                [class.bg-gray-100]="i > 2"
+                [class.text-gray-600]="i > 2"
+                >{{ amenity }}</span
+              >
+            }
+          </div>
+          @if (hotel.freeCancellation) {
+            <p class="text-sm text-success mb-2">{{ t('searchResults.card.freeCancellation') }}</p>
+          } @else {
+            <p class="text-sm text-gray-600 mb-2">{{ t('searchResults.card.nonRefundable') }}</p>
+          }
+        </div>
+        <div class="lg:text-right lg:ml-6 mt-4 lg:mt-0">
+          <div class="mb-2">
+            <span class="text-2xl font-bold text-gray-900">${{ hotel.pricePerNight }}</span>
+            <span class="text-gray-600">/{{ t('searchResults.card.night') }}</span>
+          </div>
+          <p class="text-sm text-gray-500 mb-3">${{ hotel.totalPrice }} {{ t('searchResults.card.total') }}</p>
+          <button
+            class="w-full lg:w-auto px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium"
+            type="button"
+          >
+            {{ t('searchResults.card.viewDetails') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

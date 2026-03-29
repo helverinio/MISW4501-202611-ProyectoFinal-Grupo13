@@ -78,8 +78,8 @@
                 [(ngModel)]="guests"
                 class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
               >
-                @for (option of guestOptions(); track option) {
-                  <option [value]="option">{{ option }}</option>
+                @for (option of guestOptions(); track option.value) {
+                  <option [ngValue]="option.value">{{ option.label }}</option>
                 }
               </select>
             </div>
