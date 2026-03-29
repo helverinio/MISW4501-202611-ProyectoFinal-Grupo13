@@ -47,10 +47,10 @@ class UsuariosService:
     def refresh_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'auth/refresh', data)
 
-    def get_current_user(self, authorization_header: str) -> Dict[str, Any]:
-        headers = {'Authorization': authorization_header}
+    def get_current_user(self, authorization_header: str = None) -> Dict[str, Any]:
+        headers = {'Authorization': authorization_header} if authorization_header else {}
         return self._request('GET', 'auth/me', headers=headers)
 
-    def logout(self, authorization_header: str) -> Dict[str, Any]:
-        headers = {'Authorization': authorization_header}
+    def logout(self, authorization_header: str = None) -> Dict[str, Any]:
+        headers = {'Authorization': authorization_header} if authorization_header else {}
         return self._request('POST', 'auth/logout', headers=headers)

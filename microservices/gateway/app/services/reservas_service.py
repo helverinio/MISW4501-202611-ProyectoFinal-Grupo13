@@ -1,22 +1,32 @@
 import requests
 from typing import Dict, Any
+from flask import has_request_context, request
 
 
 class ReservasService:
     def __init__(self, base_url: str):
         self.base_url = base_url
 
+    def _forward_headers(self) -> Dict[str, str]:
+        headers = {}
+        if has_request_context():
+            authorization = request.headers.get('Authorization')
+            if authorization:
+                headers['Authorization'] = authorization
+        return headers
+
     def _request(self, method: str, endpoint: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/api/v1/{endpoint}"
+            headers = self._forward_headers()
             if method == 'GET':
-                response = requests.get(url, timeout=30)
+                response = requests.get(url, headers=headers, timeout=30)
             elif method == 'POST':
-                response = requests.post(url, json=data, timeout=30)
+                response = requests.post(url, json=data, headers=headers, timeout=30)
             elif method == 'PUT':
-                response = requests.put(url, json=data, timeout=30)
+                response = requests.put(url, json=data, headers=headers, timeout=30)
             elif method == 'DELETE':
-                response = requests.delete(url, timeout=30)
+                response = requests.delete(url, headers=headers, timeout=30)
             else:
                 return {'status_code': 400, 'data': {'error': 'Invalid method'}}
             return {'status_code': response.status_code, 'data': response.json()}
@@ -79,6 +89,9 @@ class ReservasService:
 
     def get_habitaciones_by_hotel(self, hotel_id: str) -> Dict[str, Any]:
         return self._request('GET', f'hoteles/{hotel_id}/habitaciones')
+
+    def search_available_hotels(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'hoteles/buscar-disponibles', data)
 
     # Habitaciones
     def create_habitacion(self, data: Dict[str, Any]) -> Dict[str, Any]:
