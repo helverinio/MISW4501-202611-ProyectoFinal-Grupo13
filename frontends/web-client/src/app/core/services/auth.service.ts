@@ -11,7 +11,9 @@ export class AuthService {
   private readonly refreshTokenKey = 'travelhub.refresh_token';
   private readonly userKey = 'travelhub.user';
 
-  private readonly accessTokenState = signal<string | null>(localStorage.getItem(this.accessTokenKey));
+  private readonly accessTokenState = signal<string | null>(
+    localStorage.getItem(this.accessTokenKey),
+  );
   private readonly currentUserState = signal<AuthUser | null>(this.readStoredUser());
 
   readonly currentUser = this.currentUserState.asReadonly();

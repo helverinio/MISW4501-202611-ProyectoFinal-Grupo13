@@ -13,10 +13,18 @@
 
       <!-- Navigation -->
       <nav id="main-navigation" class="hidden lg:flex items-center space-x-8">
-        <a href="app/home-search" class="text-primary font-medium border-b-2 border-primary pb-1">{{ t('homeSearch.nav.travelerHome') }}</a>
-        <a href="#" class="text-gray-700 hover:text-gray-900">{{ t('homeSearch.nav.searchResults') }}</a>
-        <a href="#" class="text-gray-700 hover:text-gray-900">{{ t('homeSearch.nav.myReservations') }}</a>
-        <a href="#" class="text-gray-700 hover:text-gray-900">{{ t('homeSearch.nav.accountPreferences') }}</a>
+        <a href="app/home-search" class="text-primary font-medium border-b-2 border-primary pb-1">{{
+          t('homeSearch.nav.travelerHome')
+        }}</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">{{
+          t('homeSearch.nav.searchResults')
+        }}</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">{{
+          t('homeSearch.nav.myReservations')
+        }}</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">{{
+          t('homeSearch.nav.accountPreferences')
+        }}</a>
       </nav>
 
       <!-- Right side controls -->
@@ -59,7 +67,9 @@
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
                 alt="Profile"
               />
-              <span class="hidden sm:block">{{ currentUser()?.nombre || currentUser()?.usuario || 'Sarah' }}</span>
+              <span class="hidden sm:block">{{
+                currentUser()?.nombre || currentUser()?.usuario || 'Sarah'
+              }}</span>
               <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
             </button>
 

@@ -35,7 +35,8 @@ export class LoginPageComponent {
 
     this.authService.login(payload).subscribe({
       next: () => {
-        const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || '/app/home-search';
+        const redirectTo =
+          this.route.snapshot.queryParamMap.get('redirectTo') || '/app/home-search';
         void this.router.navigateByUrl(redirectTo);
       },
       error: (error: HttpErrorResponse) => {
