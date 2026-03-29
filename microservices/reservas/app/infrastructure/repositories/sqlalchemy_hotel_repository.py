@@ -1,8 +1,13 @@
+import logging
 from typing import List, Optional
+from sqlalchemy import or_, func
 from app import db
 from app.domain.entities.hotel import Hotel
 from app.domain.repositories.hotel_repository import HotelRepository
 from app.infrastructure.models.hotel_model import HotelModel
+from app.infrastructure.models.ciudad_model import CiudadModel
+
+logger = logging.getLogger(__name__)
 
 
 class SQLAlchemyHotelRepository(HotelRepository):
@@ -31,6 +36,27 @@ class SQLAlchemyHotelRepository(HotelRepository):
 
     def find_by_ciudad(self, ciudad_id: str) -> List[Hotel]:
         models = HotelModel.query.filter_by(id_ciudad=ciudad_id).all()
+        return [self._to_entity(m) for m in models]
+
+    def search_by_name_or_ciudad(self, busqueda: str) -> List[Hotel]:
+        """Busca hoteles por nombre o nombre de ciudad (sin distinción de tildes)"""
+        search_pattern = f"%{busqueda}%"
+        logger.info("[HotelRepo] search_by_name_or_ciudad pattern='%s'", search_pattern)
+        models = db.session.query(HotelModel).join(
+            CiudadModel, HotelModel.id_ciudad == CiudadModel.id
+        ).filter(
+            or_(
+                func.unaccent(HotelModel.nombre).ilike(func.unaccent(search_pattern)),
+                func.unaccent(CiudadModel.nombre).ilike(func.unaccent(search_pattern))
+            )
+        ).all()
+        logger.info("[HotelRepo] Hoteles encontrados: %d - nombres: %s",
+                    len(models), [m.nombre for m in models])
+        if not models:
+            total_hoteles = HotelModel.query.count()
+            total_ciudades = CiudadModel.query.count()
+            logger.warning("[HotelRepo] Sin resultados. DB tiene %d hoteles y %d ciudades",
+                           total_hoteles, total_ciudades)
         return [self._to_entity(m) for m in models]
 
     def update(self, hotel: Hotel) -> Hotel:
