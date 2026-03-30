@@ -31,7 +31,6 @@ export default function LoginScreen() {
 
   // Registration fields
   const [nombre, setNombre] = useState('');
-  const [usuario, setUsuario] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -70,7 +69,7 @@ export default function LoginScreen() {
   };
 
   const handleRegister = async () => {
-    if (!nombre.trim() || !email.trim() || !usuario.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (!nombre.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setError(t('auth.errors.allFieldsRequired'));
       return;
     }
@@ -93,7 +92,7 @@ export default function LoginScreen() {
       const result = await RegisterService.send({
         nombre,
         email,
-        usuario,
+        usuario: email,
         contrasena: password,
       });
 
@@ -101,7 +100,6 @@ export default function LoginScreen() {
         setSuccessMessage(t('auth.registerSuccess'));
         // Clear registration fields
         setNombre('');
-        setUsuario('');
         setConfirmPassword('');
         // Switch to login tab after a brief delay
         setTimeout(() => {
@@ -277,22 +275,6 @@ export default function LoginScreen() {
                     editable={!isLoading}
                   />
                   <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
-                </View>
-
-                {/* Username Field */}
-                <Text style={styles.inputLabel}>{t('auth.username')}</Text>
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder={t('auth.usernamePlaceholder')}
-                    placeholderTextColor="#999"
-                    value={usuario}
-                    onChangeText={setUsuario}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    editable={!isLoading}
-                  />
-                  <Ionicons name="at-outline" size={20} color="#999" style={styles.inputIcon} />
                 </View>
 
                 {/* Password Field */}
