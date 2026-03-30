@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateCiudadUseCase, GetCiudadUseCase, GetAllCiudadesUseCase,
     GetCiudadesByPaisUseCase, UpdateCiudadUseCase, DeleteCiudadUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/ciudades', methods=['POST'])
-def create_ciudad():
+@require_token
+def create_ciudad(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -33,7 +35,8 @@ def create_ciudad():
 
 
 @api_v1_bp.route('/ciudades/<ciudad_id>', methods=['GET'])
-def get_ciudad(ciudad_id):
+@require_token
+def get_ciudad(ciudad_id, current_usuario=None):
     use_case = GetCiudadUseCase(get_repository())
     ciudad = use_case.execute(ciudad_id)
 
@@ -48,7 +51,8 @@ def get_ciudad(ciudad_id):
 
 
 @api_v1_bp.route('/ciudades', methods=['GET'])
-def get_all_ciudades():
+@require_token
+def get_all_ciudades(current_usuario=None):
     use_case = GetAllCiudadesUseCase(get_repository())
     ciudades = use_case.execute()
 
@@ -60,7 +64,8 @@ def get_all_ciudades():
 
 
 @api_v1_bp.route('/paises/<pais_id>/ciudades', methods=['GET'])
-def get_ciudades_by_pais(pais_id):
+@require_token
+def get_ciudades_by_pais(pais_id, current_usuario=None):
     use_case = GetCiudadesByPaisUseCase(get_repository())
     ciudades = use_case.execute(pais_id)
 
@@ -72,7 +77,8 @@ def get_ciudades_by_pais(pais_id):
 
 
 @api_v1_bp.route('/ciudades/<ciudad_id>', methods=['PUT'])
-def update_ciudad(ciudad_id):
+@require_token
+def update_ciudad(ciudad_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -91,7 +97,8 @@ def update_ciudad(ciudad_id):
 
 
 @api_v1_bp.route('/ciudades/<ciudad_id>', methods=['DELETE'])
-def delete_ciudad(ciudad_id):
+@require_token
+def delete_ciudad(ciudad_id, current_usuario=None):
     use_case = DeleteCiudadUseCase(get_repository())
     deleted = use_case.execute(ciudad_id)
 

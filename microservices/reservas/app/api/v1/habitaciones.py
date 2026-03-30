@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateHabitacionUseCase, GetHabitacionUseCase, GetAllHabitacionesUseCase,
     GetHabitacionesByHotelUseCase, UpdateHabitacionUseCase, DeleteHabitacionUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/habitaciones', methods=['POST'])
-def create_habitacion():
+@require_token
+def create_habitacion(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -40,7 +42,8 @@ def create_habitacion():
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>', methods=['GET'])
-def get_habitacion(habitacion_id):
+@require_token
+def get_habitacion(habitacion_id, current_usuario=None):
     use_case = GetHabitacionUseCase(get_repository())
     habitacion = use_case.execute(habitacion_id)
 
@@ -58,7 +61,8 @@ def get_habitacion(habitacion_id):
 
 
 @api_v1_bp.route('/habitaciones', methods=['GET'])
-def get_all_habitaciones():
+@require_token
+def get_all_habitaciones(current_usuario=None):
     use_case = GetAllHabitacionesUseCase(get_repository())
     habitaciones = use_case.execute()
 
@@ -73,7 +77,8 @@ def get_all_habitaciones():
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>/habitaciones', methods=['GET'])
-def get_habitaciones_by_hotel(hotel_id):
+@require_token
+def get_habitaciones_by_hotel(hotel_id, current_usuario=None):
     use_case = GetHabitacionesByHotelUseCase(get_repository())
     habitaciones = use_case.execute(hotel_id)
 
@@ -88,7 +93,8 @@ def get_habitaciones_by_hotel(hotel_id):
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>', methods=['PUT'])
-def update_habitacion(habitacion_id):
+@require_token
+def update_habitacion(habitacion_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -110,7 +116,8 @@ def update_habitacion(habitacion_id):
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>', methods=['DELETE'])
-def delete_habitacion(habitacion_id):
+@require_token
+def delete_habitacion(habitacion_id, current_usuario=None):
     use_case = DeleteHabitacionUseCase(get_repository())
     deleted = use_case.execute(habitacion_id)
 

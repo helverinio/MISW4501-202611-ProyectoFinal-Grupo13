@@ -1,6 +1,7 @@
 from flask import request, jsonify, current_app
 from datetime import datetime
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreatePagoUseCase, GetPagoUseCase, GetAllPagosUseCase,
     GetPagosByReservaUseCase, UpdatePagoUseCase, DeletePagoUseCase
@@ -27,7 +28,8 @@ def parse_datetime(date_str):
 
 
 @api_v1_bp.route('/pagos', methods=['POST'])
-def create_pago():
+@require_token
+def create_pago(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -74,7 +76,8 @@ def create_pago():
 
 
 @api_v1_bp.route('/pagos/<pago_id>', methods=['GET'])
-def get_pago(pago_id):
+@require_token
+def get_pago(pago_id, current_usuario=None):
     use_case = GetPagoUseCase(get_repository())
     pago = use_case.execute(pago_id)
 
@@ -92,7 +95,8 @@ def get_pago(pago_id):
 
 
 @api_v1_bp.route('/pagos', methods=['GET'])
-def get_all_pagos():
+@require_token
+def get_all_pagos(current_usuario=None):
     use_case = GetAllPagosUseCase(get_repository())
     pagos = use_case.execute()
 
@@ -107,7 +111,8 @@ def get_all_pagos():
 
 
 @api_v1_bp.route('/reservas/<reserva_id>/pagos', methods=['GET'])
-def get_pagos_by_reserva(reserva_id):
+@require_token
+def get_pagos_by_reserva(reserva_id, current_usuario=None):
     use_case = GetPagosByReservaUseCase(get_repository())
     pagos = use_case.execute(reserva_id)
 
@@ -122,7 +127,8 @@ def get_pagos_by_reserva(reserva_id):
 
 
 @api_v1_bp.route('/pagos/<pago_id>', methods=['PUT'])
-def update_pago(pago_id):
+@require_token
+def update_pago(pago_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -156,7 +162,8 @@ def update_pago(pago_id):
 
 
 @api_v1_bp.route('/pagos/<pago_id>', methods=['DELETE'])
-def delete_pago(pago_id):
+@require_token
+def delete_pago(pago_id, current_usuario=None):
     use_case = DeletePagoUseCase(get_repository())
     deleted = use_case.execute(pago_id)
 

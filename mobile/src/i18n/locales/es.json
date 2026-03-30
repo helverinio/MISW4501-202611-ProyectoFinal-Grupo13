@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "TravelHub",
+    "secure": "Seguro",
+    "encrypted": "Encriptado",
+    "certified": "Certificado",
+    "securityMessage": "Tus datos están protegidos con encriptación de nivel bancario"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Crear Cuenta",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu@email.com",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "fullName": "Nombre completo",
+    "fullNamePlaceholder": "Juan Pérez",
+    "username": "Nombre de usuario",
+    "usernamePlaceholder": "juanperez",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginButton": "Iniciar Sesión",
+    "registerButton": "Crear Cuenta",
+    "loginSuccess": "¡Inicio de sesión exitoso!",
+    "registerSuccess": "¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.",
+    "errors": {
+      "emptyFields": "Por favor ingresa correo y contraseña",
+      "allFieldsRequired": "Por favor completa todos los campos",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordLength": "La contraseña debe tener al menos 6 caracteres",
+      "loginFailed": "Error al iniciar sesión. Intenta de nuevo.",
+      "registerFailed": "Error al crear la cuenta. Intenta de nuevo.",
+      "unexpectedError": "Ocurrió un error inesperado. Intenta de nuevo."
+    }
+  },
+  "landing": {
+    "welcome": "Bienvenido",
+    "successMessage": "¡Has iniciado sesión exitosamente!",
+    "signOut": "Cerrar Sesión"
+  },
+  "language": {
+    "title": "Idioma",
+    "select": "Seleccionar Idioma",
+    "english": "English",
+    "spanish": "Español",
+    "portuguese": "Português"
+  }
+}

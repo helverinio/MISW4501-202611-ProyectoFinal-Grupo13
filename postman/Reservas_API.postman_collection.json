@@ -1,0 +1,1125 @@
+{
+  "info": {
+    "name": "Reservas Microservice API",
+    "description": "Complete API collection for the Reservas microservice with all endpoints grouped by entity",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "reservas_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Paises",
+      "description": "Country management endpoints",
+      "item": [
+        {
+          "name": "Create Pais",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Colombia\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Paises",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pais by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Pais",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Colombia Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Pais",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ciudades",
+      "description": "City management endpoints",
+      "item": [
+        {
+          "name": "Create Ciudad",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bogotá\",\n  \"id_pais\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Ciudades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ciudad by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ciudades by Pais",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/paises/:pais_id/ciudades",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "paises",
+                ":pais_id",
+                "ciudades"
+              ],
+              "variable": [
+                {
+                  "key": "pais_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ciudad",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Bogotá Updated\",\n  \"id_pais\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Ciudad",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hoteles",
+      "description": "Hotel management endpoints",
+      "item": [
+        {
+          "name": "Create Hotel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Hotel Bogotá Premium\",\n  \"email\": \"hotel@bogota.com\",\n  \"id_ciudad\": \"1\",\n  \"descripcion\": \"Luxury 5-star hotel\",\n  \"amenidades\": \"WiFi, Pool, Gym, Restaurant\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Hoteles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Hotel by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Hoteles by Ciudad",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/ciudades/:ciudad_id/hoteles",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "ciudades",
+                ":ciudad_id",
+                "hoteles"
+              ],
+              "variable": [
+                {
+                  "key": "ciudad_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Hotel",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Hotel Bogotá Premium Updated\",\n  \"email\": \"hotel@bogota.com\",\n  \"descripcion\": \"Updated luxury 5-star hotel\",\n  \"amenidades\": \"WiFi, Pool, Gym, Restaurant, Spa\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Hotel",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Available Hotels",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"busqueda\": \"Bogota\",\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"nro_personas\": 2\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/buscar-disponibles",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                "buscar-disponibles"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Habitaciones",
+      "description": "Room management endpoints",
+      "item": [
+        {
+          "name": "Create Habitacion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Doble\",\n  \"nro_habitacion\": \"301\",\n  \"capacidad\": 2,\n  \"camas\": 1,\n  \"id_hotel\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/habitaciones",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Habitaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/habitaciones",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Habitacion by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/habitaciones/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Habitaciones by Hotel",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:hotel_id/habitaciones",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":hotel_id",
+                "habitaciones"
+              ],
+              "variable": [
+                {
+                  "key": "hotel_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Habitacion",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Suite\",\n  \"nro_habitacion\": \"301\",\n  \"capacidad\": 4,\n  \"camas\": 2,\n  \"id_hotel\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/habitaciones/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Habitacion",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/habitaciones/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estados",
+      "description": "Status management endpoints",
+      "item": [
+        {
+          "name": "Create Estado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Confirmada\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/estados",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "estados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Estados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/estados",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "estados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Estado by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/estados/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "estados",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Estado",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cancelada\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/estados/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "estados",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Estado",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/estados/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "estados",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reservas",
+      "description": "Reservation management endpoints",
+      "item": [
+        {
+          "name": "Create Reserva",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"total\": 500000,\n  \"nro_personas\": 2,\n  \"id_usuario\": \"user-uuid\",\n  \"id_pais\": \"1\",\n  \"id_habitacion\": \"1\",\n  \"id_estado\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Reservas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reserva by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reservas by Usuario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/usuarios/:usuario_id/reservas",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "usuarios",
+                ":usuario_id",
+                "reservas"
+              ],
+              "variable": [
+                {
+                  "key": "usuario_id",
+                  "value": "user-uuid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reserva",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_ingreso\": \"2026-04-02\",\n  \"fecha_salida\": \"2026-04-06\",\n  \"total\": 600000,\n  \"nro_personas\": 3,\n  \"id_usuario\": \"user-uuid\",\n  \"id_pais\": \"1\",\n  \"id_habitacion\": \"1\",\n  \"id_estado\": \"1\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Reserva",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 from flask import request, jsonify, current_app
 from datetime import datetime
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateReservaUseCase, GetReservaUseCase, GetAllReservasUseCase,
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
@@ -40,7 +41,8 @@ def parse_datetime(date_str):
 
 
 @api_v1_bp.route('/reservas', methods=['POST'])
-def create_reserva():
+@require_token
+def create_reserva(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -180,7 +182,8 @@ def _execute_reservation_creation(
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['GET'])
-def get_reserva(reserva_id):
+@require_token
+def get_reserva(reserva_id, current_usuario=None):
     use_case = GetReservaUseCase(get_repository())
     reserva = use_case.execute(reserva_id)
 
@@ -201,7 +204,8 @@ def get_reserva(reserva_id):
 
 
 @api_v1_bp.route('/reservas', methods=['GET'])
-def get_all_reservas():
+@require_token
+def get_all_reservas(current_usuario=None):
     use_case = GetAllReservasUseCase(get_repository())
     reservas = use_case.execute()
 
@@ -219,7 +223,8 @@ def get_all_reservas():
 
 
 @api_v1_bp.route('/usuarios/<usuario_id>/reservas', methods=['GET'])
-def get_reservas_by_usuario(usuario_id):
+@require_token
+def get_reservas_by_usuario(usuario_id, current_usuario=None):
     use_case = GetReservasByUsuarioUseCase(get_repository())
     reservas = use_case.execute(usuario_id)
 
@@ -237,7 +242,8 @@ def get_reservas_by_usuario(usuario_id):
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>/reservas', methods=['GET'])
-def get_reservas_by_habitacion(habitacion_id):
+@require_token
+def get_reservas_by_habitacion(habitacion_id, current_usuario=None):
     use_case = GetReservasByHabitacionUseCase(get_repository())
     reservas = use_case.execute(habitacion_id)
 
@@ -255,7 +261,8 @@ def get_reservas_by_habitacion(habitacion_id):
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['PUT'])
-def update_reserva(reserva_id):
+@require_token
+def update_reserva(reserva_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -298,7 +305,8 @@ def update_reserva(reserva_id):
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['DELETE'])
-def delete_reserva(reserva_id):
+@require_token
+def delete_reserva(reserva_id, current_usuario=None):
     use_case = DeleteReservaUseCase(get_repository())
     deleted = use_case.execute(reserva_id)
 

@@ -218,3 +218,52 @@ crash.log
 
 # Terraform lock: keep versioned for reproducible provider resolution
 .terraform.lock.hcl
+
+# Mobile App (Expo/React Native)
+node_modules/
+.expo/
+web-build/
+expo-env.d.ts
+
+# Native build files
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Metro bundler
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+debug.keystore
+
+# TypeScript
+*.tsbuildinfo
+
+# Gradle files
+.gradle/
+*.gradle
+gradle.properties
+
+# Android Studio
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+proguard-rules.pro
+local.properties
+
+# Android generated
+android/
+
+# Generated image assets
+**/splashscreen_logo.png
+**/ic_launcher*.png
+**/ic_launcher*.webp

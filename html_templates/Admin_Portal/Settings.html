@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-hotel text-white text-sm"></i>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full">
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-900">Admin User</p>
+                            <p class="text-xs text-gray-500">Hotel Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-chart-line w-5 mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-calendar-check w-5 mr-3"></i>
+                    Reservations
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-hotel w-5 mr-3"></i>
+                    Properties
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    Guests
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-dollar-sign w-5 mr-3"></i>
+                    Revenue
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+                    <i class="fas fa-cog w-5 mr-3"></i>
+                    Settings
+                </a>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                        <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="flex-1 p-4 sm:p-6 lg:p-8">
+            <div id="rate-header" class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Rate Management</h1>
+                        <p class="text-gray-600 text-sm">Manage room rates, discounts, and cancellation policies</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-history mr-2"></i>
+                            Rate History
+                        </button>
+                        <button class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Room Type
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="property-selector" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex-1 max-w-md">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Property</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option>Grand Hotel Plaza</option>
+                            <option>Sunset Beach Resort</option>
+                            <option>City Center Hotel</option>
+                            <option>Mountain Lodge</option>
+                        </select>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:ml-4 flex items-center space-x-2">
+                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-calendar mr-2"></i>
+                            Seasonal Rates
+                        </button>
+                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-copy mr-2"></i>
+                            Bulk Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="room-type-1" class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 bg-gray-50">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-bed text-primary-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Deluxe King Room</h3>
+                                <p class="text-sm text-gray-600">Max occupancy: 2 adults</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                <i class="fas fa-circle text-success-600 text-xs mr-1.5"></i>
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div id="base-price-section">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Base Price (per night)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" value="185" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Standard rate for this room type</p>
+                        </div>
+
+                        <div id="discount-section">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                            <div class="relative">
+                                <input type="number" value="15" min="0" max="100" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <p class="text-xs text-gray-500">Final price after discount</p>
+                                <p class="text-sm font-bold text-success-600">$157.25</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cancellation-policy-section" class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Cancellation Policy</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <button class="px-4 py-3 border-2 border-primary-600 bg-primary-50 text-primary-700 rounded-xl text-sm font-medium transition-colors">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Flexible
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 24h before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Moderate
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 7 days before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Strict
+                                <p class="text-xs text-gray-600 mt-1">Non-refundable</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="additional-settings" class="border-t border-gray-100 pt-6">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-4">Additional Settings</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Min Stay (nights)</label>
+                                <input type="number" value="1" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Max Stay (nights)</label>
+                                <input type="number" value="30" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Extra Guest Fee</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                    <input type="number" value="25" class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
+                            Cancel
+                        </button>
+                        <button class="px-6 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="room-type-2" class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 bg-gray-50">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-success-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-bed text-success-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Executive Suite</h3>
+                                <p class="text-sm text-gray-600">Max occupancy: 4 adults</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                <i class="fas fa-circle text-success-600 text-xs mr-1.5"></i>
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div id="base-price-section-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Base Price (per night)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" value="325" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Standard rate for this room type</p>
+                        </div>
+
+                        <div id="discount-section-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                            <div class="relative">
+                                <input type="number" value="20" min="0" max="100" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <p class="text-xs text-gray-500">Final price after discount</p>
+                                <p class="text-sm font-bold text-success-600">$260.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cancellation-policy-section-2" class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Cancellation Policy</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Flexible
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 24h before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-primary-600 bg-primary-50 text-primary-700 rounded-xl text-sm font-medium transition-colors">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Moderate
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 7 days before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Strict
+                                <p class="text-xs text-gray-600 mt-1">Non-refundable</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="additional-settings-2" class="border-t border-gray-100 pt-6">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-4">Additional Settings</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Min Stay (nights)</label>
+                                <input type="number" value="2" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Max Stay (nights)</label>
+                                <input type="number" value="30" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Extra Guest Fee</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                    <input type="number" value="40" class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
+                            Cancel
+                        </button>
+                        <button class="px-6 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="room-type-3" class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 bg-gray-50">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-bed text-orange-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Standard Double Room</h3>
+                                <p class="text-sm text-gray-600">Max occupancy: 2 adults</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                <i class="fas fa-circle text-success-600 text-xs mr-1.5"></i>
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div id="base-price-section-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Base Price (per night)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" value="125" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Standard rate for this room type</p>
+                        </div>
+
+                        <div id="discount-section-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                            <div class="relative">
+                                <input type="number" value="10" min="0" max="100" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <p class="text-xs text-gray-500">Final price after discount</p>
+                                <p class="text-sm font-bold text-success-600">$112.50</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cancellation-policy-section-3" class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Cancellation Policy</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Flexible
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 24h before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-medium hover:border-gray-400 transition-colors">
+                                <i class="far fa-circle mr-2"></i>
+                                Moderate
+                                <p class="text-xs text-gray-600 mt-1">Free cancellation 7 days before</p>
+                            </button>
+                            <button class="px-4 py-3 border-2 border-primary-600 bg-primary-50 text-primary-700 rounded-xl text-sm font-medium transition-colors">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Strict
+                                <p class="text-xs text-gray-600 mt-1">Non-refundable</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="additional-settings-3" class="border-t border-gray-100 pt-6">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-4">Additional Settings</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Min Stay (nights)</label>
+                                <input type="number" value="1" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Max Stay (nights)</label>
+                                <input type="number" value="30" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-2">Extra Guest Fee</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                    <input type="number" value="20" class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
+                            Cancel
+                        </button>
+                        <button class="px-6 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const discountInputs = document.querySelectorAll('[id^="discount-section"] input[type="number"]');
+            const priceInputs = document.querySelectorAll('[id^="base-price-section"] input[type="number"]');
+            
+            function calculateFinalPrice(priceInput, discountInput, finalPriceElement) {
+                const basePrice = parseFloat(priceInput.value) || 0;
+                const discount = parseFloat(discountInput.value) || 0;
+                const finalPrice = basePrice - (basePrice * discount / 100);
+                if (finalPriceElement) {
+                    finalPriceElement.textContent = '$' + finalPrice.toFixed(2);
+                }
+            }
+
+            discountInputs.forEach((input, index) => {
+                const priceInput = priceInputs[index];
+                const finalPriceElement = input.closest('[id^="discount-section"]').querySelector('.text-success-600');
+                
+                input.addEventListener('input', function() {
+                    calculateFinalPrice(priceInput, input, finalPriceElement);
+                });
+            });
+
+            priceInputs.forEach((input, index) => {
+                const discountInput = discountInputs[index];
+                const finalPriceElement = discountInput.closest('[id^="discount-section"]').querySelector('.text-success-600');
+                
+                input.addEventListener('input', function() {
+                    calculateFinalPrice(input, discountInput, finalPriceElement);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

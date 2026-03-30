@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'brand-blue': '#0066FF',
+                        'brand-green': '#10B981',
+                        'brand-gray': '#6B7280',
+                        'brand-light': '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-inter bg-gray-50">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="flex items-center justify-between px-4 py-3">
+        <div class="flex items-center space-x-3">
+            <button class="p-2 -ml-2 text-gray-600 hover:text-gray-900">
+                <i class="fa-solid fa-arrow-left text-lg"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900">My Reservations</h1>
+        </div>
+        <button class="p-2 -mr-2 text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+        </button>
+    </div>
+</header>
+
+<!-- Filter Tabs -->
+<section id="filter-tabs" class="bg-white px-4 py-3 border-b border-gray-100">
+    <div class="flex space-x-1">
+        <button class="filter-tab active flex-1 py-2 px-3 text-sm font-medium rounded-lg bg-brand-blue text-white">
+            Upcoming
+        </button>
+        <button class="filter-tab flex-1 py-2 px-3 text-sm font-medium rounded-lg bg-gray-100 text-gray-700">
+            Past
+        </button>
+        <button class="filter-tab flex-1 py-2 px-3 text-sm font-medium rounded-lg bg-gray-100 text-gray-700">
+            Cancelled
+        </button>
+    </div>
+</section>
+
+<!-- Reservations List -->
+<main id="reservations-main" class="px-4 py-4 space-y-4">
+
+    <!-- Upcoming Reservation Card 1 -->
+    <div id="reservation-card-1" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Hotel Plaza Cartagena</h3>
+                    <div class="flex items-center space-x-1 mb-2">
+                        <div class="flex space-x-1">
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-gray-300 text-sm"></i>
+                        </div>
+                        <span class="text-sm text-gray-600">4.2</span>
+                    </div>
+                    <p class="text-sm text-gray-600">Cartagena, Colombia</p>
+                </div>
+                <div class="text-right">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-green bg-opacity-10 text-brand-green">
+                        Confirmed
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-3 mb-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Check-in</p>
+                        <p class="text-sm font-medium text-gray-900">Dec 15, 2024</p>
+                        <p class="text-xs text-gray-600">3:00 PM</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Check-out</p>
+                        <p class="text-sm font-medium text-gray-900">Dec 18, 2024</p>
+                        <p class="text-xs text-gray-600">11:00 AM</p>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500">Guests</p>
+                            <p class="text-sm font-medium text-gray-900">2 Adults, 1 Child</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Total</p>
+                            <p class="text-lg font-semibold text-gray-900">$420 USD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button class="flex-1 bg-brand-blue text-white py-3 px-4 rounded-xl text-sm font-medium">
+                    View Details
+                </button>
+                <button class="px-4 py-3 border border-gray-300 rounded-xl text-sm font-medium text-gray-700">
+                    Modify
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Reservation Card 2 -->
+    <div id="reservation-card-2" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4">
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1">Bogotá Grand Hotel</h3>
+                    <div class="flex items-center space-x-1 mb-2">
+                        <div class="flex space-x-1">
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                        </div>
+                        <span class="text-sm text-gray-600">4.8</span>
+                    </div>
+                    <p class="text-sm text-gray-600">Bogotá, Colombia</p>
+                </div>
+                <div class="text-right">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        Pending
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-3 mb-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Check-in</p>
+                        <p class="text-sm font-medium text-gray-900">Jan 8, 2025</p>
+                        <p class="text-xs text-gray-600">2:00 PM</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Check-out</p>
+                        <p class="text-sm font-medium text-gray-900">Jan 12, 2025</p>
+                        <p class="text-xs text-gray-600">12:00 PM</p>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500">Guests</p>
+                            <p class="text-sm font-medium text-gray-900">1 Adult</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Total</p>
+                            <p class="text-lg font-semibold text-gray-900">$680 USD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button class="flex-1 bg-brand-blue text-white py-3 px-4 rounded-xl text-sm font-medium">
+                    Complete Payment
+                </button>
+                <button class="px-4 py-3 border border-red-300 rounded-xl text-sm font-medium text-red-600">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="empty-state" class="hidden text-center py-16 px-4">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-calendar-xmark text-2xl text-gray-400"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">No reservations found</h3>
+        <p class="text-gray-600 mb-6">You don't have any reservations in this category yet.</p>
+        <button class="bg-brand-blue text-white py-3 px-6 rounded-xl text-sm font-medium">
+            Search Hotels
+        </button>
+    </div>
+</main>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="bg-white border-t border-gray-200 px-4 py-2 fixed bottom-0 left-0 right-0">
+    <div class="flex justify-around">
+        <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
+            <span class="text-xs">Search</span>
+        </button>
+        <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+            <i class="fa-solid fa-heart text-lg mb-1"></i>
+            <span class="text-xs">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center py-2 px-3 text-brand-blue">
+            <i class="fa-solid fa-calendar-check text-lg mb-1"></i>
+            <span class="text-xs font-medium">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+            <i class="fa-solid fa-user text-lg mb-1"></i>
+            <span class="text-xs">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<!-- Reservation Detail Modal (Hidden by default) -->
+<div id="detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+    <div class="bg-white rounded-t-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-900">Reservation Details</h2>
+                <button class="p-2 -mr-2 text-gray-600 hover:text-gray-900" onclick="closeModal()">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4 space-y-6">
+            <div class="bg-gray-50 rounded-xl p-4">
+                <h3 class="font-semibold text-gray-900 mb-3">Booking Information</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Confirmation #</span>
+                        <span class="font-medium text-gray-900">TH-2024-001523</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Room Type</span>
+                        <span class="font-medium text-gray-900">Deluxe Ocean View</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Nights</span>
+                        <span class="font-medium text-gray-900">3 nights</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-4">
+                <h3 class="font-semibold text-gray-900 mb-3">Contact Information</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Hotel Phone</span>
+                        <span class="font-medium text-brand-blue">+57 5 664 9000</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Address</span>
+                        <span class="font-medium text-gray-900 text-right">Bocagrande, Cartagena</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3 pt-4">
+                <button class="flex-1 bg-red-500 text-white py-3 px-4 rounded-xl text-sm font-medium">
+                    Cancel Reservation
+                </button>
+                <button class="flex-1 border border-brand-blue text-brand-blue py-3 px-4 rounded-xl text-sm font-medium">
+                    Modify Dates
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    // Filter tab functionality
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const reservationCards = document.querySelectorAll('[id^="reservation-card"]');
+    const emptyState = document.getElementById('empty-state');
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            filterTabs.forEach(t => {
+                t.classList.remove('bg-brand-blue', 'text-white');
+                t.classList.add('bg-gray-100', 'text-gray-700');
+            });
+
+            // Add active class to clicked tab
+            this.classList.add('bg-brand-blue', 'text-white');
+            this.classList.remove('bg-gray-100', 'text-gray-700');
+
+            // Show/hide content based on filter
+            const filterType = this.textContent.trim();
+            
+            if (filterType === 'Past' || filterType === 'Cancelled') {
+                reservationCards.forEach(card => card.classList.add('hidden'));
+                emptyState.classList.remove('hidden');
+            } else {
+                reservationCards.forEach(card => card.classList.remove('hidden'));
+                emptyState.classList.add('hidden');
+            }
+        });
+    });
+
+    // Modal functionality
+    const viewDetailsButtons = document.querySelectorAll('button:contains("View Details")');
+    const detailModal = document.getElementById('detail-modal');
+    
+    document.querySelectorAll('button').forEach(button => {
+        if (button.textContent.includes('View Details')) {
+            button.addEventListener('click', function() {
+                detailModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+    });
+
+    window.closeModal = function() {
+        detailModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    };
+
+    // Close modal on backdrop click
+    detailModal.addEventListener('click', function(e) {
+        if (e.target === detailModal) {
+            closeModal();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

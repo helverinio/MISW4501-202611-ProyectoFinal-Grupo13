@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateEstadoUseCase, GetEstadoUseCase, GetAllEstadosUseCase,
     UpdateEstadoUseCase, DeleteEstadoUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/estados', methods=['POST'])
-def create_estado():
+@require_token
+def create_estado(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -32,7 +34,8 @@ def create_estado():
 
 
 @api_v1_bp.route('/estados/<estado_id>', methods=['GET'])
-def get_estado(estado_id):
+@require_token
+def get_estado(estado_id, current_usuario=None):
     use_case = GetEstadoUseCase(get_repository())
     estado = use_case.execute(estado_id)
 
@@ -47,7 +50,8 @@ def get_estado(estado_id):
 
 
 @api_v1_bp.route('/estados', methods=['GET'])
-def get_all_estados():
+@require_token
+def get_all_estados(current_usuario=None):
     use_case = GetAllEstadosUseCase(get_repository())
     estados = use_case.execute()
 
@@ -59,7 +63,8 @@ def get_all_estados():
 
 
 @api_v1_bp.route('/estados/<estado_id>', methods=['PUT'])
-def update_estado(estado_id):
+@require_token
+def update_estado(estado_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -78,7 +83,8 @@ def update_estado(estado_id):
 
 
 @api_v1_bp.route('/estados/<estado_id>', methods=['DELETE'])
-def delete_estado(estado_id):
+@require_token
+def delete_estado(estado_id, current_usuario=None):
     use_case = DeleteEstadoUseCase(get_repository())
     deleted = use_case.execute(estado_id)
 

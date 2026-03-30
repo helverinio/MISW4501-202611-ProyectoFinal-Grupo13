@@ -9,6 +9,7 @@ Este repositorio quedó preparado para Integración Continua (CI) en GitHub Acti
 - microservices/pagos
 - microservices/ext-payments
 - microservices/gateway
+- microservices/usuarios
 
 ### Frontends web (Angular)
 - frontends/web-client
@@ -29,6 +30,7 @@ Este repositorio quedó preparado para Integración Continua (CI) en GitHub Acti
 - .github/workflows/ci-backend-pagos.yml
 - .github/workflows/ci-backend-ext-payments.yml
 - .github/workflows/ci-backend-gateway.yml
+- .github/workflows/ci-backend-usuarios.yml
 
 ### Frontends
 - .github/workflows/ci-frontend-web-client.yml
@@ -71,6 +73,7 @@ Umbrales actuales:
 - reservas: 80
 - pagos: 80
 - gateway: 80
+- usuarios: 80
 - ext-payments: 50
 
 ### Frontends web (Angular)
@@ -101,6 +104,8 @@ Se reutilizó la configuración existente de Prettier (`.prettierrc`) generada p
   - microservices/ext-payments/**
 - ci-backend-gateway.yml:
   - microservices/gateway/**
+- ci-backend-usuarios.yml:
+  - microservices/usuarios/**
 - ci-frontend-web-client.yml:
   - frontends/web-client/**
 - ci-frontend-web-admin.yml:
@@ -115,6 +120,7 @@ Configurar como required checks en GitHub:
 - Backend CI - pagos / pagos
 - Backend CI - ext-payments / ext-payments
 - Backend CI - gateway / gateway
+- Backend CI - usuarios / usuarios
 - Frontend CI - web-client / web-client
 - Frontend CI - web-admin / web-admin
 
@@ -153,6 +159,21 @@ Required checks en `develop`:
 2. Marcar los checks de CI como required en cada regla.
 3. (Opcional) Definir `CODEOWNERS` para aprobación por dominio.
 4. (Opcional) Habilitar auto-merge solo cuando checks y approvals estén completos.
+
+### Opción automatizada (GitHub CLI)
+
+Se incluye script para configurar branch protection y required checks (incluyendo usuarios):
+
+- `.github/scripts/set-required-checks.ps1`
+
+Uso:
+
+```powershell
+gh auth login
+powershell -File .github/scripts/set-required-checks.ps1 -Owner <owner> -Repo <repo>
+```
+
+El script aplica la configuración en `develop` y `main` por defecto.
 
 ## 10) Supuestos realizados
 

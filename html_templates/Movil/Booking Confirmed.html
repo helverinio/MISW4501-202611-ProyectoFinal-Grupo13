@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .success-animation {
+            animation: scaleIn 0.5s ease-out;
+        }
+        .confetti-bg {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .booking-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .pulse-green {
+            animation: pulse-success 2s infinite;
+        }
+        @keyframes pulse-success {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter pb-20">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900">Booking Confirmed</h1>
+                    <p class="text-xs text-success">Payment successful</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <i class="fa-solid fa-circle-check text-success text-xl"></i>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Success Animation Section -->
+<section id="success-hero" class="confetti-bg">
+    <div class="max-w-md mx-auto px-4 py-8 text-center">
+        <div class="success-animation">
+            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 pulse-green">
+                <i class="fa-solid fa-check text-success text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">Payment Successful!</h2>
+            <p class="text-white/90 text-sm">Your booking has been confirmed</p>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Details Card -->
+<section id="booking-details" class="bg-white border-b border-gray-100 -mt-4 relative z-10">
+    <div class="max-w-md mx-auto px-4 py-6">
+        <div class="booking-card bg-white rounded-xl p-4 border border-gray-100">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Hotel Plaza Central</h3>
+                    <p class="text-sm text-gray-600">Standard Double Room</p>
+                    <div class="flex items-center space-x-1 mt-1">
+                        <div class="flex text-yellow-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">4.5</span>
+                    </div>
+                </div>
+                <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d96da3f2d7-b2a5b3724142e5bf2425.png" alt="luxury hotel room" />
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <i class="fa-solid fa-calendar-check text-success text-sm"></i>
+                        <span class="text-xs font-medium text-gray-700">Check-in</span>
+                    </div>
+                    <p class="text-sm font-semibold text-gray-900">Dec 15, 2024</p>
+                    <p class="text-xs text-gray-600">After 3:00 PM</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <i class="fa-solid fa-calendar-xmark text-gray-600 text-sm"></i>
+                        <span class="text-xs font-medium text-gray-700">Check-out</span>
+                    </div>
+                    <p class="text-sm font-semibold text-gray-900">Dec 18, 2024</p>
+                    <p class="text-xs text-gray-600">Before 11:00 AM</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-moon text-primary text-sm"></i>
+                    <span class="text-sm text-gray-700">3 nights</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-users text-primary text-sm"></i>
+                    <span class="text-sm text-gray-700">2 guests</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Reference -->
+<section id="booking-reference" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-700 mb-1">Booking Reference</p>
+                    <p class="text-lg font-bold text-primary">#HTL-2024-0892</p>
+                </div>
+                <button class="bg-primary text-white px-3 py-2 rounded-lg text-sm font-medium">
+                    <i class="fa-solid fa-copy mr-1"></i>
+                    Copy
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Payment Summary -->
+<section id="payment-summary" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Payment Summary</h3>
+        
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">Room (3 nights)</span>
+                <span class="text-sm font-medium text-gray-900">$180.00</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">Taxes & fees</span>
+                <span class="text-sm font-medium text-gray-900">$31.90</span>
+            </div>
+            <div class="border-t border-gray-200 pt-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-base font-bold text-gray-900">Total Paid</span>
+                    <span class="text-lg font-bold text-success">$211.90</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 mt-2">
+                <i class="fa-solid fa-credit-card text-gray-600 text-sm"></i>
+                <span class="text-sm text-gray-600">•••• 3456 (Visa)</span>
+                <i class="fa-solid fa-circle-check text-success text-sm"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Next Steps -->
+<section id="next-steps" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">What's Next?</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fa-solid fa-envelope text-white text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 text-sm">Confirmation Email Sent</h4>
+                    <p class="text-xs text-gray-600">Check your email for booking details and e-voucher</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fa-solid fa-map-location-dot text-white text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 text-sm">Hotel Location & Directions</h4>
+                    <p class="text-xs text-gray-600">Get directions and contact information</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fa-solid fa-bell text-white text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 text-sm">Check-in Reminder</h4>
+                    <p class="text-xs text-gray-600">We'll remind you 24 hours before your stay</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions -->
+<section id="quick-actions" class="bg-white">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="grid grid-cols-2 gap-3">
+            <button class="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:border-primary transition-colors">
+                <i class="fa-solid fa-download text-primary text-xl mb-2"></i>
+                <span class="text-sm font-medium text-gray-900">Download</span>
+                <span class="text-xs text-gray-600">E-Voucher</span>
+            </button>
+            
+            <button class="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:border-primary transition-colors">
+                <i class="fa-solid fa-phone text-primary text-xl mb-2"></i>
+                <span class="text-sm font-medium text-gray-900">Contact</span>
+                <span class="text-xs text-gray-600">Hotel</span>
+            </button>
+            
+            <button class="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:border-primary transition-colors">
+                <i class="fa-solid fa-calendar-plus text-primary text-xl mb-2"></i>
+                <span class="text-sm font-medium text-gray-900">Add to</span>
+                <span class="text-xs text-gray-600">Calendar</span>
+            </button>
+            
+            <button class="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:border-primary transition-colors">
+                <i class="fa-solid fa-share text-primary text-xl mb-2"></i>
+                <span class="text-sm font-medium text-gray-900">Share</span>
+                <span class="text-xs text-gray-600">Details</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Action Buttons -->
+<div id="action-buttons" class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 shadow-lg max-w-md mx-auto">
+    <div class="px-4 py-4 space-y-3">
+        <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold text-base hover:bg-blue-700 transition-colors">
+            View Booking Details
+        </button>
+        <button class="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold text-base hover:bg-gray-200 transition-colors">
+            Book Another Hotel
+        </button>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+    <div class="flex items-center justify-around py-2">
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-xs font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            <span class="text-xs font-medium mt-1">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-xs font-medium mt-1">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-primary">
+            <i class="fa-regular fa-calendar text-xl"></i>
+            <span class="text-xs font-medium mt-1">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-user text-xl"></i>
+            <span class="text-xs font-medium mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+window.addEventListener('load', function() {
+    // Copy booking reference
+    const copyButton = document.querySelector('button[class*="bg-primary"]');
+    copyButton.addEventListener('click', function() {
+        navigator.clipboard.writeText('HTL-2024-0892').then(function() {
+            copyButton.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied';
+            copyButton.classList.remove('bg-primary');
+            copyButton.classList.add('bg-success');
+            
+            setTimeout(() => {
+                copyButton.innerHTML = '<i class="fa-solid fa-copy mr-1"></i>Copy';
+                copyButton.classList.remove('bg-success');
+                copyButton.classList.add('bg-primary');
+            }, 2000);
+        });
+    });
+
+    // Add subtle animations on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    document.querySelectorAll('section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'all 0.5s ease-out';
+        observer.observe(section);
+    });
+});
+</script>
+
+</body>
+</html>

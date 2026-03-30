@@ -18,9 +18,11 @@ on:
     branches:
       - develop
       - main
+      - feature/srpint1
     types:
       - opened
       - reopened
+      - synchronize
       - ready_for_review
     # Keep PR trigger broad so required checks are always reported.
 

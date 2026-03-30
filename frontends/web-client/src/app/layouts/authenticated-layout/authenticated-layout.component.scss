@@ -1,0 +1,10 @@
+.authenticated-layout {
+  background: #fff;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.authenticated-layout__main {
+  flex: 1;
+}

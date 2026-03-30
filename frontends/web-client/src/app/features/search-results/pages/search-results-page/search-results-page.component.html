@@ -1,0 +1,67 @@
+<app-search-results-summary [criteria]="criteria()" (modify)="onModifySearch()" />
+
+<main id="main-content" class="flex-1">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <app-search-results-filters
+        [minPrice]="minPrice()"
+        [maxPrice]="maxPrice()"
+        [selectedMinPrice]="selectedMinPrice()"
+        [selectedMaxPrice]="selectedMaxPrice()"
+        [selectedAmenities]="selectedAmenities()"
+        [selectedRating]="selectedRating()"
+        [freeCancellationOnly]="freeCancellationOnly()"
+        (minPriceChange)="selectedMinPrice.set($event)"
+        (maxPriceChange)="selectedMaxPrice.set($event)"
+        (amenityToggle)="onToggleAmenity($event)"
+        (ratingChange)="selectedRating.set($event)"
+        (freeCancellationOnlyChange)="freeCancellationOnly.set($event)"
+        (clearAll)="onClearAllFilters()"
+      />
+
+      <div id="results-content" class="flex-1">
+        <app-search-results-header
+          [totalHotels]="filteredHotels().length"
+          [destination]="criteria().destination"
+          [sortBy]="sortBy()"
+          (sortByChange)="onSortChange($event)"
+        />
+
+        @if (loading()) {
+          <app-search-results-loading />
+        } @else if (errorMessage()) {
+          <app-search-results-error [message]="errorMessage()" (retry)="onRetry()" />
+        } @else if (!filteredHotels().length) {
+          <app-search-results-empty (clearFilters)="onClearAllFilters()" />
+        } @else {
+          <div id="hotel-cards" class="space-y-6">
+            @for (hotel of visibleHotels(); track hotel.id) {
+              <app-hotel-result-card [hotel]="hotel" />
+            }
+          </div>
+
+          @if (canLoadMore()) {
+            <div id="load-more" class="text-center mt-8">
+              <button
+                (click)="onLoadMore()"
+                class="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                type="button"
+              >
+                {{ t('searchResults.loadMore') }}
+              </button>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="mobile-filters-toggle" class="lg:hidden fixed bottom-4 left-4 z-40">
+  <button
+    class="bg-primary text-white shadow-lg rounded-full p-4 border border-primary hover:bg-primary-dark transition-colors"
+    type="button"
+  >
+    <i class="fa-solid fa-filter"></i>
+  </button>
+</div>

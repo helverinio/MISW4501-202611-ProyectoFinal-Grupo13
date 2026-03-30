@@ -1,0 +1,29 @@
+.brand {
+  align-items: center;
+  color: var(--color-slate-900);
+  display: inline-flex;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+.brand__icon {
+  align-items: center;
+  background: var(--color-brand-600);
+  border-radius: 0.65rem;
+  color: white;
+  display: inline-flex;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.brand__icon svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.brand__text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}

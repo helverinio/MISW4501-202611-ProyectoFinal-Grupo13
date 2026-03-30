@@ -10,6 +10,9 @@ from app.application.use_cases.hotel_use_cases import (
     CreateHotelUseCase, GetHotelUseCase, GetAllHotelesUseCase,
     GetHotelesByCiudadUseCase, UpdateHotelUseCase, DeleteHotelUseCase
 )
+from app.application.use_cases.search_available_hotels_use_case import (
+    SearchAvailableHotelsUseCase
+)
 from app.application.use_cases.habitacion_use_cases import (
     CreateHabitacionUseCase, GetHabitacionUseCase, GetAllHabitacionesUseCase,
     GetHabitacionesByHotelUseCase, UpdateHabitacionUseCase, DeleteHabitacionUseCase
