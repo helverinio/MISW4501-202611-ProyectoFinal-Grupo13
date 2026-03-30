@@ -20,22 +20,27 @@ import LanguageSelector from '../common/LanguageSelector';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  const [showPassword, setShowPassword] = useState(false);
+
+  // Login fields
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   // Registration fields
   const [nombre, setNombre] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!loginEmail.trim() || !loginPassword.trim()) {
       setError(t('auth.errors.emptyFields'));
       return;
     }
@@ -44,7 +49,7 @@ export default function LoginScreen() {
     setError(null);
 
     try {
-      const result = await AuthService.send(email, password);
+      const result = await AuthService.send(loginEmail, loginPassword);
 
       if (result.success) {
         router.replace('/screens/landing' as Href);
@@ -69,17 +74,17 @@ export default function LoginScreen() {
   };
 
   const handleRegister = async () => {
-    if (!nombre.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (!nombre.trim() || !registerEmail.trim() || !registerPassword.trim() || !confirmPassword.trim()) {
       setError(t('auth.errors.allFieldsRequired'));
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (registerPassword !== confirmPassword) {
       setError(t('auth.errors.passwordMismatch'));
       return;
     }
 
-    if (password.length < 6) {
+    if (registerPassword.length < 6) {
       setError(t('auth.errors.passwordLength'));
       return;
     }
@@ -91,15 +96,17 @@ export default function LoginScreen() {
     try {
       const result = await RegisterService.send({
         nombre,
-        email,
-        usuario: email,
-        contrasena: password,
+        email: registerEmail,
+        usuario: registerEmail,
+        contrasena: registerPassword,
       });
 
       if (result.success) {
         setSuccessMessage(t('auth.registerSuccess'));
         // Clear registration fields
         setNombre('');
+        setRegisterEmail('');
+        setRegisterPassword('');
         setConfirmPassword('');
         // Switch to login tab after a brief delay
         setTimeout(() => {
@@ -120,6 +127,9 @@ export default function LoginScreen() {
     setActiveTab(tab);
     setError(null);
     setSuccessMessage(null);
+    setShowLoginPassword(false);
+    setShowRegisterPassword(false);
+    setShowConfirmPassword(false);
   };
 
   return (
@@ -176,8 +186,8 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
-                    value={email}
-                    onChangeText={setEmail}
+                    value={loginEmail}
+                    onChangeText={setLoginEmail}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -193,18 +203,18 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholder="••••••••"
                     placeholderTextColor="#999"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
+                    value={loginPassword}
+                    onChangeText={setLoginPassword}
+                    secureTextEntry={!showLoginPassword}
                     autoCapitalize="none"
                     editable={!isLoading}
                   />
                   <TouchableOpacity 
-                    onPress={() => setShowPassword(!showPassword)}
+                    onPress={() => setShowLoginPassword(!showLoginPassword)}
                     style={styles.inputIcon}
                   >
                     <Ionicons 
-                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      name={showLoginPassword ? "eye-outline" : "eye-off-outline"} 
                       size={20} 
                       color="#999" 
                     />
@@ -267,8 +277,8 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
-                    value={email}
-                    onChangeText={setEmail}
+                    value={registerEmail}
+                    onChangeText={setRegisterEmail}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -284,18 +294,18 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholder="••••••••"
                     placeholderTextColor="#999"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
+                    value={registerPassword}
+                    onChangeText={setRegisterPassword}
+                    secureTextEntry={!showRegisterPassword}
                     autoCapitalize="none"
                     editable={!isLoading}
                   />
                   <TouchableOpacity 
-                    onPress={() => setShowPassword(!showPassword)}
+                    onPress={() => setShowRegisterPassword(!showRegisterPassword)}
                     style={styles.inputIcon}
                   >
                     <Ionicons 
-                      name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                      name={showRegisterPassword ? "eye-outline" : "eye-off-outline"} 
                       size={20} 
                       color="#999" 
                     />
