@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            DEFAULT: '#0066FF',
+                            dark: '#0052CC',
+                            light: '#3385FF',
+                        },
+                        error: {
+                            DEFAULT: '#DC2626',
+                            dark: '#B91C1C',
+                            light: '#EF4444',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-gray-50">
+
+<header id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-hotel text-primary text-2xl sm:text-3xl"></i>
+                <span class="text-xl sm:text-2xl font-bold text-gray-900">TravelHub</span>
+            </div>
+            <div class="flex items-center space-x-3 sm:space-x-6">
+                <button class="text-gray-600 hover:text-gray-900 text-sm sm:text-base">
+                    <i class="fa-regular fa-circle-question mr-1"></i>
+                    <span class="hidden sm:inline">Help</span>
+                </button>
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-primary">
+                    <span class="hidden md:inline text-sm font-medium text-gray-700">John Doe</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="cancelled-main" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+    
+    <section id="error-icon-section" class="text-center mb-6 sm:mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-error rounded-full mb-4 sm:mb-6">
+            <i class="fa-solid fa-xmark text-white text-3xl sm:text-4xl"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">Payment Cancelled</h1>
+        <p class="text-base sm:text-lg text-gray-600">Your payment was not processed and the booking was cancelled</p>
+    </section>
+
+    <section id="cancellation-alert" class="bg-red-50 border-2 border-red-200 rounded-2xl p-4 sm:p-6 mb-6">
+        <div class="flex items-start space-x-3 sm:space-x-4">
+            <div class="flex-shrink-0">
+                <i class="fa-solid fa-triangle-exclamation text-error text-xl sm:text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">What Happened?</h3>
+                <p class="text-sm sm:text-base text-gray-700 leading-relaxed mb-3">Your payment was either declined by your bank or cancelled during the checkout process. No charges were made to your account.</p>
+                <div class="bg-white rounded-lg p-3 sm:p-4 border border-red-100">
+                    <p class="text-xs sm:text-sm text-gray-600 mb-2"><span class="font-semibold text-gray-900">Transaction ID:</span> TXN-2024-CANCELLED-8X9K2M</p>
+                    <p class="text-xs sm:text-sm text-gray-600"><span class="font-semibold text-gray-900">Time:</span> March 15, 2024 at 2:45 PM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking-details-card" class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-6">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-900 p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div class="mb-3 sm:mb-0">
+                    <p class="text-gray-300 text-xs sm:text-sm mb-1">Attempted Booking</p>
+                    <p class="text-white text-xl sm:text-2xl font-bold tracking-wide">TH-2024-8X9K2M</p>
+                    <span class="inline-block mt-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">NOT CONFIRMED</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-6 lg:p-8">
+            <div class="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-200">
+                <div class="w-full sm:w-32 h-32 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 opacity-75">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2c171a0e3c-f49002de952100a919df.png" alt="luxury hotel room interior modern design king bed city view" />
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Grand Plaza Hotel & Spa</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-3">Deluxe King Room with City View</p>
+                    <div class="flex items-center space-x-4 text-xs sm:text-sm text-gray-500">
+                        <div class="flex items-center space-x-1">
+                            <i class="fa-solid fa-location-dot text-primary"></i>
+                            <span>Bogotá, Colombia</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <i class="fa-solid fa-star text-yellow-400"></i>
+                            <span class="font-semibold text-gray-900">4.8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <div id="checkin-info" class="bg-gray-50 rounded-xl p-4 opacity-75">
+                    <p class="text-xs sm:text-sm text-gray-500 mb-1">Check-in</p>
+                    <p class="text-base sm:text-lg font-semibold text-gray-900">March 15, 2024</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">After 3:00 PM</p>
+                </div>
+                <div id="checkout-info" class="bg-gray-50 rounded-xl p-4 opacity-75">
+                    <p class="text-xs sm:text-sm text-gray-500 mb-1">Check-out</p>
+                    <p class="text-base sm:text-lg font-semibold text-gray-900">March 18, 2024</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Before 12:00 PM</p>
+                </div>
+            </div>
+
+            <div id="price-summary" class="border-t border-gray-200 pt-4 sm:pt-6 opacity-75">
+                <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Payment Summary</h3>
+                <div class="space-y-2 sm:space-y-3 text-sm sm:text-base">
+                    <div class="flex justify-between text-gray-600">
+                        <span>3 nights × $180</span>
+                        <span>$540.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Service fee</span>
+                        <span>$27.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Taxes</span>
+                        <span>$54.30</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 sm:pt-4 border-t border-gray-200">
+                        <span class="text-lg sm:text-xl font-bold text-gray-900">Total Amount</span>
+                        <span class="text-xl sm:text-2xl font-bold text-gray-900">$621.30</span>
+                    </div>
+                </div>
+                <div class="mt-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-center space-x-2 text-xs sm:text-sm text-error">
+                    <i class="fa-solid fa-ban"></i>
+                    <span class="font-semibold">Payment was not processed - No charges applied</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reasons-section" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 mb-6">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-4">Common Reasons for Payment Cancellation</h3>
+        <div class="space-y-3">
+            <div class="flex items-start space-x-3 pb-3 border-b border-gray-100">
+                <i class="fa-solid fa-credit-card text-gray-400 text-lg mt-1"></i>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Insufficient Funds</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Your card may not have enough available balance.</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3 pb-3 border-b border-gray-100">
+                <i class="fa-solid fa-shield-halved text-gray-400 text-lg mt-1"></i>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Security Block</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Your bank may have flagged this as a suspicious transaction.</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3 pb-3 border-b border-gray-100">
+                <i class="fa-solid fa-calendar-xmark text-gray-400 text-lg mt-1"></i>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Expired Card</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">The card may have expired or details were entered incorrectly.</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3">
+                <i class="fa-solid fa-user-xmark text-gray-400 text-lg mt-1"></i>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Manual Cancellation</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">You may have cancelled the payment during checkout.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="action-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <button class="flex items-center justify-center space-x-2 bg-primary text-white px-6 py-3.5 sm:py-4 rounded-xl font-semibold hover:bg-primary-dark transition-colors text-sm sm:text-base shadow-lg shadow-primary/20">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Try Again</span>
+        </button>
+        <button class="flex items-center justify-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3.5 sm:py-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Search Other Hotels</span>
+        </button>
+    </section>
+
+    <section id="help-section" class="bg-blue-50 border border-blue-100 rounded-xl p-4 sm:p-6 mb-6">
+        <div class="flex items-start space-x-3 sm:space-x-4">
+            <div class="flex-shrink-0">
+                <i class="fa-solid fa-headset text-primary text-xl sm:text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">Need Help?</h3>
+                <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-3">If you're having trouble completing your booking or have questions about the cancellation, our support team is here to help 24/7.</p>
+                <button class="inline-flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary-dark transition-colors text-sm">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Contact Support</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="next-steps" class="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 mb-6">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-4">What You Can Do Next</h3>
+        <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-phone text-primary text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Contact Your Bank</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Verify that your card is active and has sufficient funds available.</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-credit-card text-primary text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Try Another Payment Method</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Use a different card or select an alternative payment option.</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-bookmark text-primary text-sm"></i>
+                </div>
+                <div>
+                    <p class="font-medium text-gray-900 text-sm sm:text-base">Save for Later</p>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">Add this property to your wishlist and complete the booking when ready.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="trust-badges" class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 py-6 sm:py-8">
+        <div class="flex items-center space-x-2 text-gray-500 text-xs sm:text-sm">
+            <i class="fa-solid fa-shield-halved text-primary text-lg sm:text-xl"></i>
+            <span>Secure Payment</span>
+        </div>
+        <div class="flex items-center space-x-2 text-gray-500 text-xs sm:text-sm">
+            <i class="fa-solid fa-lock text-primary text-lg sm:text-xl"></i>
+            <span>SSL Encrypted</span>
+        </div>
+        <div class="flex items-center space-x-2 text-gray-500 text-xs sm:text-sm">
+            <i class="fa-solid fa-headset text-primary text-lg sm:text-xl"></i>
+            <span>24/7 Support</span>
+        </div>
+        <div class="flex items-center space-x-2 text-gray-500 text-xs sm:text-sm">
+            <i class="fa-solid fa-award text-primary text-lg sm:text-xl"></i>
+            <span>Best Price Guarantee</span>
+        </div>
+    </section>
+
+</main>
+
+<footer id="footer" class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div id="footer-brand" class="md:col-span-2">
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-plane text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold">TravelHub</span>
+                </div>
+                <p class="text-gray-400 mb-4">Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.</p>
+                <div class="flex space-x-4">
+                    <i class="fa-brands fa-facebook text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-twitter text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-instagram text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-linkedin text-gray-400 hover:text-white cursor-pointer"></i>
+                </div>
+            </div>
+            
+            <div id="footer-links-1">
+                <h4 class="font-semibold mb-4">Company</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                    <li><a href="#" class="hover:text-white">Press</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div id="footer-links-2">
+                <h4 class="font-semibold mb-4">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white">Trust & Safety</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 TravelHub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+</html>

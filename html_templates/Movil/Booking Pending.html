@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .pending-pulse {
+            animation: pulse 2s infinite;
+        }
+        .success-icon {
+            animation: checkmark 0.6s ease-in-out;
+        }
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .pending-status {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter pb-20">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900">Booking Status</h1>
+                    <p class="text-xs text-gray-500">Payment pending</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <i class="fa-solid fa-clock text-warning text-lg"></i>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Status Banner -->
+<section id="status-banner" class="pending-status">
+    <div class="max-w-md mx-auto px-4 py-6">
+        <div class="text-center text-white">
+            <div class="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-clock text-2xl pending-pulse"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Payment Pending</h2>
+            <p class="text-sm opacity-90">Your booking is confirmed but payment is still processing</p>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Confirmation Card -->
+<section id="booking-confirmation" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-6">
+        <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-check text-success text-2xl success-icon"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Booking Confirmed!</h2>
+            <p class="text-gray-600">Confirmation #HTL-2024-0158</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+            <div class="flex items-start space-x-3">
+                <div class="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e02ff79233-55b71a366b275fdfacee.png" alt="luxury hotel room interior with elegant decor and comfortable bedding" />
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Hotel Plaza Central</h3>
+                    <p class="text-sm text-gray-600 mb-1">Standard Double Room</p>
+                    <div class="flex items-center space-x-1 mb-2">
+                        <div class="flex text-yellow-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">4.5</span>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        <p>Dec 15-18, 2024 • 3 nights</p>
+                        <p>2 guests</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Payment Status Details -->
+<section id="payment-status" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Payment Status</h3>
+        
+        <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+            <div class="flex items-start space-x-3">
+                <i class="fa-solid fa-exclamation-triangle text-warning text-xl mt-1"></i>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-900 mb-1">Payment Processing</h4>
+                    <p class="text-sm text-gray-700 mb-2">Your payment of $211.90 is currently being processed by your bank. This usually takes 1-3 business days.</p>
+                    <div class="text-xs text-gray-600">
+                        <p>• Your room is reserved and guaranteed</p>
+                        <p>• You'll receive an email once payment is confirmed</p>
+                        <p>• No action needed from your side</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between py-2">
+                <span class="text-gray-600">Payment Method</span>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-brands fa-cc-visa text-blue-600"></i>
+                    <span class="text-sm font-medium">•••• 3456</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between py-2">
+                <span class="text-gray-600">Amount</span>
+                <span class="font-semibold">$211.90</span>
+            </div>
+            <div class="flex items-center justify-between py-2">
+                <span class="text-gray-600">Transaction ID</span>
+                <span class="text-sm text-gray-500">TXN-24-0158-PAY</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Important Information -->
+<section id="important-info" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Important Information</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+                <i class="fa-solid fa-shield-halved text-success text-lg mt-1"></i>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Your Booking is Secure</h4>
+                    <p class="text-sm text-gray-600">Even with pending payment, your room is guaranteed and will not be given to other guests.</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <i class="fa-solid fa-calendar-check text-primary text-lg mt-1"></i>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Check-in Details</h4>
+                    <p class="text-sm text-gray-600">Check-in: Dec 15, 3:00 PM<br>Check-out: Dec 18, 11:00 AM</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <i class="fa-solid fa-envelope text-gray-500 text-lg mt-1"></i>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-1">Confirmation Email</h4>
+                    <p class="text-sm text-gray-600">Sent to john.doe@email.com with all booking details and hotel contact information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Next Steps -->
+<section id="next-steps" class="bg-white border-b border-gray-100">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">What Happens Next?</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                <div>
+                    <h4 class="font-semibold text-gray-900">Payment Processing</h4>
+                    <p class="text-sm text-gray-600">Your bank is processing the payment (1-3 business days)</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-gray-300 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                <div>
+                    <h4 class="font-semibold text-gray-900">Payment Confirmation</h4>
+                    <p class="text-sm text-gray-600">You'll receive an email once payment is successful</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-gray-300 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                <div>
+                    <h4 class="font-semibold text-gray-900">Enjoy Your Stay</h4>
+                    <p class="text-sm text-gray-600">Check-in at the hotel with your confirmation number</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Action Buttons -->
+<section id="action-buttons" class="bg-white">
+    <div class="max-w-md mx-auto px-4 py-6 space-y-3">
+        <button class="w-full bg-primary text-white py-4 rounded-lg font-semibold text-base hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-download"></i>
+            <span>Download Confirmation</span>
+        </button>
+        
+        <button class="w-full bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold text-base hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-phone"></i>
+            <span>Contact Hotel</span>
+        </button>
+        
+        <button class="w-full bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold text-base hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-headset"></i>
+            <span>Customer Support</span>
+        </button>
+    </div>
+</section>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+    <div class="flex items-center justify-around py-2">
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-xs font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            <span class="text-xs font-medium mt-1">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-xs font-medium mt-1">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-primary">
+            <i class="fa-regular fa-calendar text-xl"></i>
+            <span class="text-xs font-medium mt-1">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-user text-xl"></i>
+            <span class="text-xs font-medium mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+window.addEventListener('load', function() {
+    // Simulate real-time status updates
+    const statusUpdates = [
+        { time: 5000, message: "Payment verification in progress..." },
+        { time: 10000, message: "Contacting your bank for authorization..." },
+        { time: 15000, message: "Processing payment securely..." }
+    ];
+    
+    let currentUpdate = 0;
+    
+    function showStatusUpdate() {
+        if (currentUpdate < statusUpdates.length) {
+            // You could show toast notifications here
+            console.log(statusUpdates[currentUpdate].message);
+            currentUpdate++;
+        }
+    }
+    
+    statusUpdates.forEach(update => {
+        setTimeout(showStatusUpdate, update.time);
+    });
+    
+    // Add click handlers for action buttons
+    document.querySelector('button:has(.fa-download)').addEventListener('click', function() {
+        // Simulate download
+        alert('Downloading confirmation PDF...');
+    });
+    
+    document.querySelector('button:has(.fa-phone)').addEventListener('click', function() {
+        // Simulate phone call
+        alert('Calling Hotel Plaza Central: +1 (555) 123-4567');
+    });
+    
+    document.querySelector('button:has(.fa-headset)').addEventListener('click', function() {
+        // Simulate support chat
+        alert('Opening customer support chat...');
+    });
+});
+</script>
+
+</body>
+</html>

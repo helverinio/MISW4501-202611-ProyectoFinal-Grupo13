@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateHotelUseCase, GetHotelUseCase, GetAllHotelesUseCase,
     GetHotelesByCiudadUseCase, UpdateHotelUseCase, DeleteHotelUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/hoteles', methods=['POST'])
-def create_hotel():
+@require_token
+def create_hotel(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -40,7 +42,8 @@ def create_hotel():
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>', methods=['GET'])
-def get_hotel(hotel_id):
+@require_token
+def get_hotel(hotel_id, current_usuario=None):
     use_case = GetHotelUseCase(get_repository())
     hotel = use_case.execute(hotel_id)
 
@@ -58,7 +61,8 @@ def get_hotel(hotel_id):
 
 
 @api_v1_bp.route('/hoteles', methods=['GET'])
-def get_all_hoteles():
+@require_token
+def get_all_hoteles(current_usuario=None):
     use_case = GetAllHotelesUseCase(get_repository())
     hoteles = use_case.execute()
 
@@ -73,7 +77,8 @@ def get_all_hoteles():
 
 
 @api_v1_bp.route('/ciudades/<ciudad_id>/hoteles', methods=['GET'])
-def get_hoteles_by_ciudad(ciudad_id):
+@require_token
+def get_hoteles_by_ciudad(ciudad_id, current_usuario=None):
     use_case = GetHotelesByCiudadUseCase(get_repository())
     hoteles = use_case.execute(ciudad_id)
 
@@ -88,7 +93,8 @@ def get_hoteles_by_ciudad(ciudad_id):
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>', methods=['PUT'])
-def update_hotel(hotel_id):
+@require_token
+def update_hotel(hotel_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -110,7 +116,8 @@ def update_hotel(hotel_id):
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>', methods=['DELETE'])
-def delete_hotel(hotel_id):
+@require_token
+def delete_hotel(hotel_id, current_usuario=None):
     use_case = DeleteHotelUseCase(get_repository())
     deleted = use_case.execute(hotel_id)
 

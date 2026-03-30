@@ -80,6 +80,22 @@ services:
       timeout: 5s
       retries: 5
 
+  usuarios-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: usuarios
+    volumes:
+      - usuarios-db-data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   # Reservas instances (scaled for load balancing)
   reservas-1:
     build:
@@ -199,6 +215,23 @@ services:
         condition: service_healthy
     restart: on-failure
 
+  usuarios:
+    build:
+      context: ./microservices/usuarios
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@usuarios-db:5432/usuarios
+      JWT_SECRET_KEY: jwt-secret-key-change-in-production
+      JWT_ACCESS_TOKEN_EXPIRES: 3600
+      JWT_REFRESH_TOKEN_EXPIRES: 604800
+    ports:
+      - "5003:5003"
+    depends_on:
+      usuarios-db:
+        condition: service_healthy
+    restart: on-failure
+
   # Gateway instances (scaled for load balancing)
   gateway-1:
     build:
@@ -208,6 +241,7 @@ services:
       FLASK_ENV: development
       RESERVAS_SERVICE_URL: http://reservas-1:5000
       PAGOS_SERVICE_URL: http://pagos:5002
+      USUARIOS_SERVICE_URL: http://usuarios:5003
       GUNICORN_WORKERS: 4
       GUNICORN_THREADS: 2
     depends_on:
@@ -215,6 +249,7 @@ services:
       - reservas-2
       - reservas-3
       - pagos
+      - usuarios
     restart: on-failure
 
   gateway-2:
@@ -225,6 +260,7 @@ services:
       FLASK_ENV: development
       RESERVAS_SERVICE_URL: http://reservas-2:5000
       PAGOS_SERVICE_URL: http://pagos:5002
+      USUARIOS_SERVICE_URL: http://usuarios:5003
       GUNICORN_WORKERS: 4
       GUNICORN_THREADS: 2
     depends_on:
@@ -232,6 +268,7 @@ services:
       - reservas-2
       - reservas-3
       - pagos
+      - usuarios
     restart: on-failure
 
   gateway-3:
@@ -242,6 +279,7 @@ services:
       FLASK_ENV: development
       RESERVAS_SERVICE_URL: http://reservas-3:5000
       PAGOS_SERVICE_URL: http://pagos:5002
+      USUARIOS_SERVICE_URL: http://usuarios:5003
       GUNICORN_WORKERS: 4
       GUNICORN_THREADS: 2
     depends_on:
@@ -249,6 +287,7 @@ services:
       - reservas-2
       - reservas-3
       - pagos
+      - usuarios
     restart: on-failure
 
   # Nginx Load Balancer
@@ -271,4 +310,5 @@ volumes:
   reservas-db-data:
   ext-payments-db-data:
   pagos-db-data:
+  usuarios-db-data:
   redis-data:

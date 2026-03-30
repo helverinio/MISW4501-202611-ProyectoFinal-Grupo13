@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+
+<!-- Header -->
+<header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900">Mexico City</h1>
+                    <p class="text-xs text-gray-500">Dec 15 - Dec 18 • 2 Guests</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button class="p-2 text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fa-solid fa-map text-lg"></i>
+                </button>
+                <button class="p-2 text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Filters & Sort Bar -->
+<section id="filters-sort-bar" class="bg-white border-b border-gray-100 sticky top-16 z-40">
+    <div class="max-w-md mx-auto px-4 py-3">
+        <div class="flex items-center space-x-3 overflow-x-auto scrollbar-hide">
+            <button id="filter-btn" class="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg whitespace-nowrap">
+                <i class="fa-solid fa-filter text-sm"></i>
+                <span class="text-sm font-medium">Filters</span>
+            </button>
+            <button class="flex items-center space-x-2 border border-gray-200 px-3 py-2 rounded-lg whitespace-nowrap">
+                <span class="text-sm font-medium">Price</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+            <button class="flex items-center space-x-2 border border-gray-200 px-3 py-2 rounded-lg whitespace-nowrap">
+                <span class="text-sm font-medium">Rating</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+            <button class="border border-gray-200 px-3 py-2 rounded-lg whitespace-nowrap">
+                <span class="text-sm font-medium">Free WiFi</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Results Count -->
+<section id="results-count" class="bg-white">
+    <div class="max-w-md mx-auto px-4 py-3 border-b border-gray-100">
+        <p class="text-sm text-gray-600">
+            <span class="font-semibold text-gray-900">248 hotels</span> found in Mexico City
+        </p>
+    </div>
+</section>
+
+<!-- Hotel Results -->
+<main id="hotel-results" class="max-w-md mx-auto pb-20">
+    <!-- Hotel Card 1 -->
+    <div id="hotel-card-1" class="bg-white border-b border-gray-100 p-4">
+        <div class="flex space-x-3">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1b34a02f32-2603eb6ead52b1d54eee.png" alt="luxury hotel lobby with modern design and marble floors in Mexico City" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate pr-2">Hotel Plaza Central</h3>
+                    <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fa-regular fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.5 (324 reviews)</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Polanco • 0.8 km from center</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs font-medium rounded">
+                        <i class="fa-solid fa-wifi text-xs mr-1"></i>
+                        Free WiFi
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
+                        Free cancellation
+                    </span>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500">per night</p>
+                        <p class="text-lg font-bold text-gray-900">$65</p>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotel Card 2 -->
+    <div id="hotel-card-2" class="bg-white border-b border-gray-100 p-4">
+        <div class="flex space-x-3">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/198b7c3663-89104d8cbb362ad71374.png" alt="boutique hotel room with contemporary Mexican decor and city view" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate pr-2">Boutique Roma Norte</h3>
+                    <button class="p-1 text-red-500">
+                        <i class="fa-solid fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.8 (156 reviews)</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Roma Norte • 1.2 km from center</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs font-medium rounded">
+                        <i class="fa-solid fa-swimming-pool text-xs mr-1"></i>
+                        Pool
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded">
+                        <i class="fa-solid fa-utensils text-xs mr-1"></i>
+                        Breakfast
+                    </span>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500">per night</p>
+                        <p class="text-lg font-bold text-gray-900">$89</p>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotel Card 3 -->
+    <div id="hotel-card-3" class="bg-white border-b border-gray-100 p-4">
+        <div class="flex space-x-3">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b128703632-79e00bd0c2a79aea8360.png" alt="budget hotel exterior with clean modern facade in Mexico City" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate pr-2">City Express Centro</h3>
+                    <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fa-regular fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.2 (89 reviews)</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Centro Histórico • 0.5 km from center</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs font-medium rounded">
+                        <i class="fa-solid fa-car text-xs mr-1"></i>
+                        Free Parking
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
+                        Free cancellation
+                    </span>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500">per night</p>
+                        <p class="text-lg font-bold text-gray-900">$42</p>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotel Card 4 -->
+    <div id="hotel-card-4" class="bg-white border-b border-gray-100 p-4">
+        <div class="flex space-x-3">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f8bfdb9bba-15681137fe4203573bcd.png" alt="luxury hotel suite with panoramic Mexico City skyline view" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate pr-2">Grand Hotel Chapultepec</h3>
+                    <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fa-regular fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.9 (412 reviews)</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Chapultepec • 2.1 km from center</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs font-medium rounded">
+                        <i class="fa-solid fa-dumbbell text-xs mr-1"></i>
+                        Gym
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded">
+                        <i class="fa-solid fa-spa text-xs mr-1"></i>
+                        Spa
+                    </span>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500">per night</p>
+                        <p class="text-lg font-bold text-gray-900">$156</p>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotel Card 5 -->
+    <div id="hotel-card-5" class="bg-white border-b border-gray-100 p-4">
+        <div class="flex space-x-3">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/03fa52ed55-e0cf10372139110ff624.png" alt="modern business hotel lobby with sleek design and professional atmosphere" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate pr-2">Business Tower Reforma</h3>
+                    <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fa-regular fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-1 mb-2">
+                    <div class="flex text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">4.3 (267 reviews)</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Zona Rosa • 1.5 km from center</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="inline-flex items-center px-2 py-1 bg-success/10 text-success text-xs font-medium rounded">
+                        <i class="fa-solid fa-briefcase text-xs mr-1"></i>
+                        Business Center
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
+                        Free cancellation
+                    </span>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500">per night</p>
+                        <p class="text-lg font-bold text-gray-900">$78</p>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Filter Modal -->
+<div id="filter-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl max-w-md mx-auto max-h-[80vh] overflow-y-auto">
+        <div class="p-4 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-bold text-gray-900">Filters</h2>
+                <button id="close-filter" class="p-2 text-gray-500 hover:text-gray-700">
+                    <i class="fa-solid fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4 space-y-6">
+            <!-- Price Range -->
+            <div>
+                <h3 class="font-semibold text-gray-900 mb-3">Price per night</h3>
+                <div class="flex items-center space-x-4">
+                    <input type="range" min="20" max="200" value="50" class="flex-1">
+                </div>
+                <div class="flex justify-between text-sm text-gray-600 mt-2">
+                    <span>$20</span>
+                    <span>$200+</span>
+                </div>
+            </div>
+
+            <!-- Amenities -->
+            <div>
+                <h3 class="font-semibold text-gray-900 mb-3">Amenities</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">Free WiFi</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">Swimming Pool</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">Free Breakfast</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">Free Parking</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Rating -->
+            <div>
+                <h3 class="font-semibold text-gray-900 mb-3">Guest Rating</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="rating" class="text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">4.5+ Excellent</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="rating" class="text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">4.0+ Very Good</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="rating" class="text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">3.5+ Good</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex space-x-3">
+                <button class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium">
+                    Clear All
+                </button>
+                <button class="flex-1 bg-primary text-white py-3 rounded-lg font-medium">
+                    Apply Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto">
+    <div class="flex items-center justify-around py-2">
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-xs font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-primary">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i>
+            <span class="text-xs font-medium mt-1">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-xs font-medium mt-1">Favorites</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-calendar text-xl"></i>
+            <span class="text-xs font-medium mt-1">Bookings</span>
+        </button>
+        <button class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-regular fa-user text-xl"></i>
+            <span class="text-xs font-medium mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtn = document.getElementById('filter-btn');
+    const filterModal = document.getElementById('filter-modal');
+    const closeFilter = document.getElementById('close-filter');
+
+    filterBtn.addEventListener('click', function() {
+        filterModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeFilter.addEventListener('click', function() {
+        filterModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    filterModal.addEventListener('click', function(e) {
+        if (e.target === filterModal) {
+            filterModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

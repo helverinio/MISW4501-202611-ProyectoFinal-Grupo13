@@ -25,7 +25,8 @@
       "environment": [
         { "name": "FLASK_ENV", "value": "production" },
         { "name": "RESERVAS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5000" },
-        { "name": "PAGOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5002" }
+        { "name": "PAGOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5002" },
+        { "name": "USUARIOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5003" }
       ],
       "secrets": [
         { "name": "SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" }

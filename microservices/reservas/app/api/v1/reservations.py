@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateReservationUseCase,
     GetReservationUseCase,
@@ -13,7 +14,8 @@ def get_repository():
     return SQLAlchemyReservationRepository()
 
 @api_v1_bp.route('/reservations', methods=['POST'])
-def create_reservation():
+@require_token
+def create_reservation(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -39,7 +41,8 @@ def create_reservation():
     }), 201
 
 @api_v1_bp.route('/reservations/<reservation_id>', methods=['GET'])
-def get_reservation(reservation_id):
+@require_token
+def get_reservation(reservation_id, current_usuario=None):
     use_case = GetReservationUseCase(get_repository())
     reservation = use_case.execute(reservation_id)
     
@@ -57,7 +60,8 @@ def get_reservation(reservation_id):
     })
 
 @api_v1_bp.route('/reservations', methods=['GET'])
-def get_all_reservations():
+@require_token
+def get_all_reservations(current_usuario=None):
     use_case = GetAllReservationsUseCase(get_repository())
     reservations = use_case.execute()
     
@@ -72,7 +76,8 @@ def get_all_reservations():
     } for r in reservations])
 
 @api_v1_bp.route('/reservations/<reservation_id>', methods=['PUT'])
-def update_reservation(reservation_id):
+@require_token
+def update_reservation(reservation_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -94,7 +99,8 @@ def update_reservation(reservation_id):
     })
 
 @api_v1_bp.route('/reservations/<reservation_id>', methods=['DELETE'])
-def delete_reservation(reservation_id):
+@require_token
+def delete_reservation(reservation_id, current_usuario=None):
     use_case = DeleteReservationUseCase(get_repository())
     deleted = use_case.execute(reservation_id)
     

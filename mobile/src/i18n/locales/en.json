@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "TravelHub",
+    "secure": "Secure",
+    "encrypted": "Encrypted",
+    "certified": "Certified",
+    "securityMessage": "Your data is protected with bank-level encryption"
+  },
+  "auth": {
+    "login": "Log In",
+    "register": "Create Account",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "username": "Username",
+    "usernamePlaceholder": "johndoe",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "loginButton": "Log In",
+    "registerButton": "Create Account",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Account created successfully! You can now log in.",
+    "errors": {
+      "emptyFields": "Please enter email and password",
+      "allFieldsRequired": "Please fill in all fields",
+      "passwordMismatch": "Passwords do not match",
+      "passwordLength": "Password must be at least 6 characters",
+      "loginFailed": "Login failed. Please try again.",
+      "registerFailed": "Account creation failed. Please try again.",
+      "unexpectedError": "An unexpected error occurred. Please try again."
+    }
+  },
+  "landing": {
+    "welcome": "Welcome",
+    "successMessage": "You have successfully logged in!",
+    "signOut": "Sign Out"
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select Language",
+    "english": "English",
+    "spanish": "Español",
+    "portuguese": "Português"
+  }
+}

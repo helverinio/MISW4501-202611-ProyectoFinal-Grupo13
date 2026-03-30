@@ -1,0 +1,14 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-10 text-center">
+  <i class="fa-solid fa-circle-exclamation text-warning text-3xl"></i>
+  <h3 class="text-xl font-semibold text-gray-900 mt-4">
+    {{ t('searchResults.states.errorTitle') }}
+  </h3>
+  <p class="text-gray-600 mt-2">{{ message || t('searchResults.states.errorDescription') }}</p>
+  <button
+    (click)="onRetry()"
+    class="mt-5 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium"
+    type="button"
+  >
+    {{ t('searchResults.states.retry') }}
+  </button>
+</div>

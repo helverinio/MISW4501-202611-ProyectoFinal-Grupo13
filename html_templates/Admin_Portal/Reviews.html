@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+    <header id="header" class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-hotel text-white text-sm"></i>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full">
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-900">Admin User</p>
+                            <p class="text-xs text-gray-500">Hotel Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-chart-line w-5 mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-calendar-check w-5 mr-3"></i>
+                    Reservations
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-hotel w-5 mr-3"></i>
+                    Properties
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    Guests
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+                    <i class="fas fa-star w-5 mr-3"></i>
+                    Reviews & Ratings
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-dollar-sign w-5 mr-3"></i>
+                    Revenue
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                    <i class="fas fa-cog w-5 mr-3"></i>
+                    Settings
+                </a>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                        <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="flex-1 p-4 sm:p-6 lg:p-8">
+            <div id="reviews-header" class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Guest Reviews & Ratings</h1>
+                        <p class="text-gray-600 text-sm">Monitor and analyze customer feedback across all properties</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                        <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Reviews
+                        </button>
+                        <button class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reviews-stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+                <div id="average-rating-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-star text-yellow-600 text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">+0.2</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Average Rating</h3>
+                    <p class="text-3xl font-bold text-gray-900">4.6</p>
+                    <p class="text-xs text-gray-500 mt-1">out of 5 stars</p>
+                </div>
+
+                <div id="total-reviews-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-comment text-primary-600 text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">+12%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Total Reviews</h3>
+                    <p class="text-3xl font-bold text-gray-900">2,847</p>
+                </div>
+
+                <div id="positive-reviews-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-thumbs-up text-green-600 text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Positive (4-5★)</h3>
+                    <p class="text-3xl font-bold text-gray-900">87%</p>
+                </div>
+
+                <div id="response-rate-stat" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-reply text-blue-600 text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded-full">-5%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Response Rate</h3>
+                    <p class="text-3xl font-bold text-gray-900">73%</p>
+                </div>
+            </div>
+
+            <div id="filters-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    <div id="property-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Property</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">All Properties</option>
+                            <option value="grand-hotel">Grand Hotel Plaza</option>
+                            <option value="sunset-beach">Sunset Beach Resort</option>
+                            <option value="city-center">City Center Hotel</option>
+                        </select>
+                    </div>
+                    
+                    <div id="rating-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">All Ratings</option>
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
+                            <option value="1">1 Star</option>
+                        </select>
+                    </div>
+                    
+                    <div id="date-from-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                        <input type="date" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div id="date-to-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                        <input type="date" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div id="sentiment-filter" class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sentiment</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">All</option>
+                            <option value="positive">Positive</option>
+                            <option value="neutral">Neutral</option>
+                            <option value="negative">Negative</option>
+                        </select>
+                    </div>
+                    
+                    <div id="filter-actions" class="col-span-1 flex items-end space-x-2">
+                        <button class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-filter mr-2"></i>
+                            Filter
+                        </button>
+                        <button class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reviews-list-section" class="bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-1">Guest Reviews</h2>
+                            <p class="text-sm text-gray-600">Complete list of all customer feedback</p>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option>Latest First</option>
+                                <option>Oldest First</option>
+                                <option>Highest Rated</option>
+                                <option>Lowest Rated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reviews-list" class="divide-y divide-gray-100">
+                    <div id="review-1" class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Guest" class="w-12 h-12 rounded-full flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-sm font-semibold text-gray-900">Sarah Johnson</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                            </div>
+                                            <span class="ml-2 text-sm font-medium text-gray-900">5.0</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">2 days ago</span>
+                                </div>
+                                <div class="flex items-center space-x-4 mb-3">
+                                    <span class="text-sm text-primary-600 font-medium">Grand Hotel Plaza</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">Deluxe Suite #205</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">3 nights</span>
+                                </div>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">"Outstanding service and beautiful accommodations! The staff went above and beyond to make our stay memorable. The room was immaculate, the amenities were top-notch, and the location was perfect. We especially loved the spa and restaurant. Will definitely be returning!"</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Excellent Service</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Clean Rooms</span>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">Great Location</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-xs text-gray-500">Verified Stay</span>
+                                        <span class="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                            <i class="fas fa-check-circle mr-1"></i>
+                                            Positive
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-flag text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-external-link-alt text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="review-2" class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Guest" class="w-12 h-12 rounded-full flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-sm font-semibold text-gray-900">Michael Chen</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="far fa-star text-xs"></i>
+                                            </div>
+                                            <span class="ml-2 text-sm font-medium text-gray-900">4.0</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">5 days ago</span>
+                                </div>
+                                <div class="flex items-center space-x-4 mb-3">
+                                    <span class="text-sm text-primary-600 font-medium">Sunset Beach Resort</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">Ocean View Room #312</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">5 nights</span>
+                                </div>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">"Great location with stunning ocean views. The beach access was fantastic and the pool area was well-maintained. However, the check-in process took longer than expected and the room service could be faster. Overall, a good experience but there's room for improvement."</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Great Views</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">Slow Check-in</span>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Beach Access</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-xs text-gray-500">Verified Stay</span>
+                                        <span class="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                                            <i class="fas fa-minus-circle mr-1"></i>
+                                            Neutral
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-flag text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-external-link-alt text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="review-3" class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Guest" class="w-12 h-12 rounded-full flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-sm font-semibold text-gray-900">Emma Rodriguez</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="far fa-star text-xs"></i>
+                                                <i class="far fa-star text-xs"></i>
+                                                <i class="far fa-star text-xs"></i>
+                                            </div>
+                                            <span class="ml-2 text-sm font-medium text-gray-900">2.0</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">1 week ago</span>
+                                </div>
+                                <div class="flex items-center space-x-4 mb-3">
+                                    <span class="text-sm text-primary-600 font-medium">City Center Hotel</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">Standard Room #105</span>
+                                    <span class="text-sm text-gray-500">•</span>
+                                    <span class="text-sm text-gray-500">2 nights</span>
+                                </div>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">"Unfortunately, our stay was disappointing. The room had maintenance issues, the air conditioning wasn't working properly, and the noise from the street made it difficult to sleep. The staff was apologetic but couldn't resolve the issues quickly enough."</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Maintenance Issues</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Noisy</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">AC Problems</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-xs text-gray-500">Verified Stay</span>
+                                        <span class="inline-flex items-center px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            Negative
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-flag text-sm"></i>
+                                        </button>
+                                        <button class="p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                                            <i class="fas fa-external-link-alt text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="review-4" class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-9.jpg" alt="Guest" class="w-12 h-12 rounded-full flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-sm font-semibold text-gray-900">James Wilson</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                                <i class="fas fa-star text-xs"></i>
+                                            </div>
+                                            <span class="ml-2 text-sm font-medium text-gray-900">5.0</span>

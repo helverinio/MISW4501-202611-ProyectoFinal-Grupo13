@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::webkit-scrollbar { display: none;}
+        * { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        'primary-dark': '#1D4ED8',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        gray: {
+                            50: '#F9FAFB',
+                            100: '#F3F4F6',
+                            200: '#E5E7EB',
+                            300: '#D1D5DB',
+                            400: '#9CA3AF',
+                            500: '#6B7280',
+                            600: '#4B5563',
+                            700: '#374151',
+                            800: '#1F2937',
+                            900: '#111827'
+                        }
+                    },
+                    /*colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a'
+                        },
+                        error: {
+                            50: '#fef2f2',
+                            500: '#ef4444',
+                            600: '#dc2626'
+                        },
+                        gray: {
+                            50: '#F9FAFB',
+                            100: '#F3F4F6',
+                            200: '#E5E7EB',
+                            300: '#D1D5DB',
+                            400: '#9CA3AF',
+                            500: '#6B7280',
+                            600: '#4B5563',
+                            700: '#374151',
+                            800: '#1F2937',
+                            900: '#111827'
+                        }
+                    },*/
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white min-h-screen font-inter">
+    <!-- Header -->
+    <header id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+            <div id="logo-section" class="flex items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-plane text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">TravelHub</span>
+                </div>
+            </div>
+
+                <!-- Navigation -->
+                <nav id="main-navigation" class="hidden lg:flex items-center space-x-8">
+                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">Traveler Home</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900">Search Results</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900">My Reservations</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900">Account & Preferences</a>
+                </nav>
+
+                <!-- Right side controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Language & Currency Selector -->
+                <div id="language-currency" class="hidden sm:flex items-center space-x-3">
+                    <select class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option>🇺🇸 English</option>
+                        <option>🇪🇸 Español</option>
+                        <option>🇧🇷 Português</option>
+                    </select>
+                    <select class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option>USD</option>
+                        <option>ARS</option>
+                        <option>CLP</option>
+                        <option>PEN</option>
+                        <option>COP</option>
+                        <option>MXN</option>
+                    </select>
+                </div>
+                
+
+                    <!-- User Profile -->
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <button class="flex items-center space-x-2 text-sm text-gray-700 hover:text-gray-900">
+                                <img class="h-8 w-8 rounded-full" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Profile">
+                                <span class="hidden sm:block">Sarah</span>
+                                <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav id="mobile-navigation" class="lg:hidden bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex space-x-8 overflow-x-auto py-4">
+                <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1 whitespace-nowrap">Traveler Home</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 whitespace-nowrap">Search Results</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 whitespace-nowrap">My Reservations</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900 whitespace-nowrap">Account & Preferences</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1">
+        <!-- Hero Section -->
+        <section id="hero-section" class="bg-gradient-to-br from-blue-600 to-primary h-[600px] relative overflow-hidden">
+            <div class="absolute inset-0">
+                <img class="w-full h-full object-cover opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5cf3c6e393-88dbb14219cb8ba2cc8b.png" alt="beautiful tropical beach resort with palm trees and crystal clear water, luxury hotel in background, aerial view" />
+            </div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+                <div class="text-center w-full">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Find your perfect getaway</h1>
+                    <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto">Discover amazing hotels across Latin America with unbeatable prices and instant booking</p>
+                    
+                    <!-- Search Bar -->
+                    <div id="search-bar" class="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl mx-auto">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Where to?</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-location-dot absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="text" placeholder="City or hotel name" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="date" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="date" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Guests</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <select class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                        <option>1 Guest</option>
+                                        <option>2 Guests</option>
+                                        <option>3 Guests</option>
+                                        <option>4 Guests</option>
+                                        <option>5+ Guests</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <button class="w-full bg-primary text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-primary-dark transition-colors">
+                                <i class="fa-solid fa-magnifying-glass mr-2"></i>
+                                Search Hotels
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Destinations -->
+        <section id="popular-destinations" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Popular Destinations</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore the most loved destinations across Latin America</p>
+                </div>
+
+                <div id="destinations-carousel" class="relative">
+                    <div class="flex space-x-6 overflow-x-auto pb-4">
+                        <div class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1d2f182897-5d1fd9b58300224b1c65.png" alt="Mexico City skyline with colorful buildings and historic architecture" />
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Mexico City, Mexico</h3>
+                                <p class="text-gray-600 mb-4">From $45/night</p>
+                                <span class="text-sm text-success font-medium">347 hotels available</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/00eb476e0d-bf0a4b3e253fa62fd9d1.png" alt="Buenos Aires colorful La Boca neighborhood with tango dancers" />
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Buenos Aires, Argentina</h3>
+                                <p class="text-gray-600 mb-4">From $38/night</p>
+                                <span class="text-sm text-success font-medium">289 hotels available</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/862ebce4d4-0308d88a89bfe7fb8b3b.png" alt="Rio de Janeiro Christ the Redeemer statue with beautiful city view" />
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Rio de Janeiro, Brazil</h3>
+                                <p class="text-gray-600 mb-4">From $52/night</p>
+                                <span class="text-sm text-success font-medium">412 hotels available</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b34adcb6d9-8d703560c0b959d0a430.png" alt="Lima Peru historic center with colonial architecture and plaza" />
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Lima, Peru</h3>
+                                <p class="text-gray-600 mb-4">From $42/night</p>
+                                <span class="text-sm text-success font-medium">198 hotels available</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/82b708d1d5-ddb58a399476157f39d5.png" alt="Bogota Colombia modern skyline with mountains in background" />
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Bogotá, Colombia</h3>
+                                <p class="text-gray-600 mb-4">From $35/night</p>
+                                <span class="text-sm text-success font-medium">156 hotels available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recently Viewed -->
+        <section id="recently-viewed" class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Recently Viewed</h2>
+                    <a href="#" class="text-primary hover:text-primary-dark font-medium">View All</a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                        <div class="h-48 overflow-hidden">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f926958104-91aca9572a757359f7b5.png" alt="luxury hotel room with ocean view and modern amenities" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">Hotel Oceanic View</h3>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-sm text-gray-600 ml-1">4.8</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Cancun, Mexico</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-2xl font-bold text-gray-900">$89</span>
+                                    <span class="text-gray-600">/night</span>
+                                </div>
+                                <span class="text-xs text-success">Free cancellation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                        <div class="h-48 overflow-hidden">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/653fa34617-94b31fae593146f46588.png" alt="boutique hotel in historic district with colonial architecture" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">Casa Colonial Boutique</h3>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-sm text-gray-600 ml-1">4.6</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Cartagena, Colombia</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-2xl font-bold text-gray-900">$67</span>
+                                    <span class="text-gray-600">/night</span>
+                                </div>
+                                <span class="text-xs text-success">Free cancellation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                        <div class="h-48 overflow-hidden">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/eeb99269d5-493c899769cb771ac883.png" alt="modern city hotel with rooftop pool and skyline views" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">Metropolitan Plaza</h3>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-sm text-gray-600 ml-1">4.7</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">São Paulo, Brazil</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-2xl font-bold text-gray-900">$75</span>
+                                    <span class="text-gray-600">/night</span>
+                                </div>
+                                <span class="text-xs text-success">Free cancellation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Badges -->
+        <section id="trust-badges" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Why choose TravelHub?</h2>
+                    <p class="text-lg text-gray-600">Your trust and satisfaction are our top priorities</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div id="secure-payment" class="text-center">
+                        <div class="bg-success bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-shield-halved text-success text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Secure Payment</h3>
+                        <p class="text-gray-600">Your payment information is protected with bank-level security and SSL encryption</p>
+                    </div>
+
+                    <div id="free-cancellation" class="text-center">
+                        <div class="bg-primary bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-calendar-xmark text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Free Cancellation</h3>
+                        <p class="text-gray-600">Cancel most bookings free of charge up to 24 hours before check-in</p>
+                    </div>
+
+                    <div id="support" class="text-center">
+                        <div class="bg-warning bg-opacity-10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-headset text-warning text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">24/7 Support</h3>
+                        <p class="text-gray-600">Our customer support team is available around the clock to help you</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Language/Currency Selector -->
+    <div id="mobile-selectors" class="sm:hidden fixed bottom-4 right-4 z-40">
+        <div class="flex space-x-2">
+            <button class="bg-white shadow-lg rounded-full p-3 border border-gray-200">
+                <i class="fa-solid fa-globe text-gray-600"></i>
+            </button>
+            <button class="bg-white shadow-lg rounded-full p-3 border border-gray-200">
+                <span class="text-sm font-medium text-gray-600">USD</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+<footer id="footer" class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div id="footer-brand" class="md:col-span-2">
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-plane text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold">TravelHub</span>
+                </div>
+                <p class="text-gray-400 mb-4">Your trusted partner for hotel bookings across Latin America. Secure, simple, and reliable.</p>
+                <div class="flex space-x-4">
+                    <i class="fa-brands fa-facebook text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-twitter text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-instagram text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-linkedin text-gray-400 hover:text-white cursor-pointer"></i>
+                </div>
+            </div>
+            
+            <div id="footer-links-1">
+                <h4 class="font-semibold mb-4">Company</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                    <li><a href="#" class="hover:text-white">Press</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div id="footer-links-2">
+                <h4 class="font-semibold mb-4">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white">Trust & Safety</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 TravelHub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+
+    <script>
+        window.addEventListener('load', function() {
+            try {
+                // Set default dates for check-in and check-out
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const nextWeek = new Date(today);
+                nextWeek.setDate(nextWeek.getDate() + 7);
+
+                const checkinInput = document.querySelector('input[type="date"]:first-of-type');
+                const checkoutInput = document.querySelector('input[type="date"]:last-of-type');
+
+                if (checkinInput && checkoutInput) {
+                    checkinInput.value = tomorrow.toISOString().split('T')[0];
+                    checkoutInput.value = nextWeek.toISOString().split('T')[0];
+                }
+
+                // Search form functionality
+                const searchForm = document.getElementById('search-bar');
+                const searchButton = searchForm.querySelector('button');
+
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const destination = searchForm.querySelector('input[type="text"]').value;
+                    const checkin = checkinInput.value;
+                    const checkout = checkoutInput.value;
+                    const guests = searchForm.querySelector('select').value;
+
+                    if (!destination.trim()) {
+                        alert('Please enter a destination');
+                        return;
+                    }
+
+                    if (!checkin || !checkout) {
+                        alert('Please select check-in and check-out dates');
+                        return;
+                    }
+
+                    // Simulate search
+                    searchButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Searching...';
+                    searchButton.disabled = true;
+
+                    setTimeout(() => {
+                        searchButton.innerHTML = '<i class="fa-solid fa-magnifying-glass mr-2"></i>Search Hotels';
+                        searchButton.disabled = false;
+                    }, 2000);
+                });
+
+                // Horizontal scroll for destinations carousel
+                const carousel = document.getElementById('destinations-carousel');
+                const scrollContainer = carousel.querySelector('.flex');
+
+                let isScrolling = false;
+                scrollContainer.addEventListener('scroll', function() {
+                    isScrolling = true;
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 100);
+                });
+
+            } catch(e) {
+                console.error('Script error:', e);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+name: Backend CI - usuarios
+
+on:
+  # GitFlow push branches for CI validation.
+  push:
+    branches:
+      - develop
+      - feature/**
+      - release/**
+      - hotfix/**
+    # Run only when usuarios or its CI definitions change.
+    paths:
+      - microservices/usuarios/**
+      - .github/workflows/ci-backend-usuarios.yml
+      - .github/workflows/_python-service-ci.yml
+  # PR validation gates into integration and production branches.
+  pull_request:
+    branches:
+      - develop
+      - main
+      - feature/srpint1
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    # Keep PR trigger broad so required checks are always reported.
+
+jobs:
+  detect-changes:
+    name: Detect usuarios changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - 'microservices/usuarios/**'
+              - '.github/workflows/ci-backend-usuarios.yml'
+              - '.github/workflows/_python-service-ci.yml'
+
+  usuarios-ci:
+    # Calls the shared Python CI template to avoid duplication.
+    name: usuarios
+    needs: detect-changes
+    if: github.event_name == 'pull_request' || needs.detect-changes.outputs.changed == 'true'
+    uses: ./.github/workflows/_python-service-ci.yml
+    with:
+      service_name: usuarios
+      service_path: microservices/usuarios

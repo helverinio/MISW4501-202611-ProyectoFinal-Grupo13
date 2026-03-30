@@ -1,0 +1,2 @@
+from app.domain.repositories.usuario_repository import UsuarioRepository
+from app.domain.repositories.token_repository import TokenRepository

@@ -97,6 +97,7 @@ jobs:
           build_and_push reservas microservices/reservas
           build_and_push pagos microservices/pagos
           build_and_push ext-payments microservices/ext-payments
+          build_and_push usuarios microservices/usuarios
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -240,6 +241,7 @@ jobs:
           }
 
           deploy_service ext-payments &
+          deploy_service usuarios &
           deploy_service pagos &
           deploy_service reservas &
           deploy_service gateway &
