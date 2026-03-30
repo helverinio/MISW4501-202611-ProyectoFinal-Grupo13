@@ -99,3 +99,15 @@ output "frontend_urls" {
     for name, dist in aws_cloudfront_distribution.frontends : name => "https://${dist.domain_name}"
   }
 }
+
+output "aws_native_cicd_connection_arn" {
+  value = var.enable_aws_native_cicd ? local.cicd_github_connection_arn : null
+}
+
+output "aws_native_cicd_pipeline_name" {
+  value = var.enable_aws_native_cicd ? aws_codepipeline.main[0].name : null
+}
+
+output "aws_native_cicd_codebuild_project_name" {
+  value = var.enable_aws_native_cicd ? aws_codebuild_project.main[0].name : null
+}

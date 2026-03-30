@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+  shell: bash
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+      python: 3.12
+    commands:
+      - set -euo pipefail
+      - apt-get update
+      - apt-get install -y jq unzip
+      - curl -fsSL https://releases.hashicorp.com/terraform/1.8.5/terraform_1.8.5_linux_amd64.zip -o /tmp/terraform.zip
+      - unzip -o /tmp/terraform.zip -d /usr/local/bin
+      - terraform -version
+      - aws --version
+      - docker --version
+
+  pre_build:
+    commands:
+      - export GIT_SHA="${CODEBUILD_RESOLVED_SOURCE_VERSION}"
+      - chmod +x infra/aws/codebuild/deploy.sh
+
+  build:
+    commands:
+      - infra/aws/codebuild/deploy.sh
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no
