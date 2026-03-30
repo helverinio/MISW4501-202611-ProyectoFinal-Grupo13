@@ -4,6 +4,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
     PAGOS_SERVICE_URL = os.environ.get('PAGOS_SERVICE_URL', 'http://pagos:5002')
+    USUARIOS_SERVICE_URL = os.environ.get('USUARIOS_SERVICE_URL', 'http://usuarios:5003')
     DB_SCHEMA = os.environ.get('DB_SCHEMA')
     
     # Message Queue Configuration (Amazon MQ compatible)

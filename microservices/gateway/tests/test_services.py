@@ -1,4 +1,5 @@
 import pytest
+from flask import Flask
 
 from app.services.pagos_service import PagosService
 from app.services.reservas_service import ReservasService
@@ -18,19 +19,19 @@ def test_reservas_service_request_variants(monkeypatch):
 
     monkeypatch.setattr(
         "app.services.reservas_service.requests.get",
-        lambda url, timeout: DummyResponse(200, {"method": "GET", "url": url}),
+        lambda url, headers, timeout: DummyResponse(200, {"method": "GET", "url": url, "headers": headers}),
     )
     monkeypatch.setattr(
         "app.services.reservas_service.requests.post",
-        lambda url, json, timeout: DummyResponse(201, {"method": "POST", "json": json}),
+        lambda url, json, headers, timeout: DummyResponse(201, {"method": "POST", "json": json, "headers": headers}),
     )
     monkeypatch.setattr(
         "app.services.reservas_service.requests.put",
-        lambda url, json, timeout: DummyResponse(202, {"method": "PUT", "json": json}),
+        lambda url, json, headers, timeout: DummyResponse(202, {"method": "PUT", "json": json, "headers": headers}),
     )
     monkeypatch.setattr(
         "app.services.reservas_service.requests.delete",
-        lambda url, timeout: DummyResponse(204, {"method": "DELETE"}),
+        lambda url, headers, timeout: DummyResponse(204, {"method": "DELETE", "headers": headers}),
     )
 
     get_result = service._request("GET", "paises")
@@ -50,11 +51,32 @@ def test_reservas_service_request_variants(monkeypatch):
     assert invalid_result["status_code"] == 400
 
 
+def test_reservas_service_forwards_authorization_header(monkeypatch):
+    captured = {}
+
+    def fake_get(url, headers, timeout):
+        captured["url"] = url
+        captured["headers"] = headers
+        captured["timeout"] = timeout
+        return DummyResponse(200, {"ok": True})
+
+    monkeypatch.setattr("app.services.reservas_service.requests.get", fake_get)
+
+    app = Flask(__name__)
+    service = ReservasService("http://reservas")
+
+    with app.test_request_context(headers={"Authorization": "Bearer token-123"}):
+        result = service.get_all_hoteles()
+
+    assert result["status_code"] == 200
+    assert captured["headers"] == {"Authorization": "Bearer token-123"}
+
+
 def test_reservas_service_request_exception(monkeypatch):
     class BoomRequestException(Exception):
         pass
 
-    def failing_get(url, timeout):
+    def failing_get(url, headers, timeout):
         raise BoomRequestException("downstream is down")
 
     monkeypatch.setattr("app.services.reservas_service.requests.get", failing_get)
@@ -90,6 +112,7 @@ def test_reservas_service_request_exception(monkeypatch):
         ("update_hotel", ("3", {"name": "Hotel B"})),
         ("delete_hotel", ("3",)),
         ("get_habitaciones_by_hotel", ("3",)),
+        ("search_available_hotels", ({"busqueda": "Bogota", "fecha_ingreso": "2026-04-01", "fecha_salida": "2026-04-05", "nro_personas": 2},)),
         ("create_habitacion", ({"name": "Suite"},)),
         ("get_habitacion", ("4",)),
         ("get_all_habitaciones", ()),

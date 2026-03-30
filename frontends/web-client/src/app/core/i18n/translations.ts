@@ -48,6 +48,96 @@ export interface Translation {
   'home.destinations.title': string;
   'home.destinations.subtitle': string;
 
+  // Home Search Page
+  'homeSearch.nav.travelerHome': string;
+  'homeSearch.nav.searchResults': string;
+  'homeSearch.nav.myReservations': string;
+  'homeSearch.nav.accountPreferences': string;
+  'homeSearch.hero.title': string;
+  'homeSearch.hero.subtitle': string;
+  'homeSearch.hero.whereTo': string;
+  'homeSearch.hero.wherePlaceholder': string;
+  'homeSearch.hero.checkIn': string;
+  'homeSearch.hero.checkOut': string;
+  'homeSearch.hero.guests': string;
+  'homeSearch.hero.searchHotels': string;
+  'homeSearch.hero.guest1': string;
+  'homeSearch.hero.guest2': string;
+  'homeSearch.hero.guest3': string;
+  'homeSearch.hero.guest4': string;
+  'homeSearch.hero.guest5Plus': string;
+  'homeSearch.popular.title': string;
+  'homeSearch.popular.subtitle': string;
+  'homeSearch.popular.price.mexico': string;
+  'homeSearch.popular.price.argentina': string;
+  'homeSearch.popular.price.brazil': string;
+  'homeSearch.popular.price.peru': string;
+  'homeSearch.popular.price.colombia': string;
+  'homeSearch.popular.available.mexico': string;
+  'homeSearch.popular.available.argentina': string;
+  'homeSearch.popular.available.brazil': string;
+  'homeSearch.popular.available.peru': string;
+  'homeSearch.popular.available.colombia': string;
+  'homeSearch.recent.title': string;
+  'homeSearch.recent.viewAll': string;
+  'homeSearch.recent.perNight': string;
+  'homeSearch.recent.freeCancellation': string;
+  'homeSearch.trust.title': string;
+  'homeSearch.trust.subtitle': string;
+  'homeSearch.trust.secureTitle': string;
+  'homeSearch.trust.secureDesc': string;
+  'homeSearch.trust.freeCancellationTitle': string;
+  'homeSearch.trust.freeCancellationDesc': string;
+  'homeSearch.trust.supportTitle': string;
+  'homeSearch.trust.supportDesc': string;
+
+  // Search Results Page
+  'searchResults.summary.guests': string;
+  'searchResults.summary.nights': string;
+  'searchResults.summary.modifySearch': string;
+  'searchResults.filters.title': string;
+  'searchResults.filters.clearAll': string;
+  'searchResults.filters.pricePerNight': string;
+  'searchResults.filters.min': string;
+  'searchResults.filters.max': string;
+  'searchResults.filters.amenities': string;
+  'searchResults.filters.guestRating': string;
+  'searchResults.filters.rating45': string;
+  'searchResults.filters.rating40': string;
+  'searchResults.filters.rating35': string;
+  'searchResults.filters.rating30': string;
+  'searchResults.filters.freeCancellation': string;
+  'searchResults.filters.showOnMap': string;
+  'searchResults.amenity.freeWifi': string;
+  'searchResults.amenity.swimmingPool': string;
+  'searchResults.amenity.freeBreakfast': string;
+  'searchResults.amenity.freeParking': string;
+  'searchResults.amenity.fitnessCenter': string;
+  'searchResults.amenity.petFriendly': string;
+  'searchResults.resultsHeader.hotelsFound': string;
+  'searchResults.resultsHeader.in': string;
+  'searchResults.resultsHeader.sortBy': string;
+  'searchResults.sort.popularity': string;
+  'searchResults.sort.priceLowToHigh': string;
+  'searchResults.sort.priceHighToLow': string;
+  'searchResults.sort.guestRating': string;
+  'searchResults.sort.distance': string;
+  'searchResults.card.reviews': string;
+  'searchResults.card.freeCancellation': string;
+  'searchResults.card.nonRefundable': string;
+  'searchResults.card.night': string;
+  'searchResults.card.total': string;
+  'searchResults.card.viewDetails': string;
+  'searchResults.loadMore': string;
+  'searchResults.states.loading': string;
+  'searchResults.states.emptyTitle': string;
+  'searchResults.states.emptyDescription': string;
+  'searchResults.states.clearFilters': string;
+  'searchResults.states.errorTitle': string;
+  'searchResults.states.errorDescription': string;
+  'searchResults.states.retry': string;
+  'searchResults.validation.missingParams': string;
+
   // Login Page
   'login.title': string;
   'login.subtitle': string;
@@ -141,6 +231,103 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.features.mobileReadyDesc': 'Seamless experience across all your devices',
     'home.destinations.title': 'Popular Destinations',
     'home.destinations.subtitle': 'Discover the most sought-after locations across Latin America',
+
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Traveler Home',
+    'homeSearch.nav.searchResults': 'Search Results',
+    'homeSearch.nav.myReservations': 'My Reservations',
+    'homeSearch.nav.accountPreferences': 'Account & Preferences',
+    'homeSearch.hero.title': 'Find your perfect getaway',
+    'homeSearch.hero.subtitle':
+      'Discover amazing hotels across Latin America with unbeatable prices and instant booking',
+    'homeSearch.hero.whereTo': 'Where to?',
+    'homeSearch.hero.wherePlaceholder': 'City or hotel name',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Guests',
+    'homeSearch.hero.searchHotels': 'Search Hotels',
+    'homeSearch.hero.guest1': '1 Guest',
+    'homeSearch.hero.guest2': '2 Guests',
+    'homeSearch.hero.guest3': '3 Guests',
+    'homeSearch.hero.guest4': '4 Guests',
+    'homeSearch.hero.guest5Plus': '5+ Guests',
+    'homeSearch.popular.title': 'Popular Destinations',
+    'homeSearch.popular.subtitle': 'Explore the most loved destinations across Latin America',
+    'homeSearch.popular.price.mexico': 'From $45/night',
+    'homeSearch.popular.price.argentina': 'From $38/night',
+    'homeSearch.popular.price.brazil': 'From $52/night',
+    'homeSearch.popular.price.peru': 'From $42/night',
+    'homeSearch.popular.price.colombia': 'From $35/night',
+    'homeSearch.popular.available.mexico': '347 hotels available',
+    'homeSearch.popular.available.argentina': '289 hotels available',
+    'homeSearch.popular.available.brazil': '412 hotels available',
+    'homeSearch.popular.available.peru': '198 hotels available',
+    'homeSearch.popular.available.colombia': '156 hotels available',
+    'homeSearch.recent.title': 'Recently Viewed',
+    'homeSearch.recent.viewAll': 'View All',
+    'homeSearch.recent.perNight': '/night',
+    'homeSearch.recent.freeCancellation': 'Free cancellation',
+    'homeSearch.trust.title': 'Why choose TravelHub?',
+    'homeSearch.trust.subtitle': 'Your trust and satisfaction are our top priorities',
+    'homeSearch.trust.secureTitle': 'Secure Payment',
+    'homeSearch.trust.secureDesc':
+      'Your payment information is protected with bank-level security and SSL encryption',
+    'homeSearch.trust.freeCancellationTitle': 'Free Cancellation',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancel most bookings free of charge up to 24 hours before check-in',
+    'homeSearch.trust.supportTitle': '24/7 Support',
+    'homeSearch.trust.supportDesc':
+      'Our customer support team is available around the clock to help you',
+
+    // Search Results Page
+    'searchResults.summary.guests': 'Guests',
+    'searchResults.summary.nights': 'nights',
+    'searchResults.summary.modifySearch': 'Modify Search',
+    'searchResults.filters.title': 'Filters',
+    'searchResults.filters.clearAll': 'Clear all',
+    'searchResults.filters.pricePerNight': 'Price per night',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Amenities',
+    'searchResults.filters.guestRating': 'Guest Rating',
+    'searchResults.filters.rating45': '4.5+ Exceptional',
+    'searchResults.filters.rating40': '4.0+ Excellent',
+    'searchResults.filters.rating35': '3.5+ Very Good',
+    'searchResults.filters.rating30': '3.0+ Good',
+    'searchResults.filters.freeCancellation': 'Free cancellation',
+    'searchResults.filters.showOnMap': 'Show on map',
+    'searchResults.amenity.freeWifi': 'Free WiFi',
+    'searchResults.amenity.swimmingPool': 'Swimming Pool',
+    'searchResults.amenity.freeBreakfast': 'Free Breakfast',
+    'searchResults.amenity.freeParking': 'Free Parking',
+    'searchResults.amenity.fitnessCenter': 'Fitness Center',
+    'searchResults.amenity.petFriendly': 'Pet Friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hotels found',
+    'searchResults.resultsHeader.in': 'in',
+    'searchResults.resultsHeader.sortBy': 'Sort by:',
+    'searchResults.sort.popularity': 'Popularity',
+    'searchResults.sort.priceLowToHigh': 'Price (Low to High)',
+    'searchResults.sort.priceHighToLow': 'Price (High to Low)',
+    'searchResults.sort.guestRating': 'Guest Rating',
+    'searchResults.sort.distance': 'Distance',
+    'searchResults.card.reviews': 'reviews',
+    'searchResults.card.freeCancellation': 'Free cancellation',
+    'searchResults.card.nonRefundable': 'Non-refundable rate',
+    'searchResults.card.night': 'night',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'View Details',
+    'searchResults.loadMore': 'Load More Results',
+    'searchResults.states.loading': 'Searching available hotels...',
+    'searchResults.states.emptyTitle': 'No hotels match your filters',
+    'searchResults.states.emptyDescription':
+      'Try adjusting your filters to find more available options.',
+    'searchResults.states.clearFilters': 'Clear filters',
+    'searchResults.states.errorTitle': 'We could not load search results',
+    'searchResults.states.errorDescription':
+      'Please try again in a moment. If the issue persists, verify search criteria.',
+    'searchResults.states.retry': 'Retry',
+    'searchResults.validation.missingParams':
+      'Missing search parameters. Please return to home search and try again.',
 
     // Login Page
     'login.title': 'Welcome to TravelHub',
@@ -238,6 +425,103 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.destinations.title': 'Destinos Populares',
     'home.destinations.subtitle': 'Descubre las ubicaciones más buscadas en América Latina',
 
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Inicio',
+    'homeSearch.nav.searchResults': 'Resultados de Búsqueda',
+    'homeSearch.nav.myReservations': 'Mis Reservas',
+    'homeSearch.nav.accountPreferences': 'Cuenta y Preferencias',
+    'homeSearch.hero.title': 'Encuentra tu escapada perfecta',
+    'homeSearch.hero.subtitle':
+      'Descubre hoteles increíbles en América Latina con precios inmejorables y reserva instantánea',
+    'homeSearch.hero.whereTo': '¿A dónde?',
+    'homeSearch.hero.wherePlaceholder': 'Ciudad o nombre del hotel',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Huéspedes',
+    'homeSearch.hero.searchHotels': 'Buscar Hoteles',
+    'homeSearch.hero.guest1': '1 huésped',
+    'homeSearch.hero.guest2': '2 huéspedes',
+    'homeSearch.hero.guest3': '3 huéspedes',
+    'homeSearch.hero.guest4': '4 huéspedes',
+    'homeSearch.hero.guest5Plus': '5+ huéspedes',
+    'homeSearch.popular.title': 'Destinos Populares',
+    'homeSearch.popular.subtitle': 'Explora los destinos más queridos de América Latina',
+    'homeSearch.popular.price.mexico': 'Desde $45/noche',
+    'homeSearch.popular.price.argentina': 'Desde $38/noche',
+    'homeSearch.popular.price.brazil': 'Desde $52/noche',
+    'homeSearch.popular.price.peru': 'Desde $42/noche',
+    'homeSearch.popular.price.colombia': 'Desde $35/noche',
+    'homeSearch.popular.available.mexico': '347 hoteles disponibles',
+    'homeSearch.popular.available.argentina': '289 hoteles disponibles',
+    'homeSearch.popular.available.brazil': '412 hoteles disponibles',
+    'homeSearch.popular.available.peru': '198 hoteles disponibles',
+    'homeSearch.popular.available.colombia': '156 hoteles disponibles',
+    'homeSearch.recent.title': 'Vistos Recientemente',
+    'homeSearch.recent.viewAll': 'Ver todo',
+    'homeSearch.recent.perNight': '/noche',
+    'homeSearch.recent.freeCancellation': 'Cancelación gratuita',
+    'homeSearch.trust.title': '¿Por qué elegir TravelHub?',
+    'homeSearch.trust.subtitle': 'Tu confianza y satisfacción son nuestra prioridad',
+    'homeSearch.trust.secureTitle': 'Pago Seguro',
+    'homeSearch.trust.secureDesc':
+      'Tu información de pago está protegida con seguridad bancaria y cifrado SSL',
+    'homeSearch.trust.freeCancellationTitle': 'Cancelación Gratuita',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancela la mayoría de reservas sin costo hasta 24 horas antes del check-in',
+    'homeSearch.trust.supportTitle': 'Soporte 24/7',
+    'homeSearch.trust.supportDesc':
+      'Nuestro equipo de soporte está disponible todo el día para ayudarte',
+
+    // Search Results Page
+    'searchResults.summary.guests': 'Huéspedes',
+    'searchResults.summary.nights': 'noches',
+    'searchResults.summary.modifySearch': 'Modificar búsqueda',
+    'searchResults.filters.title': 'Filtros',
+    'searchResults.filters.clearAll': 'Limpiar todo',
+    'searchResults.filters.pricePerNight': 'Precio por noche',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Amenidades',
+    'searchResults.filters.guestRating': 'Calificación de huéspedes',
+    'searchResults.filters.rating45': '4.5+ Excepcional',
+    'searchResults.filters.rating40': '4.0+ Excelente',
+    'searchResults.filters.rating35': '3.5+ Muy bueno',
+    'searchResults.filters.rating30': '3.0+ Bueno',
+    'searchResults.filters.freeCancellation': 'Cancelación gratuita',
+    'searchResults.filters.showOnMap': 'Mostrar en mapa',
+    'searchResults.amenity.freeWifi': 'WiFi gratis',
+    'searchResults.amenity.swimmingPool': 'Piscina',
+    'searchResults.amenity.freeBreakfast': 'Desayuno gratis',
+    'searchResults.amenity.freeParking': 'Parqueadero gratis',
+    'searchResults.amenity.fitnessCenter': 'Gimnasio',
+    'searchResults.amenity.petFriendly': 'Pet friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hoteles encontrados',
+    'searchResults.resultsHeader.in': 'en',
+    'searchResults.resultsHeader.sortBy': 'Ordenar por:',
+    'searchResults.sort.popularity': 'Popularidad',
+    'searchResults.sort.priceLowToHigh': 'Precio (Menor a mayor)',
+    'searchResults.sort.priceHighToLow': 'Precio (Mayor a menor)',
+    'searchResults.sort.guestRating': 'Calificación de huéspedes',
+    'searchResults.sort.distance': 'Distancia',
+    'searchResults.card.reviews': 'reseñas',
+    'searchResults.card.freeCancellation': 'Cancelación gratuita',
+    'searchResults.card.nonRefundable': 'Tarifa no reembolsable',
+    'searchResults.card.night': 'noche',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'Ver detalles',
+    'searchResults.loadMore': 'Cargar más resultados',
+    'searchResults.states.loading': 'Buscando hoteles disponibles...',
+    'searchResults.states.emptyTitle': 'No hay hoteles con estos filtros',
+    'searchResults.states.emptyDescription':
+      'Prueba ajustando tus filtros para ver más opciones disponibles.',
+    'searchResults.states.clearFilters': 'Limpiar filtros',
+    'searchResults.states.errorTitle': 'No pudimos cargar los resultados',
+    'searchResults.states.errorDescription':
+      'Intenta de nuevo en unos momentos. Si persiste, verifica los criterios de búsqueda.',
+    'searchResults.states.retry': 'Reintentar',
+    'searchResults.validation.missingParams':
+      'Faltan parámetros de búsqueda. Regresa a inicio y vuelve a buscar.',
+
     // Login Page
     'login.title': 'Bienvenido a TravelHub',
     'login.subtitle': 'Inicia sesión en tu cuenta o crea una nueva',
@@ -334,6 +618,103 @@ export const translations: Record<LanguageCode, Translation> = {
     'home.features.mobileReadyDesc': 'Experiência perfeita em todos os seus dispositivos',
     'home.destinations.title': 'Destinos Populares',
     'home.destinations.subtitle': 'Descubra os locais mais procurados na América Latina',
+
+    // Home Search Page
+    'homeSearch.nav.travelerHome': 'Início do Viajante',
+    'homeSearch.nav.searchResults': 'Resultados da Busca',
+    'homeSearch.nav.myReservations': 'Minhas Reservas',
+    'homeSearch.nav.accountPreferences': 'Conta e Preferências',
+    'homeSearch.hero.title': 'Encontre sua viagem perfeita',
+    'homeSearch.hero.subtitle':
+      'Descubra hotéis incríveis na América Latina com preços imbatíveis e reserva instantânea',
+    'homeSearch.hero.whereTo': 'Para onde?',
+    'homeSearch.hero.wherePlaceholder': 'Cidade ou nome do hotel',
+    'homeSearch.hero.checkIn': 'Check-in',
+    'homeSearch.hero.checkOut': 'Check-out',
+    'homeSearch.hero.guests': 'Hóspedes',
+    'homeSearch.hero.searchHotels': 'Buscar Hotéis',
+    'homeSearch.hero.guest1': '1 hóspede',
+    'homeSearch.hero.guest2': '2 hóspedes',
+    'homeSearch.hero.guest3': '3 hóspedes',
+    'homeSearch.hero.guest4': '4 hóspedes',
+    'homeSearch.hero.guest5Plus': '5+ hóspedes',
+    'homeSearch.popular.title': 'Destinos Populares',
+    'homeSearch.popular.subtitle': 'Explore os destinos mais queridos da América Latina',
+    'homeSearch.popular.price.mexico': 'A partir de $45/noite',
+    'homeSearch.popular.price.argentina': 'A partir de $38/noite',
+    'homeSearch.popular.price.brazil': 'A partir de $52/noite',
+    'homeSearch.popular.price.peru': 'A partir de $42/noite',
+    'homeSearch.popular.price.colombia': 'A partir de $35/noite',
+    'homeSearch.popular.available.mexico': '347 hotéis disponíveis',
+    'homeSearch.popular.available.argentina': '289 hotéis disponíveis',
+    'homeSearch.popular.available.brazil': '412 hotéis disponíveis',
+    'homeSearch.popular.available.peru': '198 hotéis disponíveis',
+    'homeSearch.popular.available.colombia': '156 hotéis disponíveis',
+    'homeSearch.recent.title': 'Vistos Recentemente',
+    'homeSearch.recent.viewAll': 'Ver todos',
+    'homeSearch.recent.perNight': '/noite',
+    'homeSearch.recent.freeCancellation': 'Cancelamento grátis',
+    'homeSearch.trust.title': 'Por que escolher a TravelHub?',
+    'homeSearch.trust.subtitle': 'Sua confiança e satisfação são nossas prioridades',
+    'homeSearch.trust.secureTitle': 'Pagamento Seguro',
+    'homeSearch.trust.secureDesc':
+      'Suas informações de pagamento são protegidas com segurança bancária e criptografia SSL',
+    'homeSearch.trust.freeCancellationTitle': 'Cancelamento Grátis',
+    'homeSearch.trust.freeCancellationDesc':
+      'Cancele a maioria das reservas gratuitamente até 24 horas antes do check-in',
+    'homeSearch.trust.supportTitle': 'Suporte 24/7',
+    'homeSearch.trust.supportDesc':
+      'Nossa equipe de suporte está disponível 24 horas para ajudar você',
+
+    // Search Results Page
+    'searchResults.summary.guests': 'Hóspedes',
+    'searchResults.summary.nights': 'noites',
+    'searchResults.summary.modifySearch': 'Modificar busca',
+    'searchResults.filters.title': 'Filtros',
+    'searchResults.filters.clearAll': 'Limpar tudo',
+    'searchResults.filters.pricePerNight': 'Preço por noite',
+    'searchResults.filters.min': 'Min',
+    'searchResults.filters.max': 'Max',
+    'searchResults.filters.amenities': 'Comodidades',
+    'searchResults.filters.guestRating': 'Avaliação de hóspedes',
+    'searchResults.filters.rating45': '4.5+ Excepcional',
+    'searchResults.filters.rating40': '4.0+ Excelente',
+    'searchResults.filters.rating35': '3.5+ Muito bom',
+    'searchResults.filters.rating30': '3.0+ Bom',
+    'searchResults.filters.freeCancellation': 'Cancelamento grátis',
+    'searchResults.filters.showOnMap': 'Mostrar no mapa',
+    'searchResults.amenity.freeWifi': 'WiFi grátis',
+    'searchResults.amenity.swimmingPool': 'Piscina',
+    'searchResults.amenity.freeBreakfast': 'Café da manhã grátis',
+    'searchResults.amenity.freeParking': 'Estacionamento grátis',
+    'searchResults.amenity.fitnessCenter': 'Academia',
+    'searchResults.amenity.petFriendly': 'Pet friendly',
+    'searchResults.resultsHeader.hotelsFound': 'hotéis encontrados',
+    'searchResults.resultsHeader.in': 'em',
+    'searchResults.resultsHeader.sortBy': 'Ordenar por:',
+    'searchResults.sort.popularity': 'Popularidade',
+    'searchResults.sort.priceLowToHigh': 'Preço (Menor para maior)',
+    'searchResults.sort.priceHighToLow': 'Preço (Maior para menor)',
+    'searchResults.sort.guestRating': 'Avaliação de hóspedes',
+    'searchResults.sort.distance': 'Distância',
+    'searchResults.card.reviews': 'avaliações',
+    'searchResults.card.freeCancellation': 'Cancelamento grátis',
+    'searchResults.card.nonRefundable': 'Tarifa não reembolsável',
+    'searchResults.card.night': 'noite',
+    'searchResults.card.total': 'total',
+    'searchResults.card.viewDetails': 'Ver detalhes',
+    'searchResults.loadMore': 'Carregar mais resultados',
+    'searchResults.states.loading': 'Buscando hotéis disponíveis...',
+    'searchResults.states.emptyTitle': 'Nenhum hotel corresponde aos filtros',
+    'searchResults.states.emptyDescription':
+      'Tente ajustar os filtros para encontrar mais opções disponíveis.',
+    'searchResults.states.clearFilters': 'Limpar filtros',
+    'searchResults.states.errorTitle': 'Não foi possível carregar os resultados',
+    'searchResults.states.errorDescription':
+      'Tente novamente em alguns instantes. Se persistir, revise os critérios de busca.',
+    'searchResults.states.retry': 'Tentar novamente',
+    'searchResults.validation.missingParams':
+      'Faltam parâmetros de busca. Volte para home-search e tente de novo.',
 
     // Login Page
     'login.title': 'Bem-vindo ao TravelHub',

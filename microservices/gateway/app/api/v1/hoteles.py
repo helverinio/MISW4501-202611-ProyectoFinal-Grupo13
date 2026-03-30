@@ -47,3 +47,12 @@ def delete_hotel(hotel_id):
 def get_habitaciones_by_hotel(hotel_id):
     result = get_service().get_habitaciones_by_hotel(hotel_id)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/hoteles/buscar-disponibles', methods=['POST'])
+def search_available_hotels():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().search_available_hotels(data)
+    return jsonify(result['data']), result['status_code']
