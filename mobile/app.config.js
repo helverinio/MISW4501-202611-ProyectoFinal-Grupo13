@@ -25,7 +25,7 @@ export default {
       typedRoutes: true
     },
     extra: {
-      "REACT_APP_HASH_SALT": "PdsNVJvfLDHNVIOJfvfMVPM541V6D4V6vfv5V1D65FV4DFvf6V4DF6V4D651VDB",
+      "REACT_APP_HASH_SALT": process.env.REACT_APP_HASH_SALT,
     }
   }
 };
