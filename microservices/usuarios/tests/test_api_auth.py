@@ -43,7 +43,7 @@ def test_login_without_credentials_returns_400(client):
     response = client.post("/api/v1/auth/login", json={"usuario": "ana"})
 
     assert response.status_code == 400
-    assert response.get_json()["error"] == "usuario and contrasena are required"
+    assert response.get_json()["error"] == "email or usuario, and contrasena are required"
 
 
 def test_login_invalid_credentials_returns_401(client, monkeypatch):
@@ -90,6 +90,34 @@ def test_login_success_returns_tokens(client, monkeypatch):
     response = client.post(
         "/api/v1/auth/login",
         json={"usuario": "ana", "contrasena": "secret"},
+    )
+
+    assert response.status_code == 200
+    assert response.get_json()["token_type"] == "Bearer"
+
+
+def test_login_success_with_email_returns_tokens(client, monkeypatch):
+    class FakeAuthenticateUseCase:
+        def __init__(self, usuario_repository, token_repository):
+            self.usuario_repository = usuario_repository
+            self.token_repository = token_repository
+
+        def execute(self, identifier, contrasena):
+            return {
+                "access_token": "acc",
+                "refresh_token": "ref",
+                "token_type": "Bearer",
+                "expires_in": 3600,
+                "usuario": {"id": "u-1", "email": identifier},
+            }
+
+    monkeypatch.setattr(auth_api, "AuthenticateUseCase", FakeAuthenticateUseCase)
+    monkeypatch.setattr(auth_api, "get_usuario_repository", lambda: object())
+    monkeypatch.setattr(auth_api, "get_token_repository", lambda: object())
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"email": "ana@example.com", "contrasena": "secret"},
     )
 
     assert response.status_code == 200

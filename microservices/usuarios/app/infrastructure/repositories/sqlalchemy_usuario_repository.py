@@ -25,14 +25,14 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             return None
         return self._to_entity(model)
 
-    def find_by_usuario(self, usuario: str) -> Optional[Usuario]:
-        model = UsuarioModel.query.filter_by(usuario=usuario).first()
+    def find_by_email(self, email: str) -> Optional[Usuario]:
+        model = UsuarioModel.query.filter_by(email=email).first()
         if not model:
             return None
         return self._to_entity(model)
 
-    def find_by_email(self, email: str) -> Optional[Usuario]:
-        model = UsuarioModel.query.filter_by(email=email).first()
+    def find_by_usuario(self, usuario: str) -> Optional[Usuario]:
+        model = UsuarioModel.query.filter_by(usuario=usuario).first()
         if not model:
             return None
         return self._to_entity(model)

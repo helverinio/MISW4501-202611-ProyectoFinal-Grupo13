@@ -17,17 +17,19 @@ def create_usuario():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    required_fields = ['nombre', 'email', 'usuario', 'contrasena']
+    required_fields = ['nombre', 'email', 'contrasena']
     for field in required_fields:
         if not data.get(field):
             return jsonify({'error': f'{field} is required'}), 400
 
     repo = get_repository()
-    
-    existing_user = repo.find_by_usuario(data['usuario'])
-    if existing_user:
+
+    usuario_value = data.get('usuario') or data['email']
+
+    existing_usuario = repo.find_by_usuario(usuario_value)
+    if existing_usuario:
         return jsonify({'error': 'Usuario already exists'}), 409
-    
+
     existing_email = repo.find_by_email(data['email'])
     if existing_email:
         return jsonify({'error': 'Email already exists'}), 409
@@ -36,7 +38,7 @@ def create_usuario():
     usuario = use_case.execute(
         nombre=data['nombre'],
         email=data['email'],
-        usuario=data['usuario'],
+        usuario=usuario_value,
         contrasena=data['contrasena']
     )
 

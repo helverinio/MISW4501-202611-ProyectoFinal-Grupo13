@@ -6,7 +6,7 @@ import { LoginRequest } from '../../../../core/models/auth.models';
 import { I18nService } from '../../../../core/services/i18n.service';
 
 interface LoginForm {
-  usuario: FormControl<string>;
+  email: FormControl<string>;
   contrasena: FormControl<string>;
 }
 
@@ -25,9 +25,9 @@ export class LoginFormComponent {
   @Output() loginSubmit = new EventEmitter<LoginRequest>();
 
   protected readonly form = new FormGroup<LoginForm>({
-    usuario: new FormControl('', {
+    email: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.email],
     }),
     contrasena: new FormControl('', {
       nonNullable: true,
