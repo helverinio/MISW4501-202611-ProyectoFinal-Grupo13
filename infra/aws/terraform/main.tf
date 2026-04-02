@@ -242,27 +242,27 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_8080" 
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_internal_alb_5000_5002" {
+resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_internal_alb_5000_5003" {
   security_group_id            = aws_security_group.ecs_tasks.id
   referenced_security_group_id = aws_security_group.internal_alb.id
   from_port                    = 5000
-  to_port                      = 5002
+  to_port                      = 5003
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_5000_5002" {
+resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_5000_5003" {
   security_group_id            = aws_security_group.internal_alb.id
   referenced_security_group_id = aws_security_group.ecs_tasks.id
   from_port                    = 5000
-  to_port                      = 5002
+  to_port                      = 5003
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_15000_15002" {
+resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_15000_15003" {
   security_group_id            = aws_security_group.internal_alb.id
   referenced_security_group_id = aws_security_group.ecs_tasks.id
   from_port                    = 15000
-  to_port                      = 15002
+  to_port                      = 15003
   ip_protocol                  = "tcp"
 }
 
