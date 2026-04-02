@@ -12,31 +12,31 @@
   },
   "containerDefinitions": [
     {
-      "name": "gateway",
+      "name": "usuarios",
       "image": "__IMAGE_URI__",
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 8080,
-          "hostPort": 8080,
+          "containerPort": 5003,
+          "hostPort": 5003,
           "protocol": "tcp"
         }
       ],
       "environment": [
         { "name": "FLASK_ENV", "value": "production" },
-        { "name": "RESERVAS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5000" },
-        { "name": "PAGOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5002" },
-        { "name": "USUARIOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5003" }
+        { "name": "DB_SCHEMA", "value": "usuarios" }
       ],
       "secrets": [
-        { "name": "SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" }
+        { "name": "DATABASE_URL", "valueFrom": "__SECRET_ARN__:usuarios_database_url::" },
+        { "name": "SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" },
+        { "name": "JWT_SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "__LOG_GROUP__",
           "awslogs-region": "__AWS_REGION__",
-          "awslogs-stream-prefix": "gateway"
+          "awslogs-stream-prefix": "usuarios"
         }
       }
     }
