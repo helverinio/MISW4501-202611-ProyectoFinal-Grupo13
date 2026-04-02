@@ -37,7 +37,7 @@
                 [class.text-warning]="i === 2"
                 [class.bg-gray-100]="i > 2"
                 [class.text-gray-600]="i > 2"
-                >{{ amenity }}</span
+                >{{ amenityLabel(amenity) }}</span
               >
             }
           </div>
@@ -49,13 +49,14 @@
         </div>
         <div class="lg:text-right lg:ml-6 mt-4 lg:mt-0">
           <div class="mb-2">
-            <span class="text-2xl font-bold text-gray-900">${{ hotel.pricePerNight }}</span>
+            <span class="text-2xl font-bold text-gray-900">{{ formatPrice(hotel.pricePerNight) }}</span>
             <span class="text-gray-600">/{{ t('searchResults.card.night') }}</span>
           </div>
           <p class="text-sm text-gray-500 mb-3">
-            ${{ hotel.totalPrice }} {{ t('searchResults.card.total') }}
+            {{ formatPrice(hotel.totalPrice) }} {{ t('searchResults.card.total') }}
           </p>
           <button
+            (click)="onViewDetails()"
             class="w-full lg:w-auto px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium"
             type="button"
           >

@@ -4,6 +4,7 @@ import { LoginPageComponent } from './features/auth/pages/login-page/login-page.
 import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
 import { HomeSearchPageComponent } from './features/home-search/pages/home-search-page/home-search-page.component';
 import { SearchResultsPageComponent } from './features/search-results/pages/search-results-page/search-results-page.component';
+import { HotelDetailsPageComponent } from './features/search-results/pages/hotel-details-page/hotel-details-page.component';
 import { DashboardPageComponent } from './features/private/pages/dashboard-page/dashboard-page.component';
 import { authGuard } from './core/guards/auth.guard';
 import { publicOnlyGuard } from './core/guards/public-only.guard';
@@ -47,6 +48,10 @@ export const routes: Routes = [
       {
         path: 'search-results',
         component: SearchResultsPageComponent,
+      },
+      {
+        path: 'hoteles/:hotelId',
+        component: HotelDetailsPageComponent,
       },
     ],
   },

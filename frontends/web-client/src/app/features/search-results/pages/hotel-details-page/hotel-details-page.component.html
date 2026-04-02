@@ -1,0 +1,153 @@
+<main class="hotel-details-shell max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  @if (loading()) {
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-600">
+      Cargando informacion del hotel...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
+      {{ errorMessage() }}
+    </div>
+  } @else if (hotel()) {
+    <div class="text-sm text-gray-500 mb-3">
+      <button class="hover:text-primary transition-colors" type="button" (click)="goBack()">
+        {{ label('searchResults') }}
+      </button>
+      <span class="mx-2">&gt;</span>
+      <span class="text-gray-700">{{ hotel()!.nombre }}</span>
+    </div>
+
+    <section class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      <div class="xl:col-span-8 space-y-5">
+        <header>
+          <h1 class="text-3xl font-bold text-gray-900 leading-tight">{{ hotel()!.nombre }}</h1>
+          <div class="flex flex-wrap items-center gap-3 text-sm mt-2">
+            <span class="inline-flex px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium"
+              >{{ label('freeCancellation') }}</span
+            >
+            <span class="inline-flex px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium"
+              >{{ label('securePayment') }}</span
+            >
+          </div>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 rounded-xl overflow-hidden">
+          <div class="sm:col-span-2 h-64 sm:h-96">
+            <img class="w-full h-full object-cover" [src]="galleryImages()[0].url" [alt]="galleryImages()[0].alt" />
+          </div>
+          <div class="grid grid-rows-2 gap-2 sm:gap-3 h-64 sm:h-96">
+            <img class="w-full h-full object-cover" [src]="galleryImages()[1].url" [alt]="galleryImages()[1].alt" />
+            <div class="relative">
+              <img class="w-full h-full object-cover" [src]="galleryImages()[2].url" [alt]="galleryImages()[2].alt" />
+              <div class="absolute inset-0 bg-black/25 flex items-end justify-end p-3">
+                <span class="text-xs font-medium text-white bg-black/40 rounded-md px-2 py-1">{{ label('morePhotos') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <article class="bg-white rounded-xl border border-gray-200 p-5 sm:p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-3">{{ label('overview') }}</h2>
+          <p class="text-sm leading-7 text-gray-600">
+            {{ overviewDescription() }}
+          </p>
+        </article>
+
+        <article class="bg-white rounded-xl border border-gray-200 p-5 sm:p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ t('searchResults.filters.amenities') }}</h2>
+          @if (amenities().length) {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6">
+              @for (amenity of amenities(); track amenity) {
+                <div class="flex items-center text-sm text-gray-700">
+                  <i class="fa-solid fa-check text-primary mr-2 text-xs"></i>
+                  <span>{{ amenityLabel(amenity) }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-gray-600 text-sm">{{ label('emptyAmenities') }}</p>
+          }
+        </article>
+
+        <article class="bg-white rounded-xl border border-gray-200 p-5 sm:p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ label('availableRooms') }}</h2>
+          @if (roomCards().length) {
+            <div class="space-y-4">
+              @for (room of roomCards(); track room.id) {
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+                  <div class="md:col-span-4">
+                    <p class="font-semibold text-gray-900">{{ room.type }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ label('room') }} {{ room.roomNumber }}</p>
+                    <p class="text-xs mt-2" [class]="room.availabilityClass">{{ room.availabilityLabel }}</p>
+                  </div>
+                  <div class="md:col-span-2 text-sm text-gray-700">{{ room.capacityLabel }}</div>
+                  <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.pricePerNight) }}</div>
+                  <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.totalPrice) }}</div>
+                  <div class="md:col-span-2 md:text-right">
+                    <button
+                      type="button"
+                      class="w-full md:w-auto px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
+                    >
+                      {{ label('select') }}
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-gray-600 text-sm">{{ label('noRooms') }}</p>
+          }
+        </article>
+      </div>
+
+      <aside class="xl:col-span-4 xl:sticky xl:top-24">
+        <section class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div class="mb-4">
+            <p class="text-3xl font-bold text-gray-900">{{ formatPrice(heroPrice()) }}</p>
+            <p class="text-sm text-gray-500">/{{ t('searchResults.card.night') }}</p>
+          </div>
+
+          <div class="space-y-3 text-sm mb-5">
+            <div>
+              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.checkIn') }}</p>
+              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">{{ formattedCheckIn() }}</div>
+            </div>
+            <div>
+              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.checkOut') }}</p>
+              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">{{ formattedCheckOut() }}</div>
+            </div>
+            <div>
+              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.guests') }}</p>
+              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">
+                {{ getGuestsLabel(guests()) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-sm border-t border-gray-100 pt-4">
+            <div class="flex items-center justify-between text-gray-600">
+              <span>{{ formatPrice(heroPrice()) }} x {{ nights() }} {{ t('searchResults.summary.nights') }}</span>
+              <span>{{ formatPrice(totalPrice()) }}</span>
+            </div>
+            <div class="flex items-center justify-between text-gray-600">
+              <span>{{ label('taxesFees') }}</span>
+              <span>{{ formatPrice(taxesAndFees()) }}</span>
+            </div>
+            <div class="flex items-center justify-between text-base font-semibold text-gray-900 pt-2 border-t border-gray-100">
+              <span>{{ t('searchResults.card.total') }}</span>
+              <span>{{ formatPrice(grandTotal()) }}</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="w-full mt-5 px-4 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition-colors"
+          >
+            {{ label('reserveNow') }}
+          </button>
+
+          <p class="text-xs text-center text-gray-500 mt-3">{{ label('noChargeYet') }}</p>
+        </section>
+      </aside>
+    </section>
+  }
+</main>
