@@ -15,8 +15,13 @@ class AuthenticateUseCase:
         self.usuario_repository = usuario_repository
         self.token_repository = token_repository
 
-    def execute(self, email: str, contrasena: str) -> Optional[Dict[str, Any]]:
-        user = self.usuario_repository.find_by_email(email)
+    def execute(self, identifier: str, contrasena: str) -> Optional[Dict[str, Any]]:
+        normalized_identifier = identifier.strip()
+        user = self.usuario_repository.find_by_email(normalized_identifier)
+
+        if not user:
+            user = self.usuario_repository.find_by_usuario(normalized_identifier)
+
         if not user:
             return None
         
@@ -61,7 +66,8 @@ class AuthenticateUseCase:
             'usuario': {
                 'id': user.id,
                 'nombre': user.nombre,
-                'email': user.email
+                'email': user.email,
+                'usuario': user.usuario
             }
         }
 
@@ -124,7 +130,8 @@ class RefreshTokenUseCase:
             'usuario': {
                 'id': user.id,
                 'nombre': user.nombre,
-                'email': user.email
+                'email': user.email,
+                'usuario': user.usuario
             }
         }
 

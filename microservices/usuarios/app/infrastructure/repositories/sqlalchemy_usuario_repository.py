@@ -11,6 +11,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             id=usuario.id,
             nombre=usuario.nombre,
             email=usuario.email,
+            usuario=usuario.usuario,
             contrasena=usuario.contrasena,
             creado_en=usuario.creado_en
         )
@@ -30,6 +31,12 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             return None
         return self._to_entity(model)
 
+    def find_by_usuario(self, usuario: str) -> Optional[Usuario]:
+        model = UsuarioModel.query.filter_by(usuario=usuario).first()
+        if not model:
+            return None
+        return self._to_entity(model)
+
     def find_all(self) -> List[Usuario]:
         models = UsuarioModel.query.all()
         return [self._to_entity(m) for m in models]
@@ -39,6 +46,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
         if model:
             model.nombre = usuario.nombre
             model.email = usuario.email
+            model.usuario = usuario.usuario
             model.contrasena = usuario.contrasena
             db.session.commit()
         return usuario
@@ -56,6 +64,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             id=model.id,
             nombre=model.nombre,
             email=model.email,
+            usuario=model.usuario,
             contrasena=model.contrasena,
             creado_en=model.creado_en
         )

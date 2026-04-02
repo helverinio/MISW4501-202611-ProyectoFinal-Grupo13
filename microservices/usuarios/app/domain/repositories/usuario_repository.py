@@ -17,6 +17,10 @@ class UsuarioRepository(ABC):
         pass
 
     @abstractmethod
+    def find_by_usuario(self, usuario: str) -> Optional[Usuario]:
+        pass
+
+    @abstractmethod
     def find_all(self) -> List[Usuario]:
         pass
 

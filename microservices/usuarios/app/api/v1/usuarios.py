@@ -24,6 +24,12 @@ def create_usuario():
 
     repo = get_repository()
 
+    usuario_value = data.get('usuario') or data['email']
+
+    existing_usuario = repo.find_by_usuario(usuario_value)
+    if existing_usuario:
+        return jsonify({'error': 'Usuario already exists'}), 409
+
     existing_email = repo.find_by_email(data['email'])
     if existing_email:
         return jsonify({'error': 'Email already exists'}), 409
@@ -32,6 +38,7 @@ def create_usuario():
     usuario = use_case.execute(
         nombre=data['nombre'],
         email=data['email'],
+        usuario=usuario_value,
         contrasena=data['contrasena']
     )
 
@@ -39,6 +46,7 @@ def create_usuario():
         'id': usuario.id,
         'nombre': usuario.nombre,
         'email': usuario.email,
+        'usuario': usuario.usuario,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     }), 201
 
@@ -55,6 +63,7 @@ def get_usuario(usuario_id):
         'id': usuario.id,
         'nombre': usuario.nombre,
         'email': usuario.email,
+        'usuario': usuario.usuario,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
@@ -68,6 +77,7 @@ def get_all_usuarios():
         'id': u.id,
         'nombre': u.nombre,
         'email': u.email,
+        'usuario': u.usuario,
         'creado_en': u.creado_en.isoformat() if u.creado_en else None
     } for u in usuarios])
 
@@ -88,6 +98,7 @@ def update_usuario(usuario_id):
         'id': usuario.id,
         'nombre': usuario.nombre,
         'email': usuario.email,
+        'usuario': usuario.usuario,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
