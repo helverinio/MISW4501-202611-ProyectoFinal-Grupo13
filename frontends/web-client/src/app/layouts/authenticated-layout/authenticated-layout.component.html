@@ -1,6 +1,11 @@
 <div class="authenticated-layout">
-  <app-private-header />
-  <main class="authenticated-layout__main container">
+  <app-home-search-header />
+  <app-home-search-mobile-navigation />
+
+  <main class="authenticated-layout__main">
     <router-outlet />
   </main>
+
+  <app-home-search-mobile-selectors />
+  <app-public-footer />
 </div>

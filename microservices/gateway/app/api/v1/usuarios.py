@@ -66,8 +66,6 @@ def refresh_token():
 @api_v1_bp.route('/auth/me', methods=['GET'])
 def get_current_user():
     auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({'error': 'Authorization header is required'}), 401
     result = get_service().get_current_user(auth_header)
     return jsonify(result['data']), result['status_code']
 
@@ -75,7 +73,5 @@ def get_current_user():
 @api_v1_bp.route('/auth/logout', methods=['POST'])
 def logout():
     auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({'error': 'Authorization header is required'}), 401
     result = get_service().logout(auth_header)
     return jsonify(result['data']), result['status_code']

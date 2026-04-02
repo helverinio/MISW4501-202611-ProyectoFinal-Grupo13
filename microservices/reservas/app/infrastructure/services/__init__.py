@@ -7,6 +7,11 @@ from app.infrastructure.services.redis_lock_service import (
     get_redis_lock_service,
     with_room_lock
 )
+from app.infrastructure.services.auth_service import (
+    UsuariosAuthService,
+    init_usuarios_auth_service,
+    get_usuarios_auth_service
+)
 
 __all__ = [
     'PagosService',
@@ -15,5 +20,8 @@ __all__ = [
     'RedisLockAcquisitionError',
     'init_redis_lock_service',
     'get_redis_lock_service',
-    'with_room_lock'
+    'with_room_lock',
+    'UsuariosAuthService',
+    'init_usuarios_auth_service',
+    'get_usuarios_auth_service'
 ]

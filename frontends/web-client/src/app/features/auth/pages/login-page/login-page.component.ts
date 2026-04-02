@@ -34,25 +34,20 @@ export class LoginPageComponent {
     this.loading.set(true);
     this.errorMessage.set('');
 
-    this.authService
-      .login(payload)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: () => {
-          const requestedRedirect = this.route.snapshot.queryParamMap.get('redirectTo');
-          const redirectTo =
-            requestedRedirect && requestedRedirect.startsWith('/') ? requestedRedirect : '/app';
-
-          void this.router.navigateByUrl(redirectTo).then((navigated) => {
-            if (!navigated) {
-              void this.router.navigate(['/app']);
-            }
-          });
-        },
-        error: (error: HttpErrorResponse) => {
-          this.errorMessage.set(this.resolveErrorMessage(error));
-        },
-      });
+    this.authService.login(payload).subscribe({
+      next: () => {
+        const redirectTo =
+          this.route.snapshot.queryParamMap.get('redirectTo') || '/app/home-search';
+        void this.router.navigateByUrl(redirectTo);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorMessage.set(this.resolveErrorMessage(error));
+        this.loading.set(false);
+      },
+      complete: () => {
+        this.loading.set(false);
+      },
+    });
   }
 
   protected t(key: string): string {

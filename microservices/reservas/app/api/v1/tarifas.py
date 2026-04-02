@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api.v1 import api_v1_bp
+from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateTarifaUseCase, GetTarifaUseCase, GetAllTarifasUseCase,
     GetTarifasByHabitacionUseCase, UpdateTarifaUseCase, DeleteTarifaUseCase
@@ -12,7 +13,8 @@ def get_repository():
 
 
 @api_v1_bp.route('/tarifas', methods=['POST'])
-def create_tarifa():
+@require_token
+def create_tarifa(current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -38,7 +40,8 @@ def create_tarifa():
 
 
 @api_v1_bp.route('/tarifas/<tarifa_id>', methods=['GET'])
-def get_tarifa(tarifa_id):
+@require_token
+def get_tarifa(tarifa_id, current_usuario=None):
     use_case = GetTarifaUseCase(get_repository())
     tarifa = use_case.execute(tarifa_id)
 
@@ -55,7 +58,8 @@ def get_tarifa(tarifa_id):
 
 
 @api_v1_bp.route('/tarifas', methods=['GET'])
-def get_all_tarifas():
+@require_token
+def get_all_tarifas(current_usuario=None):
     use_case = GetAllTarifasUseCase(get_repository())
     tarifas = use_case.execute()
 
@@ -69,7 +73,8 @@ def get_all_tarifas():
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>/tarifas', methods=['GET'])
-def get_tarifas_by_habitacion(habitacion_id):
+@require_token
+def get_tarifas_by_habitacion(habitacion_id, current_usuario=None):
     use_case = GetTarifasByHabitacionUseCase(get_repository())
     tarifas = use_case.execute(habitacion_id)
 
@@ -83,7 +88,8 @@ def get_tarifas_by_habitacion(habitacion_id):
 
 
 @api_v1_bp.route('/tarifas/<tarifa_id>', methods=['PUT'])
-def update_tarifa(tarifa_id):
+@require_token
+def update_tarifa(tarifa_id, current_usuario=None):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -104,7 +110,8 @@ def update_tarifa(tarifa_id):
 
 
 @api_v1_bp.route('/tarifas/<tarifa_id>', methods=['DELETE'])
-def delete_tarifa(tarifa_id):
+@require_token
+def delete_tarifa(tarifa_id, current_usuario=None):
     use_case = DeleteTarifaUseCase(get_repository())
     deleted = use_case.execute(tarifa_id)
 
