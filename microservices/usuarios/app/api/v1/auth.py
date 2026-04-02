@@ -21,14 +21,14 @@ def login():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    usuario = data.get('usuario')
+    email = data.get('email')
     contrasena = data.get('contrasena')
 
-    if not usuario or not contrasena:
-        return jsonify({'error': 'usuario and contrasena are required'}), 400
+    if not email or not contrasena:
+        return jsonify({'error': 'email and contrasena are required'}), 400
 
     use_case = AuthenticateUseCase(get_usuario_repository(), get_token_repository())
-    result = use_case.execute(usuario, contrasena)
+    result = use_case.execute(email, contrasena)
 
     if not result:
         return jsonify({'error': 'Invalid credentials'}), 401
@@ -77,7 +77,6 @@ def get_current_user():
         'id': usuario.id,
         'nombre': usuario.nombre,
         'email': usuario.email,
-        'usuario': usuario.usuario,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 

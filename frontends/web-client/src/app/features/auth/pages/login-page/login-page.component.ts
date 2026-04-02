@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { LoginFormComponent } from '../../components/login-form/login-form.component';
 import { LoginRequest } from '../../../../core/models/auth.models';
@@ -33,19 +34,25 @@ export class LoginPageComponent {
     this.loading.set(true);
     this.errorMessage.set('');
 
-    this.authService.login(payload).subscribe({
-      next: () => {
-        const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || '/app';
-        void this.router.navigateByUrl(redirectTo);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMessage.set(this.resolveErrorMessage(error));
-        this.loading.set(false);
-      },
-      complete: () => {
-        this.loading.set(false);
-      },
-    });
+    this.authService
+      .login(payload)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          const requestedRedirect = this.route.snapshot.queryParamMap.get('redirectTo');
+          const redirectTo =
+            requestedRedirect && requestedRedirect.startsWith('/') ? requestedRedirect : '/app';
+
+          void this.router.navigateByUrl(redirectTo).then((navigated) => {
+            if (!navigated) {
+              void this.router.navigate(['/app']);
+            }
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage.set(this.resolveErrorMessage(error));
+        },
+      });
   }
 
   protected t(key: string): string {

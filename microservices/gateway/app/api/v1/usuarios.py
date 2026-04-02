@@ -48,6 +48,8 @@ def login():
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
+    if not data.get('email') or not data.get('contrasena'):
+        return jsonify({'error': 'email and contrasena are required'}), 400
     result = get_service().login(data)
     return jsonify(result['data']), result['status_code']
 

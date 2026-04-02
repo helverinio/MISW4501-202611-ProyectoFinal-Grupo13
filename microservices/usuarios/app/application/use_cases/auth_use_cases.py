@@ -15,8 +15,8 @@ class AuthenticateUseCase:
         self.usuario_repository = usuario_repository
         self.token_repository = token_repository
 
-    def execute(self, usuario: str, contrasena: str) -> Optional[Dict[str, Any]]:
-        user = self.usuario_repository.find_by_usuario(usuario)
+    def execute(self, email: str, contrasena: str) -> Optional[Dict[str, Any]]:
+        user = self.usuario_repository.find_by_email(email)
         if not user:
             return None
         
@@ -33,7 +33,7 @@ class AuthenticateUseCase:
         access_token = jwt.encode(
             {
                 'sub': user.id,
-                'usuario': user.usuario,
+                'email': user.email,
                 'exp': access_token_expires_at,
                 'iat': now,
                 'type': 'access'
@@ -61,8 +61,7 @@ class AuthenticateUseCase:
             'usuario': {
                 'id': user.id,
                 'nombre': user.nombre,
-                'email': user.email,
-                'usuario': user.usuario
+                'email': user.email
             }
         }
 
@@ -97,7 +96,7 @@ class RefreshTokenUseCase:
         new_access_token = jwt.encode(
             {
                 'sub': user.id,
-                'usuario': user.usuario,
+                'email': user.email,
                 'exp': access_token_expires_at,
                 'iat': now,
                 'type': 'access'
@@ -125,8 +124,7 @@ class RefreshTokenUseCase:
             'usuario': {
                 'id': user.id,
                 'nombre': user.nombre,
-                'email': user.email,
-                'usuario': user.usuario
+                'email': user.email
             }
         }
 
