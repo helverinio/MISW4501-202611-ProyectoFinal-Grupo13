@@ -12,12 +12,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import HotelService, { Hotel } from '../services/hotelService';
+import HotelService, { Hotel, Habitacion } from '../services/hotelService';
+
+interface RoomCard {
+  hotel: Hotel;
+  room: Habitacion;
+}
 
 export default function HotelResultsScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams();
-  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [rooms, setRooms] = useState<RoomCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +47,14 @@ export default function HotelResultsScreen() {
     });
 
     if (result.success && result.data) {
-      setHotels(result.data);
+      // Flatten hotels into individual room cards
+      const flattenedRooms: RoomCard[] = [];
+      result.data.forEach(hotel => {
+        hotel.habitaciones?.forEach(room => {
+          flattenedRooms.push({ hotel, room });
+        });
+      });
+      setRooms(flattenedRooms);
     } else {
       setError(result.error?.message || t('results.errorLoading'));
     }
@@ -108,38 +120,42 @@ export default function HotelResultsScreen() {
     return amenidades.split(',').map(a => a.trim()).filter(a => a.length > 0);
   };
 
-  const renderHotelCard = ({ item }: { item: Hotel }) => {
-    const amenidadesList = getAmenidadesList(item.amenidades || '');
-    const roomCount = item.habitaciones?.length || 0;
+  const renderRoomCard = ({ item }: { item: RoomCard }) => {
+    const { hotel, room } = item;
+    const amenidadesList = getAmenidadesList(hotel.amenidades || '');
 
     return (
       <View style={styles.hotelCard}>
         <Image
           source={{
-            uri: 'https://via.placeholder.com/120x100?text=Hotel',
+            uri: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&h=200&fit=crop',
           }}
           style={styles.hotelImage}
         />
         <View style={styles.hotelInfo}>
           <Text style={styles.hotelName} numberOfLines={1}>
-            {item.nombre}
+            {hotel.nombre}
           </Text>
           <View style={styles.ratingRow}>
-            <View style={styles.starsContainer}>{renderStars(4)}</View>
+            <View style={styles.starsContainer}>{renderStars(4.5)}</View>
             <Text style={styles.ratingText}>
-              {roomCount} {t('results.rooms')}
+              4.5 (124 {t('results.reviews')})
             </Text>
           </View>
           <Text style={styles.locationText} numberOfLines={1}>
-            {item.ciudad}, {item.pais}
+            {hotel.ciudad} • 0.8 km {t('results.fromCenter')}
           </Text>
           <View style={styles.amenitiesRow}>
             {amenidadesList.slice(0, 2).map((amenity, index) => renderAmenity(amenity, index))}
           </View>
-          <Text style={styles.descriptionText} numberOfLines={2}>
-            {item.descripcion}
+          <Text style={styles.roomTypeText} numberOfLines={1}>
+            {room.tipo} • {room.capacidad} {t('results.guests')} • {room.camas} {t('results.beds')}
           </Text>
           <View style={styles.priceRow}>
+            <View>
+              <Text style={styles.perNightText}>{t('results.perNight')}</Text>
+              <Text style={styles.priceText}>$85</Text>
+            </View>
             <TouchableOpacity style={styles.viewDetailsButton}>
               <Text style={styles.viewDetailsText}>{t('results.viewDetails')}</Text>
             </TouchableOpacity>
@@ -183,7 +199,7 @@ export default function HotelResultsScreen() {
       {/* Results Count */}
       {!loading && !error && (
         <Text style={styles.resultsCount}>
-          <Text style={styles.resultsCountBold}>{hotels.length} {t('results.hotels')}</Text>{' '}
+          <Text style={styles.resultsCountBold}>{rooms.length} {t('results.rooms')}</Text>{' '}
           {t('results.foundIn')} {destination}
         </Text>
       )}
@@ -202,16 +218,16 @@ export default function HotelResultsScreen() {
             <Text style={styles.retryText}>{t('results.retry')}</Text>
           </TouchableOpacity>
         </View>
-      ) : hotels.length === 0 ? (
+      ) : rooms.length === 0 ? (
         <View style={styles.centerContent}>
           <Ionicons name="bed-outline" size={48} color="#999" />
           <Text style={styles.noResultsText}>{t('results.noHotels')}</Text>
         </View>
       ) : (
         <FlatList
-          data={hotels}
-          renderItem={renderHotelCard}
-          keyExtractor={(item) => item.hotel_id}
+          data={rooms}
+          renderItem={renderRoomCard}
+          keyExtractor={(item) => `${item.hotel.hotel_id}-${item.room.habitacion_id}`}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
@@ -350,6 +366,12 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 8,
     lineHeight: 16,
+  },
+  roomTypeText: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+    fontStyle: 'italic',
   },
   amenitiesRow: {
     flexDirection: 'row',
