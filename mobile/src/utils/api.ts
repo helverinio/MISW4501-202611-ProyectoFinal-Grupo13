@@ -39,7 +39,8 @@ customAxios.interceptors.request.use(
       const currentToken = await AsyncStorage.getItem('_x');
 
       if (currentToken) {
-        req.headers.Authorization = JSON.parse(currentToken);
+        const token = JSON.parse(currentToken);
+        req.headers.Authorization = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
       }
 
       req.headers.CallerId = callerId;

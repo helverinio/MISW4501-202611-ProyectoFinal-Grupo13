@@ -36,7 +36,40 @@
   "landing": {
     "welcome": "Welcome",
     "successMessage": "You have successfully logged in!",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "findStay": "Find your perfect stay",
+    "discoverHotels": "Discover amazing hotels in Latin America"
+  },
+  "search": {
+    "destination": "Destination",
+    "destinationPlaceholder": "Where are you going?",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "datePlaceholder": "mm/dd/yyyy",
+    "guests": "Guests",
+    "guest": "Guest",
+    "adult": "Adult",
+    "adults": "Adults",
+    "selectGuests": "Select Guests",
+    "searchHotels": "Search Hotels",
+    "searching": "Searching...",
+    "done": "Done"
+  },
+  "results": {
+    "filters": "Filters",
+    "price": "Price",
+    "rating": "Rating",
+    "hotels": "hotels",
+    "foundIn": "found in",
+    "reviews": "reviews",
+    "fromCenter": "from center",
+    "perNight": "per night",
+    "viewDetails": "View Details",
+    "freeCancellation": "Free cancellation",
+    "searching": "Searching hotels...",
+    "errorLoading": "Error loading hotels",
+    "retry": "Retry",
+    "noHotels": "No hotels found for your search"
   },
   "language": {
     "title": "Language",
