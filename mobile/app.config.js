@@ -2,8 +2,8 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: "mobile-temp-project",
-    slug: "mobile-temp-project",
+    name: "travel-hub",
+    slug: "travel-hub",
     version: "1.0.0",
     orientation: "portrait",
     userInterfaceStyle: "automatic",
@@ -20,7 +20,7 @@ export default {
       bundler: "metro",
       output: "static"
     },
-    scheme: "mobile-temp-project",
+    scheme: "travel-hub",
     experiments: {
       typedRoutes: true
     },
