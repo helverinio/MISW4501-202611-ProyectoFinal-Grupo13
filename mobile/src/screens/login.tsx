@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,29 @@ import { AuthService } from '../services/authService/AuthService';
 import { RegisterService } from '../services/userService/RegisterService';
 import { Ionicons } from '@expo/vector-icons';
 import LanguageSelector from '../common/LanguageSelector';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    checkExistingToken();
+  }, []);
+
+  const checkExistingToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('_x');
+      if (token) {
+        router.replace('/screens/landing' as Href);
+      }
+    } catch (error) {
+      console.error('Error checking existing token:', error);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -131,6 +150,16 @@ export default function LoginScreen() {
     setShowRegisterPassword(false);
     setShowConfirmPassword(false);
   };
+
+  if (isCheckingAuth) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4A7BF7" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -386,6 +415,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   keyboardView: {
     flex: 1,
