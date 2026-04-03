@@ -13,6 +13,7 @@ interface RoomCardVm {
   id: string;
   type: string;
   roomNumber: number;
+  capacity: number;
   capacityLabel: string;
   pricePerNight: number;
   totalPrice: number;
@@ -39,8 +40,10 @@ export class HotelDetailsPageComponent {
 
   protected readonly loading = signal<boolean>(true);
   protected readonly errorMessage = signal<string>('');
+  protected readonly holdTimeoutMessage = signal<string>('');
   protected readonly hotel = signal<HotelByIdResponse | null>(null);
   protected readonly rooms = signal<HotelRoomResponse[]>([]);
+  protected readonly selectedRoomCard = signal<RoomCardVm | null>(null);
 
   protected readonly amenities = signal<string[]>([]);
   protected readonly checkInDate = signal<string>('');
@@ -64,18 +67,29 @@ export class HotelDetailsPageComponent {
   protected readonly roomCards = computed<RoomCardVm[]>(() => {
     const nights = this.nights();
 
-    return this.rooms()
+    const roomsWithVariant = this.rooms().map((room) => ({
+      room,
+      variant: this.getRoomPriceVariant(room),
+    }));
+
+    const minVariant = roomsWithVariant.length
+      ? Math.min(...roomsWithVariant.map((item) => item.variant))
+      : 0;
+
+    const hotelBasePrice = this.getHotelBasePrice();
+
+    return roomsWithVariant
       .slice()
-      .sort((a, b) => this.getRoomBasePrice(a) - this.getRoomBasePrice(b))
-      .slice(0, 4)
-      .map((room, index) => {
-        const pricePerNight = this.getRoomBasePrice(room);
+      .sort((a, b) => a.variant - b.variant)
+      .map(({ room, variant }, index) => {
+        const pricePerNight = hotelBasePrice + (variant - minVariant);
         const totalPrice = pricePerNight * nights;
 
         return {
           id: room.id,
           type: this.roomTypeLabel(room.tipo),
           roomNumber: room.nro_habitacion,
+          capacity: room.capacidad,
           capacityLabel: `${room.capacidad} ${this.getGuestWord(room.capacidad)}`,
           pricePerNight,
           totalPrice,
@@ -85,13 +99,17 @@ export class HotelDetailsPageComponent {
       });
   });
 
-  protected readonly heroPrice = computed(() => {
-    const cards = this.roomCards();
-    if (!cards.length) {
-      return 0;
-    }
-    return cards[0].pricePerNight;
+  protected readonly activeRoomCard = computed<RoomCardVm | null>(
+    () => this.selectedRoomCard() ?? this.roomCards()[0] ?? null,
+  );
+
+  protected readonly guestsExceedCapacity = computed(() => {
+    const room = this.activeRoomCard();
+    if (!room) return false;
+    return this.guests() > room.capacity;
   });
+
+  protected readonly heroPrice = computed(() => this.activeRoomCard()?.pricePerNight ?? 0);
 
   protected readonly totalPrice = computed(() => this.heroPrice() * this.nights());
 
@@ -120,6 +138,34 @@ export class HotelDetailsPageComponent {
   protected readonly formattedCheckIn = computed(() => this.formatDate(this.checkInDate()));
 
   protected readonly formattedCheckOut = computed(() => this.formatDate(this.checkOutDate()));
+
+  protected readonly guestOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  protected todayIso(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  protected readonly checkOutMinDate = computed(() => {
+    const checkIn = this.checkInDate();
+    if (!checkIn) return this.todayIso();
+    const d = new Date(checkIn);
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  });
+
+  protected onCheckInChange(value: string): void {
+    this.checkInDate.set(value);
+    // If checkout is now before or equal to checkin, push it forward by 1 day
+    if (this.checkOutDate() <= value) {
+      const d = new Date(value);
+      d.setDate(d.getDate() + 1);
+      this.checkOutDate.set(d.toISOString().slice(0, 10));
+    }
+  }
+
+  protected onCheckOutChange(value: string): void {
+    this.checkOutDate.set(value);
+  }
 
   protected readonly overviewDescription = computed(() => {
     const description = this.hotel()?.descripcion?.trim();
@@ -153,6 +199,9 @@ export class HotelDetailsPageComponent {
       this.checkInDate.set(params.get('fecha_ingreso') || '');
       this.checkOutDate.set(params.get('fecha_salida') || '');
 
+      const holdExpired = params.get('hold_expired') === '1';
+      this.holdTimeoutMessage.set(holdExpired ? this.label('holdExpiredError') : '');
+
       const guests = Number(params.get('nro_personas') || 2);
       this.guests.set(Number.isNaN(guests) || guests < 1 ? 2 : guests);
     });
@@ -160,6 +209,24 @@ export class HotelDetailsPageComponent {
 
   protected goBack(): void {
     void this.router.navigate(['/app/search-results']);
+  }
+
+  protected selectRoom(room: RoomCardVm): void {
+    this.selectedRoomCard.set(room);
+  }
+
+  protected onReserveNow(): void {
+    const selectedRoom = this.activeRoomCard();
+
+    void this.router.navigate(['/app/reservas/nueva'], {
+      queryParams: {
+        hotel_id: this.hotel()?.id,
+        room_id: selectedRoom?.id,
+        fecha_ingreso: this.checkInDate(),
+        fecha_salida: this.checkOutDate(),
+        nro_personas: this.guests(),
+      },
+    });
   }
 
   protected t(key: string): string {
@@ -188,6 +255,9 @@ export class HotelDetailsPageComponent {
       | 'reserveNow'
       | 'noChargeYet'
       | 'taxesFees'
+      | 'holdExpiredError'
+      | 'roomType'
+      | 'guestsExceedCapacity'
       | 'notAvailable',
   ): string {
     const lang = this.currentLanguage();
@@ -211,6 +281,9 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reserve Now',
         noChargeYet: 'You will not be charged yet',
         taxesFees: 'Taxes & fees',
+        holdExpiredError: 'You exceeded the maximum time to complete the reservation. Please try again.',
+        roomType: 'Room type',
+        guestsExceedCapacity: 'Exceeds the maximum guests allowed for this room.',
         notAvailable: 'N/A',
       },
       es: {
@@ -231,6 +304,9 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reservar ahora',
         noChargeYet: 'Todavia no se realizara ningun cobro',
         taxesFees: 'Impuestos y cargos',
+        holdExpiredError: 'Has excedido el tiempo maximo para completar la reserva. Intentalo nuevamente.',
+        roomType: 'Tipo de habitacion',
+        guestsExceedCapacity: 'Supera el maximo de huespedes permitido para esta habitacion.',
         notAvailable: 'N/D',
       },
       pt: {
@@ -251,6 +327,9 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reservar agora',
         noChargeYet: 'Voce ainda nao sera cobrado',
         taxesFees: 'Impostos e taxas',
+        holdExpiredError: 'Voce excedeu o tempo maximo para concluir a reserva. Tente novamente.',
+        roomType: 'Tipo de quarto',
+        guestsExceedCapacity: 'Excede o maximo de hospedes permitido para este quarto.',
         notAvailable: 'N/D',
       },
     } as const;
@@ -344,22 +423,19 @@ export class HotelDetailsPageComponent {
     });
   }
 
-  private getRoomBasePrice(room: HotelRoomResponse): number {
-    const seed = this.seededNumber(room.id);
-    const type = room.tipo.toLowerCase();
-
-    let base = 90;
-    if (type.includes('suite')) {
-      base = 220;
-    } else if (type.includes('triple')) {
-      base = 150;
-    } else if (type.includes('doble')) {
-      base = 130;
-    } else if (type.includes('sencilla')) {
-      base = 95;
+  private getHotelBasePrice(): number {
+    const hotelId = this.hotel()?.id;
+    if (!hotelId) {
+      return 65;
     }
 
-    return base + (seed % 35);
+    // Keep the exact same baseline used in search results for cross-screen consistency.
+    return 65 + (this.seededNumber(hotelId) % 140);
+  }
+
+  private getRoomPriceVariant(room: HotelRoomResponse): number {
+    const seed = this.seededNumber(room.id);
+    return seed % 35;
   }
 
   private seededNumber(seed: string): number {

@@ -8,6 +8,12 @@
       {{ errorMessage() }}
     </div>
   } @else if (hotel()) {
+    @if (holdTimeoutMessage()) {
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 mb-4">
+        {{ holdTimeoutMessage() }}
+      </div>
+    }
+
     <div class="text-sm text-gray-500 mb-3">
       <button class="hover:text-primary transition-colors" type="button" (click)="goBack()">
         {{ label('searchResults') }}
@@ -71,9 +77,25 @@
         <article class="bg-white rounded-xl border border-gray-200 p-5 sm:p-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ label('availableRooms') }}</h2>
           @if (roomCards().length) {
-            <div class="space-y-4">
-              @for (room of roomCards(); track room.id) {
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+            <div class="max-h-[560px] overflow-y-auto pr-1">
+              <div class="hidden md:grid md:grid-cols-12 md:gap-4 items-center text-xs font-semibold text-gray-500 uppercase tracking-wide sticky top-0 bg-white z-10 pb-3">
+                <div class="md:col-span-4 whitespace-nowrap">{{ label('roomType') }}</div>
+                <div class="md:col-span-2 whitespace-nowrap">Guests</div>
+                <div class="md:col-span-2 whitespace-nowrap">{{ t('searchResults.filters.pricePerNight') }}</div>
+                <div class="md:col-span-2 whitespace-nowrap">
+                  {{ t('searchResults.card.total') }} <span class="whitespace-nowrap">({{ nights() }} {{ t('searchResults.summary.nights') }})</span>
+                </div>
+                <div class="md:col-span-2 text-right whitespace-nowrap md:pr-3">Action</div>
+              </div>
+              <div class="space-y-4">
+                @for (room of roomCards(); track room.id) {
+                <div
+                  class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0 rounded-lg transition-colors"
+                  [class.bg-primary-50]="activeRoomCard()?.id === room.id"
+                  [class.ring-1]="activeRoomCard()?.id === room.id"
+                  [class.ring-primary]="activeRoomCard()?.id === room.id"
+                  [class.px-3]="activeRoomCard()?.id === room.id"
+                >
                   <div class="md:col-span-4">
                     <p class="font-semibold text-gray-900">{{ room.type }}</p>
                     <p class="text-xs text-gray-500 mt-1">{{ label('room') }} {{ room.roomNumber }}</p>
@@ -82,16 +104,23 @@
                   <div class="md:col-span-2 text-sm text-gray-700">{{ room.capacityLabel }}</div>
                   <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.pricePerNight) }}</div>
                   <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.totalPrice) }}</div>
-                  <div class="md:col-span-2 md:text-right">
+                  <div class="md:col-span-2 md:text-right md:pr-3">
                     <button
                       type="button"
-                      class="w-full md:w-auto px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
+                      class="w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                      [class.bg-primary]="activeRoomCard()?.id !== room.id"
+                      [class.text-white]="activeRoomCard()?.id !== room.id"
+                      [class.hover:bg-primary-dark]="activeRoomCard()?.id !== room.id"
+                      [class.bg-emerald-600]="activeRoomCard()?.id === room.id"
+                      [class.text-white]="activeRoomCard()?.id === room.id"
+                      (click)="selectRoom(room)"
                     >
-                      {{ label('select') }}
+                      {{ activeRoomCard()?.id === room.id ? '\u2713 ' + label('select') : label('select') }}
                     </button>
                   </div>
                 </div>
-              }
+                }
+              </div>
             </div>
           } @else {
             <p class="text-gray-600 text-sm">{{ label('noRooms') }}</p>
@@ -108,19 +137,52 @@
 
           <div class="space-y-3 text-sm mb-5">
             <div>
-              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.checkIn') }}</p>
-              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">{{ formattedCheckIn() }}</div>
+              <label class="text-gray-500 mb-1 block">{{ t('homeSearch.hero.checkIn') }}</label>
+              <input
+                type="date"
+                class="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                [value]="checkInDate()"
+                [min]="todayIso()"
+                (change)="onCheckInChange($any($event.target).value)"
+              />
             </div>
             <div>
-              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.checkOut') }}</p>
-              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">{{ formattedCheckOut() }}</div>
+              <label class="text-gray-500 mb-1 block">{{ t('homeSearch.hero.checkOut') }}</label>
+              <input
+                type="date"
+                class="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                [value]="checkOutDate()"
+                [min]="checkOutMinDate()"
+                (change)="onCheckOutChange($any($event.target).value)"
+              />
             </div>
             <div>
-              <p class="text-gray-500 mb-1">{{ t('homeSearch.hero.guests') }}</p>
-              <div class="rounded-md border border-gray-300 px-3 py-2 text-gray-800">
-                {{ getGuestsLabel(guests()) }}
+              <label class="text-gray-500 mb-1 block">{{ t('homeSearch.hero.guests') }}</label>
+              <select
+                class="w-full rounded-md border px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:border-transparent"
+                [class.border-gray-300]="!guestsExceedCapacity()"
+                [class.focus:ring-primary]="!guestsExceedCapacity()"
+                [class.border-red-400]="guestsExceedCapacity()"
+                [class.focus:ring-red-400]="guestsExceedCapacity()"
+                [value]="guests()"
+                (change)="guests.set(+$any($event.target).value)"
+              >
+                @for (n of guestOptions; track n) {
+                  <option [value]="n">{{ getGuestsLabel(n) }}</option>
+                }
+              </select>
+              @if (guestsExceedCapacity()) {
+                <p class="text-red-500 text-xs mt-1">{{ label('guestsExceedCapacity') }}</p>
+              }
+            </div>
+            @if (activeRoomCard()) {
+              <div>
+                <p class="text-gray-500 mb-1">{{ label('roomType') }}</p>
+                <div class="rounded-md border border-primary px-3 py-2 text-gray-800 bg-primary-50 text-sm font-medium">
+                  {{ activeRoomCard()!.type }} &mdash; {{ label('room') }} {{ activeRoomCard()!.roomNumber }}
+                </div>
               </div>
-            </div>
+            }
           </div>
 
           <div class="space-y-2 text-sm border-t border-gray-100 pt-4">
@@ -140,7 +202,15 @@
 
           <button
             type="button"
-            class="w-full mt-5 px-4 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition-colors"
+            class="w-full mt-5 px-4 py-3 rounded-lg font-semibold transition-colors"
+            [class.bg-primary]="!guestsExceedCapacity()"
+            [class.text-white]="!guestsExceedCapacity()"
+            [class.hover:bg-primary-dark]="!guestsExceedCapacity()"
+            [class.bg-gray-200]="guestsExceedCapacity()"
+            [class.text-gray-400]="guestsExceedCapacity()"
+            [class.cursor-not-allowed]="guestsExceedCapacity()"
+            [disabled]="guestsExceedCapacity()"
+            (click)="onReserveNow()"
           >
             {{ label('reserveNow') }}
           </button>

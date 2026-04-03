@@ -24,6 +24,7 @@ export class HomeSearchHeroSearchComponent {
   protected checkInDate = this.getDateOffset(1);
   protected checkOutDate = this.getDateOffset(7);
   protected guests = 1;
+  protected submitAttempted = false;
 
   constructor() {
     this.route.queryParamMap.subscribe((params) => {
@@ -64,8 +65,52 @@ export class HomeSearchHeroSearchComponent {
     return this.i18n.t(key as any);
   }
 
+  protected get todayDate(): string {
+    return this.getDateOffset(0);
+  }
+
+  protected get isDestinationInvalid(): boolean {
+    return this.submitAttempted && !this.destination.trim();
+  }
+
+  protected get isCheckInInvalid(): boolean {
+    return this.submitAttempted && !!this.checkInDate && this.checkInDate < this.todayDate;
+  }
+
+  protected get isCheckOutInvalid(): boolean {
+    return this.submitAttempted && !!this.checkOutDate && !!this.checkInDate && this.checkOutDate <= this.checkInDate;
+  }
+
+  protected get hasSearchErrors(): boolean {
+    return this.isDestinationInvalid || this.isCheckInInvalid || this.isCheckOutInvalid;
+  }
+
+  protected onDestinationInput(): void {
+    if (!this.submitAttempted) {
+      return;
+    }
+    this.submitAttempted = true;
+  }
+
+  protected onCheckInInput(value: string): void {
+    this.checkInDate = value;
+    if (this.checkOutDate && this.checkOutDate <= value) {
+      this.checkOutDate = this.getDateOffsetFrom(value, 1);
+    }
+  }
+
+  protected onCheckOutInput(value: string): void {
+    this.checkOutDate = value;
+  }
+
   protected onSearchHotels(): void {
+    this.submitAttempted = true;
+
     if (!this.destination.trim() || !this.checkInDate || !this.checkOutDate || this.guests < 1) {
+      return;
+    }
+
+    if (this.checkInDate < this.todayDate || this.checkOutDate <= this.checkInDate) {
       return;
     }
 
@@ -82,6 +127,12 @@ export class HomeSearchHeroSearchComponent {
   private getDateOffset(daysFromNow: number): string {
     const date = new Date();
     date.setDate(date.getDate() + daysFromNow);
+    return date.toISOString().split('T')[0];
+  }
+
+  private getDateOffsetFrom(baseDate: string, daysFromBase: number): string {
+    const date = new Date(baseDate);
+    date.setDate(date.getDate() + daysFromBase);
     return date.toISOString().split('T')[0];
   }
 }

@@ -70,6 +70,10 @@ export class HomeSearchHeaderComponent {
     return this.currentUrl().startsWith('/app/search-results');
   }
 
+  protected isMyReservationsPage(): boolean {
+    return this.currentUrl().startsWith('/app/mis-reservas');
+  }
+
   @HostListener('document:click')
   protected closeUserMenu(): void {
     this.isUserMenuOpen.set(false);
