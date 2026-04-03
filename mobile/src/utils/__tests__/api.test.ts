@@ -90,7 +90,7 @@ describe('API Configuration', () => {
 
       const result = await requestInterceptor(mockRequest);
 
-      expect(result.headers.Authorization).toBe('test-token');
+      expect(result.headers.Authorization).toBe('Bearer test-token');
     });
 
     it('should add CallerId header', async () => {
