@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ export interface SearchParams {
 interface HotelSearchProps {
   onSearch: (params: SearchParams) => void;
   loading?: boolean;
+  initialValues?: SearchParams | null;
 }
 
 interface CalendarPickerProps {
@@ -164,12 +165,21 @@ function CalendarPicker({ visible, onClose, onSelect, title, minimumDate, select
   );
 }
 
-export default function HotelSearch({ onSearch, loading = false }: HotelSearchProps) {
+export default function HotelSearch({ onSearch, loading = false, initialValues }: HotelSearchProps) {
   const { t } = useTranslation();
-  const [destination, setDestination] = useState('');
-  const [checkIn, setCheckIn] = useState<Date | null>(null);
-  const [checkOut, setCheckOut] = useState<Date | null>(null);
-  const [guests, setGuests] = useState(1);
+  const [destination, setDestination] = useState(initialValues?.destination || '');
+  const [checkIn, setCheckIn] = useState<Date | null>(initialValues?.checkIn || null);
+  const [checkOut, setCheckOut] = useState<Date | null>(initialValues?.checkOut || null);
+  const [guests, setGuests] = useState(initialValues?.guests || 1);
+
+  useEffect(() => {
+    if (initialValues) {
+      setDestination(initialValues.destination);
+      setCheckIn(initialValues.checkIn);
+      setCheckOut(initialValues.checkOut);
+      setGuests(initialValues.guests);
+    }
+  }, [initialValues]);
   const [showCheckInPicker, setShowCheckInPicker] = useState(false);
   const [showCheckOutPicker, setShowCheckOutPicker] = useState(false);
   const [showGuestsPicker, setShowGuestsPicker] = useState(false);

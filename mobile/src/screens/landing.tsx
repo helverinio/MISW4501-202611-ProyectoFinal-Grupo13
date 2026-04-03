@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Href } from 'expo-router';
@@ -8,9 +8,41 @@ import { Ionicons } from '@expo/vector-icons';
 import LanguageSelector from '../common/LanguageSelector';
 import HotelSearch, { SearchParams } from '../common/HotelSearch';
 
+const LAST_SEARCH_KEY = 'lastHotelSearch';
+
 export default function LandingPage() {
   const { t } = useTranslation();
   const [searchLoading, setSearchLoading] = useState(false);
+  const [lastSearch, setLastSearch] = useState<SearchParams | null>(null);
+
+  useEffect(() => {
+    loadLastSearch();
+  }, []);
+
+  const loadLastSearch = async () => {
+    try {
+      const stored = await AsyncStorage.getItem(LAST_SEARCH_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setLastSearch({
+          destination: parsed.destination,
+          checkIn: new Date(parsed.checkIn),
+          checkOut: new Date(parsed.checkOut),
+          guests: parsed.guests,
+        });
+      }
+    } catch (e) {
+      // Ignore load errors
+    }
+  };
+
+  const saveLastSearch = async (params: SearchParams) => {
+    try {
+      await AsyncStorage.setItem(LAST_SEARCH_KEY, JSON.stringify(params));
+    } catch (e) {
+      // Ignore save errors
+    }
+  };
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('_x');
@@ -20,6 +52,8 @@ export default function LandingPage() {
 
   const handleSearch = async (params: SearchParams) => {
     setSearchLoading(true);
+    setLastSearch(params);
+    saveLastSearch(params);
     
     const searchParams = {
       destination: params.destination,
@@ -71,7 +105,7 @@ export default function LandingPage() {
         </View>
 
         {/* Search Component */}
-        <HotelSearch onSearch={handleSearch} loading={searchLoading} />
+        <HotelSearch onSearch={handleSearch} loading={searchLoading} initialValues={lastSearch} />
 
         {/* Quick Actions or Featured - can be expanded later */}
         <View style={styles.bottomPadding} />
