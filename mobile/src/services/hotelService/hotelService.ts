@@ -7,18 +7,23 @@ export interface HotelSearchParams {
   nro_personas: number;
 }
 
+export interface Habitacion {
+  habitacion_id: string;
+  tipo: string;
+  nro_habitacion: number;
+  capacidad: number;
+  camas: number;
+}
+
 export interface Hotel {
-  id: string;
+  hotel_id: string;
   nombre: string;
-  direccion: string;
+  descripcion: string;
+  email: string;
   ciudad: string;
-  rating: number;
-  num_reviews: number;
-  precio_noche: number;
-  distancia_centro: number;
-  imagen_url?: string;
-  amenidades: string[];
-  cancelacion_gratis: boolean;
+  pais: string;
+  amenidades: string;
+  habitaciones: Habitacion[];
 }
 
 export interface HotelSearchResult {
@@ -40,7 +45,7 @@ export const HotelService = {
       if (response.status === 200) {
         return {
           success: true,
-          data: response.data,
+          data: response.data.hoteles || [],
         };
       }
 

@@ -104,49 +104,50 @@ export default function HotelResultsScreen() {
     );
   };
 
-  const renderHotelCard = ({ item }: { item: Hotel }) => (
-    <View style={styles.hotelCard}>
-      <Image
-        source={{
-          uri: item.imagen_url || 'https://via.placeholder.com/120x100?text=Hotel',
-        }}
-        style={styles.hotelImage}
-      />
-      <View style={styles.hotelInfo}>
-        <Text style={styles.hotelName} numberOfLines={1}>
-          {item.nombre}
-        </Text>
-        <View style={styles.ratingRow}>
-          <View style={styles.starsContainer}>{renderStars(item.rating)}</View>
-          <Text style={styles.ratingText}>
-            {item.rating} ({item.num_reviews} {t('results.reviews')})
+  const getAmenidadesList = (amenidades: string): string[] => {
+    return amenidades.split(',').map(a => a.trim()).filter(a => a.length > 0);
+  };
+
+  const renderHotelCard = ({ item }: { item: Hotel }) => {
+    const amenidadesList = getAmenidadesList(item.amenidades || '');
+    const roomCount = item.habitaciones?.length || 0;
+
+    return (
+      <View style={styles.hotelCard}>
+        <Image
+          source={{
+            uri: 'https://via.placeholder.com/120x100?text=Hotel',
+          }}
+          style={styles.hotelImage}
+        />
+        <View style={styles.hotelInfo}>
+          <Text style={styles.hotelName} numberOfLines={1}>
+            {item.nombre}
           </Text>
-        </View>
-        <Text style={styles.locationText} numberOfLines={1}>
-          {item.ciudad} • {item.distancia_centro} km {t('results.fromCenter')}
-        </Text>
-        <View style={styles.amenitiesRow}>
-          {item.amenidades?.slice(0, 2).map((amenity, index) => renderAmenity(amenity, index))}
-          {item.cancelacion_gratis && (
-            <View style={[styles.amenityBadge, { borderColor: '#22C55E' }]}>
-              <Text style={[styles.amenityText, { color: '#22C55E' }]}>
-                {t('results.freeCancellation')}
-              </Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.priceRow}>
-          <View>
-            <Text style={styles.perNightText}>{t('results.perNight')}</Text>
-            <Text style={styles.priceText}>${item.precio_noche}</Text>
+          <View style={styles.ratingRow}>
+            <View style={styles.starsContainer}>{renderStars(4)}</View>
+            <Text style={styles.ratingText}>
+              {roomCount} {t('results.rooms')}
+            </Text>
           </View>
-          <TouchableOpacity style={styles.viewDetailsButton}>
-            <Text style={styles.viewDetailsText}>{t('results.viewDetails')}</Text>
-          </TouchableOpacity>
+          <Text style={styles.locationText} numberOfLines={1}>
+            {item.ciudad}, {item.pais}
+          </Text>
+          <View style={styles.amenitiesRow}>
+            {amenidadesList.slice(0, 2).map((amenity, index) => renderAmenity(amenity, index))}
+          </View>
+          <Text style={styles.descriptionText} numberOfLines={2}>
+            {item.descripcion}
+          </Text>
+          <View style={styles.priceRow}>
+            <TouchableOpacity style={styles.viewDetailsButton}>
+              <Text style={styles.viewDetailsText}>{t('results.viewDetails')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -210,7 +211,7 @@ export default function HotelResultsScreen() {
         <FlatList
           data={hotels}
           renderItem={renderHotelCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.hotel_id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
@@ -343,6 +344,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#666',
     marginBottom: 8,
+  },
+  descriptionText: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 8,
+    lineHeight: 16,
   },
   amenitiesRow: {
     flexDirection: 'row',
