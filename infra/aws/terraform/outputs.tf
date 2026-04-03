@@ -10,6 +10,12 @@ output "ecs_cluster_name" {
   value = aws_ecs_cluster.main.name
 }
 
+output "ecs_services" {
+  value = {
+    for name, service in aws_ecs_service.services : name => service.name
+  }
+}
+
 output "ecs_task_execution_role_arn" {
   value = aws_iam_role.ecs_task_execution.arn
 }
@@ -50,6 +56,14 @@ output "codedeploy_deployment_groups" {
   value = {
     for name, group in aws_codedeploy_deployment_group.services : name => group.deployment_group_name
   }
+}
+
+output "codedeploy_prod_listener_arns" {
+  value = var.enable_codedeploy ? {
+    for name, config in local.service_configs : name => (
+      name == "gateway" ? aws_lb_listener.public_prod.arn : aws_lb_listener.internal_prod[name].arn
+    )
+  } : {}
 }
 
 output "log_groups" {
@@ -98,4 +112,16 @@ output "frontend_urls" {
   value = {
     for name, dist in aws_cloudfront_distribution.frontends : name => "https://${dist.domain_name}"
   }
+}
+
+output "aws_native_cicd_connection_arn" {
+  value = var.enable_aws_native_cicd ? local.cicd_github_connection_arn : null
+}
+
+output "aws_native_cicd_pipeline_name" {
+  value = var.enable_aws_native_cicd ? aws_codepipeline.main[0].name : null
+}
+
+output "aws_native_cicd_codebuild_project_name" {
+  value = var.enable_aws_native_cicd ? aws_codebuild_project.main[0].name : null
 }
