@@ -4,22 +4,38 @@ import LoginScreen from '../login';
 import { AuthService } from '../../services/authService/AuthService';
 import { RegisterService } from '../../services/userService/RegisterService';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('../../services/authService/AuthService');
 jest.mock('../../services/userService/RegisterService');
 jest.mock('../../common/LanguageSelector', () => 'LanguageSelector');
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+}));
 
 const mockAuthService = AuthService as jest.Mocked<typeof AuthService>;
 const mockRegisterService = RegisterService as jest.Mocked<typeof RegisterService>;
+const mockAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
+
+const renderAndWaitForAuth = async () => {
+  const result = render(<LoginScreen />);
+  await waitFor(() => {
+    expect(result.queryByText('common.appName')).toBeTruthy();
+  });
+  return result;
+};
 
 describe('LoginScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAsyncStorage.getItem.mockResolvedValue(null);
   });
 
   describe('Rendering', () => {
-    it('should render login form by default', () => {
-      const { getByText, getByPlaceholderText } = render(<LoginScreen />);
+    it('should render login form by default', async () => {
+      const { getByText, getByPlaceholderText } = await renderAndWaitForAuth();
 
       expect(getByText('common.appName')).toBeTruthy();
       expect(getByText('auth.login')).toBeTruthy();
@@ -31,18 +47,18 @@ describe('LoginScreen', () => {
       expect(getByText('auth.loginButton')).toBeTruthy();
     });
 
-    it('should render remember me checkbox', () => {
-      const { getByText } = render(<LoginScreen />);
+    it('should render remember me checkbox', async () => {
+      const { getByText } = await renderAndWaitForAuth();
       expect(getByText('auth.rememberMe')).toBeTruthy();
     });
 
-    it('should render forgot password link', () => {
-      const { getByText } = render(<LoginScreen />);
+    it('should render forgot password link', async () => {
+      const { getByText } = await renderAndWaitForAuth();
       expect(getByText('auth.forgotPassword')).toBeTruthy();
     });
 
-    it('should render security badges in footer', () => {
-      const { getByText } = render(<LoginScreen />);
+    it('should render security badges in footer', async () => {
+      const { getByText } = await renderAndWaitForAuth();
       expect(getByText('common.secure')).toBeTruthy();
       expect(getByText('common.encrypted')).toBeTruthy();
       expect(getByText('common.certified')).toBeTruthy();
@@ -50,8 +66,8 @@ describe('LoginScreen', () => {
   });
 
   describe('Tab Navigation', () => {
-    it('should switch to register tab when register is pressed', () => {
-      const { getByText, queryByText } = render(<LoginScreen />);
+    it('should switch to register tab when register is pressed', async () => {
+      const { getByText, queryByText } = await renderAndWaitForAuth();
 
       const registerTab = getByText('auth.register');
       fireEvent.press(registerTab);
@@ -61,8 +77,8 @@ describe('LoginScreen', () => {
       expect(getByText('auth.registerButton')).toBeTruthy();
     });
 
-    it('should switch back to login tab when login is pressed', () => {
-      const { getByText, queryByText } = render(<LoginScreen />);
+    it('should switch back to login tab when login is pressed', async () => {
+      const { getByText, queryByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
       expect(getByText('auth.fullName')).toBeTruthy();
@@ -72,8 +88,8 @@ describe('LoginScreen', () => {
       expect(getByText('auth.loginButton')).toBeTruthy();
     });
 
-    it('should clear errors when switching tabs', () => {
-      const { getByText, getByPlaceholderText, queryByText } = render(<LoginScreen />);
+    it('should clear errors when switching tabs', async () => {
+      const { getByText, getByPlaceholderText, queryByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.loginButton'));
       expect(getByText('auth.errors.emptyFields')).toBeTruthy();
@@ -85,7 +101,7 @@ describe('LoginScreen', () => {
 
   describe('Login Functionality', () => {
     it('should show error when login fields are empty', async () => {
-      const { getByText } = render(<LoginScreen />);
+      const { getByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.loginButton'));
 
@@ -94,7 +110,7 @@ describe('LoginScreen', () => {
     });
 
     it('should show error when only email is provided', async () => {
-      const { getByText, getByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       fireEvent.press(getByText('auth.loginButton'));
@@ -103,7 +119,7 @@ describe('LoginScreen', () => {
     });
 
     it('should show error when only password is provided', async () => {
-      const { getByText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       const passwordInputs = getAllByPlaceholderText('••••••••');
       fireEvent.changeText(passwordInputs[0], 'password123');
@@ -115,7 +131,7 @@ describe('LoginScreen', () => {
     it('should call AuthService.send with correct credentials on valid login', async () => {
       mockAuthService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -133,7 +149,7 @@ describe('LoginScreen', () => {
     it('should navigate to landing screen on successful login', async () => {
       mockAuthService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -154,7 +170,7 @@ describe('LoginScreen', () => {
         error: { message: 'Invalid credentials' },
       });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -172,7 +188,7 @@ describe('LoginScreen', () => {
     it('should show default error message when login fails without message', async () => {
       mockAuthService.send.mockResolvedValue({ success: false });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -190,7 +206,7 @@ describe('LoginScreen', () => {
     it('should show unexpected error on AuthService exception', async () => {
       mockAuthService.send.mockRejectedValue(new Error('Network error'));
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -212,7 +228,7 @@ describe('LoginScreen', () => {
     });
 
     it('should show error when registration fields are empty', async () => {
-      const { getByText } = render(<LoginScreen />);
+      const { getByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
       fireEvent.press(getByText('auth.registerButton'));
@@ -222,7 +238,7 @@ describe('LoginScreen', () => {
     });
 
     it('should show error when passwords do not match', async () => {
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -239,7 +255,7 @@ describe('LoginScreen', () => {
     });
 
     it('should show error when password is too short', async () => {
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -258,7 +274,7 @@ describe('LoginScreen', () => {
     it('should call RegisterService.send with correct data on valid registration', async () => {
       mockRegisterService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -286,7 +302,7 @@ describe('LoginScreen', () => {
     it('should show success message on successful registration', async () => {
       mockRegisterService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -309,7 +325,7 @@ describe('LoginScreen', () => {
     it('should switch to login tab after successful registration', async () => {
       mockRegisterService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -340,7 +356,7 @@ describe('LoginScreen', () => {
         error: { message: 'Email already exists' },
       });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -363,7 +379,7 @@ describe('LoginScreen', () => {
     it('should show default error message when registration fails without message', async () => {
       mockRegisterService.send.mockResolvedValue({ success: false });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -386,7 +402,7 @@ describe('LoginScreen', () => {
     it('should show unexpected error on RegisterService exception', async () => {
       mockRegisterService.send.mockRejectedValue(new Error('Network error'));
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -408,8 +424,8 @@ describe('LoginScreen', () => {
   });
 
   describe('Password Visibility Toggle', () => {
-    it('should toggle login password visibility', () => {
-      const { getAllByPlaceholderText, getByTestId } = render(<LoginScreen />);
+    it('should toggle login password visibility', async () => {
+      const { getAllByPlaceholderText, getByTestId } = await renderAndWaitForAuth();
 
       const passwordInputs = getAllByPlaceholderText('••••••••');
       const passwordInput = passwordInputs[0];
@@ -417,8 +433,8 @@ describe('LoginScreen', () => {
       expect(passwordInput.props.secureTextEntry).toBe(true);
     });
 
-    it('should toggle register password visibility', () => {
-      const { getByText, getAllByPlaceholderText } = render(<LoginScreen />);
+    it('should toggle register password visibility', async () => {
+      const { getByText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -429,8 +445,8 @@ describe('LoginScreen', () => {
   });
 
   describe('Remember Me Checkbox', () => {
-    it('should toggle remember me checkbox', () => {
-      const { getByText } = render(<LoginScreen />);
+    it('should toggle remember me checkbox', async () => {
+      const { getByText } = await renderAndWaitForAuth();
 
       const rememberMeText = getByText('auth.rememberMe');
       fireEvent.press(rememberMeText);
@@ -438,8 +454,8 @@ describe('LoginScreen', () => {
   });
 
   describe('Input Field Behavior', () => {
-    it('should update login email on change', () => {
-      const { getByPlaceholderText } = render(<LoginScreen />);
+    it('should update login email on change', async () => {
+      const { getByPlaceholderText } = await renderAndWaitForAuth();
 
       const emailInput = getByPlaceholderText('auth.emailPlaceholder');
       fireEvent.changeText(emailInput, 'newemail@test.com');
@@ -447,8 +463,8 @@ describe('LoginScreen', () => {
       expect(emailInput.props.value).toBe('newemail@test.com');
     });
 
-    it('should update login password on change', () => {
-      const { getAllByPlaceholderText } = render(<LoginScreen />);
+    it('should update login password on change', async () => {
+      const { getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       const passwordInputs = getAllByPlaceholderText('••••••••');
       fireEvent.changeText(passwordInputs[0], 'newpassword');
@@ -456,8 +472,8 @@ describe('LoginScreen', () => {
       expect(passwordInputs[0].props.value).toBe('newpassword');
     });
 
-    it('should update registration fields on change', () => {
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+    it('should update registration fields on change', async () => {
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -485,7 +501,7 @@ describe('LoginScreen', () => {
       });
       mockAuthService.send.mockReturnValue(loginPromise as any);
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -509,7 +525,7 @@ describe('LoginScreen', () => {
       });
       mockRegisterService.send.mockReturnValue(registerPromise as any);
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText, queryByText } = await renderAndWaitForAuth();
 
       fireEvent.press(getByText('auth.register'));
 
@@ -535,7 +551,7 @@ describe('LoginScreen', () => {
     it('should trim whitespace from login email', async () => {
       mockAuthService.send.mockResolvedValue({ success: true, data: {} });
 
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), '  test@example.com  ');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -551,7 +567,7 @@ describe('LoginScreen', () => {
     });
 
     it('should handle whitespace-only email as empty', async () => {
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), '   ');
       const passwordInputs = getAllByPlaceholderText('••••••••');
@@ -564,7 +580,7 @@ describe('LoginScreen', () => {
     });
 
     it('should handle whitespace-only password as empty', async () => {
-      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = render(<LoginScreen />);
+      const { getByText, getByPlaceholderText, getAllByPlaceholderText } = await renderAndWaitForAuth();
 
       fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'test@example.com');
       const passwordInputs = getAllByPlaceholderText('••••••••');
