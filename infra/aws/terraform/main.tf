@@ -569,6 +569,10 @@ resource "aws_lb_listener" "public_prod" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.blue["gateway"].arn
   }
+
+  lifecycle {
+    ignore_changes = [default_action]
+  }
 }
 
 resource "aws_lb_listener" "public_test" {
@@ -579,6 +583,10 @@ resource "aws_lb_listener" "public_test" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.green["gateway"].arn
+  }
+
+  lifecycle {
+    ignore_changes = [default_action]
   }
 }
 
@@ -595,6 +603,10 @@ resource "aws_lb_listener" "internal_prod" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.blue[each.key].arn
   }
+
+  lifecycle {
+    ignore_changes = [default_action]
+  }
 }
 
 resource "aws_lb_listener" "internal_test" {
@@ -609,6 +621,10 @@ resource "aws_lb_listener" "internal_test" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.green[each.key].arn
+  }
+
+  lifecycle {
+    ignore_changes = [default_action]
   }
 }
 
