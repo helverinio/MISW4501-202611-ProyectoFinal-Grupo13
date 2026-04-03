@@ -68,7 +68,8 @@ export default function HotelResultsScreen() {
     return `${checkInDate.toLocaleDateString('en-US', options)} - ${checkOutDate.toLocaleDateString('en-US', options)}`;
   };
 
-  const renderStars = (rating: number) => {
+  const renderStars = (rating: number | null) => {
+    if (rating === null) return null;
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
@@ -123,6 +124,10 @@ export default function HotelResultsScreen() {
   const renderRoomCard = ({ item }: { item: RoomCard }) => {
     const { hotel, room } = item;
     const amenidadesList = getAmenidadesList(hotel.amenidades || '');
+    const rating = (hotel as any).rating || null;
+    const reviews = (hotel as any).reviews || null;
+    const distancia = (hotel as any).distancia || null;
+    const precio = (room as any).precio || null;
 
     return (
       <View style={styles.hotelCard}>
@@ -136,14 +141,18 @@ export default function HotelResultsScreen() {
           <Text style={styles.hotelName} numberOfLines={1}>
             {hotel.nombre}
           </Text>
-          <View style={styles.ratingRow}>
-            <View style={styles.starsContainer}>{renderStars(4.5)}</View>
-            <Text style={styles.ratingText}>
-              4.5 (124 {t('results.reviews')})
-            </Text>
-          </View>
+          {(rating !== null || reviews !== null) && (
+            <View style={styles.ratingRow}>
+              {rating !== null && <View style={styles.starsContainer}>{renderStars(rating)}</View>}
+              {rating !== null && reviews !== null && (
+                <Text style={styles.ratingText}>
+                  {rating} ({reviews} {t('results.reviews')})
+                </Text>
+              )}
+            </View>
+          )}
           <Text style={styles.locationText} numberOfLines={1}>
-            {hotel.ciudad} • 0.8 km {t('results.fromCenter')}
+            {hotel.ciudad}{distancia !== null ? ` • ${distancia} km ${t('results.fromCenter')}` : ''}
           </Text>
           <View style={styles.amenitiesRow}>
             {amenidadesList.slice(0, 2).map((amenity, index) => renderAmenity(amenity, index))}
@@ -153,8 +162,14 @@ export default function HotelResultsScreen() {
           </Text>
           <View style={styles.priceRow}>
             <View>
-              <Text style={styles.perNightText}>{t('results.perNight')}</Text>
-              <Text style={styles.priceText}>$85</Text>
+              {precio !== null ? (
+                <>
+                  <Text style={styles.perNightText}>{t('results.perNight')}</Text>
+                  <Text style={styles.priceText}>${precio}</Text>
+                </>
+              ) : (
+                <Text style={styles.noPriceText}>-</Text>
+              )}
             </View>
             <TouchableOpacity style={styles.viewDetailsButton}>
               <Text style={styles.viewDetailsText}>{t('results.viewDetails')}</Text>
@@ -406,6 +421,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#333',
+  },
+  noPriceText: {
+    fontSize: 16,
+    color: '#999',
   },
   viewDetailsButton: {
     backgroundColor: '#4A7BF7',
