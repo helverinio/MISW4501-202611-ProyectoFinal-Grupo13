@@ -3,8 +3,17 @@ from app.infrastructure.models.ciudad_model import CiudadModel
 from app.infrastructure.models.hotel_model import HotelModel
 from app.infrastructure.models.habitacion_model import HabitacionModel
 from app.infrastructure.models.tarifa_model import TarifaModel
+from app.infrastructure.models.tipo_habitacion_model import TipoHabitacionModel
+from app.infrastructure.models.plan_tarifario_model import PlanTarifarioModel
+from app.infrastructure.models.regla_tarifaria_model import ReglaTarifariaModel
+from app.infrastructure.models.temporada_model import TemporadaModel
+from app.infrastructure.models.temporada_detalle_model import TemporadaDetalleModel
+from app.infrastructure.models.cotizacion_model import CotizacionModel
+from app.infrastructure.models.cotizacion_detalle_model import CotizacionDetalleModel
+from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetalleTarifaModel
 from app.infrastructure.models.estado_model import EstadoModel
 from app.infrastructure.models.reserva_model import ReservaModel
+from app.infrastructure.models.comentario_hotel_model import ComentarioHotelModel
 from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.notificacion_model import NotificacionModel
 from app.infrastructure.models.room_hold_model import RoomHoldModel

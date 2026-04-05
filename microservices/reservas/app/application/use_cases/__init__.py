@@ -42,3 +42,12 @@ from app.application.use_cases.room_hold_use_cases import (
     AcquireRoomHoldUseCase, GetRoomHoldUseCase, CheckRoomHoldUseCase,
     ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CleanupExpiredHoldsUseCase
 )
+from app.application.use_cases.pricing_use_cases import (
+    PricingService, QuotationService, PricingRuleNotFoundError
+)
+from app.application.use_cases.comentario_hotel_use_cases import (
+    CreateComentarioHotelUseCase,
+    ListComentariosHotelUseCase,
+    GetHotelRatingSummaryUseCase,
+    RatingAggregationService,
+)

@@ -6,6 +6,7 @@ from app.domain.repositories.hotel_repository import HotelRepository
 from app.domain.repositories.habitacion_repository import HabitacionRepository
 from app.domain.repositories.ciudad_repository import CiudadRepository
 from app.domain.repositories.pais_repository import PaisRepository
+from app.application.use_cases.pricing_use_cases import PricingService, PricingRuleNotFoundError
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +17,16 @@ class SearchAvailableHotelsUseCase:
         hotel_repository: HotelRepository,
         habitacion_repository: HabitacionRepository,
         ciudad_repository: CiudadRepository,
-        pais_repository: PaisRepository
+        pais_repository: PaisRepository,
+        pricing_service: PricingService = None,
+        rating_aggregation_service=None,
     ):
         self.hotel_repository = hotel_repository
         self.habitacion_repository = habitacion_repository
         self.ciudad_repository = ciudad_repository
         self.pais_repository = pais_repository
+        self.pricing_service = pricing_service
+        self.rating_aggregation_service = rating_aggregation_service
 
     def execute(
         self,
@@ -54,6 +59,11 @@ class SearchAvailableHotelsUseCase:
                          h.id, h.nombre, h.id_ciudad)
         
         results = []
+        ratings_summary = {}
+        if self.rating_aggregation_service and hoteles:
+            ratings_summary = self.rating_aggregation_service.get_hotels_rating_summaries(
+                [hotel.id for hotel in hoteles]
+            )
         
         for hotel in hoteles:
             # Obtener ciudad para el nombre
@@ -86,17 +96,19 @@ class SearchAvailableHotelsUseCase:
             if habitaciones_disponibles:
                 # Convertir habitaciones a RoomAvailability
                 rooms = [
-                    RoomAvailability(
-                        habitacion_id=h.id,
-                        tipo=h.tipo,
-                        nro_habitacion=h.nro_habitacion,
-                        capacidad=h.capacidad,
-                        camas=h.camas
-                    )
+                    self._to_room_availability(h, fecha_ingreso, fecha_salida, nro_personas)
                     for h in habitaciones_disponibles
                 ]
+                rooms = [room for room in rooms if room is not None]
+                if not rooms:
+                    continue
                 
                 # Crear resultado de búsqueda
+                hotel_rating = ratings_summary.get(hotel.id, {
+                    'rating_promedio': 3.0,
+                    'cantidad_ratings': 0,
+                    'cantidad_comentarios': 0,
+                })
                 result = SearchHotelResult(
                     hotel_id=hotel.id,
                     nombre=hotel.nombre,
@@ -106,8 +118,47 @@ class SearchAvailableHotelsUseCase:
                     ciudad_nombre=ciudad.nombre,
                     pais_nombre=pais.nombre,
                     available_rooms=rooms,
-                    total_available_rooms=len(rooms)
+                    total_available_rooms=len(rooms),
+                    rating_promedio=hotel_rating['rating_promedio'],
+                    cantidad_ratings=hotel_rating['cantidad_ratings'],
+                    cantidad_comentarios=hotel_rating['cantidad_comentarios'],
                 )
                 results.append(result)
         
         return results
+
+    def _to_room_availability(self, habitacion, fecha_ingreso, fecha_salida, nro_personas):
+        if not self.pricing_service:
+            return RoomAvailability(
+                habitacion_id=habitacion.id,
+                tipo=habitacion.tipo,
+                nro_habitacion=habitacion.nro_habitacion,
+                capacidad=habitacion.capacidad,
+                camas=habitacion.camas
+            )
+
+        try:
+            pricing = self.pricing_service.calculate_stay(
+                id_habitacion=habitacion.id,
+                fecha_ingreso=fecha_ingreso,
+                fecha_salida=fecha_salida,
+                nro_personas=nro_personas
+            )
+            avg = pricing['total'] / pricing['noches'] if pricing['noches'] else pricing['total']
+            return RoomAvailability(
+                habitacion_id=habitacion.id,
+                tipo=habitacion.tipo,
+                nro_habitacion=habitacion.nro_habitacion,
+                capacidad=habitacion.capacidad,
+                camas=habitacion.camas,
+                moneda=pricing['moneda'],
+                precio_total_reserva=pricing['total'],
+                precio_promedio_noche=round(avg, 2)
+            )
+        except (PricingRuleNotFoundError, ValueError) as ex:
+            logger.warning(
+                "[SearchUseCase] Habitacion %s omitida por pricing: %s",
+                habitacion.id,
+                str(ex)
+            )
+            return None
