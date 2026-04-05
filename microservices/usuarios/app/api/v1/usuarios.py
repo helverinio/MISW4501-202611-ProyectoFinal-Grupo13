@@ -39,7 +39,8 @@ def create_usuario():
         nombre=data['nombre'],
         email=data['email'],
         usuario=usuario_value,
-        contrasena=data['contrasena']
+        contrasena=data['contrasena'],
+        ciudad_id=data.get('ciudad_id')
     )
 
     return jsonify({
@@ -47,6 +48,7 @@ def create_usuario():
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     }), 201
 
@@ -64,6 +66,7 @@ def get_usuario(usuario_id):
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
@@ -78,6 +81,7 @@ def get_all_usuarios():
         'nombre': u.nombre,
         'email': u.email,
         'usuario': u.usuario,
+        'ciudad_id': u.ciudad_id,
         'creado_en': u.creado_en.isoformat() if u.creado_en else None
     } for u in usuarios])
 
@@ -99,6 +103,7 @@ def update_usuario(usuario_id):
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 

@@ -78,6 +78,7 @@ def get_current_user():
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
