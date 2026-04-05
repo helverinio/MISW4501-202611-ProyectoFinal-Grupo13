@@ -27,3 +27,6 @@ class SearchHotelResult:
     pais_nombre: str
     available_rooms: List[RoomAvailability]
     total_available_rooms: int
+    rating_promedio: float = 3.0
+    cantidad_ratings: int = 0
+    cantidad_comentarios: int = 0

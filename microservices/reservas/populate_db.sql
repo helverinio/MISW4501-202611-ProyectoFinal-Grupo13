@@ -10,11 +10,14 @@
 CREATE EXTENSION IF NOT EXISTS unaccent;
 
 -- 🗑️ Opcional: Limpiar antes de popular (comentar si ya hay datos que quieres mantener)
--- DELETE FROM habitaciones;
--- DELETE FROM hoteles;
--- DELETE FROM ciudades;
--- DELETE FROM paises;
--- DELETE FROM estados;
+ -- DELETE FROM habitaciones;
+ -- DELETE FROM reglas_tarifarias;
+ -- DELETE FROM planes_tarifarios;
+ -- DELETE FROM tipos_habitacion;
+ -- DELETE FROM hoteles;
+ -- DELETE FROM ciudades;
+ -- DELETE FROM paises;
+ -- DELETE FROM estados;
 
 -- =============================================================================
 -- PAISES
@@ -218,6 +221,92 @@ JOIN tipos_habitacion t ON t.id = p.id_tipo_habitacion
 ON CONFLICT DO NOTHING;
 
 -- =============================================================================
+-- RESERVAS BASE (para habilitar reseñas)
+-- =============================================================================
+INSERT INTO reservas (
+  id, fecha_ingreso, fecha_salida, total, nro_personas,
+  id_usuario, id_pais, id_habitacion, id_estado, id_cotizacion
+) VALUES
+  (
+    'c290f1ee-6c54-4b01-90e6-d701748f0851',
+    '2026-03-20 15:00:00',
+    '2026-03-23 11:00:00',
+    420.00,
+    2,
+    'u290f1ee-6c54-4b01-90e6-d701748f0851',
+    'd290f1ee-6c54-4b01-90e6-d701748f0851',
+    'b290f1ee-6c54-4b01-90e6-d701748f0851',
+    'f290f1ee-6c54-4b01-90e6-d701748f0854',
+    NULL
+  ),
+  (
+    'c290f1ee-6c54-4b01-90e6-d701748f0852',
+    '2026-03-22 15:00:00',
+    '2026-03-25 11:00:00',
+    450.00,
+    2,
+    'u290f1ee-6c54-4b01-90e6-d701748f0852',
+    'd290f1ee-6c54-4b01-90e6-d701748f0851',
+    'b290f1ee-6c54-4b01-90e6-d701748f0852',
+    'f290f1ee-6c54-4b01-90e6-d701748f0854',
+    NULL
+  ),
+  (
+    'c290f1ee-6c54-4b01-90e6-d701748f0853',
+    '2026-03-24 15:00:00',
+    '2026-03-27 11:00:00',
+    555.00,
+    3,
+    'u290f1ee-6c54-4b01-90e6-d701748f0853',
+    'd290f1ee-6c54-4b01-90e6-d701748f0852',
+    'b290f1ee-6c54-4b01-90e6-d701748f0864',
+    'f290f1ee-6c54-4b01-90e6-d701748f0854',
+    NULL
+  )
+ON CONFLICT DO NOTHING;
+
+-- =============================================================================
+-- COMENTARIOS Y RATINGS DE HOTELES
+-- =============================================================================
+INSERT INTO comentarios_hoteles (
+  id, id_hotel, id_usuario, id_reserva, comentario, rating, created_at, updated_at, activo
+) VALUES
+  (
+    'g290f1ee-6c54-4b01-90e6-d701748f0851',
+    'a290f1ee-6c54-4b01-90e6-d701748f0851',
+    'u290f1ee-6c54-4b01-90e6-d701748f0851',
+    'c290f1ee-6c54-4b01-90e6-d701748f0851',
+    'Excelente ubicación y servicio del personal.',
+    5,
+    NOW() - INTERVAL '10 days',
+    NOW() - INTERVAL '10 days',
+    TRUE
+  ),
+  (
+    'g290f1ee-6c54-4b01-90e6-d701748f0852',
+    'a290f1ee-6c54-4b01-90e6-d701748f0851',
+    'u290f1ee-6c54-4b01-90e6-d701748f0852',
+    'c290f1ee-6c54-4b01-90e6-d701748f0852',
+    'Habitación cómoda y desayuno muy completo.',
+    4,
+    NOW() - INTERVAL '7 days',
+    NOW() - INTERVAL '7 days',
+    TRUE
+  ),
+  (
+    'g290f1ee-6c54-4b01-90e6-d701748f0853',
+    'a290f1ee-6c54-4b01-90e6-d701748f0855',
+    'u290f1ee-6c54-4b01-90e6-d701748f0853',
+    'c290f1ee-6c54-4b01-90e6-d701748f0853',
+    'Buena relación costo beneficio.',
+    4,
+    NOW() - INTERVAL '5 days',
+    NOW() - INTERVAL '5 days',
+    TRUE
+  )
+ON CONFLICT DO NOTHING;
+
+-- =============================================================================
 -- Verificación
 -- =============================================================================
 SELECT 
@@ -228,4 +317,6 @@ SELECT
   (SELECT COUNT(*) FROM habitaciones) as total_habitaciones,
   (SELECT COUNT(*) FROM tipos_habitacion) as total_tipos_habitacion,
   (SELECT COUNT(*) FROM planes_tarifarios) as total_planes_tarifarios,
-  (SELECT COUNT(*) FROM reglas_tarifarias) as total_reglas_tarifarias;
+  (SELECT COUNT(*) FROM reglas_tarifarias) as total_reglas_tarifarias,
+  (SELECT COUNT(*) FROM reservas) as total_reservas,
+  (SELECT COUNT(*) FROM comentarios_hoteles) as total_comentarios_hoteles;

@@ -8,3 +8,4 @@ from app.domain.repositories.reserva_repository import ReservaRepository
 from app.domain.repositories.pago_repository import PagoRepository
 from app.domain.repositories.notificacion_repository import NotificacionRepository
 from app.domain.repositories.pricing_repository import PricingRepository
+from app.domain.repositories.comentario_hotel_repository import ComentarioHotelRepository

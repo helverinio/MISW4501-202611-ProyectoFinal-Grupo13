@@ -18,6 +18,7 @@ class ReservaModel(db.Model):
     pagos = db.relationship('PagoModel', backref='reserva', lazy=True)
     notificaciones = db.relationship('NotificacionModel', backref='reserva', lazy=True)
     detalle_tarifa = db.relationship('ReservaDetalleTarifaModel', backref='reserva', lazy=True, cascade='all, delete-orphan')
+    comentarios_hoteles = db.relationship('ComentarioHotelModel', backref='reserva', lazy=True)
 
     def to_dict(self):
         return {

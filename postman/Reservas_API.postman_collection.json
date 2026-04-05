@@ -581,6 +581,151 @@
               ]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Search response includes rating fields per hotel', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (Array.isArray(jsonData.hoteles) && jsonData.hoteles.length > 0) {",
+                  "        pm.expect(jsonData.hoteles[0]).to.have.property('rating_promedio');",
+                  "        pm.expect(jsonData.hoteles[0]).to.have.property('cantidad_ratings');",
+                  "        pm.expect(jsonData.hoteles[0]).to.have.property('cantidad_comentarios');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comentarios Hoteles",
+      "description": "Hotel comments and ratings endpoints",
+      "item": [
+        {
+          "name": "Create Comentario Hotel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_usuario\": \"u290f1ee-6c54-4b01-90e6-d701748f0851\",\n  \"id_reserva\": \"c290f1ee-6c54-4b01-90e6-d701748f0851\",\n  \"rating\": 5,\n  \"comentario\": \"Excelente atencion y limpieza.\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:hotel_id/comentarios",
+              "protocol": "{{reservas_url}}",
+              "host": [
+                "{{reservas_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":hotel_id",
+                "comentarios"
+              ],
+              "variable": [
+                {
+                  "key": "hotel_id",
+                  "value": "a290f1ee-6c54-4b01-90e6-d701748f0851"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Comentarios Hotel",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:hotel_id/comentarios?page=1&per_page=10",
+              "protocol": "{{reservas_url}}",
+              "host": [
+                "{{reservas_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":hotel_id",
+                "comentarios"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "hotel_id",
+                  "value": "a290f1ee-6c54-4b01-90e6-d701748f0851"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Hotel Rating Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/:hotel_id/rating",
+              "protocol": "{{reservas_url}}",
+              "host": [
+                "{{reservas_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hoteles",
+                ":hotel_id",
+                "rating"
+              ],
+              "variable": [
+                {
+                  "key": "hotel_id",
+                  "value": "a290f1ee-6c54-4b01-90e6-d701748f0851"
+                }
+              ]
+            }
+          },
           "response": []
         }
       ]

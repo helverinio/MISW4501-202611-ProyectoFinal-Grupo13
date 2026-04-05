@@ -18,13 +18,15 @@ class SearchAvailableHotelsUseCase:
         habitacion_repository: HabitacionRepository,
         ciudad_repository: CiudadRepository,
         pais_repository: PaisRepository,
-        pricing_service: PricingService = None
+        pricing_service: PricingService = None,
+        rating_aggregation_service=None,
     ):
         self.hotel_repository = hotel_repository
         self.habitacion_repository = habitacion_repository
         self.ciudad_repository = ciudad_repository
         self.pais_repository = pais_repository
         self.pricing_service = pricing_service
+        self.rating_aggregation_service = rating_aggregation_service
 
     def execute(
         self,
@@ -57,6 +59,11 @@ class SearchAvailableHotelsUseCase:
                          h.id, h.nombre, h.id_ciudad)
         
         results = []
+        ratings_summary = {}
+        if self.rating_aggregation_service and hoteles:
+            ratings_summary = self.rating_aggregation_service.get_hotels_rating_summaries(
+                [hotel.id for hotel in hoteles]
+            )
         
         for hotel in hoteles:
             # Obtener ciudad para el nombre
@@ -97,6 +104,11 @@ class SearchAvailableHotelsUseCase:
                     continue
                 
                 # Crear resultado de búsqueda
+                hotel_rating = ratings_summary.get(hotel.id, {
+                    'rating_promedio': 3.0,
+                    'cantidad_ratings': 0,
+                    'cantidad_comentarios': 0,
+                })
                 result = SearchHotelResult(
                     hotel_id=hotel.id,
                     nombre=hotel.nombre,
@@ -106,7 +118,10 @@ class SearchAvailableHotelsUseCase:
                     ciudad_nombre=ciudad.nombre,
                     pais_nombre=pais.nombre,
                     available_rooms=rooms,
-                    total_available_rooms=len(rooms)
+                    total_available_rooms=len(rooms),
+                    rating_promedio=hotel_rating['rating_promedio'],
+                    cantidad_ratings=hotel_rating['cantidad_ratings'],
+                    cantidad_comentarios=hotel_rating['cantidad_comentarios'],
                 )
                 results.append(result)
         

@@ -13,6 +13,7 @@ from app.infrastructure.models.cotizacion_detalle_model import CotizacionDetalle
 from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetalleTarifaModel
 from app.infrastructure.models.estado_model import EstadoModel
 from app.infrastructure.models.reserva_model import ReservaModel
+from app.infrastructure.models.comentario_hotel_model import ComentarioHotelModel
 from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.notificacion_model import NotificacionModel
 from app.infrastructure.models.room_hold_model import RoomHoldModel
