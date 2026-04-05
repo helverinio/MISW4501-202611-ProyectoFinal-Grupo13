@@ -952,7 +952,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"total\": 500000,\n  \"nro_personas\": 2,\n  \"id_usuario\": \"user-uuid\",\n  \"id_pais\": \"1\",\n  \"id_habitacion\": \"1\",\n  \"id_estado\": \"1\"\n}"
+              "raw": "{\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"nro_personas\": 2,\n  \"id_usuario\": \"user-uuid\",\n  \"id_pais\": \"1\",\n  \"id_habitacion\": \"1\",\n  \"id_estado\": \"1\",\n  \"id_cotizacion\": \"cotizacion-uuid-opcional\"\n}"
             },
             "url": {
               "raw": "{{reservas_url}}/api/v1/reservas",
@@ -1114,6 +1114,104 @@
                   "key": "id",
                   "value": "1"
                 }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pricing y Cotizaciones",
+      "description": "Pricing engine endpoints with USD backend totals",
+      "item": [
+        {
+          "name": "Create Cotizacion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_usuario\": \"user-uuid\",\n  \"id_habitacion\": \"1\",\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"nro_personas\": 2\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/cotizaciones",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "cotizaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cotizacion By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/cotizaciones/:id",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "cotizaciones",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "cotizacion-uuid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reserva From Cotizacion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_ingreso\": \"2026-04-01\",\n  \"fecha_salida\": \"2026-04-05\",\n  \"nro_personas\": 2,\n  \"id_usuario\": \"user-uuid\",\n  \"id_pais\": \"1\",\n  \"id_habitacion\": \"1\",\n  \"id_estado\": \"1\",\n  \"id_cotizacion\": \"cotizacion-uuid\",\n  \"payment_method\": \"card\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reservas",
+              "protocol": "{{reservas_url}}",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
               ]
             }
           },

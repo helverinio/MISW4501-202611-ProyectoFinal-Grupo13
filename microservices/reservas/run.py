@@ -11,5 +11,16 @@ with app.app_context():
         db.session.commit()
     db.create_all()
 
+    # Incremental schema evolution for existing databases.
+    db.session.execute(text(
+        "ALTER TABLE IF EXISTS habitaciones "
+        "ADD COLUMN IF NOT EXISTS id_tipo_habitacion VARCHAR(36)"
+    ))
+    db.session.execute(text(
+        "ALTER TABLE IF EXISTS reservas "
+        "ADD COLUMN IF NOT EXISTS id_cotizacion VARCHAR(36)"
+    ))
+    db.session.commit()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

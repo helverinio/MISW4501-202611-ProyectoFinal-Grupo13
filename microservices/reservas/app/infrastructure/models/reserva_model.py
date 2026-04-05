@@ -13,9 +13,11 @@ class ReservaModel(db.Model):
     id_pais = db.Column(db.String(36), db.ForeignKey('paises.id'), nullable=False)
     id_habitacion = db.Column(db.String(36), db.ForeignKey('habitaciones.id'), nullable=False)
     id_estado = db.Column(db.String(36), db.ForeignKey('estados.id'), nullable=False)
+    id_cotizacion = db.Column(db.String(36), db.ForeignKey('cotizaciones.id'), nullable=True)
 
     pagos = db.relationship('PagoModel', backref='reserva', lazy=True)
     notificaciones = db.relationship('NotificacionModel', backref='reserva', lazy=True)
+    detalle_tarifa = db.relationship('ReservaDetalleTarifaModel', backref='reserva', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -27,5 +29,6 @@ class ReservaModel(db.Model):
             'id_usuario': self.id_usuario,
             'id_pais': self.id_pais,
             'id_habitacion': self.id_habitacion,
-            'id_estado': self.id_estado
+            'id_estado': self.id_estado,
+            'id_cotizacion': self.id_cotizacion
         }

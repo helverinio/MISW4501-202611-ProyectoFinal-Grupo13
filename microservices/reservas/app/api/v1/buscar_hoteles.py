@@ -6,11 +6,13 @@ from app.api.v1.auth import require_token
 
 logger = logging.getLogger(__name__)
 from app.application.use_cases import SearchAvailableHotelsUseCase
+from app.application.use_cases.pricing_use_cases import PricingService
 from app.infrastructure.repositories import (
     SQLAlchemyHotelRepository,
     SQLAlchemyHabitacionRepository,
     SQLAlchemyCiudadRepository,
-    SQLAlchemyPaisRepository
+    SQLAlchemyPaisRepository,
+    SQLAlchemyPricingRepository
 )
 
 
@@ -91,8 +93,9 @@ def search_available_hotels(current_usuario=None):
         hotel_repo, habitacion_repo, ciudad_repo, pais_repo = get_repositories()
 
         # Ejecutar use case
+        pricing_service = PricingService(SQLAlchemyPricingRepository())
         use_case = SearchAvailableHotelsUseCase(
-            hotel_repo, habitacion_repo, ciudad_repo, pais_repo
+            hotel_repo, habitacion_repo, ciudad_repo, pais_repo, pricing_service
         )
         logger.info("[buscar-disponibles] Ejecutando use case...")
         resultados = use_case.execute(
@@ -123,7 +126,10 @@ def search_available_hotels(current_usuario=None):
                             'tipo': room.tipo,
                             'nro_habitacion': room.nro_habitacion,
                             'capacidad': room.capacidad,
-                            'camas': room.camas
+                            'camas': room.camas,
+                            'moneda': room.moneda,
+                            'precio_total_reserva': room.precio_total_reserva,
+                            'precio_promedio_noche': room.precio_promedio_noche
                         }
                         for room in r.available_rooms
                     ]

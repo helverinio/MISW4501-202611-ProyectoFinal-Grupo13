@@ -119,6 +119,105 @@ ON CONFLICT DO NOTHING;
 -- (5 tipos de habitaciones × 5 unidades × 13 hoteles)
 
 -- =============================================================================
+-- PRICING ENGINE (USD)
+-- =============================================================================
+INSERT INTO tipos_habitacion (id, nombre, descripcion, capacidad, camas, id_hotel, created_at, updated_at)
+SELECT
+  md5(h.id || '-' || hb.tipo) AS id,
+  hb.tipo AS nombre,
+  CONCAT('Tipo autogenerado para ', hb.tipo) AS descripcion,
+  MAX(hb.capacidad) AS capacidad,
+  MAX(hb.camas) AS camas,
+  h.id AS id_hotel,
+  NOW(),
+  NOW()
+FROM hoteles h
+JOIN habitaciones hb ON hb.id_hotel = h.id
+GROUP BY h.id, hb.tipo
+ON CONFLICT DO NOTHING;
+
+UPDATE habitaciones hb
+SET id_tipo_habitacion = t.id
+FROM tipos_habitacion t
+WHERE hb.id_hotel = t.id_hotel
+  AND hb.tipo = t.nombre
+  AND hb.id_tipo_habitacion IS NULL;
+
+INSERT INTO planes_tarifarios (id, nombre, descripcion, moneda, activo, id_tipo_habitacion)
+SELECT
+  md5('plan-flex-' || t.id) AS id,
+  'Flexible USD' AS nombre,
+  'Plan flexible en USD' AS descripcion,
+  'USD' AS moneda,
+  TRUE AS activo,
+  t.id AS id_tipo_habitacion
+FROM tipos_habitacion t
+ON CONFLICT DO NOTHING;
+
+INSERT INTO reglas_tarifarias (
+  id, id_plan_tarifario, id_temporada, fecha_inicio, fecha_fin,
+  dias_semana_mask, precio_base_noche, prioridad, min_noches, combinable, activo
+)
+SELECT
+  md5('rule-base-' || p.id) AS id,
+  p.id AS id_plan_tarifario,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  CASE
+    WHEN t.capacidad >= 4 THEN 260.00
+    WHEN t.capacidad = 3 THEN 180.00
+    WHEN t.capacidad = 2 THEN 140.00
+    ELSE 100.00
+  END AS precio_base_noche,
+  1,
+  NULL,
+  FALSE,
+  TRUE
+FROM planes_tarifarios p
+JOIN tipos_habitacion t ON t.id = p.id_tipo_habitacion
+ON CONFLICT DO NOTHING;
+
+INSERT INTO temporadas (id, nombre, descripcion, activo)
+VALUES (md5('season-high-2026'), 'Temporada Alta 2026', 'Temporada alta de referencia', TRUE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO temporadas_detalle (id, id_temporada, fecha_inicio, fecha_fin)
+VALUES (
+  md5('season-high-2026-detail-1'),
+  md5('season-high-2026'),
+  '2026-03-29',
+  '2026-04-05'
+)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO reglas_tarifarias (
+  id, id_plan_tarifario, id_temporada, fecha_inicio, fecha_fin,
+  dias_semana_mask, precio_base_noche, prioridad, min_noches, combinable, activo
+)
+SELECT
+  md5('rule-season-high-' || p.id) AS id,
+  p.id AS id_plan_tarifario,
+  md5('season-high-2026') AS id_temporada,
+  '2026-03-29',
+  '2026-04-05',
+  NULL,
+  CASE
+    WHEN t.capacidad >= 4 THEN 320.00
+    WHEN t.capacidad = 3 THEN 230.00
+    WHEN t.capacidad = 2 THEN 185.00
+    ELSE 130.00
+  END AS precio_base_noche,
+  100,
+  NULL,
+  FALSE,
+  TRUE
+FROM planes_tarifarios p
+JOIN tipos_habitacion t ON t.id = p.id_tipo_habitacion
+ON CONFLICT DO NOTHING;
+
+-- =============================================================================
 -- Verificación
 -- =============================================================================
 SELECT 
@@ -126,4 +225,7 @@ SELECT
   (SELECT COUNT(*) FROM ciudades) as total_ciudades,
   (SELECT COUNT(*) FROM estados) as total_estados,
   (SELECT COUNT(*) FROM hoteles) as total_hoteles,
-  (SELECT COUNT(*) FROM habitaciones) as total_habitaciones;
+  (SELECT COUNT(*) FROM habitaciones) as total_habitaciones,
+  (SELECT COUNT(*) FROM tipos_habitacion) as total_tipos_habitacion,
+  (SELECT COUNT(*) FROM planes_tarifarios) as total_planes_tarifarios,
+  (SELECT COUNT(*) FROM reglas_tarifarias) as total_reglas_tarifarias;

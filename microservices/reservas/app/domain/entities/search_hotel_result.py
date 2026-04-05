@@ -10,6 +10,9 @@ class RoomAvailability:
     nro_habitacion: str
     capacidad: int
     camas: int
+    moneda: Optional[str] = None
+    precio_total_reserva: Optional[float] = None
+    precio_promedio_noche: Optional[float] = None
 
 
 @dataclass
