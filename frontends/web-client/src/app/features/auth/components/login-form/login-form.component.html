@@ -13,11 +13,11 @@
     <input
       id="signin-email"
       type="email"
-      formControlName="usuario"
+      formControlName="email"
       class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
       [placeholder]="t('login.form.emailPlaceholder')"
     />
-    @if (form.get('usuario')?.errors?.['required'] && form.get('usuario')?.touched) {
+    @if (form.get('email')?.errors?.['required'] && form.get('email')?.touched) {
       <div id="email-error" class="mt-1 text-sm text-error-500">
         <i class="fa-solid fa-exclamation-circle mr-1"></i>
         {{ t('login.form.errors.emailRequired') }}

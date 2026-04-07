@@ -39,7 +39,8 @@ customAxios.interceptors.request.use(
       const currentToken = await AsyncStorage.getItem('_x');
 
       if (currentToken) {
-        req.headers.Authorization = JSON.parse(currentToken);
+        const token = JSON.parse(currentToken);
+        req.headers.Authorization = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
       }
 
       req.headers.CallerId = callerId;
@@ -48,6 +49,12 @@ customAxios.interceptors.request.use(
       const method = req.method?.toUpperCase() || 'UNKNOWN';
       const url = `${req.baseURL}${req.url}`;
       console.log(`🌐 API Request: ${method} ${url}`);
+      if (req.data) {
+        console.log('📤 Request Body:', JSON.stringify(req.data, null, 2));
+      }
+      if (req.params) {
+        console.log('📋 Query Params:', JSON.stringify(req.params, null, 2));
+      }
     } catch (error) {
       console.error('Error setting auth headers:', error);
     }
@@ -66,6 +73,9 @@ customAxios.interceptors.response.use(
     console.log(
       `✅ API Response: ${res.status} ${res.config.method?.toUpperCase()} ${res.config.url}`,
     );
+    if (res.data) {
+      console.log('📥 Response Data:', JSON.stringify(res.data, null, 2));
+    }
 
     if (res.status === 201) {
       // Handle 201 status if needed
@@ -94,8 +104,13 @@ customAxios.interceptors.response.use(
     // Log error responses
     console.error(
       `❌ API Error: ${responseStatus} ${requestMethod} ${requestUrl}`,
-      err.response?.data || err.message,
     );
+    if (err.response?.data) {
+      console.error('📥 Error Response:', JSON.stringify(err.response.data, null, 2));
+    }
+    if (err.config?.data) {
+      console.error('📤 Request Body was:', err.config.data);
+    }
 
     if (responseStatus === 401) {
       try {

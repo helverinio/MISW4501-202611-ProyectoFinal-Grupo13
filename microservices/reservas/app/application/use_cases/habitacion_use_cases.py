@@ -8,8 +8,8 @@ class CreateHabitacionUseCase:
         self.repository = repository
 
     def execute(self, tipo: str, nro_habitacion: int, capacidad: int,
-                camas: int, id_hotel: str) -> Habitacion:
-        habitacion = Habitacion.create(tipo, nro_habitacion, capacidad, camas, id_hotel)
+            camas: int, id_hotel: str, id_tipo_habitacion: Optional[str] = None) -> Habitacion:
+        habitacion = Habitacion.create(tipo, nro_habitacion, capacidad, camas, id_hotel, id_tipo_habitacion)
         return self.repository.save(habitacion)
 
 
@@ -55,6 +55,8 @@ class UpdateHabitacionUseCase:
             habitacion.camas = kwargs['camas']
         if 'id_hotel' in kwargs:
             habitacion.id_hotel = kwargs['id_hotel']
+        if 'id_tipo_habitacion' in kwargs:
+            habitacion.id_tipo_habitacion = kwargs['id_tipo_habitacion']
         return self.repository.update(habitacion)
 
 

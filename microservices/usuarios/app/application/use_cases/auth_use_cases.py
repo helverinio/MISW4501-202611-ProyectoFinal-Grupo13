@@ -15,8 +15,13 @@ class AuthenticateUseCase:
         self.usuario_repository = usuario_repository
         self.token_repository = token_repository
 
-    def execute(self, usuario: str, contrasena: str) -> Optional[Dict[str, Any]]:
-        user = self.usuario_repository.find_by_usuario(usuario)
+    def execute(self, identifier: str, contrasena: str) -> Optional[Dict[str, Any]]:
+        normalized_identifier = identifier.strip()
+        user = self.usuario_repository.find_by_email(normalized_identifier)
+
+        if not user:
+            user = self.usuario_repository.find_by_usuario(normalized_identifier)
+
         if not user:
             return None
         
@@ -33,7 +38,7 @@ class AuthenticateUseCase:
         access_token = jwt.encode(
             {
                 'sub': user.id,
-                'usuario': user.usuario,
+                'email': user.email,
                 'exp': access_token_expires_at,
                 'iat': now,
                 'type': 'access'
@@ -97,7 +102,7 @@ class RefreshTokenUseCase:
         new_access_token = jwt.encode(
             {
                 'sub': user.id,
-                'usuario': user.usuario,
+                'email': user.email,
                 'exp': access_token_expires_at,
                 'iat': now,
                 'type': 'access'

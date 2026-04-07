@@ -24,12 +24,13 @@ def create_habitacion(current_usuario=None):
     capacidad = data.get('capacidad')
     camas = data.get('camas')
     id_hotel = data.get('id_hotel')
+    id_tipo_habitacion = data.get('id_tipo_habitacion')
 
     if not all([tipo, nro_habitacion is not None, capacidad is not None, camas is not None, id_hotel]):
         return jsonify({'error': 'tipo, nro_habitacion, capacidad, camas, and id_hotel are required'}), 400
 
     use_case = CreateHabitacionUseCase(get_repository())
-    habitacion = use_case.execute(tipo, nro_habitacion, capacidad, camas, id_hotel)
+    habitacion = use_case.execute(tipo, nro_habitacion, capacidad, camas, id_hotel, id_tipo_habitacion)
 
     return jsonify({
         'id': habitacion.id,
@@ -37,7 +38,8 @@ def create_habitacion(current_usuario=None):
         'nro_habitacion': habitacion.nro_habitacion,
         'capacidad': habitacion.capacidad,
         'camas': habitacion.camas,
-        'id_hotel': habitacion.id_hotel
+        'id_hotel': habitacion.id_hotel,
+        'id_tipo_habitacion': habitacion.id_tipo_habitacion
     }), 201
 
 
@@ -56,7 +58,8 @@ def get_habitacion(habitacion_id, current_usuario=None):
         'nro_habitacion': habitacion.nro_habitacion,
         'capacidad': habitacion.capacidad,
         'camas': habitacion.camas,
-        'id_hotel': habitacion.id_hotel
+        'id_hotel': habitacion.id_hotel,
+        'id_tipo_habitacion': habitacion.id_tipo_habitacion
     })
 
 
@@ -72,7 +75,8 @@ def get_all_habitaciones(current_usuario=None):
         'nro_habitacion': h.nro_habitacion,
         'capacidad': h.capacidad,
         'camas': h.camas,
-        'id_hotel': h.id_hotel
+        'id_hotel': h.id_hotel,
+        'id_tipo_habitacion': h.id_tipo_habitacion
     } for h in habitaciones])
 
 
@@ -88,7 +92,8 @@ def get_habitaciones_by_hotel(hotel_id, current_usuario=None):
         'nro_habitacion': h.nro_habitacion,
         'capacidad': h.capacidad,
         'camas': h.camas,
-        'id_hotel': h.id_hotel
+        'id_hotel': h.id_hotel,
+        'id_tipo_habitacion': h.id_tipo_habitacion
     } for h in habitaciones])
 
 
@@ -111,7 +116,8 @@ def update_habitacion(habitacion_id, current_usuario=None):
         'nro_habitacion': habitacion.nro_habitacion,
         'capacidad': habitacion.capacidad,
         'camas': habitacion.camas,
-        'id_hotel': habitacion.id_hotel
+        'id_hotel': habitacion.id_hotel,
+        'id_tipo_habitacion': habitacion.id_tipo_habitacion
     })
 
 

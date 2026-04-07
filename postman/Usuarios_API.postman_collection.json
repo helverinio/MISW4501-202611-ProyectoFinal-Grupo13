@@ -45,7 +45,6 @@
 									"        pm.expect(jsonData.id).to.exist;",
 									"        pm.expect(jsonData.nombre).to.exist;",
 									"        pm.expect(jsonData.email).to.exist;",
-									"        pm.expect(jsonData.usuario).to.exist;",
 									"    });",
 									"}"
 								],
@@ -63,7 +62,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Juan Pérez\",\n    \"email\": \"juan.perez@example.com\",\n    \"usuario\": \"jperez\",\n    \"contrasena\": \"SecurePassword123!\"\n}"
+							"raw": "{\n    \"nombre\": \"Juan Pérez\",\n    \"email\": \"juan.perez@example.com\",\n    \"contrasena\": \"SecurePassword123!\"\n}"
 						},
 						"url": {
 							"raw": "{{gateway_url}}/api/v1/usuarios",
@@ -211,7 +210,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"usuario\": \"jperez\",\n    \"contrasena\": \"SecurePassword123!\"\n}"
+							"raw": "{\n    \"email\": \"juan.perez@example.com\",\n    \"contrasena\": \"SecurePassword123!\"\n}"
 						},
 						"url": {
 							"raw": "{{gateway_url}}/api/v1/auth/login",
@@ -291,7 +290,6 @@
 									"        pm.expect(jsonData.id).to.exist;",
 									"        pm.expect(jsonData.nombre).to.exist;",
 									"        pm.expect(jsonData.email).to.exist;",
-									"        pm.expect(jsonData.usuario).to.exist;",
 									"    });",
 									"}"
 								],
@@ -397,8 +395,7 @@
 							"script": {
 								"exec": [
 									"var timestamp = Date.now();",
-									"pm.collectionVariables.set('test_email', 'testuser' + timestamp + '@example.com');",
-									"pm.collectionVariables.set('test_username', 'testuser' + timestamp);"
+									"pm.collectionVariables.set('test_email', 'testuser' + timestamp + '@example.com');"
 								],
 								"type": "text/javascript"
 							}
@@ -414,7 +411,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Test User\",\n    \"email\": \"{{test_email}}\",\n    \"usuario\": \"{{test_username}}\",\n    \"contrasena\": \"TestPassword123!\"\n}"
+							"raw": "{\n    \"nombre\": \"Test User\",\n    \"email\": \"{{test_email}}\",\n    \"contrasena\": \"TestPassword123!\"\n}"
 						},
 						"url": {
 							"raw": "{{gateway_url}}/api/v1/usuarios",
@@ -466,7 +463,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"usuario\": \"{{test_username}}\",\n    \"contrasena\": \"TestPassword123!\"\n}"
+							"raw": "{\n    \"email\": \"{{test_email}}\",\n    \"contrasena\": \"TestPassword123!\"\n}"
 						},
 						"url": {
 							"raw": "{{gateway_url}}/api/v1/auth/login",

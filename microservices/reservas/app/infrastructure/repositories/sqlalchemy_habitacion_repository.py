@@ -17,7 +17,8 @@ class SQLAlchemyHabitacionRepository(HabitacionRepository):
             nro_habitacion=habitacion.nro_habitacion,
             capacidad=habitacion.capacidad,
             camas=habitacion.camas,
-            id_hotel=habitacion.id_hotel
+            id_hotel=habitacion.id_hotel,
+            id_tipo_habitacion=habitacion.id_tipo_habitacion
         )
         db.session.add(model)
         db.session.commit()
@@ -45,6 +46,7 @@ class SQLAlchemyHabitacionRepository(HabitacionRepository):
             model.capacidad = habitacion.capacidad
             model.camas = habitacion.camas
             model.id_hotel = habitacion.id_hotel
+            model.id_tipo_habitacion = habitacion.id_tipo_habitacion
             db.session.commit()
         return habitacion
 
@@ -119,5 +121,6 @@ class SQLAlchemyHabitacionRepository(HabitacionRepository):
             nro_habitacion=model.nro_habitacion,
             capacidad=model.capacidad,
             camas=model.camas,
-            id_hotel=model.id_hotel
+            id_hotel=model.id_hotel,
+            id_tipo_habitacion=model.id_tipo_habitacion
         )

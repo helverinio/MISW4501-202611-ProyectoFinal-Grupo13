@@ -16,12 +16,13 @@ class TestConfig:
     JWT_REFRESH_TOKEN_EXPIRES = 604800
 
 
-def _user(user_id="u-1", nombre="Ana", email="ana@example.com", usuario="ana"):
+def _user(user_id="u-1", nombre="Ana", email="ana@example.com", usuario="ana", ciudad_id=None):
     return SimpleNamespace(
         id=user_id,
         nombre=nombre,
         email=email,
         usuario=usuario,
+        ciudad_id=ciudad_id,
         creado_en=datetime(2026, 1, 1, 0, 0, 0),
         contrasena="$2b$12$hashed"
     )
