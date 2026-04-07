@@ -1,5 +1,5 @@
 from app.application.use_cases.usuario_use_cases import (
-    CreateUsuarioUseCase, GetUsuarioUseCase, GetUsuarioByUsuarioUseCase,
+    CreateUsuarioUseCase, GetUsuarioByUsuarioUseCase, GetUsuarioUseCase,
     GetAllUsuariosUseCase, UpdateUsuarioUseCase, DeleteUsuarioUseCase
 )
 from app.application.use_cases.auth_use_cases import (

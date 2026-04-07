@@ -42,6 +42,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'home-search',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
         component: DashboardPageComponent,
       },
       {

@@ -188,6 +188,42 @@ deploy_backends() {
 
   export AWS_REGION EXEC_ROLE_ARN TASK_ROLE_ARN SECRET_ARN INTERNAL_ALB_DNS PUBLIC_ALB_DNS REDIS_HOST MQ_HOST MQ_PORT
 
+  reconcile_listener() {
+    local service="$1"
+    local cluster_name service_name prod_listener_arn expected_target_group current_target_group
+
+    cluster_name=$(jq -r '.ecs_cluster_name.value' "$TF_OUTPUTS")
+    service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
+    prod_listener_arn=$(jq -r --arg s "$service" '.codedeploy_prod_listener_arns.value[$s]' "$TF_OUTPUTS")
+
+    expected_target_group=$(aws ecs describe-services \
+      --cluster "$cluster_name" \
+      --services "$service_name" \
+      --query 'services[0].loadBalancers[0].targetGroupArn' \
+      --output text)
+
+    current_target_group=$(aws elbv2 describe-listeners \
+      --listener-arns "$prod_listener_arn" \
+      --query 'Listeners[0].DefaultActions[0].TargetGroupArn' \
+      --output text)
+
+    if [[ -z "$expected_target_group" || "$expected_target_group" == "None" ]]; then
+      echo "Could not determine primary target group for ${service}"
+      return 1
+    fi
+
+    if [[ "$current_target_group" != "$expected_target_group" ]]; then
+      echo "Re-aligning prod listener for ${service}"
+      aws elbv2 modify-listener \
+        --listener-arn "$prod_listener_arn" \
+        --default-actions Type=forward,TargetGroupArn="$expected_target_group" >/dev/null
+    fi
+  }
+
+  for service in "${DEPLOY_ORDER[@]}"; do
+    reconcile_listener "$service"
+  done
+
   for service in "${DEPLOY_ORDER[@]}"; do
     deploy_backend_service "$service"
   done

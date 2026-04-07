@@ -10,10 +10,10 @@ class CreateReservaUseCase:
 
     def execute(self, fecha_ingreso: datetime, fecha_salida: datetime,
                 total: float, nro_personas: int, id_usuario: str,
-                id_pais: str, id_habitacion: str, id_estado: str) -> Reserva:
+                id_pais: str, id_habitacion: str, id_estado: str, id_cotizacion: Optional[str] = None) -> Reserva:
         reserva = Reserva.create(
             fecha_ingreso, fecha_salida, total, nro_personas,
-            id_usuario, id_pais, id_habitacion, id_estado
+            id_usuario, id_pais, id_habitacion, id_estado, id_cotizacion
         )
         return self.repository.save(reserva)
 
@@ -74,6 +74,8 @@ class UpdateReservaUseCase:
             reserva.id_habitacion = kwargs['id_habitacion']
         if 'id_estado' in kwargs:
             reserva.id_estado = kwargs['id_estado']
+        if 'id_cotizacion' in kwargs:
+            reserva.id_cotizacion = kwargs['id_cotizacion']
         return self.repository.update(reserva)
 
 

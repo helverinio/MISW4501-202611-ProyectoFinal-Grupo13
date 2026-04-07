@@ -8,12 +8,31 @@ class CreateUsuarioUseCase:
     def __init__(self, repository: UsuarioRepository):
         self.repository = repository
 
-    def execute(self, nombre: str, email: str, usuario: str, contrasena: str) -> Usuario:
-        hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
+    def execute(
+        self,
+        nombre: str,
+        email: str,
+        contrasena_or_usuario: str | None = None,
+        contrasena: str | None = None,
+        usuario: str | None = None,
+        ciudad_id: int | None = None,
+    ) -> Usuario:
+        if contrasena is None and contrasena_or_usuario is None:
+            raise ValueError('contrasena is required')
+
+        if contrasena is None:
+            resolved_contrasena = contrasena_or_usuario
+            resolved_usuario = usuario
+        else:
+            resolved_contrasena = contrasena
+            resolved_usuario = usuario or contrasena_or_usuario
+
+        hashed_password = bcrypt.hashpw(resolved_contrasena.encode('utf-8'), bcrypt.gensalt())
         user = Usuario.create(
             nombre=nombre,
             email=email,
-            usuario=usuario,
+            usuario=resolved_usuario,
+            ciudad_id=ciudad_id,
             contrasena=hashed_password.decode('utf-8')
         )
         return self.repository.save(user)
@@ -57,6 +76,8 @@ class UpdateUsuarioUseCase:
             user.email = kwargs['email']
         if 'usuario' in kwargs:
             user.usuario = kwargs['usuario']
+        if 'ciudad_id' in kwargs:
+            user.ciudad_id = kwargs['ciudad_id']
         if 'contrasena' in kwargs:
             hashed_password = bcrypt.hashpw(kwargs['contrasena'].encode('utf-8'), bcrypt.gensalt())
             user.contrasena = hashed_password.decode('utf-8')

@@ -1,5 +1,5 @@
 export interface LoginRequest {
-  usuario: string;
+  email: string;
   contrasena: string;
 }
 
@@ -7,7 +7,6 @@ export interface AuthUser {
   id: number;
   nombre: string;
   email: string;
-  usuario: string;
 }
 
 export interface LoginResponse {

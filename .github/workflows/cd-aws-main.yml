@@ -160,6 +160,38 @@ jobs:
           MQ_HOST=$(jq -r '.mq_host.value' "$TF_OUTPUTS")
           MQ_PORT=$(jq -r '.mq_port.value' "$TF_OUTPUTS")
 
+          reconcile_listener() {
+            local service="$1"
+            local cluster_name service_name prod_listener_arn expected_target_group current_target_group
+
+            cluster_name=$(jq -r '.ecs_cluster_name.value' "$TF_OUTPUTS")
+            service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
+            prod_listener_arn=$(jq -r --arg s "$service" '.codedeploy_prod_listener_arns.value[$s]' "$TF_OUTPUTS")
+
+            expected_target_group=$(aws ecs describe-services \
+              --cluster "$cluster_name" \
+              --services "$service_name" \
+              --query 'services[0].loadBalancers[0].targetGroupArn' \
+              --output text)
+
+            current_target_group=$(aws elbv2 describe-listeners \
+              --listener-arns "$prod_listener_arn" \
+              --query 'Listeners[0].DefaultActions[0].TargetGroupArn' \
+              --output text)
+
+            if [ -z "$expected_target_group" ] || [ "$expected_target_group" = "None" ]; then
+              echo "Could not determine primary target group for $service"
+              exit 1
+            fi
+
+            if [ "$current_target_group" != "$expected_target_group" ]; then
+              echo "Re-aligning prod listener for $service"
+              aws elbv2 modify-listener \
+                --listener-arn "$prod_listener_arn" \
+                --default-actions Type=forward,TargetGroupArn="$expected_target_group" >/dev/null
+            fi
+          }
+
           render_taskdef() {
             local service="$1"
             local image_uri="$2"
@@ -240,11 +272,28 @@ jobs:
             done
           }
 
-          deploy_service ext-payments &
-          deploy_service usuarios &
-          deploy_service pagos &
-          deploy_service reservas &
-          deploy_service gateway &
-          
-          wait
+          for service in gateway reservas pagos ext-payments usuarios; do
+            reconcile_listener "$service"
+          done
+
+          services=(ext-payments usuarios pagos reservas gateway)
+          pids=()
+
+          for service in "${services[@]}"; do
+            deploy_service "$service" &
+            pids+=("$!")
+          done
+
+          failed=0
+          for index in "${!pids[@]}"; do
+            if ! wait "${pids[$index]}"; then
+              echo "Deployment process failed for ${services[$index]}"
+              failed=1
+            fi
+          done
+
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+
           echo "All deployments completed successfully"

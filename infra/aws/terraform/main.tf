@@ -242,27 +242,27 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_8080" 
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_internal_alb_5000_5002" {
+resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_internal_alb_5000_5003" {
   security_group_id            = aws_security_group.ecs_tasks.id
   referenced_security_group_id = aws_security_group.internal_alb.id
   from_port                    = 5000
-  to_port                      = 5002
+  to_port                      = 5003
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_5000_5002" {
+resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_5000_5003" {
   security_group_id            = aws_security_group.internal_alb.id
   referenced_security_group_id = aws_security_group.ecs_tasks.id
   from_port                    = 5000
-  to_port                      = 5002
+  to_port                      = 5003
   ip_protocol                  = "tcp"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_15000_15002" {
+resource "aws_vpc_security_group_ingress_rule" "internal_alb_from_ecs_tasks_15000_15003" {
   security_group_id            = aws_security_group.internal_alb.id
   referenced_security_group_id = aws_security_group.ecs_tasks.id
   from_port                    = 15000
-  to_port                      = 15002
+  to_port                      = 15003
   ip_protocol                  = "tcp"
 }
 
@@ -569,6 +569,10 @@ resource "aws_lb_listener" "public_prod" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.blue["gateway"].arn
   }
+
+  lifecycle {
+    ignore_changes = [default_action]
+  }
 }
 
 resource "aws_lb_listener" "public_test" {
@@ -579,6 +583,10 @@ resource "aws_lb_listener" "public_test" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.green["gateway"].arn
+  }
+
+  lifecycle {
+    ignore_changes = [default_action]
   }
 }
 
@@ -595,6 +603,10 @@ resource "aws_lb_listener" "internal_prod" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.blue[each.key].arn
   }
+
+  lifecycle {
+    ignore_changes = [default_action]
+  }
 }
 
 resource "aws_lb_listener" "internal_test" {
@@ -609,6 +621,10 @@ resource "aws_lb_listener" "internal_test" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.green[each.key].arn
+  }
+
+  lifecycle {
+    ignore_changes = [default_action]
   }
 }
 
