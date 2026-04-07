@@ -180,7 +180,7 @@ Cuando te pregunte esto:
 ```text
 AWS Access Key ID: <tu access key id>
 AWS Secret Access Key: <tu secret access key>
-Default region name: us-east-1
+Default region name: us-east-2
 Default output format: json
 ```
 

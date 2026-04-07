@@ -6,11 +6,15 @@ from app.api.v1.auth import require_token
 
 logger = logging.getLogger(__name__)
 from app.application.use_cases import SearchAvailableHotelsUseCase
+from app.application.use_cases.comentario_hotel_use_cases import RatingAggregationService
+from app.application.use_cases.pricing_use_cases import PricingService
 from app.infrastructure.repositories import (
+    SQLAlchemyComentarioHotelRepository,
     SQLAlchemyHotelRepository,
     SQLAlchemyHabitacionRepository,
     SQLAlchemyCiudadRepository,
-    SQLAlchemyPaisRepository
+    SQLAlchemyPaisRepository,
+    SQLAlchemyPricingRepository
 )
 
 
@@ -91,8 +95,15 @@ def search_available_hotels(current_usuario=None):
         hotel_repo, habitacion_repo, ciudad_repo, pais_repo = get_repositories()
 
         # Ejecutar use case
+        pricing_service = PricingService(SQLAlchemyPricingRepository())
+        rating_aggregation_service = RatingAggregationService(SQLAlchemyComentarioHotelRepository())
         use_case = SearchAvailableHotelsUseCase(
-            hotel_repo, habitacion_repo, ciudad_repo, pais_repo
+            hotel_repo,
+            habitacion_repo,
+            ciudad_repo,
+            pais_repo,
+            pricing_service,
+            rating_aggregation_service,
         )
         logger.info("[buscar-disponibles] Ejecutando use case...")
         resultados = use_case.execute(
@@ -116,6 +127,9 @@ def search_available_hotels(current_usuario=None):
                     'email': r.email,
                     'ciudad': r.ciudad_nombre,
                     'pais': r.pais_nombre,
+                    'rating_promedio': r.rating_promedio,
+                    'cantidad_ratings': r.cantidad_ratings,
+                    'cantidad_comentarios': r.cantidad_comentarios,
                     'total_habitaciones_disponibles': r.total_available_rooms,
                     'habitaciones': [
                         {
@@ -123,7 +137,10 @@ def search_available_hotels(current_usuario=None):
                             'tipo': room.tipo,
                             'nro_habitacion': room.nro_habitacion,
                             'capacidad': room.capacidad,
-                            'camas': room.camas
+                            'camas': room.camas,
+                            'moneda': room.moneda,
+                            'precio_total_reserva': room.precio_total_reserva,
+                            'precio_promedio_noche': room.precio_promedio_noche
                         }
                         for room in r.available_rooms
                     ]

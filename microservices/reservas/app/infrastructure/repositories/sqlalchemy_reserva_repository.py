@@ -18,7 +18,8 @@ class SQLAlchemyReservaRepository(ReservaRepository):
             id_usuario=reserva.id_usuario,
             id_pais=reserva.id_pais,
             id_habitacion=reserva.id_habitacion,
-            id_estado=reserva.id_estado
+            id_estado=reserva.id_estado,
+            id_cotizacion=reserva.id_cotizacion
         )
         db.session.add(model)
         db.session.commit()
@@ -53,6 +54,7 @@ class SQLAlchemyReservaRepository(ReservaRepository):
             model.id_pais = reserva.id_pais
             model.id_habitacion = reserva.id_habitacion
             model.id_estado = reserva.id_estado
+            model.id_cotizacion = reserva.id_cotizacion
             db.session.commit()
         return reserva
 
@@ -74,7 +76,8 @@ class SQLAlchemyReservaRepository(ReservaRepository):
             id_usuario=model.id_usuario,
             id_pais=model.id_pais,
             id_habitacion=model.id_habitacion,
-            id_estado=model.id_estado
+            id_estado=model.id_estado,
+            id_cotizacion=model.id_cotizacion
         )
 
     def has_overlapping_confirmed_reservation(

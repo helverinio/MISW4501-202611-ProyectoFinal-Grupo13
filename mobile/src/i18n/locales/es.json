@@ -36,7 +36,43 @@
   "landing": {
     "welcome": "Bienvenido",
     "successMessage": "¡Has iniciado sesión exitosamente!",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "findStay": "Encuentra tu estadía perfecta",
+    "discoverHotels": "Descubre hoteles increíbles en América Latina"
+  },
+  "search": {
+    "destination": "Destino",
+    "destinationPlaceholder": "¿A dónde vas?",
+    "checkIn": "Entrada",
+    "checkOut": "Salida",
+    "datePlaceholder": "dd/mm/aaaa",
+    "guests": "Huéspedes",
+    "guest": "Huésped",
+    "adult": "Adulto",
+    "adults": "Adultos",
+    "selectGuests": "Seleccionar Huéspedes",
+    "searchHotels": "Buscar Hoteles",
+    "searching": "Buscando...",
+    "done": "Listo"
+  },
+  "results": {
+    "filters": "Filtros",
+    "price": "Precio",
+    "rating": "Calificación",
+    "hotels": "hoteles",
+    "foundIn": "encontrados en",
+    "reviews": "reseñas",
+    "rooms": "habitaciones",
+    "guests": "huéspedes",
+    "beds": "camas",
+    "fromCenter": "del centro",
+    "perNight": "por noche",
+    "viewDetails": "Ver Detalles",
+    "freeCancellation": "Cancelación gratis",
+    "searching": "Buscando hoteles...",
+    "errorLoading": "Error al cargar hoteles",
+    "retry": "Reintentar",
+    "noHotels": "No se encontraron hoteles para tu búsqueda"
   },
   "language": {
     "title": "Idioma",

@@ -17,17 +17,19 @@ def create_usuario():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    required_fields = ['nombre', 'email', 'usuario', 'contrasena']
+    required_fields = ['nombre', 'email', 'contrasena']
     for field in required_fields:
         if not data.get(field):
             return jsonify({'error': f'{field} is required'}), 400
 
     repo = get_repository()
-    
-    existing_user = repo.find_by_usuario(data['usuario'])
-    if existing_user:
+
+    usuario_value = data.get('usuario') or data['email']
+
+    existing_usuario = repo.find_by_usuario(usuario_value)
+    if existing_usuario:
         return jsonify({'error': 'Usuario already exists'}), 409
-    
+
     existing_email = repo.find_by_email(data['email'])
     if existing_email:
         return jsonify({'error': 'Email already exists'}), 409
@@ -36,8 +38,9 @@ def create_usuario():
     usuario = use_case.execute(
         nombre=data['nombre'],
         email=data['email'],
-        usuario=data['usuario'],
-        contrasena=data['contrasena']
+        usuario=usuario_value,
+        contrasena=data['contrasena'],
+        ciudad_id=data.get('ciudad_id')
     )
 
     return jsonify({
@@ -45,6 +48,7 @@ def create_usuario():
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     }), 201
 
@@ -62,6 +66,7 @@ def get_usuario(usuario_id):
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
@@ -76,6 +81,7 @@ def get_all_usuarios():
         'nombre': u.nombre,
         'email': u.email,
         'usuario': u.usuario,
+        'ciudad_id': u.ciudad_id,
         'creado_en': u.creado_en.isoformat() if u.creado_en else None
     } for u in usuarios])
 
@@ -97,6 +103,7 @@ def update_usuario(usuario_id):
         'nombre': usuario.nombre,
         'email': usuario.email,
         'usuario': usuario.usuario,
+        'ciudad_id': usuario.ciudad_id,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 

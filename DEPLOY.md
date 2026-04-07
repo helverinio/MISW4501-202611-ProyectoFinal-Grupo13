@@ -1,5 +1,5 @@
 Cuenta activa: 501588780134
-Región activa: us-east-1
+Región activa: us-east-2
 ECS cluster: th-prod-ecs
 ECS services:
 th-prod-gateway

@@ -10,6 +10,7 @@ class HabitacionModel(db.Model):
     capacidad = db.Column(db.Integer, nullable=False)
     camas = db.Column(db.Integer, nullable=False)
     id_hotel = db.Column(db.String(36), db.ForeignKey('hoteles.id'), nullable=False)
+    id_tipo_habitacion = db.Column(db.String(36), db.ForeignKey('tipos_habitacion.id'), nullable=True)
 
     tarifas = db.relationship('TarifaModel', backref='habitacion', lazy=True)
     reservas = db.relationship('ReservaModel', backref='habitacion', lazy=True)
@@ -21,5 +22,6 @@ class HabitacionModel(db.Model):
             'nro_habitacion': self.nro_habitacion,
             'capacidad': self.capacidad,
             'camas': self.camas,
-            'id_hotel': self.id_hotel
+            'id_hotel': self.id_hotel,
+            'id_tipo_habitacion': self.id_tipo_habitacion
         }
