@@ -13,3 +13,5 @@ from app.api.v1 import reservas
 from app.api.v1 import pagos
 from app.api.v1 import notificaciones
 from app.api.v1 import room_holds
+from app.api.v1 import cotizaciones
+from app.api.v1 import comentarios_hoteles

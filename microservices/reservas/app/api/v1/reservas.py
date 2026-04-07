@@ -7,9 +7,15 @@ from app.application.use_cases import (
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
     UpdateReservaUseCase, DeleteReservaUseCase,
     ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase,
-    AcquireRoomHoldUseCase
+    AcquireRoomHoldUseCase,
+    PricingService, QuotationService, PricingRuleNotFoundError
 )
-from app.infrastructure.repositories import SQLAlchemyReservaRepository, SQLAlchemyRoomHoldRepository, SQLAlchemyEstadoRepository
+from app.infrastructure.repositories import (
+    SQLAlchemyReservaRepository,
+    SQLAlchemyRoomHoldRepository,
+    SQLAlchemyEstadoRepository,
+    SQLAlchemyPricingRepository,
+)
 from app.infrastructure.services import PagosService, get_redis_lock_service, RedisLockAcquisitionError
 from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 from app.domain.entities.estado import Estado
@@ -29,6 +35,13 @@ def get_room_hold_repository():
 
 def get_lock_service():
     return get_redis_lock_service()
+
+
+def get_pricing_services():
+    pricing_repository = SQLAlchemyPricingRepository()
+    pricing_service = PricingService(pricing_repository)
+    quotation_service = QuotationService(pricing_repository, pricing_service)
+    return pricing_repository, pricing_service, quotation_service
 
 
 def parse_datetime(date_str):
@@ -55,11 +68,53 @@ def create_reserva(current_usuario=None):
     id_pais = data.get('id_pais')
     id_habitacion = data.get('id_habitacion')
     id_estado = data.get('id_estado')
+    id_cotizacion = data.get('id_cotizacion')
     payment_method = data.get('payment_method', 'card')
 
-    if not all([fecha_ingreso, fecha_salida, total is not None, nro_personas is not None,
+    if not all([fecha_ingreso, fecha_salida, nro_personas is not None,
                 id_usuario, id_pais, id_habitacion, id_estado]):
-        return jsonify({'error': 'All fields are required: fecha_ingreso, fecha_salida, total, nro_personas, id_usuario, id_pais, id_habitacion, id_estado'}), 400
+        return jsonify({'error': 'All fields are required: fecha_ingreso, fecha_salida, nro_personas, id_usuario, id_pais, id_habitacion, id_estado'}), 400
+
+    try:
+        nro_personas = int(nro_personas)
+    except (ValueError, TypeError):
+        return jsonify({'error': 'nro_personas must be a positive integer'}), 400
+
+    pricing_repository, pricing_service, quotation_service = get_pricing_services()
+    pricing_breakdown = None
+    moneda = 'USD'
+
+    if id_cotizacion:
+        quote = quotation_service.get_quotation(id_cotizacion)
+        if not quote:
+            return jsonify({'error': 'Cotizacion not found'}), 404
+        if quotation_service.is_expired(quote):
+            return jsonify({'error': 'Cotizacion expirada'}), 409
+        if quote['id_usuario'] != id_usuario or quote['id_habitacion'] != id_habitacion:
+            return jsonify({'error': 'Cotizacion does not match id_usuario/id_habitacion'}), 409
+        if quote['fecha_ingreso'] != fecha_ingreso.date() or quote['fecha_salida'] != fecha_salida.date():
+            return jsonify({'error': 'Cotizacion does not match fecha_ingreso/fecha_salida'}), 409
+        total = quote['total']
+        moneda = quote['moneda']
+        pricing_breakdown = quote['detalle_noches']
+    else:
+        try:
+            pricing = pricing_service.calculate_stay(
+                id_habitacion=id_habitacion,
+                fecha_ingreso=fecha_ingreso.date(),
+                fecha_salida=fecha_salida.date(),
+                nro_personas=nro_personas,
+            )
+            total = pricing['total']
+            moneda = pricing['moneda']
+            pricing_breakdown = pricing['detalle_noches']
+        except PricingRuleNotFoundError as ex:
+            return jsonify({'error': str(ex)}), 422
+        except ValueError as ex:
+            return jsonify({'error': str(ex)}), 400
+
+    if moneda != 'USD':
+        return jsonify({'error': 'Backend currency must be USD'}), 400
 
     lock_service = get_lock_service()
     
@@ -74,7 +129,8 @@ def create_reserva(current_usuario=None):
                 )
                 return _execute_reservation_creation(
                     fecha_ingreso, fecha_salida, total, nro_personas,
-                    id_usuario, id_pais, id_habitacion, id_estado, payment_method
+                    id_usuario, id_pais, id_habitacion, id_estado, payment_method,
+                    id_cotizacion, pricing_breakdown, pricing_repository, moneda
                 )
         except RedisLockAcquisitionError:
             current_app.logger.warning(
@@ -90,13 +146,15 @@ def create_reserva(current_usuario=None):
         )
         return _execute_reservation_creation(
             fecha_ingreso, fecha_salida, total, nro_personas,
-            id_usuario, id_pais, id_habitacion, id_estado, payment_method
+            id_usuario, id_pais, id_habitacion, id_estado, payment_method,
+            id_cotizacion, pricing_breakdown, pricing_repository, moneda
         )
 
 
 def _execute_reservation_creation(
     fecha_ingreso, fecha_salida, total, nro_personas,
-    id_usuario, id_pais, id_habitacion, id_estado, payment_method
+    id_usuario, id_pais, id_habitacion, id_estado, payment_method,
+    id_cotizacion, pricing_breakdown, pricing_repository, moneda
 ):
     """Execute the actual reservation creation within the distributed lock."""
     room_hold_repository = get_room_hold_repository()
@@ -128,11 +186,13 @@ def _execute_reservation_creation(
     try:
         reserva = use_case.execute(
             fecha_ingreso, fecha_salida, total, nro_personas,
-            id_usuario, id_pais, id_habitacion, id_estado
+            id_usuario, id_pais, id_habitacion, id_estado, id_cotizacion
         )
         if not reserva:
             current_app.logger.error("[RESERVAS] Failed to save reservation to database")
             return jsonify({'error': 'Failed to save reservation to database'}), 500
+
+        pricing_repository.save_reserva_tarifa_snapshot(reserva.id, pricing_breakdown or [])
     except Exception as e:
         current_app.logger.error(f"[RESERVAS] Error creating reservation: {str(e)}")
         return jsonify({'error': 'Failed to save reservation to database'}), 500
@@ -151,7 +211,7 @@ def _execute_reservation_creation(
     payment_result = pagos_service.create_payment(
         reservation_id=reserva.id,
         amount=total,
-        currency='USD',
+        currency=moneda,
         payment_method=payment_method,
         description=f"Payment for reservation {reserva.id}"
     )
@@ -167,18 +227,20 @@ def _execute_reservation_creation(
     else:
         current_app.logger.error(f"[RESERVAS] Failed to register payment: {payment_result.get('error')}")
 
-    return jsonify({
-        'id': reserva.id,
-        'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
-        'fecha_salida': reserva.fecha_salida.isoformat(),
-        'total': reserva.total,
-        'nro_personas': reserva.nro_personas,
-        'id_usuario': reserva.id_usuario,
-        'id_pais': reserva.id_pais,
-        'id_habitacion': reserva.id_habitacion,
-        'id_estado': reserva.id_estado,
-        'payment': payment_info
-    }), 201
+    response_payload = _serialize_reserva(reserva)
+    response_payload['moneda'] = moneda
+    response_payload['detalle_tarifa'] = [
+        {
+            'fecha_noche': d['fecha_noche'].isoformat() if hasattr(d['fecha_noche'], 'isoformat') else str(d['fecha_noche']),
+            'id_plan_tarifario': d['id_plan_tarifario'],
+            'id_regla_tarifaria': d['id_regla_tarifaria'],
+            'precio_noche': d['precio_noche'],
+            'subtotal_noche': d['subtotal_noche'],
+        }
+        for d in (pricing_breakdown or [])
+    ]
+    response_payload['payment'] = payment_info
+    return jsonify(response_payload), 201
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['GET'])
@@ -190,17 +252,7 @@ def get_reserva(reserva_id, current_usuario=None):
     if not reserva:
         return jsonify({'error': 'Reserva not found'}), 404
 
-    return jsonify({
-        'id': reserva.id,
-        'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
-        'fecha_salida': reserva.fecha_salida.isoformat(),
-        'total': reserva.total,
-        'nro_personas': reserva.nro_personas,
-        'id_usuario': reserva.id_usuario,
-        'id_pais': reserva.id_pais,
-        'id_habitacion': reserva.id_habitacion,
-        'id_estado': reserva.id_estado
-    })
+    return jsonify(_serialize_reserva(reserva))
 
 
 @api_v1_bp.route('/reservas', methods=['GET'])
@@ -209,17 +261,7 @@ def get_all_reservas(current_usuario=None):
     use_case = GetAllReservasUseCase(get_repository())
     reservas = use_case.execute()
 
-    return jsonify([{
-        'id': r.id,
-        'fecha_ingreso': r.fecha_ingreso.isoformat(),
-        'fecha_salida': r.fecha_salida.isoformat(),
-        'total': r.total,
-        'nro_personas': r.nro_personas,
-        'id_usuario': r.id_usuario,
-        'id_pais': r.id_pais,
-        'id_habitacion': r.id_habitacion,
-        'id_estado': r.id_estado
-    } for r in reservas])
+    return jsonify([_serialize_reserva(r) for r in reservas])
 
 
 @api_v1_bp.route('/usuarios/<usuario_id>/reservas', methods=['GET'])
@@ -228,17 +270,7 @@ def get_reservas_by_usuario(usuario_id, current_usuario=None):
     use_case = GetReservasByUsuarioUseCase(get_repository())
     reservas = use_case.execute(usuario_id)
 
-    return jsonify([{
-        'id': r.id,
-        'fecha_ingreso': r.fecha_ingreso.isoformat(),
-        'fecha_salida': r.fecha_salida.isoformat(),
-        'total': r.total,
-        'nro_personas': r.nro_personas,
-        'id_usuario': r.id_usuario,
-        'id_pais': r.id_pais,
-        'id_habitacion': r.id_habitacion,
-        'id_estado': r.id_estado
-    } for r in reservas])
+    return jsonify([_serialize_reserva(r) for r in reservas])
 
 
 @api_v1_bp.route('/habitaciones/<habitacion_id>/reservas', methods=['GET'])
@@ -247,17 +279,7 @@ def get_reservas_by_habitacion(habitacion_id, current_usuario=None):
     use_case = GetReservasByHabitacionUseCase(get_repository())
     reservas = use_case.execute(habitacion_id)
 
-    return jsonify([{
-        'id': r.id,
-        'fecha_ingreso': r.fecha_ingreso.isoformat(),
-        'fecha_salida': r.fecha_salida.isoformat(),
-        'total': r.total,
-        'nro_personas': r.nro_personas,
-        'id_usuario': r.id_usuario,
-        'id_pais': r.id_pais,
-        'id_habitacion': r.id_habitacion,
-        'id_estado': r.id_estado
-    } for r in reservas])
+    return jsonify([_serialize_reserva(r) for r in reservas])
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['PUT'])
@@ -292,15 +314,7 @@ def update_reserva(reserva_id, current_usuario=None):
         return jsonify({'error': 'Reserva not found'}), 404
 
     return jsonify({
-        'id': reserva.id,
-        'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
-        'fecha_salida': reserva.fecha_salida.isoformat(),
-        'total': reserva.total,
-        'nro_personas': reserva.nro_personas,
-        'id_usuario': reserva.id_usuario,
-        'id_pais': reserva.id_pais,
-        'id_habitacion': reserva.id_habitacion,
-        'id_estado': reserva.id_estado
+        **_serialize_reserva(reserva)
     })
 
 
@@ -383,6 +397,14 @@ def create_reserva_pms_webhook():
     current_app.logger.info(f"[RESERVAS PMS] Hold {pms_hold.id} released after reservation creation")
 
     return jsonify({
+        **_serialize_reserva(reserva),
+        'estado_nombre': estado_nombre,
+        'source': 'PMS'
+    }), 201
+
+
+def _serialize_reserva(reserva):
+    return {
         'id': reserva.id,
         'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
         'fecha_salida': reserva.fecha_salida.isoformat(),
@@ -392,9 +414,8 @@ def create_reserva_pms_webhook():
         'id_pais': reserva.id_pais,
         'id_habitacion': reserva.id_habitacion,
         'id_estado': reserva.id_estado,
-        'estado_nombre': estado_nombre,
-        'source': 'PMS'
-    }), 201
+        'id_cotizacion': reserva.id_cotizacion,
+    }
 
 
 @api_v1_bp.route('/payments/webhook', methods=['POST'])

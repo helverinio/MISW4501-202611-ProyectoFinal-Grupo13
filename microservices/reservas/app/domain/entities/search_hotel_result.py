@@ -10,6 +10,9 @@ class RoomAvailability:
     nro_habitacion: str
     capacidad: int
     camas: int
+    moneda: Optional[str] = None
+    precio_total_reserva: Optional[float] = None
+    precio_promedio_noche: Optional[float] = None
 
 
 @dataclass
@@ -24,3 +27,6 @@ class SearchHotelResult:
     pais_nombre: str
     available_rooms: List[RoomAvailability]
     total_available_rooms: int
+    rating_promedio: float = 3.0
+    cantidad_ratings: int = 0
+    cantidad_comentarios: int = 0

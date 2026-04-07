@@ -1,6 +1,7 @@
 import os
 from app import create_app, db
 from sqlalchemy import text, inspect
+from app.infrastructure.models import UsuarioModel, CiudadModel, PaisModel, TokenModel
 
 app = create_app(os.environ.get('FLASK_ENV', 'development'))
 
@@ -21,7 +22,27 @@ def init_db():
                 db.session.execute(text('DROP TYPE IF EXISTS user_accounts CASCADE'))
                 db.session.execute(text('DROP TYPE IF EXISTS usuarios CASCADE'))
                 db.session.commit()
-                db.create_all()
+
+            db.create_all()
+
+            inspector = inspect(db.engine)
+            user_account_columns = {col['name'] for col in inspector.get_columns('user_accounts')}
+            if 'ciudad_id' not in user_account_columns:
+                db.session.execute(text('ALTER TABLE user_accounts ADD COLUMN ciudad_id INTEGER'))
+
+            fk_rows = db.session.execute(text("""
+                SELECT conname
+                FROM pg_constraint
+                WHERE conname = 'fk_user_accounts_ciudad_id'
+            """)).fetchall()
+            if not fk_rows:
+                db.session.execute(text("""
+                    ALTER TABLE user_accounts
+                    ADD CONSTRAINT fk_user_accounts_ciudad_id
+                    FOREIGN KEY (ciudad_id) REFERENCES ciudad(id)
+                """))
+
+            db.session.commit()
         except Exception as e:
             app.logger.warning(f"DB init warning (may be race condition): {e}")
             db.session.rollback()

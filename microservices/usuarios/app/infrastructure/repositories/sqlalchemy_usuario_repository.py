@@ -12,6 +12,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             nombre=usuario.nombre,
             email=usuario.email,
             usuario=usuario.usuario,
+            ciudad_id=usuario.ciudad_id,
             contrasena=usuario.contrasena,
             creado_en=usuario.creado_en
         )
@@ -47,6 +48,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             model.nombre = usuario.nombre
             model.email = usuario.email
             model.usuario = usuario.usuario
+            model.ciudad_id = usuario.ciudad_id
             model.contrasena = usuario.contrasena
             db.session.commit()
         return usuario
@@ -65,6 +67,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             nombre=model.nombre,
             email=model.email,
             usuario=model.usuario,
+            ciudad_id=model.ciudad_id,
             contrasena=model.contrasena,
             creado_en=model.creado_en
         )

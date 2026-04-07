@@ -99,6 +99,15 @@ Los dos ultimos puntos ya implican cambios de configuracion, no rediseno, pero d
 
 ### Ver estado
 
+##### Confirmar usuario
+```powershell
+aws configure list-profiles
+aws sts get-caller-identity --profile grupo13
+$env:AWS_PROFILE = "grupo13"
+$env:AWS_DEFAULT_REGION = "us-east-2"
+aws sts get-caller-identity
+```
+
 ```powershell
 .\infra\aws\scripts\cost-parking.ps1 -Action status
 ```

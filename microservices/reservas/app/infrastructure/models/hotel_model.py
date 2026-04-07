@@ -12,6 +12,7 @@ class HotelModel(db.Model):
     id_ciudad = db.Column(db.String(36), db.ForeignKey('ciudades.id'), nullable=False)
 
     habitaciones = db.relationship('HabitacionModel', backref='hotel', lazy=True)
+    comentarios = db.relationship('ComentarioHotelModel', backref='hotel', lazy=True)
 
     def to_dict(self):
         return {
