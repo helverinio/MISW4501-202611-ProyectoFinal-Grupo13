@@ -25,6 +25,7 @@
       "environment": [
         { "name": "FLASK_ENV", "value": "production" },
         { "name": "PAGOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5002" },
+        { "name": "USUARIOS_SERVICE_URL", "value": "http://__INTERNAL_ALB_DNS__:5003" },
         { "name": "REDIS_HOST", "value": "__REDIS_HOST__" },
         { "name": "REDIS_PORT", "value": "6379" },
         { "name": "REDIS_LOCK_TIMEOUT_SECONDS", "value": "30" },

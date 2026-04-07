@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { CurrencyService } from '../../../../core/services/currency.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { LanguageCode } from '../../../../core/i18n/translations';
 
@@ -16,11 +17,12 @@ import { LanguageCode } from '../../../../core/i18n/translations';
 export class HomeSearchHeaderComponent {
   private readonly i18n = inject(I18nService);
   private readonly authService = inject(AuthService);
+  private readonly currencyService = inject(CurrencyService);
   private readonly router = inject(Router);
 
   protected readonly currentLanguage = this.i18n.currentLanguage;
   protected readonly currentUser = this.authService.currentUser;
-  protected readonly currency = signal<string>('USD');
+  protected readonly currency = this.currencyService.currentCurrency;
   protected readonly isUserMenuOpen = signal<boolean>(false);
   protected readonly currentUrl = signal<string>(this.router.url);
   protected readonly isSearchResults = computed(() =>
@@ -35,6 +37,10 @@ export class HomeSearchHeaderComponent {
 
   protected onLanguageChange(lang: LanguageCode): void {
     this.i18n.setLanguage(lang);
+  }
+
+  protected onCurrencyChange(currency: string): void {
+    this.currencyService.setCurrency(currency);
   }
 
   protected t(key: string): string {
@@ -62,6 +68,10 @@ export class HomeSearchHeaderComponent {
 
   protected isSearchResultsPage(): boolean {
     return this.currentUrl().startsWith('/app/search-results');
+  }
+
+  protected isMyReservationsPage(): boolean {
+    return this.currentUrl().startsWith('/app/mis-reservas');
   }
 
   @HostListener('document:click')

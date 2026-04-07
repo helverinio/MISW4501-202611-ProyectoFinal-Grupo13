@@ -24,4 +24,8 @@ export class HomeSearchMobileNavigationComponent {
   protected isSearchResultsPage(): boolean {
     return this.router.url.startsWith('/app/search-results');
   }
+
+  protected isMyReservationsPage(): boolean {
+    return this.router.url.startsWith('/app/mis-reservas');
+  }
 }
