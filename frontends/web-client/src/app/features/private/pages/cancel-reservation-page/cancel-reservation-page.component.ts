@@ -105,7 +105,7 @@ export class CancelReservationPageComponent {
     const dictionary = {
       en: {
         cancelReservation: 'Cancel Reservation',
-          breadcrumbHome: 'Home',
+        breadcrumbHome: 'Home',
         reviewReservation: 'Review your reservation details and cancellation policy',
         reservationSummary: 'Reservation Summary',
         booking: 'Booking',
@@ -126,7 +126,8 @@ export class CancelReservationPageComponent {
         other: 'Other',
         additionalComments: 'Additional comments (optional)',
         importantNotice: 'Important Notice',
-        cannotUndo: 'This action cannot be undone. Once cancelled, you will need to make a new reservation if you wish to stay at this property.',
+        cannotUndo:
+          'This action cannot be undone. Once cancelled, you will need to make a new reservation if you wish to stay at this property.',
         keepReservation: 'Keep Reservation',
         confirmCancellation: 'Confirm Cancellation',
         refunded: 'Refunded',
@@ -136,7 +137,7 @@ export class CancelReservationPageComponent {
       },
       es: {
         cancelReservation: 'Cancelar Reserva',
-          breadcrumbHome: 'Home',
+        breadcrumbHome: 'Home',
         reviewReservation: 'Revisa los detalles de tu reserva y la política de cancelación',
         reservationSummary: 'Resumen de la Reserva',
         booking: 'Reserva',
@@ -157,7 +158,8 @@ export class CancelReservationPageComponent {
         other: 'Otro',
         additionalComments: 'Comentarios adicionales (opcional)',
         importantNotice: 'Aviso Importante',
-        cannotUndo: 'Esta acción no se puede deshacer. Una vez cancelada, tendrás que hacer una nueva reserva si deseas alojarte en este hotel.',
+        cannotUndo:
+          'Esta acción no se puede deshacer. Una vez cancelada, tendrás que hacer una nueva reserva si deseas alojarte en este hotel.',
         keepReservation: 'Mantener Reserva',
         confirmCancellation: 'Confirmar Cancelación',
         refunded: 'Reembolsada',
@@ -166,7 +168,7 @@ export class CancelReservationPageComponent {
         guests: 'huéspedes',
       },
       pt: {
-          breadcrumbHome: 'Home',
+        breadcrumbHome: 'Home',
         cancelReservation: 'Cancelar Reserva',
         reviewReservation: 'Revise os detalhes da sua reserva e política de cancelamento',
         reservationSummary: 'Resumo da Reserva',
@@ -188,7 +190,8 @@ export class CancelReservationPageComponent {
         other: 'Outro',
         additionalComments: 'Comentários adicionais (opcional)',
         importantNotice: 'Aviso Importante',
-        cannotUndo: 'Esta ação não pode ser desfeita. Após o cancelamento, você precisará fazer uma nova reserva se desejar ficar nesta propriedade.',
+        cannotUndo:
+          'Esta ação não pode ser desfeita. Após o cancelamento, você precisará fazer uma nova reserva se desejar ficar nesta propriedade.',
         keepReservation: 'Manter Reserva',
         confirmCancellation: 'Confirmar Cancelamento',
         refunded: 'Reembolsada',
@@ -245,9 +248,7 @@ export class CancelReservationPageComponent {
       },
       error: (error) => {
         this.submitting.set(false);
-        this.errorMessage.set(
-          error?.error?.error || 'Failed to load statuses for cancellation.',
-        );
+        this.errorMessage.set(error?.error?.error || 'Failed to load statuses for cancellation.');
       },
     });
   }
@@ -315,17 +316,15 @@ export class CancelReservationPageComponent {
       }
 
       this.loading.set(true);
-      this.reservationService
-        .getEstados()
-        .subscribe({
-          next: (estados) => {
-            this.loadReservationDetails(reservaId, estados);
-          },
-          error: () => {
-            this.loading.set(false);
-            this.errorMessage.set('Unable to load cancellation details. Please try again.');
-          },
-        });
+      this.reservationService.getEstados().subscribe({
+        next: (estados) => {
+          this.loadReservationDetails(reservaId, estados);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.errorMessage.set('Unable to load cancellation details. Please try again.');
+        },
+      });
     });
   }
 

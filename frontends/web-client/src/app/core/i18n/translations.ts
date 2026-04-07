@@ -160,6 +160,7 @@ export interface Translation {
   'login.form.signInButton': string;
   'login.form.signingIn': string;
   'login.form.errors.emailRequired': string;
+  'login.form.errors.emailInvalid': string;
   'login.form.errors.passwordRequired': string;
   'login.form.errors.passwordMinLength': string;
 
@@ -354,6 +355,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Sign In',
     'login.form.signingIn': 'Signing in...',
     'login.form.errors.emailRequired': 'Email is required',
+    'login.form.errors.emailInvalid': 'Please enter a valid email format',
     'login.form.errors.passwordRequired': 'Password is required',
     'login.form.errors.passwordMinLength': 'Minimum 6 characters',
 
@@ -550,6 +552,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Iniciar Sesión',
     'login.form.signingIn': 'Iniciando sesión...',
     'login.form.errors.emailRequired': 'Email es requerido',
+    'login.form.errors.emailInvalid': 'Por favor ingresa un formato de email válido',
     'login.form.errors.passwordRequired': 'Contraseña es requerida',
     'login.form.errors.passwordMinLength': 'Mínimo 6 caracteres',
 
@@ -747,6 +750,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Entrar',
     'login.form.signingIn': 'Entrando...',
     'login.form.errors.emailRequired': 'Email é obrigatório',
+    'login.form.errors.emailInvalid': 'Por favor, digite um formato de email válido',
     'login.form.errors.passwordRequired': 'Senha é obrigatória',
     'login.form.errors.passwordMinLength': 'Mínimo 6 caracteres',
 

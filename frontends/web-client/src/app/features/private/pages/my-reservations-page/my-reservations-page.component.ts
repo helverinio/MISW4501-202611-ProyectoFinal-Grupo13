@@ -65,7 +65,8 @@ export class MyReservationsPageComponent {
     return this.reservations().filter((reservation) => {
       const matchesTab =
         tab === 'all' ||
-        (tab === 'upcoming' && (reservation.status === 'confirmed' || reservation.status === 'pending')) ||
+        (tab === 'upcoming' &&
+          (reservation.status === 'confirmed' || reservation.status === 'pending')) ||
         (tab === 'past' && reservation.status === 'completed') ||
         (tab === 'cancelled' && reservation.status === 'cancelled');
 
@@ -380,9 +381,7 @@ export class MyReservationsPageComponent {
     }
 
     const lang = this.currentLanguage();
-    const nightLabel = nights === 1
-      ? this.getNightSingular()
-      : this.label('nights');
+    const nightLabel = nights === 1 ? this.getNightSingular() : this.label('nights');
 
     return `${this.label('totalFor')} ${nights} ${nightLabel}`;
   }
@@ -418,9 +417,7 @@ export class MyReservationsPageComponent {
             return of([] as ReservationItemVm[]);
           }
 
-          return forkJoin(
-            reservas.map((reserva) => this.enrichReservation(reserva, estados)),
-          );
+          return forkJoin(reservas.map((reserva) => this.enrichReservation(reserva, estados)));
         }),
         finalize(() => this.loading.set(false)),
       )
@@ -435,10 +432,7 @@ export class MyReservationsPageComponent {
       });
   }
 
-  private enrichReservation(
-    reserva: ReservaResponse,
-    estados: EstadoResponse[],
-  ) {
+  private enrichReservation(reserva: ReservaResponse, estados: EstadoResponse[]) {
     return this.reservationService.getHabitacionById(reserva.id_habitacion).pipe(
       switchMap((habitacion) =>
         this.searchHotelsService.getHotelById(habitacion.id_hotel).pipe(
@@ -454,9 +448,7 @@ export class MyReservationsPageComponent {
           ),
         ),
       ),
-      catchError(() =>
-        of(this.toFallbackReservationVm(reserva, estados)),
-      ),
+      catchError(() => of(this.toFallbackReservationVm(reserva, estados))),
     );
   }
 

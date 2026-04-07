@@ -116,8 +116,8 @@ export class ReservationFormPageComponent {
     return Math.round(taxable * 0.12 * 100) / 100;
   });
 
-  protected readonly grandTotal = computed(() =>
-    Math.max(this.totalPrice() - this.discountAmount(), 0) + this.taxesAmount(),
+  protected readonly grandTotal = computed(
+    () => Math.max(this.totalPrice() - this.discountAmount(), 0) + this.taxesAmount(),
   );
 
   protected readonly holdCountdownLabel = computed(() => {
@@ -339,7 +339,8 @@ export class ReservationFormPageComponent {
         paidWith: 'Paid with',
         whatsNext: "What's Next?",
         preArrivalTitle: 'Pre-arrival Information',
-        preArrivalDesc: "You'll receive a reminder 24 hours before check-in with important details.",
+        preArrivalDesc:
+          "You'll receive a reminder 24 hours before check-in with important details.",
         mobileCheckinTitle: 'Mobile Check-in',
         mobileCheckinDesc: 'Download our app for faster check-in and digital room key access.',
         support247Desc: 'Need to make changes? Our support team is available anytime.',
@@ -396,10 +397,13 @@ export class ReservationFormPageComponent {
         paidWith: 'Pagado con',
         whatsNext: '¿Qué sigue?',
         preArrivalTitle: 'Información previa a la llegada',
-        preArrivalDesc: 'Recibirás un recordatorio 24 horas antes del check-in con detalles importantes.',
+        preArrivalDesc:
+          'Recibirás un recordatorio 24 horas antes del check-in con detalles importantes.',
         mobileCheckinTitle: 'Check-in móvil',
-        mobileCheckinDesc: 'Descarga nuestra app para un check-in más rápido y acceso a la llave virtual.',
-        support247Desc: '¿Necesitas cambios? Nuestro equipo de soporte está disponible en cualquier momento.',
+        mobileCheckinDesc:
+          'Descarga nuestra app para un check-in más rápido y acceso a la llave virtual.',
+        support247Desc:
+          '¿Necesitas cambios? Nuestro equipo de soporte está disponible en cualquier momento.',
         bestPriceGuarantee: 'Mejor precio garantizado',
         confirmationEmailInbox: 'Revisa tu bandeja de entrada (y carpeta de spam por si acaso).',
       },
@@ -453,12 +457,16 @@ export class ReservationFormPageComponent {
         paidWith: 'Pago com',
         whatsNext: 'O que vem a seguir?',
         preArrivalTitle: 'Informações pré-chegada',
-        preArrivalDesc: 'Você receberá um lembrete 24 horas antes do check-in com detalhes importantes.',
+        preArrivalDesc:
+          'Você receberá um lembrete 24 horas antes do check-in com detalhes importantes.',
         mobileCheckinTitle: 'Check-in Mobile',
-        mobileCheckinDesc: 'Baixe nosso app para check-in mais rápido e acesso à chave digital do quarto.',
-        support247Desc: 'Precisa fazer alterações? Nossa equipe de suporte está disponível a qualquer momento.',
+        mobileCheckinDesc:
+          'Baixe nosso app para check-in mais rápido e acesso à chave digital do quarto.',
+        support247Desc:
+          'Precisa fazer alterações? Nossa equipe de suporte está disponível a qualquer momento.',
         bestPriceGuarantee: 'Melhor preço garantido',
-        confirmationEmailInbox: 'Verifique sua caixa de entrada (e pasta de spam, só por garantia).',
+        confirmationEmailInbox:
+          'Verifique sua caixa de entrada (e pasta de spam, só por garantia).',
       },
     } as const;
 
@@ -498,7 +506,8 @@ export class ReservationFormPageComponent {
     }).format(parsed);
   }
 
-  protected goBackToHotel(): void {    this.releaseCurrentHoldSilently();
+  protected goBackToHotel(): void {
+    this.releaseCurrentHoldSilently();
     this.resetBookingState();
 
     const hotelId = this.reservationForm.controls.hotelId.value;
@@ -548,7 +557,9 @@ export class ReservationFormPageComponent {
     }
 
     if (!this.hasActiveHold()) {
-      this.errorMessage.set('El tiempo de retencion expiro. Vuelve a seleccionar la habitacion para generar un nuevo hold.');
+      this.errorMessage.set(
+        'El tiempo de retencion expiro. Vuelve a seleccionar la habitacion para generar un nuevo hold.',
+      );
       return;
     }
 
@@ -615,7 +626,11 @@ export class ReservationFormPageComponent {
 
     const preferred = estados.find((estado) => {
       const name = normalized(estado.nombre || '');
-      return name.includes('confirmada') || name.includes('reservada via pms') || name.includes('reservado');
+      return (
+        name.includes('confirmada') ||
+        name.includes('reservada via pms') ||
+        name.includes('reservado')
+      );
     });
 
     if (preferred) {

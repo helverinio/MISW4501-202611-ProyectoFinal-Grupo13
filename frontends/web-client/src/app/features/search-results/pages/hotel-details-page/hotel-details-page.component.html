@@ -27,10 +27,12 @@
         <header>
           <h1 class="text-3xl font-bold text-gray-900 leading-tight">{{ hotel()!.nombre }}</h1>
           <div class="flex flex-wrap items-center gap-3 text-sm mt-2">
-            <span class="inline-flex px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium"
+            <span
+              class="inline-flex px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium"
               >{{ label('freeCancellation') }}</span
             >
-            <span class="inline-flex px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium"
+            <span
+              class="inline-flex px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium"
               >{{ label('securePayment') }}</span
             >
           </div>
@@ -38,14 +40,28 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 rounded-xl overflow-hidden">
           <div class="sm:col-span-2 h-64 sm:h-96">
-            <img class="w-full h-full object-cover" [src]="galleryImages()[0].url" [alt]="galleryImages()[0].alt" />
+            <img
+              class="w-full h-full object-cover"
+              [src]="galleryImages()[0].url"
+              [alt]="galleryImages()[0].alt"
+            />
           </div>
           <div class="grid grid-rows-2 gap-2 sm:gap-3 h-64 sm:h-96">
-            <img class="w-full h-full object-cover" [src]="galleryImages()[1].url" [alt]="galleryImages()[1].alt" />
+            <img
+              class="w-full h-full object-cover"
+              [src]="galleryImages()[1].url"
+              [alt]="galleryImages()[1].alt"
+            />
             <div class="relative">
-              <img class="w-full h-full object-cover" [src]="galleryImages()[2].url" [alt]="galleryImages()[2].alt" />
+              <img
+                class="w-full h-full object-cover"
+                [src]="galleryImages()[2].url"
+                [alt]="galleryImages()[2].alt"
+              />
               <div class="absolute inset-0 bg-black/25 flex items-end justify-end p-3">
-                <span class="text-xs font-medium text-white bg-black/40 rounded-md px-2 py-1">{{ label('morePhotos') }}</span>
+                <span class="text-xs font-medium text-white bg-black/40 rounded-md px-2 py-1">{{
+                  label('morePhotos')
+                }}</span>
               </div>
             </div>
           </div>
@@ -59,7 +75,9 @@
         </article>
 
         <article class="bg-white rounded-xl border border-gray-200 p-5 sm:p-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ t('searchResults.filters.amenities') }}</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">
+            {{ t('searchResults.filters.amenities') }}
+          </h2>
           @if (amenities().length) {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6">
               @for (amenity of amenities(); track amenity) {
@@ -78,47 +96,66 @@
           <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ label('availableRooms') }}</h2>
           @if (roomCards().length) {
             <div class="max-h-[560px] overflow-y-auto pr-1">
-              <div class="hidden md:grid md:grid-cols-12 md:gap-4 items-center text-xs font-semibold text-gray-500 uppercase tracking-wide sticky top-0 bg-white z-10 pb-3">
+              <div
+                class="hidden md:grid md:grid-cols-12 md:gap-4 items-center text-xs font-semibold text-gray-500 uppercase tracking-wide sticky top-0 bg-white z-10 pb-3"
+              >
                 <div class="md:col-span-4 whitespace-nowrap">{{ label('roomType') }}</div>
                 <div class="md:col-span-2 whitespace-nowrap">Guests</div>
-                <div class="md:col-span-2 whitespace-nowrap">{{ t('searchResults.filters.pricePerNight') }}</div>
                 <div class="md:col-span-2 whitespace-nowrap">
-                  {{ t('searchResults.card.total') }} <span class="whitespace-nowrap">({{ nights() }} {{ t('searchResults.summary.nights') }})</span>
+                  {{ t('searchResults.filters.pricePerNight') }}
+                </div>
+                <div class="md:col-span-2 whitespace-nowrap">
+                  {{ t('searchResults.card.total') }}
+                  <span class="whitespace-nowrap"
+                    >({{ nights() }} {{ t('searchResults.summary.nights') }})</span
+                  >
                 </div>
                 <div class="md:col-span-2 text-right whitespace-nowrap md:pr-3">Action</div>
               </div>
               <div class="space-y-4">
                 @for (room of roomCards(); track room.id) {
-                <div
-                  class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0 rounded-lg transition-colors"
-                  [class.bg-primary-50]="activeRoomCard()?.id === room.id"
-                  [class.ring-1]="activeRoomCard()?.id === room.id"
-                  [class.ring-primary]="activeRoomCard()?.id === room.id"
-                  [class.px-3]="activeRoomCard()?.id === room.id"
-                >
-                  <div class="md:col-span-4">
-                    <p class="font-semibold text-gray-900">{{ room.type }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ label('room') }} {{ room.roomNumber }}</p>
-                    <p class="text-xs mt-2" [class]="room.availabilityClass">{{ room.availabilityLabel }}</p>
+                  <div
+                    class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0 rounded-lg transition-colors"
+                    [class.bg-primary-50]="activeRoomCard()?.id === room.id"
+                    [class.ring-1]="activeRoomCard()?.id === room.id"
+                    [class.ring-primary]="activeRoomCard()?.id === room.id"
+                    [class.px-3]="activeRoomCard()?.id === room.id"
+                  >
+                    <div class="md:col-span-4">
+                      <p class="font-semibold text-gray-900">{{ room.type }}</p>
+                      <p class="text-xs text-gray-500 mt-1">
+                        {{ label('room') }} {{ room.roomNumber }}
+                      </p>
+                      <p class="text-xs mt-2" [class]="room.availabilityClass">
+                        {{ room.availabilityLabel }}
+                      </p>
+                    </div>
+                    <div class="md:col-span-2 text-sm text-gray-700">{{ room.capacityLabel }}</div>
+                    <div class="md:col-span-2 text-sm font-semibold text-gray-900">
+                      {{ formatPrice(room.pricePerNight) }}
+                    </div>
+                    <div class="md:col-span-2 text-sm font-semibold text-gray-900">
+                      {{ formatPrice(room.totalPrice) }}
+                    </div>
+                    <div class="md:col-span-2 md:text-right md:pr-3">
+                      <button
+                        type="button"
+                        class="w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                        [class.bg-primary]="activeRoomCard()?.id !== room.id"
+                        [class.text-white]="activeRoomCard()?.id !== room.id"
+                        [class.hover:bg-primary-dark]="activeRoomCard()?.id !== room.id"
+                        [class.bg-emerald-600]="activeRoomCard()?.id === room.id"
+                        [class.text-white]="activeRoomCard()?.id === room.id"
+                        (click)="selectRoom(room)"
+                      >
+                        {{
+                          activeRoomCard()?.id === room.id
+                            ? '\u2713 ' + label('select')
+                            : label('select')
+                        }}
+                      </button>
+                    </div>
                   </div>
-                  <div class="md:col-span-2 text-sm text-gray-700">{{ room.capacityLabel }}</div>
-                  <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.pricePerNight) }}</div>
-                  <div class="md:col-span-2 text-sm font-semibold text-gray-900">{{ formatPrice(room.totalPrice) }}</div>
-                  <div class="md:col-span-2 md:text-right md:pr-3">
-                    <button
-                      type="button"
-                      class="w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                      [class.bg-primary]="activeRoomCard()?.id !== room.id"
-                      [class.text-white]="activeRoomCard()?.id !== room.id"
-                      [class.hover:bg-primary-dark]="activeRoomCard()?.id !== room.id"
-                      [class.bg-emerald-600]="activeRoomCard()?.id === room.id"
-                      [class.text-white]="activeRoomCard()?.id === room.id"
-                      (click)="selectRoom(room)"
-                    >
-                      {{ activeRoomCard()?.id === room.id ? '\u2713 ' + label('select') : label('select') }}
-                    </button>
-                  </div>
-                </div>
                 }
               </div>
             </div>
@@ -178,8 +215,11 @@
             @if (activeRoomCard()) {
               <div>
                 <p class="text-gray-500 mb-1">{{ label('roomType') }}</p>
-                <div class="rounded-md border border-primary px-3 py-2 text-gray-800 bg-primary-50 text-sm font-medium">
-                  {{ activeRoomCard()!.type }} &mdash; {{ label('room') }} {{ activeRoomCard()!.roomNumber }}
+                <div
+                  class="rounded-md border border-primary px-3 py-2 text-gray-800 bg-primary-50 text-sm font-medium"
+                >
+                  {{ activeRoomCard()!.type }} &mdash; {{ label('room') }}
+                  {{ activeRoomCard()!.roomNumber }}
                 </div>
               </div>
             }
@@ -187,14 +227,19 @@
 
           <div class="space-y-2 text-sm border-t border-gray-100 pt-4">
             <div class="flex items-center justify-between text-gray-600">
-              <span>{{ formatPrice(heroPrice()) }} x {{ nights() }} {{ t('searchResults.summary.nights') }}</span>
+              <span
+                >{{ formatPrice(heroPrice()) }} x {{ nights() }}
+                {{ t('searchResults.summary.nights') }}</span
+              >
               <span>{{ formatPrice(totalPrice()) }}</span>
             </div>
             <div class="flex items-center justify-between text-gray-600">
               <span>{{ label('taxesFees') }}</span>
               <span>{{ formatPrice(taxesAndFees()) }}</span>
             </div>
-            <div class="flex items-center justify-between text-base font-semibold text-gray-900 pt-2 border-t border-gray-100">
+            <div
+              class="flex items-center justify-between text-base font-semibold text-gray-900 pt-2 border-t border-gray-100"
+            >
               <span>{{ t('searchResults.card.total') }}</span>
               <span>{{ formatPrice(grandTotal()) }}</span>
             </div>

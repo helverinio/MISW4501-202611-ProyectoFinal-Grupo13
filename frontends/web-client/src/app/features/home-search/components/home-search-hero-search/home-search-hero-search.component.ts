@@ -78,7 +78,12 @@ export class HomeSearchHeroSearchComponent {
   }
 
   protected get isCheckOutInvalid(): boolean {
-    return this.submitAttempted && !!this.checkOutDate && !!this.checkInDate && this.checkOutDate <= this.checkInDate;
+    return (
+      this.submitAttempted &&
+      !!this.checkOutDate &&
+      !!this.checkInDate &&
+      this.checkOutDate <= this.checkInDate
+    );
   }
 
   protected get hasSearchErrors(): boolean {

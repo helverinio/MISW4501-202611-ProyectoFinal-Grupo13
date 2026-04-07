@@ -149,7 +149,10 @@ export class ReservationService {
 
   acquireRoomHold(habitacionId: string, payload: AcquireHoldPayload): Observable<RoomHoldResponse> {
     return this.http
-      .post<RoomHoldResponse>(`${environment.apiBaseUrl}/habitaciones/${habitacionId}/hold`, payload)
+      .post<RoomHoldResponse>(
+        `${environment.apiBaseUrl}/habitaciones/${habitacionId}/hold`,
+        payload,
+      )
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 

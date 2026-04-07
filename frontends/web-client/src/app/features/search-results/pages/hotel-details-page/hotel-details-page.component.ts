@@ -93,7 +93,8 @@ export class HotelDetailsPageComponent {
           capacityLabel: `${room.capacidad} ${this.getGuestWord(room.capacidad)}`,
           pricePerNight,
           totalPrice,
-          availabilityLabel: index < 2 ? this.label('freeCancellationShort') : this.label('limitedAvailability'),
+          availabilityLabel:
+            index < 2 ? this.label('freeCancellationShort') : this.label('limitedAvailability'),
           availabilityClass: index < 2 ? 'text-emerald-600' : 'text-amber-600',
         };
       });
@@ -281,7 +282,8 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reserve Now',
         noChargeYet: 'You will not be charged yet',
         taxesFees: 'Taxes & fees',
-        holdExpiredError: 'You exceeded the maximum time to complete the reservation. Please try again.',
+        holdExpiredError:
+          'You exceeded the maximum time to complete the reservation. Please try again.',
         roomType: 'Room type',
         guestsExceedCapacity: 'Exceeds the maximum guests allowed for this room.',
         notAvailable: 'N/A',
@@ -304,7 +306,8 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reservar ahora',
         noChargeYet: 'Todavia no se realizara ningun cobro',
         taxesFees: 'Impuestos y cargos',
-        holdExpiredError: 'Has excedido el tiempo maximo para completar la reserva. Intentalo nuevamente.',
+        holdExpiredError:
+          'Has excedido el tiempo maximo para completar la reserva. Intentalo nuevamente.',
         roomType: 'Tipo de habitacion',
         guestsExceedCapacity: 'Supera el maximo de huespedes permitido para esta habitacion.',
         notAvailable: 'N/D',
@@ -361,7 +364,10 @@ export class HotelDetailsPageComponent {
       .toLowerCase()
       .trim();
 
-    const keyByType: Record<string, 'single' | 'double' | 'triple' | 'deluxeSuite' | 'presidentialSuite'> = {
+    const keyByType: Record<
+      string,
+      'single' | 'double' | 'triple' | 'deluxeSuite' | 'presidentialSuite'
+    > = {
       'habitacion sencilla': 'single',
       'habitacion doble': 'double',
       'habitacion triple': 'triple',
