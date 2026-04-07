@@ -35,9 +35,17 @@
           [class.text-gray-700]="!isSearchResultsPage()"
           >{{ t('homeSearch.nav.searchResults') }}</a
         >
-        <a href="#" class="text-gray-700 hover:text-gray-900">{{
-          t('homeSearch.nav.myReservations')
-        }}</a>
+        <a
+          routerLink="/app/mis-reservas"
+          class="hover:text-gray-900"
+          [class.text-primary]="isMyReservationsPage()"
+          [class.font-medium]="isMyReservationsPage()"
+          [class.border-b-2]="isMyReservationsPage()"
+          [class.border-primary]="isMyReservationsPage()"
+          [class.pb-1]="isMyReservationsPage()"
+          [class.text-gray-700]="!isMyReservationsPage()"
+          >{{ t('homeSearch.nav.myReservations') }}</a
+        >
         <a href="#" class="text-gray-700 hover:text-gray-900">{{
           t('homeSearch.nav.accountPreferences')
         }}</a>
@@ -57,7 +65,7 @@
             <option value="pt">🇧🇷 Português</option>
           </select>
           <select
-            (ngModelChange)="currency.set($event)"
+            (ngModelChange)="onCurrencyChange($event)"
             [ngModel]="currency()"
             class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >

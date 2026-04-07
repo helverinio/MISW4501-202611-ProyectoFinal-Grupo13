@@ -96,13 +96,13 @@ render_taskdef() {
     return 1
   fi
 
-  python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT"
+  python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT" "$FRONTEND_CORS_ORIGINS"
 import pathlib
 import sys
 
 (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
  log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
- mq_port) = sys.argv[1:]
+ mq_port, frontend_cors_origins) = sys.argv[1:]
 
 content = pathlib.Path(template_path).read_text()
 replacements = {
@@ -118,6 +118,7 @@ replacements = {
   "__REDIS_HOST__": redis_host,
   "__MQ_HOST__": mq_host,
   "__MQ_PORT__": mq_port,
+  "__CORS_ORIGINS__": frontend_cors_origins,
 }
 for key, value in replacements.items():
   content = content.replace(key, value)
@@ -185,8 +186,9 @@ deploy_backends() {
   REDIS_HOST=$(jq -r '.redis_primary_endpoint.value' "$TF_OUTPUTS")
   MQ_HOST=$(jq -r '.mq_host.value' "$TF_OUTPUTS")
   MQ_PORT=$(jq -r '.mq_port.value' "$TF_OUTPUTS")
+  FRONTEND_CORS_ORIGINS=$(jq -r '.frontend_urls.value | to_entries | map(.value) | join(",")' "$TF_OUTPUTS")
 
-  export AWS_REGION EXEC_ROLE_ARN TASK_ROLE_ARN SECRET_ARN INTERNAL_ALB_DNS PUBLIC_ALB_DNS REDIS_HOST MQ_HOST MQ_PORT
+  export AWS_REGION EXEC_ROLE_ARN TASK_ROLE_ARN SECRET_ARN INTERNAL_ALB_DNS PUBLIC_ALB_DNS REDIS_HOST MQ_HOST MQ_PORT FRONTEND_CORS_ORIGINS
 
   reconcile_listener() {
     local service="$1"

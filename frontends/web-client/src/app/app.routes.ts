@@ -4,7 +4,11 @@ import { LoginPageComponent } from './features/auth/pages/login-page/login-page.
 import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
 import { HomeSearchPageComponent } from './features/home-search/pages/home-search-page/home-search-page.component';
 import { SearchResultsPageComponent } from './features/search-results/pages/search-results-page/search-results-page.component';
+import { HotelDetailsPageComponent } from './features/search-results/pages/hotel-details-page/hotel-details-page.component';
+import { ReservationFormPageComponent } from './features/search-results/pages/reservation-form-page/reservation-form-page.component';
 import { DashboardPageComponent } from './features/private/pages/dashboard-page/dashboard-page.component';
+import { MyReservationsPageComponent } from './features/private/pages/my-reservations-page/my-reservations-page.component';
+import { CancelReservationPageComponent } from './features/private/pages/cancel-reservation-page/cancel-reservation-page.component';
 import { authGuard } from './core/guards/auth.guard';
 import { publicOnlyGuard } from './core/guards/public-only.guard';
 import { AuthenticatedLayoutComponent } from './layouts/authenticated-layout/authenticated-layout.component';
@@ -52,6 +56,22 @@ export const routes: Routes = [
       {
         path: 'search-results',
         component: SearchResultsPageComponent,
+      },
+      {
+        path: 'hoteles/:hotelId',
+        component: HotelDetailsPageComponent,
+      },
+      {
+        path: 'reservas/nueva',
+        component: ReservationFormPageComponent,
+      },
+      {
+        path: 'mis-reservas',
+        component: MyReservationsPageComponent,
+      },
+      {
+        path: 'cancelar-reserva',
+        component: CancelReservationPageComponent,
       },
     ],
   },

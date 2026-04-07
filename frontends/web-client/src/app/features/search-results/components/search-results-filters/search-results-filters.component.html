@@ -49,15 +49,15 @@
     <div id="amenities-filter" class="mb-6">
       <h4 class="font-medium text-gray-900 mb-3">{{ t('searchResults.filters.amenities') }}</h4>
       <div class="space-y-3">
-        @for (amenity of amenities; track amenity.value) {
+        @for (amenity of availableAmenities; track amenity) {
           <label class="flex items-center">
             <input
-              (change)="onAmenityToggle(amenity.value)"
-              [checked]="isSelectedAmenity(amenity.value)"
+              (change)="onAmenityToggle(amenity)"
+              [checked]="isSelectedAmenity(amenity)"
               type="checkbox"
               class="rounded border-gray-300 text-primary focus:ring-primary"
             />
-            <span class="ml-3 text-sm text-gray-700">{{ t(amenity.labelKey) }}</span>
+            <span class="ml-3 text-sm text-gray-700">{{ amenityLabel(amenity) }}</span>
           </label>
         }
       </div>

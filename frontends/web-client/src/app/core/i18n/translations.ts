@@ -66,6 +66,9 @@ export interface Translation {
   'homeSearch.hero.guest3': string;
   'homeSearch.hero.guest4': string;
   'homeSearch.hero.guest5Plus': string;
+  'homeSearch.hero.errorDestinationRequired': string;
+  'homeSearch.hero.errorCheckInPast': string;
+  'homeSearch.hero.errorCheckOutBeforeOrEqual': string;
   'homeSearch.popular.title': string;
   'homeSearch.popular.subtitle': string;
   'homeSearch.popular.price.mexico': string;
@@ -157,6 +160,7 @@ export interface Translation {
   'login.form.signInButton': string;
   'login.form.signingIn': string;
   'login.form.errors.emailRequired': string;
+  'login.form.errors.emailInvalid': string;
   'login.form.errors.passwordRequired': string;
   'login.form.errors.passwordMinLength': string;
 
@@ -251,6 +255,9 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.guest3': '3 Guests',
     'homeSearch.hero.guest4': '4 Guests',
     'homeSearch.hero.guest5Plus': '5+ Guests',
+    'homeSearch.hero.errorDestinationRequired': 'Please enter a destination (city or hotel).',
+    'homeSearch.hero.errorCheckInPast': 'Check-in cannot be earlier than today.',
+    'homeSearch.hero.errorCheckOutBeforeOrEqual': 'Check-out must be after check-in.',
     'homeSearch.popular.title': 'Popular Destinations',
     'homeSearch.popular.subtitle': 'Explore the most loved destinations across Latin America',
     'homeSearch.popular.price.mexico': 'From $45/night',
@@ -348,6 +355,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Sign In',
     'login.form.signingIn': 'Signing in...',
     'login.form.errors.emailRequired': 'Email is required',
+    'login.form.errors.emailInvalid': 'Please enter a valid email format',
     'login.form.errors.passwordRequired': 'Password is required',
     'login.form.errors.passwordMinLength': 'Minimum 6 characters',
 
@@ -444,6 +452,9 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.guest3': '3 huéspedes',
     'homeSearch.hero.guest4': '4 huéspedes',
     'homeSearch.hero.guest5Plus': '5+ huéspedes',
+    'homeSearch.hero.errorDestinationRequired': 'Debes ingresar un destino (ciudad u hotel).',
+    'homeSearch.hero.errorCheckInPast': 'El check-in no puede ser anterior a hoy.',
+    'homeSearch.hero.errorCheckOutBeforeOrEqual': 'El check-out debe ser posterior al check-in.',
     'homeSearch.popular.title': 'Destinos Populares',
     'homeSearch.popular.subtitle': 'Explora los destinos más queridos de América Latina',
     'homeSearch.popular.price.mexico': 'Desde $45/noche',
@@ -541,6 +552,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Iniciar Sesión',
     'login.form.signingIn': 'Iniciando sesión...',
     'login.form.errors.emailRequired': 'Email es requerido',
+    'login.form.errors.emailInvalid': 'Por favor ingresa un formato de email válido',
     'login.form.errors.passwordRequired': 'Contraseña es requerida',
     'login.form.errors.passwordMinLength': 'Mínimo 6 caracteres',
 
@@ -638,6 +650,9 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.guest3': '3 hóspedes',
     'homeSearch.hero.guest4': '4 hóspedes',
     'homeSearch.hero.guest5Plus': '5+ hóspedes',
+    'homeSearch.hero.errorDestinationRequired': 'Você deve informar um destino (cidade ou hotel).',
+    'homeSearch.hero.errorCheckInPast': 'O check-in não pode ser anterior a hoje.',
+    'homeSearch.hero.errorCheckOutBeforeOrEqual': 'O check-out deve ser posterior ao check-in.',
     'homeSearch.popular.title': 'Destinos Populares',
     'homeSearch.popular.subtitle': 'Explore os destinos mais queridos da América Latina',
     'homeSearch.popular.price.mexico': 'A partir de $45/noite',
@@ -735,6 +750,7 @@ export const translations: Record<LanguageCode, Translation> = {
     'login.form.signInButton': 'Entrar',
     'login.form.signingIn': 'Entrando...',
     'login.form.errors.emailRequired': 'Email é obrigatório',
+    'login.form.errors.emailInvalid': 'Por favor, digite um formato de email válido',
     'login.form.errors.passwordRequired': 'Senha é obrigatória',
     'login.form.errors.passwordMinLength': 'Mínimo 6 caracteres',
 
