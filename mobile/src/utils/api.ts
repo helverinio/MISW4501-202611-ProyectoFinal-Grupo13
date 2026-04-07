@@ -9,12 +9,12 @@ const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
+  backendUrl = 'https://d1r8df79ch2otn.cloudfront.net'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
     Constants.expoConfig?.extra?.REACT_APP_BACKEND_URL ||
-    'https://oa-charlottemason-prod-backend.azurewebsites.net';
+    'https://d1r8df79ch2otn.cloudfront.net';
 }
 
 console.log('API configured with backend URL:', backendUrl);
