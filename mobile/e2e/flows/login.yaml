@@ -36,6 +36,14 @@ appId: com.travelhub.app
     text: "Iniciar Sesión"
     index: 1
 
+# Dismiss Google Password Manager dialog if it appears
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
 # Wait for navigation - login button should disappear
 - extendedWaitUntil:
     notVisible:
