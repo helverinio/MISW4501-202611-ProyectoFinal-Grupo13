@@ -15,7 +15,9 @@ export default {
     ios: {
       supportsTablet: true
     },
-    android: {},
+    android: {
+      package: "com.travelhub.app"
+    },
     web: {
       bundler: "metro",
       output: "static"

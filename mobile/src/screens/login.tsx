@@ -153,16 +153,16 @@ export default function LoginScreen() {
 
   if (isCheckingAuth) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} testID="login-screen">
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4A7BF7" />
+          <ActivityIndicator size="large" color="#4A7BF7" testID="login-loading" />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="login-screen">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -187,6 +187,7 @@ export default function LoginScreen() {
           {/* Tab Navigation */}
           <View style={styles.tabContainer}>
             <TouchableOpacity
+              testID="login-tab"
               style={[styles.tab, activeTab === 'login' && styles.activeTab]}
               onPress={() => handleTabChange('login')}
             >
@@ -195,6 +196,7 @@ export default function LoginScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              testID="register-tab"
               style={[styles.tab, activeTab === 'register' && styles.activeTab]}
               onPress={() => handleTabChange('register')}
             >
@@ -212,6 +214,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.email')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="login-email-input"
                     style={styles.input}
                     placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
@@ -229,6 +232,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.password')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="login-password-input"
                     style={styles.input}
                     placeholder="••••••••"
                     placeholderTextColor="#999"
@@ -266,10 +270,11 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {error && <Text style={styles.errorText}>{error}</Text>}
+                {error && <Text testID="login-error-text" style={styles.errorText}>{error}</Text>}
 
                 {/* Login Button */}
                 <TouchableOpacity
+                  testID="login-submit-button"
                   style={[styles.button, isLoading && styles.buttonDisabled]}
                   onPress={handleLogin}
                   disabled={isLoading}
@@ -288,6 +293,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.fullName')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="register-name-input"
                     style={styles.input}
                     placeholder={t('auth.fullNamePlaceholder')}
                     placeholderTextColor="#999"
@@ -303,6 +309,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.email')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="register-email-input"
                     style={styles.input}
                     placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
@@ -320,6 +327,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.password')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="register-password-input"
                     style={styles.input}
                     placeholder="••••••••"
                     placeholderTextColor="#999"
@@ -345,6 +353,7 @@ export default function LoginScreen() {
                 <Text style={styles.inputLabel}>{t('auth.confirmPassword')}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
+                    testID="register-confirm-password-input"
                     style={styles.input}
                     placeholder="••••••••"
                     placeholderTextColor="#999"
@@ -366,11 +375,12 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {error && <Text style={styles.errorText}>{error}</Text>}
-                {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
+                {error && <Text testID="register-error-text" style={styles.errorText}>{error}</Text>}
+                {successMessage && <Text testID="register-success-text" style={styles.successText}>{successMessage}</Text>}
 
                 {/* Register Button */}
                 <TouchableOpacity
+                  testID="register-submit-button"
                   style={[styles.button, isLoading && styles.buttonDisabled]}
                   onPress={handleRegister}
                   disabled={isLoading}
