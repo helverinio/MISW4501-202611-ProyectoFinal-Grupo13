@@ -23,6 +23,12 @@
         {{ t('login.form.errors.emailRequired') }}
       </div>
     }
+    @if (form.get('email')?.errors?.['email'] && form.get('email')?.touched) {
+      <div id="email-error-format" class="mt-1 text-sm text-error-500">
+        <i class="fa-solid fa-exclamation-circle mr-1"></i>
+        {{ t('login.form.errors.emailInvalid') }}
+      </div>
+    }
   </div>
 
   <div>

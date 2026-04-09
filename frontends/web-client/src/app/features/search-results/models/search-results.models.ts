@@ -34,6 +34,24 @@ export interface SearchAvailableHotelsResponse {
   hoteles: AvailableHotelApi[];
 }
 
+export interface HotelByIdResponse {
+  id: string;
+  nombre: string;
+  email: string | null;
+  descripcion: string | null;
+  amenidades: string | null;
+  id_ciudad: string;
+}
+
+export interface HotelRoomResponse {
+  id: string;
+  tipo: string;
+  nro_habitacion: number;
+  capacidad: number;
+  camas: number;
+  id_hotel: string;
+}
+
 export interface SearchCriteriaVm {
   destination: string;
   checkInDate: string;

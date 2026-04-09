@@ -1,0 +1,287 @@
+<section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Breadcrumb -->
+  <div class="text-sm text-gray-500 mb-6">
+    <a routerLink="/app/home-search" class="hover:text-primary transition-colors">{{
+      label('breadcrumbHome')
+    }}</a>
+    <span class="mx-2">&gt;</span>
+    <a routerLink="/app/mis-reservas" class="hover:text-primary transition-colors">{{
+      t('navigation.myReservations')
+    }}</a>
+    <span class="mx-2">&gt;</span>
+    <span>{{ label('cancelReservation') }}</span>
+  </div>
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ label('cancelReservation') }}</h1>
+    <p class="text-gray-600">{{ label('reviewReservation') }}</p>
+  </div>
+
+  @if (loading()) {
+    <div
+      class="bg-white rounded-2xl border border-gray-200 p-8 text-center text-gray-600 shadow-sm"
+    >
+      Loading reservation details...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 mb-6">
+      {{ errorMessage() }}
+    </div>
+  } @else if (cancellationInfo()) {
+    <div class="space-y-6">
+      <!-- Reservation Summary -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 shadow-sm">
+        <div class="flex items-start gap-3 mb-5">
+          <i class="fa-solid fa-info-circle text-amber-500 mt-1"></i>
+          <h2 class="text-lg font-semibold text-gray-900">{{ label('reservationSummary') }}</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm text-gray-500">
+                {{ label('booking') }} #{{ cancellationInfo()!.id }}
+              </p>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-gray-900">{{ cancellationInfo()!.hotelName }}</p>
+            </div>
+            <div class="space-y-2 text-sm text-gray-600">
+              <div class="flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-gray-400"></i>
+                <span>{{ cancellationInfo()!.checkIn }} - {{ cancellationInfo()!.checkOut }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bed text-gray-400"></i>
+                <span>{{ translateRoomType(cancellationInfo()!.roomType) }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-users text-gray-400"></i>
+                <span
+                  >{{ cancellationInfo()!.guests }} {{ label('guests').toLowerCase() }},
+                  {{ cancellationInfo()!.nights }} {{ label('nights') }}</span
+                >
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-gray-400"></i>
+                <span>{{ cancellationInfo()!.location }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Summary -->
+          <div class="bg-gray-50 rounded-lg p-5">
+            <h3 class="font-semibold text-gray-900 mb-4">{{ label('totalPaid') }}</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600"
+                  >{{ label('roomRate') }} ({{ cancellationInfo()!.nights }}
+                  {{ label('nights') }})</span
+                >
+                <span class="font-medium">{{ formatPrice(cancellationInfo()!.roomRate) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">{{ label('taxes') }}</span>
+                <span class="font-medium">{{ formatPrice(cancellationInfo()!.taxes) }}</span>
+              </div>
+              <div class="border-t border-gray-200 pt-3 flex justify-between">
+                <span class="font-semibold text-gray-900">{{ label('totalPaid') }}</span>
+                <span class="font-bold text-lg">{{ formatPrice(cancellationInfo()!.total) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancellation Policy -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 shadow-sm">
+        <div class="flex items-start gap-3 mb-5">
+          <i class="fa-solid fa-shield text-blue-500 mt-1"></i>
+          <h2 class="text-lg font-semibold text-gray-900">{{ label('cancellationPolicy') }}</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div class="border-l-4 border-emerald-500 bg-emerald-50 p-4">
+            <div class="flex gap-3">
+              <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+              <div>
+                <h3 class="font-semibold text-emerald-900">{{ label('freeCancellation') }}</h3>
+                <p class="text-sm text-emerald-700 mt-1">
+                  Cancel before {{ cancellationInfo()!.checkIn }} for a full refund.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-amber-500 bg-amber-50 p-4">
+            <div class="flex gap-3">
+              <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5 flex-shrink-0"></i>
+              <div>
+                <h3 class="font-semibold text-amber-900">{{ label('partialRefund') }}</h3>
+                <p class="text-sm text-amber-700 mt-1">
+                  Cancel 24-48 hours before check-in and receive 50% refund.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-red-500 bg-red-50 p-4">
+            <div class="flex gap-3">
+              <i class="fa-solid fa-xmark text-red-600 mt-0.5 flex-shrink-0"></i>
+              <div>
+                <h3 class="font-semibold text-red-900">{{ label('noRefund') }}</h3>
+                <p class="text-sm text-red-700 mt-1">
+                  Cancel within 24 hours of check-in - no refund available.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-l-4 border-blue-500 bg-blue-50 p-4">
+            <div class="flex gap-3">
+              <i class="fa-solid fa-circle-info text-blue-600 mt-0.5 flex-shrink-0"></i>
+              <div>
+                <h3 class="font-semibold text-blue-900">{{ label('currentStatus') }}</h3>
+                <p class="text-sm text-blue-700 mt-1">
+                  {{ label('canCancelNow') }}
+                  <strong>{{ formatPrice(cancellationInfo()!.refundAmount) }}</strong
+                  >.
+                  {{ label('processingDays') }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancellation Form -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          {{ label('reasonForCancellation') }}
+        </h2>
+
+        <div class="space-y-3 mb-6">
+          <label
+            class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all"
+          >
+            <input
+              type="radio"
+              name="reason"
+              value="travel_plans"
+              [checked]="selectedReason() === 'travel_plans'"
+              (change)="setReason('travel_plans')"
+              class="w-4 h-4 text-primary"
+            />
+            <span class="text-gray-700">{{ label('changeInTravelPlans') }}</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all"
+          >
+            <input
+              type="radio"
+              name="reason"
+              value="emergency"
+              [checked]="selectedReason() === 'emergency'"
+              (change)="setReason('emergency')"
+              class="w-4 h-4 text-primary"
+            />
+            <span class="text-gray-700">{{ label('personalEmergency') }}</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all"
+          >
+            <input
+              type="radio"
+              name="reason"
+              value="work"
+              [checked]="selectedReason() === 'work'"
+              (change)="setReason('work')"
+              class="w-4 h-4 text-primary"
+            />
+            <span class="text-gray-700">{{ label('workRelated') }}</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all"
+          >
+            <input
+              type="radio"
+              name="reason"
+              value="health"
+              [checked]="selectedReason() === 'health'"
+              (change)="setReason('health')"
+              class="w-4 h-4 text-primary"
+            />
+            <span class="text-gray-700">{{ label('healthConcerns') }}</span>
+          </label>
+
+          <label
+            class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all"
+          >
+            <input
+              type="radio"
+              name="reason"
+              value="other"
+              [checked]="selectedReason() === 'other'"
+              (change)="setReason('other')"
+              class="w-4 h-4 text-primary"
+            />
+            <span class="text-gray-700">{{ label('other') }}</span>
+          </label>
+        </div>
+
+        <!-- Comments -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            {{ label('additionalComments') }}
+          </label>
+          <textarea
+            [value]="comments()"
+            (input)="updateComments($any($event.target).value)"
+            placeholder="Share any additional details (optional)"
+            class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+            rows="4"
+          ></textarea>
+        </div>
+
+        <!-- Important Notice -->
+        <div class="rounded-xl border border-red-200 bg-red-50 p-4 mb-6">
+          <div class="flex gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-red-600 mt-0.5 flex-shrink-0"></i>
+            <div>
+              <h3 class="font-semibold text-red-900">{{ label('importantNotice') }}</h3>
+              <p class="text-sm text-red-700 mt-1">{{ label('cannotUndo') }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3 justify-end">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="px-6 py-2.5 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-colors"
+          >
+            {{ label('keepReservation') }}
+          </button>
+          <button
+            type="button"
+            (click)="confirmCancellation()"
+            [disabled]="reasonDisabled() || submitting()"
+            class="px-6 py-2.5 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            @if (submitting()) {
+              <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+              Processing...
+            } @else {
+              {{ label('confirmCancellation') }}
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</section>
