@@ -1,0 +1,123 @@
+appId: com.travelhub.app
+---
+# Hotel Search E2E Test Flow
+# This test logs in and performs a hotel search with specified parameters:
+# - City: Bogota
+# - From: Tomorrow
+# - To: Day after tomorrow
+# - Guests: 1
+
+- launchApp:
+    clearState: true
+
+# ============================================
+# Step 1: Login
+# ============================================
+# Wait for app to load
+- extendedWaitUntil:
+    visible:
+      text: "TravelHub"
+    timeout: 30000
+
+# Enter email
+- tapOn:
+    text: "tu@email.com"
+- inputText: "orlando@example.com"
+
+# Enter password
+- tapOn:
+    text: "••••••••"
+- inputText: "password2"
+
+# Dismiss keyboard
+- tapOn:
+    text: "TravelHub"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+# Tap login button
+- tapOn:
+    text: "Iniciar Sesión"
+    index: 1
+
+# Dismiss Google Password Manager dialog if it appears
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
+# ============================================
+# Step 2: Wait for landing page to load
+# ============================================
+- extendedWaitUntil:
+    visible: "Encuentra tu estadía perfecta"
+    timeout: 10000
+
+# ============================================
+# Step 3: Fill destination field (City: Bogota)
+# ============================================
+- tapOn:
+    text: "¿A dónde vas?"
+- inputText: "Bogota"
+
+# Dismiss keyboard by tapping elsewhere
+- tapOn:
+    text: "Encuentra tu estadía perfecta"
+
+# Scroll down to see date fields
+- swipe:
+    direction: UP
+    duration: 500
+
+# ============================================
+# Step 4: Select Check-in date (Tomorrow)
+# ============================================
+# Tap on the ENTRADA label area
+- tapOn:
+    text: "ENTRADA"
+# Wait for calendar to open (Listo = Done in Spanish)
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-tomorrow.js
+- tapOn:
+    text: "${output.tomorrowDay}"
+
+# ============================================
+# Step 5: Select Check-out date (Day after tomorrow)
+# ============================================
+- tapOn:
+    text: "SALIDA"
+# Wait for calendar to open
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-day-after-tomorrow.js
+- tapOn:
+    text: "${output.dayAfterTomorrowDay}"
+
+# ============================================
+# Step 6: Verify Guests is set to 1 (default)
+# ============================================
+- assertVisible:
+    text: "1 Adulto"
+
+# ============================================
+# Step 7: Submit search
+# ============================================
+- tapOn:
+    text: "Buscar Hoteles"
+
+# ============================================
+# Step 8: Verify navigation to hotel results
+# ============================================
+- extendedWaitUntil:
+    visible:
+      text: ".*Bogota.*"
+    timeout: 10000
