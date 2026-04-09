@@ -39,7 +39,6 @@ npm run e2e:skip-build
 
 # Run specific test flow
 npm run e2e:login
-npm run e2e:register
 ```
 
 ### Manual Steps (Alternative)
