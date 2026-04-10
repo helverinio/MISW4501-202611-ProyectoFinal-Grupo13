@@ -199,7 +199,7 @@ describe('HotelResultsScreen', () => {
       const { getByText } = render(<HotelResultsScreen />);
 
       await waitFor(() => {
-        expect(getByText(/3 results.rooms/)).toBeTruthy();
+        expect(getByText(/2 results.hotels/)).toBeTruthy();
       });
     });
 
@@ -217,7 +217,7 @@ describe('HotelResultsScreen', () => {
       });
     });
 
-    it('should display room details', async () => {
+    it('should display hotel names', async () => {
       mockHotelService.searchAvailableHotels.mockResolvedValue({
         success: true,
         data: mockHotelsData,
@@ -226,7 +226,8 @@ describe('HotelResultsScreen', () => {
       const { getByText } = render(<HotelResultsScreen />);
 
       await waitFor(() => {
-        expect(getByText(/Deluxe Suite/)).toBeTruthy();
+        expect(getByText('Grand Hotel Paris')).toBeTruthy();
+        expect(getByText('Boutique Hotel')).toBeTruthy();
       });
     });
 
@@ -257,7 +258,7 @@ describe('HotelResultsScreen', () => {
       });
     });
 
-    it('should display view details button', async () => {
+    it('should display view details button for each hotel', async () => {
       mockHotelService.searchAvailableHotels.mockResolvedValue({
         success: true,
         data: mockHotelsData,
@@ -267,7 +268,7 @@ describe('HotelResultsScreen', () => {
 
       await waitFor(() => {
         const viewDetailsButtons = getAllByText('results.viewDetails');
-        expect(viewDetailsButtons.length).toBe(3);
+        expect(viewDetailsButtons.length).toBe(2); // One per hotel, not per room
       });
     });
   });
@@ -286,7 +287,7 @@ describe('HotelResultsScreen', () => {
       });
     });
 
-    it('should display no results when hotels have no rooms', async () => {
+    it('should display hotels even when they have no rooms', async () => {
       mockHotelService.searchAvailableHotels.mockResolvedValue({
         success: true,
         data: [
@@ -306,7 +307,8 @@ describe('HotelResultsScreen', () => {
       const { getByText } = render(<HotelResultsScreen />);
 
       await waitFor(() => {
-        expect(getByText('results.noHotels')).toBeTruthy();
+        // Hotels are still displayed, rooms are shown in details
+        expect(getByText('Empty Hotel')).toBeTruthy();
       });
     });
   });
@@ -463,7 +465,7 @@ describe('HotelResultsScreen', () => {
   });
 
   describe('Hotels Without Rooms', () => {
-    it('should not display hotels that have undefined habitaciones', async () => {
+    it('should display hotels even with undefined habitaciones', async () => {
       mockHotelService.searchAvailableHotels.mockResolvedValue({
         success: true,
         data: [
@@ -483,7 +485,8 @@ describe('HotelResultsScreen', () => {
       const { getByText } = render(<HotelResultsScreen />);
 
       await waitFor(() => {
-        expect(getByText('results.noHotels')).toBeTruthy();
+        // Hotels are displayed even without rooms (price shows as '-')
+        expect(getByText('No Rooms Hotel')).toBeTruthy();
       });
     });
   });

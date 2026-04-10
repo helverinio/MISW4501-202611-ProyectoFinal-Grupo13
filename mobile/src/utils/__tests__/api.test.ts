@@ -198,7 +198,6 @@ describe('API Configuration', () => {
     });
 
     it('should handle 401 errors and attempt token refresh', async () => {
-      mockAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify('old-token'));
       mockAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify('refresh-token'));
 
       const error401 = {
@@ -212,7 +211,8 @@ describe('API Configuration', () => {
         // Expected to reject
       }
 
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith('_x');
+      // The refresh flow first gets the refresh token from '_c'
+      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith('_c');
     });
 
     it('should reject non-401 errors normally', async () => {
