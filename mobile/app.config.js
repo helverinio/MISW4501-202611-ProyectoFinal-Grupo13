@@ -28,6 +28,9 @@ export default {
     },
     extra: {
       "REACT_APP_HASH_SALT": process.env.REACT_APP_HASH_SALT,
+      eas: {
+        projectId: "fefd16b7-4a5a-4e76-82ca-36ea963e82d4"
+      }
     }
   }
 };
