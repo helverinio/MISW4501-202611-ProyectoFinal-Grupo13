@@ -9,12 +9,12 @@ const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
+  backendUrl = 'https://d1r8df79ch2otn.cloudfront.net'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
     Constants.expoConfig?.extra?.REACT_APP_BACKEND_URL ||
-    'https://oa-charlottemason-prod-backend.azurewebsites.net';
+    'https://d1r8df79ch2otn.cloudfront.net';
 }
 
 console.log('API configured with backend URL:', backendUrl);
@@ -28,10 +28,23 @@ axiosRetry(customAxios, {
   retryDelay: axiosRetry.exponentialDelay,
   shouldResetTimeout: true,
   retryCondition: (error: AxiosError): boolean => {
-    // Retry on 401 unauthorized (token might need refresh) or network errors
-    return error.response?.status === 401 || error.code === 'ECONNABORTED' || !error.response;
+    // Retry on network errors only - 401 is handled by the response interceptor
+    return error.code === 'ECONNABORTED' || !error.response;
   },
 });
+
+// Flag to prevent multiple simultaneous token refresh attempts
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (callback: (token: string) => void) => {
+  refreshSubscribers.push(callback);
+};
+
+const onTokenRefreshed = (token: string) => {
+  refreshSubscribers.forEach(callback => callback(token));
+  refreshSubscribers = [];
+};
 
 customAxios.interceptors.request.use(
   async (req: InternalAxiosRequestConfig) => {
@@ -112,23 +125,59 @@ customAxios.interceptors.response.use(
       console.error('📤 Request Body was:', err.config.data);
     }
 
-    if (responseStatus === 401) {
+    if (responseStatus === 401 && err.config) {
+      const originalRequest = err.config as InternalAxiosRequestConfig & { _retry?: boolean };
+      
+      // Prevent infinite retry loop
+      if (originalRequest._retry) {
+        console.log('🔄 Already retried this request, not retrying again');
+        return Promise.reject(err);
+      }
+
+      // Check if we have a refresh token before attempting refresh
+      const storedRefreshToken = await AsyncStorage.getItem('_c');
+      if (!storedRefreshToken) {
+        console.log('🔄 No refresh token available, cannot refresh');
+        return Promise.reject(err);
+      }
+
+      if (isRefreshing) {
+        // Wait for the ongoing refresh to complete
+        console.log('🔄 Token refresh already in progress, waiting...');
+        return new Promise(resolve => {
+          subscribeTokenRefresh((token: string) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            originalRequest._retry = true;
+            resolve(customAxios(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
         console.log('🔄 Attempting token refresh...');
-        // Get token from AsyncStorage
-        const currentToken = await AsyncStorage.getItem('_x');
-
-        if (currentToken) {
-          // Call refresh token function
-          await refreshToken();
-          // Retry the original request
-          if (err.config) {
+        const success = await refreshToken();
+        
+        if (success) {
+          const newToken = await AsyncStorage.getItem('_x');
+          if (newToken) {
+            const token = JSON.parse(newToken);
+            onTokenRefreshed(token);
+            originalRequest.headers.Authorization = `Bearer ${token}`;
             console.log('🔄 Retrying request after token refresh');
-            return customAxios(err.config);
+            return customAxios(originalRequest);
           }
         }
+        
+        console.log('🔄 Token refresh failed');
+        return Promise.reject(err);
       } catch (error) {
         console.error('Error in refresh token flow:', error);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
       }
     }
 
