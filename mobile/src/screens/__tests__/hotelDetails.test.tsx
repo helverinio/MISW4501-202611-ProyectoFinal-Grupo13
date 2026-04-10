@@ -30,10 +30,8 @@ const mockHotelData = {
       nro_habitacion: 101,
       capacidad: 2,
       camas: 1,
-      precio: 200,
-      vista: 'Ocean View',
-      tamano: 45,
-      amenidades: 'WiFi, Air Conditioning',
+      precio_promedio_noche: 200,
+      moneda: 'USD',
     },
     {
       habitacion_id: 'room-2',
@@ -41,10 +39,8 @@ const mockHotelData = {
       nro_habitacion: 102,
       capacidad: 2,
       camas: 2,
-      precio: 120,
-      vista: 'City View',
-      tamano: 30,
-      amenidades: 'WiFi',
+      precio_promedio_noche: 120,
+      moneda: 'USD',
     },
   ],
 };
@@ -99,10 +95,12 @@ describe('HotelDetailsScreen', () => {
       expect(getByText('hotelDetails.availableRooms')).toBeTruthy();
     });
 
+    /* TODO: Uncomment when API provides valet parking data
     it('should render valet parking text', () => {
       const { getByText } = render(<HotelDetailsScreen />);
       expect(getByText('hotelDetails.valetParking')).toBeTruthy();
     });
+    */
   });
 
   describe('Navigation', () => {
@@ -214,16 +212,10 @@ describe('HotelDetailsScreen', () => {
       expect(getAllByText('results.perNight').length).toBeGreaterThan(0);
     });
 
-    it('should display room size', () => {
-      const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText(/45 m²/)).toBeTruthy();
-      expect(getByText(/30 m²/)).toBeTruthy();
-    });
-
-    it('should display room view', () => {
-      const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText(/Ocean View/)).toBeTruthy();
-      expect(getByText(/City View/)).toBeTruthy();
+    it('should display room beds count', () => {
+      const { getAllByText } = render(<HotelDetailsScreen />);
+      // Room with 1 bed and room with 2 beds
+      expect(getAllByText(/hotelDetails.beds/).length).toBeGreaterThan(0);
     });
 
     it('should display select room button for each room', () => {
@@ -253,8 +245,8 @@ describe('HotelDetailsScreen', () => {
       expect(getByText('-')).toBeTruthy();
     });
 
-    it('should handle room without view', () => {
-      const hotelWithNoViewRoom = {
+    it('should handle room without beds count', () => {
+      const hotelWithNoBeds = {
         ...mockHotelData,
         habitaciones: [
           {
@@ -262,74 +254,17 @@ describe('HotelDetailsScreen', () => {
             tipo: 'Basic Room',
             nro_habitacion: 101,
             capacidad: 2,
-            camas: 1,
-            precio: 100,
+            precio_promedio_noche: 100,
           },
         ],
       };
       mockUseLocalSearchParams.mockReturnValue({
         ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithNoViewRoom),
+        hotelData: JSON.stringify(hotelWithNoBeds),
       });
 
       const { getByText } = render(<HotelDetailsScreen />);
       expect(getByText('Basic Room')).toBeTruthy();
-    });
-
-    it('should handle room without size', () => {
-      const hotelWithNoSizeRoom = {
-        ...mockHotelData,
-        habitaciones: [
-          {
-            habitacion_id: 'room-1',
-            tipo: 'Basic Room',
-            nro_habitacion: 101,
-            capacidad: 2,
-            camas: 1,
-            precio: 100,
-            vista: 'Garden View',
-          },
-        ],
-      };
-      mockUseLocalSearchParams.mockReturnValue({
-        ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithNoSizeRoom),
-      });
-
-      const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText(/Garden View/)).toBeTruthy();
-    });
-
-    it('should display room amenities badges', () => {
-      const { getAllByText } = render(<HotelDetailsScreen />);
-      // Room amenities should show first 2 amenities
-      expect(getAllByText('WiFi').length).toBeGreaterThan(0);
-    });
-
-    it('should only display first 2 room amenities', () => {
-      const hotelWithManyRoomAmenities = {
-        ...mockHotelData,
-        habitaciones: [
-          {
-            habitacion_id: 'room-1',
-            tipo: 'Luxury Suite',
-            nro_habitacion: 101,
-            capacidad: 2,
-            camas: 1,
-            precio: 300,
-            amenidades: 'WiFi, Pool, Gym, Spa',
-          },
-        ],
-      };
-      mockUseLocalSearchParams.mockReturnValue({
-        ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithManyRoomAmenities),
-      });
-
-      const { getAllByText, queryByText } = render(<HotelDetailsScreen />);
-      // Should show first 2 room amenities
-      expect(getAllByText('WiFi').length).toBeGreaterThan(0);
-      expect(getAllByText('Pool').length).toBeGreaterThan(0);
     });
   });
 
@@ -367,8 +302,8 @@ describe('HotelDetailsScreen', () => {
     it('should display rating when provided', () => {
       const hotelWithRating = {
         ...mockHotelData,
-        rating: 4.5,
-        reviews: 120,
+        rating_promedio: 4.5,
+        cantidad_comentarios: 120,
       };
       mockUseLocalSearchParams.mockReturnValue({
         ...mockSearchParams,
@@ -387,8 +322,8 @@ describe('HotelDetailsScreen', () => {
     it('should display stars for rating of 5', () => {
       const hotelWithFullRating = {
         ...mockHotelData,
-        rating: 5,
-        reviews: 50,
+        rating_promedio: 5,
+        cantidad_comentarios: 50,
       };
       mockUseLocalSearchParams.mockReturnValue({
         ...mockSearchParams,
@@ -402,8 +337,8 @@ describe('HotelDetailsScreen', () => {
     it('should display stars for rating with half star (4.5)', () => {
       const hotelWithHalfRating = {
         ...mockHotelData,
-        rating: 4.5,
-        reviews: 80,
+        rating_promedio: 4.5,
+        cantidad_comentarios: 80,
       };
       mockUseLocalSearchParams.mockReturnValue({
         ...mockSearchParams,
@@ -417,8 +352,8 @@ describe('HotelDetailsScreen', () => {
     it('should display stars for low rating (2)', () => {
       const hotelWithLowRating = {
         ...mockHotelData,
-        rating: 2,
-        reviews: 10,
+        rating_promedio: 2,
+        cantidad_comentarios: 10,
       };
       mockUseLocalSearchParams.mockReturnValue({
         ...mockSearchParams,
@@ -430,25 +365,11 @@ describe('HotelDetailsScreen', () => {
     });
   });
 
-  describe('Distance Display', () => {
-    it('should display distance from center when provided', () => {
-      const hotelWithDistance = {
-        ...mockHotelData,
-        distancia: 2.5,
-      };
-      mockUseLocalSearchParams.mockReturnValue({
-        ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithDistance),
-      });
-
-      const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText(/2.5 km results.fromCenter/)).toBeTruthy();
-    });
-
-    it('should display city name when distance is not provided', () => {
-      const { getByText } = render(<HotelDetailsScreen />);
-      // Should show city instead of distance
-      expect(getByText('Paris, France')).toBeTruthy();
+  describe('Location Display', () => {
+    it('should display city name in location section', () => {
+      const { getAllByText } = render(<HotelDetailsScreen />);
+      // City appears in header and location section
+      expect(getAllByText('Paris').length).toBeGreaterThan(0);
     });
   });
 
@@ -704,53 +625,11 @@ describe('HotelDetailsScreen', () => {
     });
   });
 
-  describe('Room with Empty Amenities', () => {
-    it('should handle room with empty amenidades string', () => {
-      const hotelWithEmptyRoomAmenities = {
-        ...mockHotelData,
-        habitaciones: [
-          {
-            habitacion_id: 'room-1',
-            tipo: 'Basic Room',
-            nro_habitacion: 101,
-            capacidad: 2,
-            camas: 1,
-            precio: 100,
-            amenidades: '',
-          },
-        ],
-      };
-      mockUseLocalSearchParams.mockReturnValue({
-        ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithEmptyRoomAmenities),
-      });
-
+  describe('Room Data Handling', () => {
+    it('should handle room with all fields', () => {
       const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText('Basic Room')).toBeTruthy();
-    });
-
-    it('should handle room with null amenidades', () => {
-      const hotelWithNullRoomAmenities = {
-        ...mockHotelData,
-        habitaciones: [
-          {
-            habitacion_id: 'room-1',
-            tipo: 'Basic Room',
-            nro_habitacion: 101,
-            capacidad: 2,
-            camas: 1,
-            precio: 100,
-            amenidades: null,
-          },
-        ],
-      };
-      mockUseLocalSearchParams.mockReturnValue({
-        ...mockSearchParams,
-        hotelData: JSON.stringify(hotelWithNullRoomAmenities),
-      });
-
-      const { getByText } = render(<HotelDetailsScreen />);
-      expect(getByText('Basic Room')).toBeTruthy();
+      expect(getByText('Deluxe Suite')).toBeTruthy();
+      expect(getByText('Standard Room')).toBeTruthy();
     });
   });
 
@@ -834,14 +713,14 @@ describe('HotelDetailsScreen', () => {
             nro_habitacion: 101,
             capacidad: 2,
             camas: 1,
-            precio: 100,
+            precio_promedio_noche: 100,
           },
           {
             tipo: 'Basic Room 2',
             nro_habitacion: 102,
             capacidad: 2,
             camas: 1,
-            precio: 110,
+            precio_promedio_noche: 110,
           },
         ],
       };

@@ -607,19 +607,19 @@ describe('HotelResultsScreen', () => {
           ...mockHotelsData[0],
           hotel_id: 'expensive-hotel',
           nombre: 'Expensive Hotel',
-          habitaciones: [{ habitacion_id: 'r1', tipo: 'Suite', nro_habitacion: 1, capacidad: 2, camas: 1, precio: 500 }],
+          habitaciones: [{ habitacion_id: 'r1', tipo: 'Suite', nro_habitacion: 1, capacidad: 2, camas: 1, precio_promedio_noche: 500 }],
         },
         {
           ...mockHotelsData[0],
           hotel_id: 'cheap-hotel',
           nombre: 'Cheap Hotel',
-          habitaciones: [{ habitacion_id: 'r2', tipo: 'Room', nro_habitacion: 2, capacidad: 2, camas: 1, precio: 100 }],
+          habitaciones: [{ habitacion_id: 'r2', tipo: 'Room', nro_habitacion: 2, capacidad: 2, camas: 1, precio_promedio_noche: 100 }],
         },
         {
           ...mockHotelsData[0],
           hotel_id: 'mid-hotel',
           nombre: 'Mid Hotel',
-          habitaciones: [{ habitacion_id: 'r3', tipo: 'Room', nro_habitacion: 3, capacidad: 2, camas: 1, precio: 250 }],
+          habitaciones: [{ habitacion_id: 'r3', tipo: 'Room', nro_habitacion: 3, capacidad: 2, camas: 1, precio_promedio_noche: 250 }],
         },
       ];
 
@@ -652,7 +652,7 @@ describe('HotelResultsScreen', () => {
           ...mockHotelsData[0],
           hotel_id: 'priced-hotel',
           nombre: 'Priced Hotel',
-          habitaciones: [{ habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio: 150 }],
+          habitaciones: [{ habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio_promedio_noche: 150 }],
         },
       ];
 
@@ -673,9 +673,9 @@ describe('HotelResultsScreen', () => {
       const hotelWithMultipleRooms = {
         ...mockHotelsData[0],
         habitaciones: [
-          { habitacion_id: 'r1', tipo: 'Suite', nro_habitacion: 1, capacidad: 2, camas: 1, precio: 300 },
-          { habitacion_id: 'r2', tipo: 'Standard', nro_habitacion: 2, capacidad: 2, camas: 1, precio: 150 },
-          { habitacion_id: 'r3', tipo: 'Deluxe', nro_habitacion: 3, capacidad: 2, camas: 1, precio: 250 },
+          { habitacion_id: 'r1', tipo: 'Suite', nro_habitacion: 1, capacidad: 2, camas: 1, precio_promedio_noche: 300 },
+          { habitacion_id: 'r2', tipo: 'Standard', nro_habitacion: 2, capacidad: 2, camas: 1, precio_promedio_noche: 150 },
+          { habitacion_id: 'r3', tipo: 'Deluxe', nro_habitacion: 3, capacidad: 2, camas: 1, precio_promedio_noche: 250 },
         ],
       };
 
@@ -697,7 +697,7 @@ describe('HotelResultsScreen', () => {
     it('should display price with dollar sign', async () => {
       const hotelWithPrice = {
         ...mockHotelsData[0],
-        habitaciones: [{ habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio: 200 }],
+        habitaciones: [{ habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio_promedio_noche: 200 }],
       };
 
       mockHotelService.searchAvailableHotels.mockResolvedValue({
@@ -735,8 +735,8 @@ describe('HotelResultsScreen', () => {
       const hotelWithNullPrices = {
         ...mockHotelsData[0],
         habitaciones: [
-          { habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio: null },
-          { habitacion_id: 'r2', tipo: 'Room', nro_habitacion: 2, capacidad: 2, camas: 1, precio: undefined },
+          { habitacion_id: 'r1', tipo: 'Room', nro_habitacion: 1, capacidad: 2, camas: 1, precio_promedio_noche: null },
+          { habitacion_id: 'r2', tipo: 'Room', nro_habitacion: 2, capacidad: 2, camas: 1, precio_promedio_noche: undefined },
         ],
       };
 
