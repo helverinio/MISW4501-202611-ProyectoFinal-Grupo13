@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_35" tests="3" failures="0" time="121.0">
+    <testcase id="hotel-search-flow" name="hotel-search-flow" classname="hotel-search-flow" time="67.0" status="SUCCESS"/>
+    <testcase id="login" name="login" classname="login" time="39.0" status="SUCCESS"/>
+    <testcase id="tab-navigation" name="tab-navigation" classname="tab-navigation" time="15.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>
