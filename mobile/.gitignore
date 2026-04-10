@@ -68,4 +68,7 @@ android/
 **/ic_launcher*.png
 **/ic_launcher*.webp
 
+# E2E Testing
+android-build/
+
 

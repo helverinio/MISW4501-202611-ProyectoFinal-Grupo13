@@ -1,5 +1,5 @@
 {
-  "name": "mobile-temp-project",
+  "name": "travel-hub",
   "version": "1.0.0",
   "main": "expo-router/entry",
   "expo-router": {
@@ -7,12 +7,18 @@
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "e2e": "node scripts/run-e2e.js",
+    "e2e:build": "node scripts/run-e2e.js --build-only",
+    "e2e:skip-build": "node scripts/run-e2e.js --skip-build",
+    "e2e:login": "node scripts/run-e2e.js --skip-build login.yaml",
+    "e2e:register": "node scripts/run-e2e.js --skip-build register.yaml",
+    "prebuild:android": "expo prebuild --platform android --clean"
   },
   "dependencies": {
     "@babel/runtime": "^7.29.2",

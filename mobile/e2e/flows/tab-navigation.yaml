@@ -1,0 +1,45 @@
+appId: com.travelhub.app
+---
+# Tab Navigation E2E Test
+# Tests switching between login and register tabs
+
+- launchApp:
+    clearState: true
+
+- assertVisible:
+    id: "login-screen"
+
+# Verify login tab is active by default (login inputs should be visible)
+- assertVisible:
+    id: "login-email-input"
+
+- assertVisible:
+    id: "login-password-input"
+
+# Switch to register tab
+- tapOn:
+    id: "register-tab"
+
+# Verify register inputs are now visible
+- assertVisible:
+    id: "register-name-input"
+
+- assertVisible:
+    id: "register-email-input"
+
+- assertVisible:
+    id: "register-password-input"
+
+- assertVisible:
+    id: "register-confirm-password-input"
+
+# Switch back to login tab
+- tapOn:
+    id: "login-tab"
+
+# Verify login inputs are visible again
+- assertVisible:
+    id: "login-email-input"
+
+- assertVisible:
+    id: "login-password-input"

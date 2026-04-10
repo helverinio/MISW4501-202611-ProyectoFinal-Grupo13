@@ -74,6 +74,14 @@
     "retry": "Tentar novamente",
     "noHotels": "Nenhum hotel encontrado para sua busca"
   },
+  "hotelDetails": {
+    "amenities": "Comodidades",
+    "availableRooms": "Quartos Disponíveis",
+    "selectRoom": "Selecionar Quarto",
+    "guests": "hóspedes",
+    "valetParking": "Estacionamento com manobrista",
+    "noRoomsAvailable": "Nenhum quarto disponível"
+  },
   "language": {
     "title": "Idioma",
     "select": "Selecionar Idioma",

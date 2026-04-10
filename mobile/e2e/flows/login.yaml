@@ -1,0 +1,51 @@
+appId: com.travelhub.app
+---
+# Login Flow E2E Test
+# Tests the login functionality with valid credentials
+
+- launchApp:
+    clearState: true
+
+# Wait for app to load - look for TravelHub
+- extendedWaitUntil:
+    visible:
+      text: "TravelHub"
+    timeout: 30000
+
+# Tap on email input field and enter email
+- tapOn:
+    text: "tu@email.com"
+- inputText: "orlando@example.com"
+
+# Tap on password input field (tap below email, on the dots)
+- tapOn:
+    text: "••••••••"
+- inputText: "password2"
+
+# Tap on TravelHub logo area to dismiss keyboard
+- tapOn:
+    text: "TravelHub"
+
+# Wait a moment for keyboard to dismiss
+- swipe:
+    direction: UP
+    duration: 500
+
+# Tap login button (the blue one, not the tab)
+- tapOn:
+    text: "Iniciar Sesión"
+    index: 1
+
+# Dismiss Google Password Manager dialog if it appears
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
+# Wait for navigation - login button should disappear
+- extendedWaitUntil:
+    notVisible:
+      text: "Iniciar Sesión"
+    timeout: 15000
