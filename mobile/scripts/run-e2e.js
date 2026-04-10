@@ -281,16 +281,29 @@ function runMaestroTests(flowFile = null) {
   log('Running Maestro E2E tests...', 'cyan');
   
   const testPath = flowFile ? path.join(FLOWS_DIR, flowFile) : FLOWS_DIR;
+  const logsDir = path.join(__dirname, '..', 'e2e', 'logs');
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const debugOutput = path.join(logsDir, `run-${timestamp}`);
+  const junitOutput = path.join(logsDir, `results-${timestamp}.xml`);
   
   if (!fs.existsSync(testPath)) {
     throw new Error(`Test path not found: ${testPath}`);
   }
   
+  // Ensure logs directory exists
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+  
+  log(`Debug output: ${debugOutput}`, 'yellow');
+  log(`JUnit report: ${junitOutput}`, 'yellow');
+  
   try {
-    runCommand(`"${MAESTRO_CMD}" test "${testPath}"`);
+    runCommand(`"${MAESTRO_CMD}" test "${testPath}" --debug-output "${debugOutput}" --format junit --output "${junitOutput}"`);
     log('\n✅ All E2E tests passed!', 'green');
   } catch (error) {
     log('\n❌ Some E2E tests failed', 'red');
+    log(`Check debug output at: ${debugOutput}`, 'yellow');
     process.exit(1);
   }
 }
