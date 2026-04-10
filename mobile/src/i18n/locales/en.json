@@ -74,6 +74,14 @@
     "retry": "Retry",
     "noHotels": "No hotels found for your search"
   },
+  "hotelDetails": {
+    "amenities": "Amenities",
+    "availableRooms": "Available Rooms",
+    "selectRoom": "Select Room",
+    "guests": "guests",
+    "valetParking": "Valet parking",
+    "noRoomsAvailable": "No rooms available"
+  },
   "language": {
     "title": "Language",
     "select": "Select Language",

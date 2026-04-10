@@ -12,17 +12,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import HotelService, { Hotel, Habitacion } from '../services/hotelService';
+import HotelService, { Hotel } from '../services/hotelService';
 
-interface RoomCard {
-  hotel: Hotel;
-  room: Habitacion;
+interface HotelWithMinPrice extends Hotel {
+  minPrice: number | null;
 }
 
 export default function HotelResultsScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams();
-  const [rooms, setRooms] = useState<RoomCard[]>([]);
+  const [hotels, setHotels] = useState<HotelWithMinPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,14 +46,22 @@ export default function HotelResultsScreen() {
     });
 
     if (result.success && result.data) {
-      // Flatten hotels into individual room cards
-      const flattenedRooms: RoomCard[] = [];
-      result.data.forEach(hotel => {
-        hotel.habitaciones?.forEach(room => {
-          flattenedRooms.push({ hotel, room });
-        });
+      // Calculate min price per hotel and sort by price
+      const hotelsWithMinPrice: HotelWithMinPrice[] = result.data.map(hotel => {
+        const prices = hotel.habitaciones
+          ?.map(room => (room as any).precio)
+          .filter((p): p is number => p !== null && p !== undefined) || [];
+        const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+        return { ...hotel, minPrice };
       });
-      setRooms(flattenedRooms);
+      // Sort by minPrice ascending (nulls last)
+      hotelsWithMinPrice.sort((a, b) => {
+        if (a.minPrice === null && b.minPrice === null) return 0;
+        if (a.minPrice === null) return 1;
+        if (b.minPrice === null) return -1;
+        return a.minPrice - b.minPrice;
+      });
+      setHotels(hotelsWithMinPrice);
     } else {
       setError(result.error?.message || t('results.errorLoading'));
     }
@@ -121,13 +128,24 @@ export default function HotelResultsScreen() {
     return amenidades.split(',').map(a => a.trim()).filter(a => a.length > 0);
   };
 
-  const renderRoomCard = ({ item }: { item: RoomCard }) => {
-    const { hotel, room } = item;
-    const amenidadesList = getAmenidadesList(hotel.amenidades || '');
-    const rating = (hotel as any).rating || null;
-    const reviews = (hotel as any).reviews || null;
-    const distancia = (hotel as any).distancia || null;
-    const precio = (room as any).precio || null;
+  const navigateToHotelDetails = (hotel: HotelWithMinPrice) => {
+    router.push({
+      pathname: '/screens/hotelDetails',
+      params: {
+        hotelId: hotel.hotel_id,
+        hotelData: JSON.stringify(hotel),
+        checkIn,
+        checkOut,
+        guests: guests.toString(),
+      },
+    });
+  };
+
+  const renderHotelCard = ({ item }: { item: HotelWithMinPrice }) => {
+    const amenidadesList = getAmenidadesList(item.amenidades || '');
+    const rating = (item as any).rating || null;
+    const reviews = (item as any).reviews || null;
+    const distancia = (item as any).distancia || null;
 
     return (
       <View style={styles.hotelCard}>
@@ -139,7 +157,7 @@ export default function HotelResultsScreen() {
         />
         <View style={styles.hotelInfo}>
           <Text style={styles.hotelName} numberOfLines={1}>
-            {hotel.nombre}
+            {item.nombre}
           </Text>
           {(rating !== null || reviews !== null) && (
             <View style={styles.ratingRow}>
@@ -152,26 +170,26 @@ export default function HotelResultsScreen() {
             </View>
           )}
           <Text style={styles.locationText} numberOfLines={1}>
-            {hotel.ciudad}{distancia !== null ? ` • ${distancia} km ${t('results.fromCenter')}` : ''}
+            {item.ciudad}{distancia !== null ? ` • ${distancia} km ${t('results.fromCenter')}` : ''}
           </Text>
           <View style={styles.amenitiesRow}>
             {amenidadesList.slice(0, 2).map((amenity, index) => renderAmenity(amenity, index))}
           </View>
-          <Text style={styles.roomTypeText} numberOfLines={1}>
-            {room.tipo} • {room.capacidad} {t('results.guests')} • {room.camas} {t('results.beds')}
-          </Text>
           <View style={styles.priceRow}>
             <View>
-              {precio !== null ? (
+              {item.minPrice !== null ? (
                 <>
                   <Text style={styles.perNightText}>{t('results.perNight')}</Text>
-                  <Text style={styles.priceText}>${precio}</Text>
+                  <Text style={styles.priceText}>${item.minPrice}</Text>
                 </>
               ) : (
                 <Text style={styles.noPriceText}>-</Text>
               )}
             </View>
-            <TouchableOpacity style={styles.viewDetailsButton}>
+            <TouchableOpacity 
+              style={styles.viewDetailsButton}
+              onPress={() => navigateToHotelDetails(item)}
+            >
               <Text style={styles.viewDetailsText}>{t('results.viewDetails')}</Text>
             </TouchableOpacity>
           </View>
@@ -214,7 +232,7 @@ export default function HotelResultsScreen() {
       {/* Results Count */}
       {!loading && !error && (
         <Text style={styles.resultsCount}>
-          <Text style={styles.resultsCountBold}>{rooms.length} {t('results.rooms')}</Text>{' '}
+          <Text style={styles.resultsCountBold}>{hotels.length} {t('results.hotels')}</Text>{' '}
           {t('results.foundIn')} {destination}
         </Text>
       )}
@@ -233,16 +251,16 @@ export default function HotelResultsScreen() {
             <Text style={styles.retryText}>{t('results.retry')}</Text>
           </TouchableOpacity>
         </View>
-      ) : rooms.length === 0 ? (
+      ) : hotels.length === 0 ? (
         <View style={styles.centerContent}>
           <Ionicons name="bed-outline" size={48} color="#999" />
           <Text style={styles.noResultsText}>{t('results.noHotels')}</Text>
         </View>
       ) : (
         <FlatList
-          data={rooms}
-          renderItem={renderRoomCard}
-          keyExtractor={(item) => `${item.hotel.hotel_id}-${item.room.habitacion_id}`}
+          data={hotels}
+          renderItem={renderHotelCard}
+          keyExtractor={(item) => item.hotel_id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
@@ -381,12 +399,6 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 8,
     lineHeight: 16,
-  },
-  roomTypeText: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 8,
-    fontStyle: 'italic',
   },
   amenitiesRow: {
     flexDirection: 'row',
