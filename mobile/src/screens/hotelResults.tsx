@@ -49,7 +49,7 @@ export default function HotelResultsScreen() {
       // Calculate min price per hotel and sort by price
       const hotelsWithMinPrice: HotelWithMinPrice[] = result.data.map(hotel => {
         const prices = hotel.habitaciones
-          ?.map(room => (room as any).precio)
+          ?.map(room => (room as any).precio_promedio_noche)
           .filter((p): p is number => p !== null && p !== undefined) || [];
         const minPrice = prices.length > 0 ? Math.min(...prices) : null;
         return { ...hotel, minPrice };

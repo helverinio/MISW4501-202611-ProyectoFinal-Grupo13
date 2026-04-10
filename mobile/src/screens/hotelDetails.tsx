@@ -38,9 +38,8 @@ export default function HotelDetailsScreen() {
   const checkOut = params.checkOut as string;
   const guests = parseInt(params.guests as string, 10) || 1;
 
-  const rating = (hotelData as any).rating || null;
-  const reviews = (hotelData as any).reviews || null;
-  const distancia = (hotelData as any).distancia || null;
+  const rating = (hotelData as any).rating_promedio ?? null;
+  const reviews = (hotelData as any).cantidad_comentarios ?? null;
 
   const getAmenidadesList = (amenidades: string): string[] => {
     return amenidades.split(',').map(a => a.trim()).filter(a => a.length > 0);
@@ -110,11 +109,8 @@ export default function HotelDetailsScreen() {
   );
 
   const renderRoomCard = ({ item }: { item: Habitacion }) => {
-    const precio = (item as any).precio || null;
-    const vista = (item as any).vista || null;
-    const tamano = (item as any).tamano || null;
-    const roomAmenities = (item as any).amenidades || '';
-    const roomAmenitiesList = roomAmenities ? roomAmenities.split(',').map((a: string) => a.trim()).filter((a: string) => a.length > 0) : [];
+    const precio = (item as any).precio_promedio_noche ?? null;
+    const camas = (item as any).camas ?? null;
 
     return (
       <View style={styles.roomCard}>
@@ -122,7 +118,7 @@ export default function HotelDetailsScreen() {
           <View style={styles.roomInfo}>
             <Text style={styles.roomType}>{item.tipo}</Text>
             <Text style={styles.roomDetails}>
-              {item.capacidad} {t('hotelDetails.guests')} • {tamano ? `${tamano} m²` : ''} {vista ? `• ${vista}` : ''}
+              {item.capacidad} {t('hotelDetails.guests')}{camas ? ` • ${camas} ${t('hotelDetails.beds')}` : ''}
             </Text>
           </View>
           <View style={styles.roomPriceContainer}>
@@ -136,18 +132,6 @@ export default function HotelDetailsScreen() {
             )}
           </View>
         </View>
-        {roomAmenitiesList.length > 0 && (
-          <View style={styles.roomAmenities}>
-            {roomAmenitiesList.slice(0, 2).map((amenity: string, index: number) => {
-              const amenityInfo = getAmenityIcon(amenity);
-              return (
-                <View key={index} style={[styles.roomAmenityBadge, { borderColor: amenityInfo.color }]}>
-                  <Text style={[styles.roomAmenityText, { color: amenityInfo.color }]}>{amenity}</Text>
-                </View>
-              );
-            })}
-          </View>
-        )}
         <TouchableOpacity 
           style={styles.selectRoomButton}
           onPress={() => handleSelectRoom(item)}
@@ -212,13 +196,15 @@ export default function HotelDetailsScreen() {
           <View style={styles.locationItem}>
             <Ionicons name="location" size={16} color="#666" />
             <Text style={styles.locationText}>
-              {distancia !== null ? `${distancia} km ${t('results.fromCenter')}` : hotelData.ciudad}
+              {hotelData.ciudad}
             </Text>
           </View>
+{/* TODO: Include when API provides valet parking info
           <View style={styles.locationItem}>
             <Ionicons name="car" size={16} color="#666" />
             <Text style={styles.locationText}>{t('hotelDetails.valetParking')}</Text>
           </View>
+*/}
         </View>
 
         {/* Amenities Section */}
@@ -438,22 +424,6 @@ const styles = StyleSheet.create({
   noPriceText: {
     fontSize: 16,
     color: '#999',
-  },
-  roomAmenities: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 12,
-  },
-  roomAmenityBadge: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  roomAmenityText: {
-    fontSize: 12,
-    fontWeight: '500',
   },
   selectRoomButton: {
     backgroundColor: '#4A7BF7',
