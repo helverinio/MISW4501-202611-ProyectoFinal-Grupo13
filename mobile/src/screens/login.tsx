@@ -179,7 +179,7 @@ export default function LoginScreen() {
           {/* Header with Logo */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Ionicons name="navigate" size={24} color="#fff" />
+              <Ionicons name="airplane" size={24} color="#fff" />
             </View>
             <Text style={styles.logoText}>{t('common.appName')}</Text>
           </View>
