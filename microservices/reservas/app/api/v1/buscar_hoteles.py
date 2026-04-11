@@ -35,7 +35,7 @@ def search_available_hotels(current_usuario=None):
     
     Request body:
     {
-        "busqueda": "Bogota",  # Nombre de hotel o ciudad
+        "busqueda": "Bogota",  # Nombre de hotel, ciudad o pais
         "fecha_ingreso": "2026-04-01",  # YYYY-MM-DD
         "fecha_salida": "2026-04-05",  # YYYY-MM-DD
         "nro_personas": 2
