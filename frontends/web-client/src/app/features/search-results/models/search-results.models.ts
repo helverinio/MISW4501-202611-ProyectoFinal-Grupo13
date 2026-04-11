@@ -52,6 +52,24 @@ export interface HotelRoomResponse {
   id_hotel: string;
 }
 
+export interface PopularDestinationByCityApi {
+  ciudad: string;
+  pais: string;
+  id_ciudad: string;
+  hotel_id: string;
+  hotel_nombre: string;
+  rating_promedio: number;
+  cantidad_ratings: number;
+  precio_minimo_noche: number | null;
+  moneda: string;
+  hoteles_disponibles_ciudad: number;
+}
+
+export interface PopularDestinationsByCityResponse {
+  total_ciudades: number;
+  destinos: PopularDestinationByCityApi[];
+}
+
 export interface SearchCriteriaVm {
   destination: string;
   checkInDate: string;

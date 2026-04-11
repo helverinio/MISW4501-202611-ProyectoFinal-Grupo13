@@ -71,6 +71,12 @@ export interface Translation {
   'homeSearch.hero.errorCheckOutBeforeOrEqual': string;
   'homeSearch.popular.title': string;
   'homeSearch.popular.subtitle': string;
+  'homeSearch.popular.from': string;
+  'homeSearch.popular.perNight': string;
+  'homeSearch.popular.hotelsAvailable': string;
+  'homeSearch.popular.loading': string;
+  'homeSearch.popular.error': string;
+  'homeSearch.popular.priceUnavailable': string;
   'homeSearch.popular.price.mexico': string;
   'homeSearch.popular.price.argentina': string;
   'homeSearch.popular.price.brazil': string;
@@ -260,6 +266,12 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.errorCheckOutBeforeOrEqual': 'Check-out must be after check-in.',
     'homeSearch.popular.title': 'Popular Destinations',
     'homeSearch.popular.subtitle': 'Explore the most loved destinations across Latin America',
+    'homeSearch.popular.from': 'From',
+    'homeSearch.popular.perNight': '/night',
+    'homeSearch.popular.hotelsAvailable': 'hotels available',
+    'homeSearch.popular.loading': 'Loading popular destinations...',
+    'homeSearch.popular.error': 'We could not load popular destinations. Please try again.',
+    'homeSearch.popular.priceUnavailable': 'Price unavailable',
     'homeSearch.popular.price.mexico': 'From $45/night',
     'homeSearch.popular.price.argentina': 'From $38/night',
     'homeSearch.popular.price.brazil': 'From $52/night',
@@ -457,6 +469,12 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.errorCheckOutBeforeOrEqual': 'El check-out debe ser posterior al check-in.',
     'homeSearch.popular.title': 'Destinos Populares',
     'homeSearch.popular.subtitle': 'Explora los destinos más queridos de América Latina',
+    'homeSearch.popular.from': 'Desde',
+    'homeSearch.popular.perNight': '/noche',
+    'homeSearch.popular.hotelsAvailable': 'hoteles disponibles',
+    'homeSearch.popular.loading': 'Cargando destinos populares...',
+    'homeSearch.popular.error': 'No pudimos cargar los destinos populares. Inténtalo de nuevo.',
+    'homeSearch.popular.priceUnavailable': 'Precio no disponible',
     'homeSearch.popular.price.mexico': 'Desde $45/noche',
     'homeSearch.popular.price.argentina': 'Desde $38/noche',
     'homeSearch.popular.price.brazil': 'Desde $52/noche',
@@ -655,6 +673,12 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.hero.errorCheckOutBeforeOrEqual': 'O check-out deve ser posterior ao check-in.',
     'homeSearch.popular.title': 'Destinos Populares',
     'homeSearch.popular.subtitle': 'Explore os destinos mais queridos da América Latina',
+    'homeSearch.popular.from': 'A partir de',
+    'homeSearch.popular.perNight': '/noite',
+    'homeSearch.popular.hotelsAvailable': 'hotéis disponíveis',
+    'homeSearch.popular.loading': 'Carregando destinos populares...',
+    'homeSearch.popular.error': 'Não foi possível carregar os destinos populares. Tente novamente.',
+    'homeSearch.popular.priceUnavailable': 'Preço indisponível',
     'homeSearch.popular.price.mexico': 'A partir de $45/noite',
     'homeSearch.popular.price.argentina': 'A partir de $38/noite',
     'homeSearch.popular.price.brazil': 'A partir de $52/noite',
