@@ -29,12 +29,12 @@
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">
                   {{ destination.cityCountry }}
                 </h3>
-                @if (destination.minPricePerNight === null) {
+                @if (destination.minPriceUsd === null) {
                   <p class="text-gray-600 mb-4">{{ t('homeSearch.popular.priceUnavailable') }}</p>
                 } @else {
                   <p class="text-gray-600 mb-4">
-                    {{ t('homeSearch.popular.from') }} {{ destination.currency }}
-                    {{ formatPrice(destination.minPricePerNight) }}{{ t('homeSearch.popular.perNight') }}
+                    {{ t('homeSearch.popular.from') }} {{ currencyService.currentCurrency() }}
+                    {{ convertAndFormat(destination.minPriceUsd) }}{{ t('homeSearch.popular.perNight') }}
                   </p>
                 }
                 <span class="text-sm text-success font-medium"

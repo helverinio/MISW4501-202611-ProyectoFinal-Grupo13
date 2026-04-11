@@ -5,13 +5,12 @@ import {
   PopularDestinationsByCityResponse,
 } from '../../../search-results/models/search-results.models';
 import { SearchHotelsService } from '../../../search-results/services/search-hotels.service';
-
 import { I18nService } from '../../../../core/services/i18n.service';
+import { CurrencyService } from '../../../../core/services/currency.service';
 
 interface PopularDestination {
   cityCountry: string;
-  minPricePerNight: number | null;
-  currency: string;
+  minPriceUsd: number | null;
   availableHotelsCount: number;
   imageUrl: string;
   imageAlt: string;
@@ -27,6 +26,7 @@ export class HomeSearchPopularDestinationsComponent implements OnInit {
   private readonly hotelsService = inject(SearchHotelsService);
   private readonly ngZone = inject(NgZone);
   private readonly cdr = inject(ChangeDetectorRef);
+  protected readonly currencyService = inject(CurrencyService);
 
   protected isLoading = true;
   protected hasLoadError = false;
@@ -60,11 +60,12 @@ export class HomeSearchPopularDestinationsComponent implements OnInit {
     });
   }
 
-  protected formatPrice(value: number | null): string {
-    if (value === null) {
+  protected convertAndFormat(usdValue: number | null): string {
+    if (usdValue === null) {
       return '';
     }
-    return value.toLocaleString(undefined, {
+    const converted = this.currencyService.convertFromUsd(usdValue);
+    return converted.toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
@@ -73,8 +74,7 @@ export class HomeSearchPopularDestinationsComponent implements OnInit {
   private mapDestination(destination: PopularDestinationByCityApi): PopularDestination {
     return {
       cityCountry: `${destination.ciudad}, ${destination.pais}`,
-      minPricePerNight: destination.precio_minimo_noche,
-      currency: destination.moneda,
+      minPriceUsd: destination.precio_minimo_noche,
       availableHotelsCount: destination.hoteles_disponibles_ciudad,
       imageUrl: this.resolveImageByCity(destination.ciudad),
       imageAlt: `${destination.ciudad} city destination photo`,
