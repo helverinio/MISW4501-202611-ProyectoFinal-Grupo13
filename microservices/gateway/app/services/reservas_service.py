@@ -26,7 +26,10 @@ class ReservasService:
             url = f"{self.base_url}/api/v1/{endpoint}"
             headers = self._forward_headers()
             if method == 'GET':
-                response = requests.get(url, headers=headers, params=params, timeout=30)
+                if params is None:
+                    response = requests.get(url, headers=headers, timeout=30)
+                else:
+                    response = requests.get(url, headers=headers, params=params, timeout=30)
             elif method == 'POST':
                 response = requests.post(url, json=data, headers=headers, timeout=30)
             elif method == 'PUT':

@@ -34,7 +34,8 @@
                 } @else {
                   <p class="text-gray-600 mb-4">
                     {{ t('homeSearch.popular.from') }} {{ currencyService.currentCurrency() }}
-                    {{ convertAndFormat(destination.minPriceUsd) }}{{ t('homeSearch.popular.perNight') }}
+                    {{ convertAndFormat(destination.minPriceUsd)
+                    }}{{ t('homeSearch.popular.perNight') }}
                   </p>
                 }
                 <span class="text-sm text-success font-medium"

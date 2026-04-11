@@ -166,9 +166,9 @@ export class ReservationService {
     limit: number = 3,
   ): Observable<RecentlyViewedHotelResponse[]> {
     return this.http
-      .get<RecentlyViewedHotelResponse[]>(
-        `${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas/recently-viewed?limit=${limit}`,
-      )
+      .get<
+        RecentlyViewedHotelResponse[]
+      >(`${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas/recently-viewed?limit=${limit}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
