@@ -91,6 +91,8 @@ export interface Translation {
   'homeSearch.recent.viewAll': string;
   'homeSearch.recent.perNight': string;
   'homeSearch.recent.freeCancellation': string;
+  'homeSearch.recent.loading': string;
+  'homeSearch.recent.error': string;
   'homeSearch.trust.title': string;
   'homeSearch.trust.subtitle': string;
   'homeSearch.trust.secureTitle': string;
@@ -286,6 +288,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.recent.viewAll': 'View All',
     'homeSearch.recent.perNight': '/night',
     'homeSearch.recent.freeCancellation': 'Free cancellation',
+    'homeSearch.recent.loading': 'Loading...',
+    'homeSearch.recent.error': 'Could not load recently viewed hotels.',
     'homeSearch.trust.title': 'Why choose TravelHub?',
     'homeSearch.trust.subtitle': 'Your trust and satisfaction are our top priorities',
     'homeSearch.trust.secureTitle': 'Secure Payment',
@@ -489,6 +493,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.recent.viewAll': 'Ver todo',
     'homeSearch.recent.perNight': '/noche',
     'homeSearch.recent.freeCancellation': 'Cancelación gratuita',
+    'homeSearch.recent.loading': 'Cargando...',
+    'homeSearch.recent.error': 'No se pudieron cargar los hoteles vistos recientemente.',
     'homeSearch.trust.title': '¿Por qué elegir TravelHub?',
     'homeSearch.trust.subtitle': 'Tu confianza y satisfacción son nuestra prioridad',
     'homeSearch.trust.secureTitle': 'Pago Seguro',
@@ -693,6 +699,8 @@ export const translations: Record<LanguageCode, Translation> = {
     'homeSearch.recent.viewAll': 'Ver todos',
     'homeSearch.recent.perNight': '/noite',
     'homeSearch.recent.freeCancellation': 'Cancelamento grátis',
+    'homeSearch.recent.loading': 'Carregando...',
+    'homeSearch.recent.error': 'Não foi possível carregar os hotéis vistos recentemente.',
     'homeSearch.trust.title': 'Por que escolher a TravelHub?',
     'homeSearch.trust.subtitle': 'Sua confiança e satisfação são nossas prioridades',
     'homeSearch.trust.secureTitle': 'Pagamento Seguro',

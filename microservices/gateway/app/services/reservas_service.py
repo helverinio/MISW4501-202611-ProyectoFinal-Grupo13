@@ -195,6 +195,14 @@ class ReservasService:
     def get_reservas_by_usuario(self, usuario_id: str) -> Dict[str, Any]:
         return self._request('GET', f'usuarios/{usuario_id}/reservas')
 
+
+    def get_recently_viewed_by_usuario(self, usuario_id: str, limit: int = 3) -> Dict[str, Any]:
+        return self._request(
+            'GET',
+            f'usuarios/{usuario_id}/reservas/recently-viewed',
+            params={'limit': limit},
+        )
+
     def create_reserva_pms_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'reservas/webhook/pms', data)
 
