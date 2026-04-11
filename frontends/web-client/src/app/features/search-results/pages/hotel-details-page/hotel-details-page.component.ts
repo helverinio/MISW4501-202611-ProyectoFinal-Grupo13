@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 
 import { AmenityI18nService } from '../../../../core/services/amenity-i18n.service';
 import { CurrencyService, SupportedCurrency } from '../../../../core/services/currency.service';
 import { I18nService } from '../../../../core/services/i18n.service';
-import { HotelByIdResponse, HotelRoomResponse } from '../../models/search-results.models';
+import {
+  HotelByIdResponse,
+  HotelRoomResponse,
+  SearchAvailableHotelsRequest,
+  SearchAvailableHotelsResponse,
+} from '../../models/search-results.models';
 import { SearchHotelsService } from '../../services/search-hotels.service';
 
 interface RoomCardVm {
@@ -41,6 +46,7 @@ export class HotelDetailsPageComponent {
   protected readonly loading = signal<boolean>(true);
   protected readonly errorMessage = signal<string>('');
   protected readonly holdTimeoutMessage = signal<string>('');
+  protected readonly destination = signal<string>('');
   protected readonly hotel = signal<HotelByIdResponse | null>(null);
   protected readonly rooms = signal<HotelRoomResponse[]>([]);
   protected readonly selectedRoomCard = signal<RoomCardVm | null>(null);
@@ -67,23 +73,12 @@ export class HotelDetailsPageComponent {
   protected readonly roomCards = computed<RoomCardVm[]>(() => {
     const nights = this.nights();
 
-    const roomsWithVariant = this.rooms().map((room) => ({
-      room,
-      variant: this.getRoomPriceVariant(room),
-    }));
-
-    const minVariant = roomsWithVariant.length
-      ? Math.min(...roomsWithVariant.map((item) => item.variant))
-      : 0;
-
-    const hotelBasePrice = this.getHotelBasePrice();
-
-    return roomsWithVariant
+    return this.rooms()
       .slice()
-      .sort((a, b) => a.variant - b.variant)
-      .map(({ room, variant }, index) => {
-        const pricePerNight = hotelBasePrice + (variant - minVariant);
-        const totalPrice = pricePerNight * nights;
+      .sort((a, b) => this.getRoomNightlyPrice(a) - this.getRoomNightlyPrice(b))
+      .map((room, index) => {
+        const pricePerNight = this.getRoomNightlyPrice(room);
+        const totalPrice = this.getRoomTotalPrice(room, nights);
 
         return {
           id: room.id,
@@ -197,6 +192,7 @@ export class HotelDetailsPageComponent {
     });
 
     this.route.queryParamMap.subscribe((params) => {
+      this.destination.set((params.get('busqueda') || '').trim());
       this.checkInDate.set(params.get('fecha_ingreso') || '');
       this.checkOutDate.set(params.get('fecha_salida') || '');
 
@@ -223,6 +219,7 @@ export class HotelDetailsPageComponent {
       queryParams: {
         hotel_id: this.hotel()?.id,
         room_id: selectedRoom?.id,
+        busqueda: this.destination(),
         fecha_ingreso: this.checkInDate(),
         fecha_salida: this.checkOutDate(),
         nro_personas: this.guests(),
@@ -411,46 +408,98 @@ export class HotelDetailsPageComponent {
     this.loading.set(true);
     this.errorMessage.set('');
 
+    const searchPayload = this.buildSearchPayload();
+
     forkJoin({
       hotel: this.searchHotelsService.getHotelById(hotelId),
       rooms: this.searchHotelsService.getRoomsByHotelId(hotelId),
-    }).subscribe({
-      next: ({ hotel, rooms }) => {
-        this.hotel.set(hotel);
-        this.rooms.set(rooms);
-        this.amenities.set(this.parseAmenities(hotel.amenidades));
-        this.loading.set(false);
-      },
-      error: (error) => {
-        const backendError = error?.error?.error as string | undefined;
-        this.errorMessage.set(backendError || 'No fue posible obtener la informacion del hotel.');
-        this.loading.set(false);
-      },
+    })
+      .pipe(
+        switchMap(({ hotel, rooms }) => {
+          if (!searchPayload) {
+            return of({ hotel, rooms });
+          }
+
+          return this.searchHotelsService.searchAvailableHotels(searchPayload).pipe(
+            map((response) => ({
+              hotel,
+              rooms: this.mergeRoomPricing(rooms, hotel.id, response),
+            })),
+            catchError(() => of({ hotel, rooms })),
+          );
+        }),
+      )
+      .subscribe({
+        next: ({ hotel, rooms }) => {
+          this.hotel.set(hotel);
+          this.rooms.set(rooms);
+          this.amenities.set(this.parseAmenities(hotel.amenidades));
+          this.loading.set(false);
+        },
+        error: (error) => {
+          const backendError = error?.error?.error as string | undefined;
+          this.errorMessage.set(backendError || 'No fue posible obtener la informacion del hotel.');
+          this.loading.set(false);
+        },
+      });
+  }
+
+  private buildSearchPayload(): SearchAvailableHotelsRequest | null {
+    const params = this.route.snapshot.queryParamMap;
+    const destination = (params.get('busqueda') || '').trim();
+    const checkInDate = params.get('fecha_ingreso') || '';
+    const checkOutDate = params.get('fecha_salida') || '';
+    const guests = Number(params.get('nro_personas') || 0);
+
+    if (!destination || !checkInDate || !checkOutDate || Number.isNaN(guests) || guests < 1) {
+      return null;
+    }
+
+    return {
+      busqueda: destination,
+      fecha_ingreso: checkInDate,
+      fecha_salida: checkOutDate,
+      nro_personas: guests,
+    };
+  }
+
+  private mergeRoomPricing(
+    rooms: HotelRoomResponse[],
+    hotelId: string,
+    response: SearchAvailableHotelsResponse,
+  ): HotelRoomResponse[] {
+    const matchingHotel = response.hoteles.find((hotel) => hotel.hotel_id === hotelId);
+    if (!matchingHotel) {
+      return rooms;
+    }
+
+    const pricedByRoomId = new Map(
+      matchingHotel.habitaciones.map((room) => [
+        room.habitacion_id,
+        {
+          moneda: room.moneda,
+          precio_promedio_noche: room.precio_promedio_noche,
+          precio_total_reserva: room.precio_total_reserva,
+        },
+      ]),
+    );
+
+    return rooms.map((room) => {
+      const priced = pricedByRoomId.get(room.id);
+      return priced ? { ...room, ...priced } : room;
     });
   }
 
-  private getHotelBasePrice(): number {
-    const hotelId = this.hotel()?.id;
-    if (!hotelId) {
-      return 65;
-    }
-
-    // Keep the exact same baseline used in search results for cross-screen consistency.
-    return 65 + (this.seededNumber(hotelId) % 140);
+  private getRoomNightlyPrice(room: HotelRoomResponse): number {
+    return room.precio_promedio_noche ?? 0;
   }
 
-  private getRoomPriceVariant(room: HotelRoomResponse): number {
-    const seed = this.seededNumber(room.id);
-    return seed % 35;
-  }
-
-  private seededNumber(seed: string): number {
-    let hash = 0;
-    for (let i = 0; i < seed.length; i += 1) {
-      hash = (hash << 5) - hash + seed.charCodeAt(i);
-      hash |= 0;
+  private getRoomTotalPrice(room: HotelRoomResponse, nights: number): number {
+    if ((room.precio_total_reserva ?? 0) > 0) {
+      return room.precio_total_reserva as number;
     }
-    return Math.abs(hash);
+
+    return this.getRoomNightlyPrice(room) * nights;
   }
 
   private parseAmenities(rawAmenities: string | null): string[] {
