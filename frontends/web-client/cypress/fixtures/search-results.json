@@ -18,8 +18,26 @@
       "cantidad_comentarios": 150,
       "total_habitaciones_disponibles": 8,
       "habitaciones": [
-        { "habitacion_id": "r001", "tipo": "Suite", "nro_habitacion": 501, "capacidad": 3, "camas": 2, "moneda": "USD", "precio_promedio_noche": 180, "precio_total_reserva": 900 },
-        { "habitacion_id": "r002", "tipo": "Doble", "nro_habitacion": 302, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 120, "precio_total_reserva": 600 }
+        {
+          "habitacion_id": "r001",
+          "tipo": "Suite",
+          "nro_habitacion": 501,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 180,
+          "precio_total_reserva": 900
+        },
+        {
+          "habitacion_id": "r002",
+          "tipo": "Doble",
+          "nro_habitacion": 302,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 120,
+          "precio_total_reserva": 600
+        }
       ]
     },
     {
@@ -35,7 +53,16 @@
       "cantidad_comentarios": 95,
       "total_habitaciones_disponibles": 3,
       "habitaciones": [
-        { "habitacion_id": "r003", "tipo": "Individual", "nro_habitacion": 102, "capacidad": 1, "camas": 1, "moneda": "USD", "precio_promedio_noche": 95, "precio_total_reserva": 475 }
+        {
+          "habitacion_id": "r003",
+          "tipo": "Individual",
+          "nro_habitacion": 102,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 95,
+          "precio_total_reserva": 475
+        }
       ]
     },
     {
@@ -51,7 +78,16 @@
       "cantidad_comentarios": 80,
       "total_habitaciones_disponibles": 5,
       "habitaciones": [
-        { "habitacion_id": "r004", "tipo": "Doble", "nro_habitacion": 205, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 110, "precio_total_reserva": 550 }
+        {
+          "habitacion_id": "r004",
+          "tipo": "Doble",
+          "nro_habitacion": 205,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 110,
+          "precio_total_reserva": 550
+        }
       ]
     },
     {
@@ -67,7 +103,16 @@
       "cantidad_comentarios": 200,
       "total_habitaciones_disponibles": 12,
       "habitaciones": [
-        { "habitacion_id": "r005", "tipo": "Suite", "nro_habitacion": 801, "capacidad": 4, "camas": 2, "moneda": "USD", "precio_promedio_noche": 280, "precio_total_reserva": 1400 }
+        {
+          "habitacion_id": "r005",
+          "tipo": "Suite",
+          "nro_habitacion": 801,
+          "capacidad": 4,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 280,
+          "precio_total_reserva": 1400
+        }
       ]
     },
     {
@@ -83,7 +128,16 @@
       "cantidad_comentarios": 60,
       "total_habitaciones_disponibles": 6,
       "habitaciones": [
-        { "habitacion_id": "r007", "tipo": "Individual", "nro_habitacion": 110, "capacidad": 1, "camas": 1, "moneda": "USD", "precio_promedio_noche": 65, "precio_total_reserva": 325 }
+        {
+          "habitacion_id": "r007",
+          "tipo": "Individual",
+          "nro_habitacion": 110,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 65,
+          "precio_total_reserva": 325
+        }
       ]
     },
     {
@@ -99,7 +153,16 @@
       "cantidad_comentarios": 170,
       "total_habitaciones_disponibles": 20,
       "habitaciones": [
-        { "habitacion_id": "r008", "tipo": "Doble", "nro_habitacion": 610, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 150, "precio_total_reserva": 750 }
+        {
+          "habitacion_id": "r008",
+          "tipo": "Doble",
+          "nro_habitacion": 610,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 150,
+          "precio_total_reserva": 750
+        }
       ]
     },
     {
@@ -115,7 +178,16 @@
       "cantidad_comentarios": 130,
       "total_habitaciones_disponibles": 4,
       "habitaciones": [
-        { "habitacion_id": "r010", "tipo": "Suite", "nro_habitacion": 701, "capacidad": 3, "camas": 2, "moneda": "USD", "precio_promedio_noche": 220, "precio_total_reserva": 1100 }
+        {
+          "habitacion_id": "r010",
+          "tipo": "Suite",
+          "nro_habitacion": 701,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 220,
+          "precio_total_reserva": 1100
+        }
       ]
     },
     {
@@ -131,7 +203,16 @@
       "cantidad_comentarios": 40,
       "total_habitaciones_disponibles": 15,
       "habitaciones": [
-        { "habitacion_id": "r011", "tipo": "Individual", "nro_habitacion": 204, "capacidad": 1, "camas": 1, "moneda": "USD", "precio_promedio_noche": 45, "precio_total_reserva": 225 }
+        {
+          "habitacion_id": "r011",
+          "tipo": "Individual",
+          "nro_habitacion": 204,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 45,
+          "precio_total_reserva": 225
+        }
       ]
     },
     {
@@ -147,7 +228,16 @@
       "cantidad_comentarios": 110,
       "total_habitaciones_disponibles": 7,
       "habitaciones": [
-        { "habitacion_id": "r012", "tipo": "Doble", "nro_habitacion": 505, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 190, "precio_total_reserva": 950 }
+        {
+          "habitacion_id": "r012",
+          "tipo": "Doble",
+          "nro_habitacion": 505,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 190,
+          "precio_total_reserva": 950
+        }
       ]
     },
     {
@@ -163,7 +253,16 @@
       "cantidad_comentarios": 230,
       "total_habitaciones_disponibles": 2,
       "habitaciones": [
-        { "habitacion_id": "r013", "tipo": "Suite", "nro_habitacion": 901, "capacidad": 4, "camas": 2, "moneda": "USD", "precio_promedio_noche": 350, "precio_total_reserva": 1750 }
+        {
+          "habitacion_id": "r013",
+          "tipo": "Suite",
+          "nro_habitacion": 901,
+          "capacidad": 4,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 350,
+          "precio_total_reserva": 1750
+        }
       ]
     },
     {
@@ -179,7 +278,16 @@
       "cantidad_comentarios": 70,
       "total_habitaciones_disponibles": 10,
       "habitaciones": [
-        { "habitacion_id": "r014", "tipo": "Doble", "nro_habitacion": 315, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 85, "precio_total_reserva": 425 }
+        {
+          "habitacion_id": "r014",
+          "tipo": "Doble",
+          "nro_habitacion": 315,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 85,
+          "precio_total_reserva": 425
+        }
       ]
     },
     {
@@ -195,7 +303,16 @@
       "cantidad_comentarios": 85,
       "total_habitaciones_disponibles": 9,
       "habitaciones": [
-        { "habitacion_id": "r015", "tipo": "Doble", "nro_habitacion": 402, "capacidad": 2, "camas": 2, "moneda": "USD", "precio_promedio_noche": 100, "precio_total_reserva": 500 }
+        {
+          "habitacion_id": "r015",
+          "tipo": "Doble",
+          "nro_habitacion": 402,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 100,
+          "precio_total_reserva": 500
+        }
       ]
     },
     {
@@ -211,7 +328,16 @@
       "cantidad_comentarios": 50,
       "total_habitaciones_disponibles": 6,
       "habitaciones": [
-        { "habitacion_id": "r016", "tipo": "Individual", "nro_habitacion": 108, "capacidad": 1, "camas": 1, "moneda": "USD", "precio_promedio_noche": 70, "precio_total_reserva": 350 }
+        {
+          "habitacion_id": "r016",
+          "tipo": "Individual",
+          "nro_habitacion": 108,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 70,
+          "precio_total_reserva": 350
+        }
       ]
     },
     {
@@ -227,7 +353,16 @@
       "cantidad_comentarios": 155,
       "total_habitaciones_disponibles": 11,
       "habitaciones": [
-        { "habitacion_id": "r017", "tipo": "Suite", "nro_habitacion": 602, "capacidad": 3, "camas": 2, "moneda": "USD", "precio_promedio_noche": 200, "precio_total_reserva": 1000 }
+        {
+          "habitacion_id": "r017",
+          "tipo": "Suite",
+          "nro_habitacion": 602,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 200,
+          "precio_total_reserva": 1000
+        }
       ]
     },
     {
@@ -243,7 +378,16 @@
       "cantidad_comentarios": 75,
       "total_habitaciones_disponibles": 4,
       "habitaciones": [
-        { "habitacion_id": "r019", "tipo": "Suite", "nro_habitacion": 301, "capacidad": 2, "camas": 1, "moneda": "USD", "precio_promedio_noche": 130, "precio_total_reserva": 650 }
+        {
+          "habitacion_id": "r019",
+          "tipo": "Suite",
+          "nro_habitacion": 301,
+          "capacidad": 2,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 130,
+          "precio_total_reserva": 650
+        }
       ]
     }
   ]

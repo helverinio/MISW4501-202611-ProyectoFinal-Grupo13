@@ -121,11 +121,11 @@ describe('Flujo E2E #2: Busqueda de hoteles', () => {
         cy.get('#hotel-cards app-hotel-result-card')
           .first()
           .within(() => {
-            cy.get('h3').should('not.be.empty');           // nombre
-            cy.get('.fa-location-dot').should('exist');     // ubicacion
-            cy.get('.fa-star').should('exist');             // rating
-            cy.contains('$').should('exist');               // precio
-            cy.get('button').should('exist');               // boton View Details
+            cy.get('h3').should('not.be.empty'); // nombre
+            cy.get('.fa-location-dot').should('exist'); // ubicacion
+            cy.get('.fa-star').should('exist'); // rating
+            cy.contains('$').should('exist'); // precio
+            cy.get('button').should('exist'); // boton View Details
           });
       });
     });
@@ -171,10 +171,7 @@ describe('Flujo E2E #2: Busqueda de hoteles', () => {
           cy.get('#amenities-filter input[type="checkbox"]').first().check();
 
           // Los resultados deben ser igual o menos
-          cy.get('#hotel-cards app-hotel-result-card').should(
-            'have.length.at.most',
-            totalBefore,
-          );
+          cy.get('#hotel-cards app-hotel-result-card').should('have.length.at.most', totalBefore);
         });
       });
 
