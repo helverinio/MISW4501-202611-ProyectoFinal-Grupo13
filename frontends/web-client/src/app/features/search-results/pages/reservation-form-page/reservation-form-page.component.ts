@@ -687,13 +687,7 @@ export class ReservationFormPageComponent {
     checkOutDate: string,
     guests: number,
   ): SearchAvailableHotelsRequest | null {
-    if (
-      !destination ||
-      !checkInDate ||
-      !checkOutDate ||
-      Number.isNaN(guests) ||
-      guests < 1
-    ) {
+    if (!destination || !checkInDate || !checkOutDate || Number.isNaN(guests) || guests < 1) {
       return null;
     }
 
