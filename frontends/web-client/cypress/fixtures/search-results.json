@@ -1,0 +1,394 @@
+{
+  "total_hoteles": 15,
+  "busqueda": "Bogota",
+  "fecha_ingreso": "2026-04-10",
+  "fecha_salida": "2026-04-15",
+  "nro_personas": 2,
+  "hoteles": [
+    {
+      "hotel_id": "h001",
+      "nombre": "Hotel Tequendama",
+      "descripcion": "Lujoso hotel en el corazon de Bogota con vistas a los cerros orientales.",
+      "amenidades": "Free WiFi, Swimming Pool, Free Breakfast, Free Parking",
+      "email": "reservas@tequendama.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.5,
+      "cantidad_ratings": 320,
+      "cantidad_comentarios": 150,
+      "total_habitaciones_disponibles": 8,
+      "habitaciones": [
+        {
+          "habitacion_id": "r001",
+          "tipo": "Suite",
+          "nro_habitacion": 501,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 180,
+          "precio_total_reserva": 900
+        },
+        {
+          "habitacion_id": "r002",
+          "tipo": "Doble",
+          "nro_habitacion": 302,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 120,
+          "precio_total_reserva": 600
+        }
+      ]
+    },
+    {
+      "hotel_id": "h002",
+      "nombre": "Casa Medina",
+      "descripcion": "Hotel boutique de estilo colonial con jardines interiores.",
+      "amenidades": "Free WiFi, Free Breakfast, Fitness Center",
+      "email": "info@casamedina.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.7,
+      "cantidad_ratings": 210,
+      "cantidad_comentarios": 95,
+      "total_habitaciones_disponibles": 3,
+      "habitaciones": [
+        {
+          "habitacion_id": "r003",
+          "tipo": "Individual",
+          "nro_habitacion": 102,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 95,
+          "precio_total_reserva": 475
+        }
+      ]
+    },
+    {
+      "hotel_id": "h003",
+      "nombre": "Hotel de la Opera",
+      "descripcion": "Ubicado frente al Teatro Colon, combina historia y confort.",
+      "amenidades": "Free WiFi, Swimming Pool",
+      "email": "reservas@hotelopera.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.2,
+      "cantidad_ratings": 180,
+      "cantidad_comentarios": 80,
+      "total_habitaciones_disponibles": 5,
+      "habitaciones": [
+        {
+          "habitacion_id": "r004",
+          "tipo": "Doble",
+          "nro_habitacion": 205,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 110,
+          "precio_total_reserva": 550
+        }
+      ]
+    },
+    {
+      "hotel_id": "h004",
+      "nombre": "JW Marriott Bogota",
+      "descripcion": "Hotel cinco estrellas con spa y restaurante gourmet.",
+      "amenidades": "Free WiFi, Swimming Pool, Fitness Center, Free Parking",
+      "email": "reservas@jwmarriott.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.8,
+      "cantidad_ratings": 450,
+      "cantidad_comentarios": 200,
+      "total_habitaciones_disponibles": 12,
+      "habitaciones": [
+        {
+          "habitacion_id": "r005",
+          "tipo": "Suite",
+          "nro_habitacion": 801,
+          "capacidad": 4,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 280,
+          "precio_total_reserva": 1400
+        }
+      ]
+    },
+    {
+      "hotel_id": "h005",
+      "nombre": "Hotel Dann Carlton",
+      "descripcion": "Hotel tradicional con amplias habitaciones.",
+      "amenidades": "Free WiFi, Free Breakfast",
+      "email": "info@danncarlton.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 3.8,
+      "cantidad_ratings": 140,
+      "cantidad_comentarios": 60,
+      "total_habitaciones_disponibles": 6,
+      "habitaciones": [
+        {
+          "habitacion_id": "r007",
+          "tipo": "Individual",
+          "nro_habitacion": 110,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 65,
+          "precio_total_reserva": 325
+        }
+      ]
+    },
+    {
+      "hotel_id": "h006",
+      "nombre": "Hilton Bogota",
+      "descripcion": "Moderno hotel de negocios con centro de convenciones.",
+      "amenidades": "Free WiFi, Swimming Pool, Fitness Center, Free Breakfast, Pet Friendly",
+      "email": "reservas@hilton.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.4,
+      "cantidad_ratings": 380,
+      "cantidad_comentarios": 170,
+      "total_habitaciones_disponibles": 20,
+      "habitaciones": [
+        {
+          "habitacion_id": "r008",
+          "tipo": "Doble",
+          "nro_habitacion": 610,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 150,
+          "precio_total_reserva": 750
+        }
+      ]
+    },
+    {
+      "hotel_id": "h007",
+      "nombre": "Sofitel Legend",
+      "descripcion": "Elegancia francesa en el corazon historico.",
+      "amenidades": "Free WiFi, Swimming Pool, Free Breakfast, Free Parking, Fitness Center",
+      "email": "info@sofitel.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.6,
+      "cantidad_ratings": 290,
+      "cantidad_comentarios": 130,
+      "total_habitaciones_disponibles": 4,
+      "habitaciones": [
+        {
+          "habitacion_id": "r010",
+          "tipo": "Suite",
+          "nro_habitacion": 701,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 220,
+          "precio_total_reserva": 1100
+        }
+      ]
+    },
+    {
+      "hotel_id": "h008",
+      "nombre": "Hotel Ibis Bogota",
+      "descripcion": "Hotel economico ideal para viajeros de negocios.",
+      "amenidades": "Free WiFi",
+      "email": "reservas@ibis.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 3.5,
+      "cantidad_ratings": 95,
+      "cantidad_comentarios": 40,
+      "total_habitaciones_disponibles": 15,
+      "habitaciones": [
+        {
+          "habitacion_id": "r011",
+          "tipo": "Individual",
+          "nro_habitacion": 204,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 45,
+          "precio_total_reserva": 225
+        }
+      ]
+    },
+    {
+      "hotel_id": "h009",
+      "nombre": "W Bogota",
+      "descripcion": "Hotel de diseno contemporaneo con rooftop bar.",
+      "amenidades": "Free WiFi, Swimming Pool, Fitness Center",
+      "email": "info@whotels.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.3,
+      "cantidad_ratings": 260,
+      "cantidad_comentarios": 110,
+      "total_habitaciones_disponibles": 7,
+      "habitaciones": [
+        {
+          "habitacion_id": "r012",
+          "tipo": "Doble",
+          "nro_habitacion": 505,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 190,
+          "precio_total_reserva": 950
+        }
+      ]
+    },
+    {
+      "hotel_id": "h010",
+      "nombre": "Four Seasons Casa Medina",
+      "descripcion": "Exclusivo hotel de lujo con servicio personalizado.",
+      "amenidades": "Free WiFi, Swimming Pool, Free Breakfast, Fitness Center, Free Parking, Pet Friendly",
+      "email": "reservas@fourseasons.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.9,
+      "cantidad_ratings": 510,
+      "cantidad_comentarios": 230,
+      "total_habitaciones_disponibles": 2,
+      "habitaciones": [
+        {
+          "habitacion_id": "r013",
+          "tipo": "Suite",
+          "nro_habitacion": 901,
+          "capacidad": 4,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 350,
+          "precio_total_reserva": 1750
+        }
+      ]
+    },
+    {
+      "hotel_id": "h011",
+      "nombre": "Hotel Cosmos 100",
+      "descripcion": "Hotel con centro de negocios y vistas panoramicas.",
+      "amenidades": "Free WiFi, Free Parking",
+      "email": "info@cosmos100.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 3.9,
+      "cantidad_ratings": 160,
+      "cantidad_comentarios": 70,
+      "total_habitaciones_disponibles": 10,
+      "habitaciones": [
+        {
+          "habitacion_id": "r014",
+          "tipo": "Doble",
+          "nro_habitacion": 315,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 85,
+          "precio_total_reserva": 425
+        }
+      ]
+    },
+    {
+      "hotel_id": "h012",
+      "nombre": "Estelar La Fontana",
+      "descripcion": "Hotel familiar con amplias zonas verdes.",
+      "amenidades": "Free WiFi, Swimming Pool, Pet Friendly",
+      "email": "reservas@estelar.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.1,
+      "cantidad_ratings": 200,
+      "cantidad_comentarios": 85,
+      "total_habitaciones_disponibles": 9,
+      "habitaciones": [
+        {
+          "habitacion_id": "r015",
+          "tipo": "Doble",
+          "nro_habitacion": 402,
+          "capacidad": 2,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 100,
+          "precio_total_reserva": 500
+        }
+      ]
+    },
+    {
+      "hotel_id": "h013",
+      "nombre": "GHL Hotel Capital",
+      "descripcion": "Moderno hotel en la zona financiera con restaurante.",
+      "amenidades": "Free WiFi, Fitness Center, Free Breakfast",
+      "email": "info@ghlhoteles.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 3.7,
+      "cantidad_ratings": 120,
+      "cantidad_comentarios": 50,
+      "total_habitaciones_disponibles": 6,
+      "habitaciones": [
+        {
+          "habitacion_id": "r016",
+          "tipo": "Individual",
+          "nro_habitacion": 108,
+          "capacidad": 1,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 70,
+          "precio_total_reserva": 350
+        }
+      ]
+    },
+    {
+      "hotel_id": "h014",
+      "nombre": "NH Collection Royal",
+      "descripcion": "Hotel premium con spa y gastronomia de autor.",
+      "amenidades": "Free WiFi, Swimming Pool, Fitness Center, Free Breakfast",
+      "email": "reservas@nh-hotels.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.4,
+      "cantidad_ratings": 340,
+      "cantidad_comentarios": 155,
+      "total_habitaciones_disponibles": 11,
+      "habitaciones": [
+        {
+          "habitacion_id": "r017",
+          "tipo": "Suite",
+          "nro_habitacion": 602,
+          "capacidad": 3,
+          "camas": 2,
+          "moneda": "USD",
+          "precio_promedio_noche": 200,
+          "precio_total_reserva": 1000
+        }
+      ]
+    },
+    {
+      "hotel_id": "h015",
+      "nombre": "Biohotel Organic Suites",
+      "descripcion": "Primer hotel ecologico de Colombia.",
+      "amenidades": "Free WiFi, Free Breakfast, Pet Friendly",
+      "email": "info@biohotel.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.0,
+      "cantidad_ratings": 175,
+      "cantidad_comentarios": 75,
+      "total_habitaciones_disponibles": 4,
+      "habitaciones": [
+        {
+          "habitacion_id": "r019",
+          "tipo": "Suite",
+          "nro_habitacion": 301,
+          "capacidad": 2,
+          "camas": 1,
+          "moneda": "USD",
+          "precio_promedio_noche": 130,
+          "precio_total_reserva": 650
+        }
+      ]
+    }
+  ]
+}

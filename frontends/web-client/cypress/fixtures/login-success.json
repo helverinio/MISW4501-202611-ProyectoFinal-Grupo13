@@ -1,0 +1,11 @@
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiY3lwcmVzc190ZXN0IiwiZXhwIjoxOTk5OTk5OTk5fQ.mock-token",
+  "refresh_token": "mock-refresh-token-cypress",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "usuario": {
+    "id": 1,
+    "nombre": "Cypress Tester",
+    "email": "cypress@test.com"
+  }
+}
