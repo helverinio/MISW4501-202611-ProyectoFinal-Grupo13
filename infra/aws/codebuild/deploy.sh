@@ -98,6 +98,7 @@ render_taskdef() {
 
   python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT" "$FRONTEND_CORS_ORIGINS"
 import pathlib
+import re
 import sys
 
 (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
@@ -122,6 +123,11 @@ replacements = {
 }
 for key, value in replacements.items():
   content = content.replace(key, value)
+
+unresolved = sorted(set(re.findall(r"__[A-Z0-9_]+__", content)))
+if unresolved:
+  raise SystemExit(f"Unresolved placeholders in {template_path}: {', '.join(unresolved)}")
+
 pathlib.Path(output_path).write_text(content)
 PY
 

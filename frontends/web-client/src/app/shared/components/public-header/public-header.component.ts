@@ -1,10 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { I18nService } from '../../../core/services/i18n.service';
 import { LanguageCode } from '../../../core/i18n/translations';
+import { CurrencyService } from '../../../core/services/currency.service';
 
 @Component({
   selector: 'app-public-header',
@@ -14,9 +15,9 @@ import { LanguageCode } from '../../../core/i18n/translations';
 })
 export class PublicHeaderComponent {
   private readonly i18n = inject(I18nService);
+  protected readonly currencyService = inject(CurrencyService);
 
   protected readonly currentLanguage = this.i18n.currentLanguage;
-  protected readonly currency = signal<string>('ARS');
 
   readonly languages: Array<{ label: string; value: LanguageCode }> = [
     { label: '🇺🇸 English', value: 'en' },
@@ -28,6 +29,10 @@ export class PublicHeaderComponent {
 
   protected onLanguageChange(lang: LanguageCode): void {
     this.i18n.setLanguage(lang);
+  }
+
+  protected onCurrencyChange(currency: string): void {
+    this.currencyService.setCurrency(currency);
   }
 
   protected t(key: string): string {

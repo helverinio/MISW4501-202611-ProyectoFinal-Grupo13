@@ -1,10 +1,15 @@
 from typing import List, Optional
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 from app import db
 from app.domain.entities.reserva import Reserva
 from app.domain.repositories.reserva_repository import ReservaRepository
 from app.infrastructure.models.reserva_model import ReservaModel
 from app.infrastructure.models.estado_model import EstadoModel
+from app.infrastructure.models.habitacion_model import HabitacionModel
+from app.infrastructure.models.hotel_model import HotelModel
+from app.infrastructure.models.ciudad_model import CiudadModel
+from app.infrastructure.models.pais_model import PaisModel
+from app.infrastructure.models.comentario_hotel_model import ComentarioHotelModel
 
 
 class SQLAlchemyReservaRepository(ReservaRepository):
@@ -97,3 +102,54 @@ class SQLAlchemyReservaRepository(ReservaRepository):
         ).first()
 
         return overlapping is not None
+
+    def find_recently_viewed_enriched(self, usuario_id: str, limit: int) -> List[dict]:
+        cancelled_estado_ids = db.session.query(EstadoModel.id).filter(
+            EstadoModel.nombre.in_(['cancelada', 'Cancelada', 'CANCELADA'])
+        ).subquery()
+
+        models = (
+            ReservaModel.query
+            .filter(
+                ReservaModel.id_usuario == usuario_id,
+                ReservaModel.id_estado.notin_(cancelled_estado_ids),
+            )
+            .order_by(ReservaModel.created_at.desc())
+            .limit(limit)
+            .all()
+        )
+
+        result = []
+        for m in models:
+            habitacion = HabitacionModel.query.get(m.id_habitacion)
+            if not habitacion:
+                continue
+            hotel = HotelModel.query.get(habitacion.id_hotel)
+            if not hotel:
+                continue
+            ciudad = CiudadModel.query.get(hotel.id_ciudad)
+            pais = PaisModel.query.get(ciudad.id_pais) if ciudad else None
+
+            dias = (m.fecha_salida - m.fecha_ingreso).days
+            nightly_price = m.total / dias if dias > 0 else m.total
+
+            rating_avg = db.session.query(func.avg(ComentarioHotelModel.rating)).filter(
+                ComentarioHotelModel.id_hotel == hotel.id,
+                ComentarioHotelModel.activo == True,
+            ).scalar()
+
+            result.append({
+                'reserva_id': m.id,
+                'hotel_id': hotel.id,
+                'hotel_name': hotel.nombre,
+                'city': ciudad.nombre if ciudad else None,
+                'country': pais.nombre if pais else None,
+                'rating': round(float(rating_avg), 1) if rating_avg else None,
+                'nightly_price': round(nightly_price, 2),
+                'total': m.total,
+                'fecha_ingreso': m.fecha_ingreso.isoformat(),
+                'fecha_salida': m.fecha_salida.isoformat(),
+                'created_at': m.created_at.isoformat() if m.created_at else None,
+            })
+
+        return result

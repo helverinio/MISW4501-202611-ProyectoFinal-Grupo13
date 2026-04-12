@@ -98,6 +98,20 @@ export interface UpdateReservaPayload {
   id_estado?: string;
 }
 
+export interface RecentlyViewedHotelResponse {
+  reserva_id: string;
+  hotel_id: string;
+  hotel_name: string;
+  city: string | null;
+  country: string | null;
+  rating: number | null;
+  nightly_price: number;
+  total: number;
+  fecha_ingreso: string;
+  fecha_salida: string;
+  created_at: string | null;
+}
+
 export interface CreateNotificacionPayload {
   fecha_notif: string;
   titulo: string;
@@ -144,6 +158,17 @@ export class ReservationService {
   getReservasByUsuario(usuarioId: string): Observable<ReservaResponse[]> {
     return this.http
       .get<ReservaResponse[]>(`${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getRecentlyViewedHotels(
+    usuarioId: string,
+    limit: number = 3,
+  ): Observable<RecentlyViewedHotelResponse[]> {
+    return this.http
+      .get<
+        RecentlyViewedHotelResponse[]
+      >(`${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas/recently-viewed?limit=${limit}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 

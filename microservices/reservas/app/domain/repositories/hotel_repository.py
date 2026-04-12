@@ -22,7 +22,7 @@ class HotelRepository(ABC):
 
     @abstractmethod
     def search_by_name_or_ciudad(self, busqueda: str) -> List[Hotel]:
-        """Busca hoteles por nombre o ciudad"""
+        """Busca hoteles por nombre, ciudad o pais"""
         pass
 
     @abstractmethod

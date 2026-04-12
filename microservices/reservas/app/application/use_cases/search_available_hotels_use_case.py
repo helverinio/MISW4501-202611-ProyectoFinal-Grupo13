@@ -40,7 +40,7 @@ class SearchAvailableHotelsUseCase:
         Busca hoteles disponibles con habitaciones que cumplan los criterios
         
         Args:
-            busqueda: Término de búsqueda (nombre del hotel o ciudad)
+            busqueda: Termino de busqueda (nombre del hotel, ciudad o pais)
             fecha_ingreso: Fecha de entrada
             fecha_salida: Fecha de salida
             nro_personas: Número de personas (usa capacidad mínima)
@@ -50,7 +50,7 @@ class SearchAvailableHotelsUseCase:
             Lista de SearchHotelResult con hoteles y habitaciones disponibles
         """
         
-        # Buscar hoteles por nombre o ciudad
+        # Buscar hoteles por nombre, ciudad o pais
         hoteles = self.hotel_repository.search_by_name_or_ciudad(busqueda)
         logger.info("[SearchUseCase] Hoteles encontrados para busqueda='%s': %d",
                     busqueda, len(hoteles))

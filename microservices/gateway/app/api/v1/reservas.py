@@ -49,6 +49,13 @@ def get_reservas_by_usuario(usuario_id):
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/usuarios/<usuario_id>/reservas/recently-viewed', methods=['GET'])
+def get_recently_viewed_by_usuario(usuario_id):
+    limit = request.args.get('limit', 3, type=int)
+    result = get_service().get_recently_viewed_by_usuario(usuario_id, limit)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/reservas/<reserva_id>/pagos', methods=['GET'])
 def get_pagos_by_reserva(reserva_id):
     result = get_service().get_pagos_by_reserva(reserva_id)

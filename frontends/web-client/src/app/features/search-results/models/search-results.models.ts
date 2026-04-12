@@ -8,9 +8,12 @@ export interface SearchAvailableHotelsRequest {
 export interface AvailableRoomApi {
   habitacion_id: string;
   tipo: string;
-  nro_habitacion: string;
+  nro_habitacion: number;
   capacidad: number;
   camas: number;
+  moneda: string;
+  precio_promedio_noche: number;
+  precio_total_reserva: number;
 }
 
 export interface AvailableHotelApi {
@@ -21,6 +24,9 @@ export interface AvailableHotelApi {
   email: string | null;
   ciudad: string | null;
   pais: string | null;
+  rating_promedio: number;
+  cantidad_ratings: number;
+  cantidad_comentarios: number;
   total_habitaciones_disponibles: number;
   habitaciones: AvailableRoomApi[];
 }
@@ -50,6 +56,27 @@ export interface HotelRoomResponse {
   capacidad: number;
   camas: number;
   id_hotel: string;
+  moneda?: string;
+  precio_promedio_noche?: number;
+  precio_total_reserva?: number;
+}
+
+export interface PopularDestinationByCityApi {
+  ciudad: string;
+  pais: string;
+  id_ciudad: string;
+  hotel_id: string;
+  hotel_nombre: string;
+  rating_promedio: number;
+  cantidad_ratings: number;
+  precio_minimo_noche: number | null;
+  moneda: string;
+  hoteles_disponibles_ciudad: number;
+}
+
+export interface PopularDestinationsByCityResponse {
+  total_ciudades: number;
+  destinos: PopularDestinationByCityApi[];
 }
 
 export interface SearchCriteriaVm {
