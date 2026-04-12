@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import {
   HotelByIdResponse,
   HotelRoomResponse,
+  PopularDestinationsByCityResponse,
   SearchAvailableHotelsRequest,
   SearchAvailableHotelsResponse,
 } from '../models/search-results.models';
@@ -34,6 +35,14 @@ export class SearchHotelsService {
   getRoomsByHotelId(hotelId: string): Observable<HotelRoomResponse[]> {
     return this.http
       .get<HotelRoomResponse[]>(`${environment.apiBaseUrl}/hoteles/${hotelId}/habitaciones`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getPopularDestinationsByCity(limit = 4): Observable<PopularDestinationsByCityResponse> {
+    return this.http
+      .get<PopularDestinationsByCityResponse>(
+        `${environment.apiBaseUrl}/hoteles/populares-por-ciudad?limit=${limit}`,
+      )
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 }

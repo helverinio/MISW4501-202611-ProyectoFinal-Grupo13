@@ -56,3 +56,10 @@ def search_available_hotels():
         return jsonify({'error': 'No data provided'}), 400
     result = get_service().search_available_hotels(data)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/hoteles/populares-por-ciudad', methods=['GET'])
+def get_popular_destinations_by_city():
+    limit = request.args.get('limit', default=4, type=int)
+    result = get_service().get_popular_destinations_by_city(limit)
+    return jsonify(result['data']), result['status_code']

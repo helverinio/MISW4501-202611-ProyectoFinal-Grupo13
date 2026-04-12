@@ -273,6 +273,19 @@ def get_reservas_by_usuario(usuario_id, current_usuario=None):
     return jsonify([_serialize_reserva(r) for r in reservas])
 
 
+@api_v1_bp.route('/usuarios/<usuario_id>/reservas/recently-viewed', methods=['GET'])
+@require_token
+def get_recently_viewed_by_usuario(usuario_id, current_usuario=None):
+    try:
+        limit = min(int(request.args.get('limit', 3)), 10)
+    except (ValueError, TypeError):
+        limit = 3
+
+    repository = get_repository()
+    result = repository.find_recently_viewed_enriched(usuario_id, limit)
+    return jsonify(result)
+
+
 @api_v1_bp.route('/habitaciones/<habitacion_id>/reservas', methods=['GET'])
 @require_token
 def get_reservas_by_habitacion(habitacion_id, current_usuario=None):

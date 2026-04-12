@@ -15,12 +15,21 @@ class ReservasService:
                 headers['Authorization'] = authorization
         return headers
 
-    def _request(self, method: str, endpoint: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
+    def _request(
+        self,
+        method: str,
+        endpoint: str,
+        data: Dict[str, Any] = None,
+        params: Dict[str, Any] = None,
+    ) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/api/v1/{endpoint}"
             headers = self._forward_headers()
             if method == 'GET':
-                response = requests.get(url, headers=headers, timeout=30)
+                if params is None:
+                    response = requests.get(url, headers=headers, timeout=30)
+                else:
+                    response = requests.get(url, headers=headers, params=params, timeout=30)
             elif method == 'POST':
                 response = requests.post(url, json=data, headers=headers, timeout=30)
             elif method == 'PUT':
@@ -92,6 +101,13 @@ class ReservasService:
 
     def search_available_hotels(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'hoteles/buscar-disponibles', data)
+
+    def get_popular_destinations_by_city(self, limit: int = 4) -> Dict[str, Any]:
+        return self._request(
+            'GET',
+            'hoteles/populares-por-ciudad',
+            params={'limit': limit},
+        )
 
     # Habitaciones
     def create_habitacion(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -181,6 +197,14 @@ class ReservasService:
 
     def get_reservas_by_usuario(self, usuario_id: str) -> Dict[str, Any]:
         return self._request('GET', f'usuarios/{usuario_id}/reservas')
+
+
+    def get_recently_viewed_by_usuario(self, usuario_id: str, limit: int = 3) -> Dict[str, Any]:
+        return self._request(
+            'GET',
+            f'usuarios/{usuario_id}/reservas/recently-viewed',
+            params={'limit': limit},
+        )
 
     def create_reserva_pms_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'reservas/webhook/pms', data)

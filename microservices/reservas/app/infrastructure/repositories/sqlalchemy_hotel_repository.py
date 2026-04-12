@@ -6,6 +6,7 @@ from app.domain.entities.hotel import Hotel
 from app.domain.repositories.hotel_repository import HotelRepository
 from app.infrastructure.models.hotel_model import HotelModel
 from app.infrastructure.models.ciudad_model import CiudadModel
+from app.infrastructure.models.pais_model import PaisModel
 
 logger = logging.getLogger(__name__)
 
@@ -39,15 +40,18 @@ class SQLAlchemyHotelRepository(HotelRepository):
         return [self._to_entity(m) for m in models]
 
     def search_by_name_or_ciudad(self, busqueda: str) -> List[Hotel]:
-        """Busca hoteles por nombre o nombre de ciudad (sin distinción de tildes)"""
+        """Busca hoteles por nombre de hotel, ciudad o pais (sin distincion de tildes)"""
         search_pattern = f"%{busqueda}%"
         logger.info("[HotelRepo] search_by_name_or_ciudad pattern='%s'", search_pattern)
         models = db.session.query(HotelModel).join(
             CiudadModel, HotelModel.id_ciudad == CiudadModel.id
+        ).join(
+            PaisModel, CiudadModel.id_pais == PaisModel.id
         ).filter(
             or_(
                 func.unaccent(HotelModel.nombre).ilike(func.unaccent(search_pattern)),
-                func.unaccent(CiudadModel.nombre).ilike(func.unaccent(search_pattern))
+                func.unaccent(CiudadModel.nombre).ilike(func.unaccent(search_pattern)),
+                func.unaccent(PaisModel.nombre).ilike(func.unaccent(search_pattern))
             )
         ).all()
         logger.info("[HotelRepo] Hoteles encontrados: %d - nombres: %s",

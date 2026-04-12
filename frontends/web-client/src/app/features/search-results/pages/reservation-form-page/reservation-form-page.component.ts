@@ -2,12 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, forkJoin, switchMap } from 'rxjs';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
 import { I18nService } from '../../../../core/services/i18n.service';
-import { HotelByIdResponse, HotelRoomResponse } from '../../models/search-results.models';
+import {
+  HotelByIdResponse,
+  HotelRoomResponse,
+  SearchAvailableHotelsRequest,
+  SearchAvailableHotelsResponse,
+} from '../../models/search-results.models';
 import {
   CreateReservaPayload,
   EstadoResponse,
@@ -104,10 +109,21 @@ export class ReservationFormPageComponent {
     if (!room) {
       return 0;
     }
-    return this.getRoomBasePrice(room);
+    return this.getRoomNightlyPrice(room);
   });
 
-  protected readonly totalPrice = computed(() => this.pricePerNight() * this.nights());
+  protected readonly totalPrice = computed(() => {
+    const room = this.selectedRoom();
+    if (!room) {
+      return 0;
+    }
+
+    if ((room.precio_total_reserva ?? 0) > 0) {
+      return room.precio_total_reserva as number;
+    }
+
+    return this.getRoomNightlyPrice(room) * this.nights();
+  });
 
   protected readonly discountAmount = computed(() => (this.nights() >= 3 ? 25 : 0));
 
@@ -141,6 +157,7 @@ export class ReservationFormPageComponent {
         switchMap((params) => {
           const hotelId = params.get('hotel_id') || '';
           const roomId = params.get('room_id') || '';
+          const destination = (params.get('busqueda') || '').trim();
           const fechaIngreso = params.get('fecha_ingreso') || '';
           const fechaSalida = params.get('fecha_salida') || '';
           const nroPersonas = Number(params.get('nro_personas') || 2);
@@ -167,9 +184,23 @@ export class ReservationFormPageComponent {
             return [];
           }
 
+          const searchPayload = this.buildSearchPayload(
+            destination,
+            fechaIngreso,
+            fechaSalida,
+            nroPersonas,
+          );
+
+          const search$ = searchPayload
+            ? this.searchHotelsService
+                .searchAvailableHotels(searchPayload)
+                .pipe(catchError(() => of(null)))
+            : of(null);
+
           return forkJoin({
             hotel: this.searchHotelsService.getHotelById(hotelId),
             rooms: this.searchHotelsService.getRoomsByHotelId(hotelId),
+            search: search$,
           });
         }),
       )
@@ -180,7 +211,13 @@ export class ReservationFormPageComponent {
           }
 
           this.hotel.set(data.hotel as HotelByIdResponse);
-          this.rooms.set((data.rooms as HotelRoomResponse[]) || []);
+          this.rooms.set(
+            this.mergeRoomPricing(
+              (data.rooms as HotelRoomResponse[]) || [],
+              (data.hotel as HotelByIdResponse).id,
+              data.search as SearchAvailableHotelsResponse | null,
+            ),
+          );
 
           if (!this.rooms().length) {
             this.errorMessage.set(this.label('noRoomsAvailable'));
@@ -194,7 +231,7 @@ export class ReservationFormPageComponent {
           if (!roomExists) {
             const cheapestRoom = this.rooms()
               .slice()
-              .sort((a, b) => this.getRoomBasePrice(a) - this.getRoomBasePrice(b))[0];
+              .sort((a, b) => this.getRoomNightlyPrice(a) - this.getRoomNightlyPrice(b))[0];
             this.reservationForm.controls.roomId.setValue(cheapestRoom.id);
           }
 
@@ -644,31 +681,57 @@ export class ReservationFormPageComponent {
     return `${value}T00:00:00`;
   }
 
-  private getRoomBasePrice(room: HotelRoomResponse): number {
-    const seed = this.seededNumber(room.id);
-    const type = room.tipo.toLowerCase();
-
-    let base = 90;
-    if (type.includes('suite')) {
-      base = 220;
-    } else if (type.includes('triple')) {
-      base = 150;
-    } else if (type.includes('doble')) {
-      base = 130;
-    } else if (type.includes('sencilla')) {
-      base = 95;
+  private buildSearchPayload(
+    destination: string,
+    checkInDate: string,
+    checkOutDate: string,
+    guests: number,
+  ): SearchAvailableHotelsRequest | null {
+    if (!destination || !checkInDate || !checkOutDate || Number.isNaN(guests) || guests < 1) {
+      return null;
     }
 
-    return base + (seed % 35);
+    return {
+      busqueda: destination,
+      fecha_ingreso: checkInDate,
+      fecha_salida: checkOutDate,
+      nro_personas: guests,
+    };
   }
 
-  private seededNumber(seed: string): number {
-    let hash = 0;
-    for (let i = 0; i < seed.length; i += 1) {
-      hash = (hash << 5) - hash + seed.charCodeAt(i);
-      hash |= 0;
+  private mergeRoomPricing(
+    rooms: HotelRoomResponse[],
+    hotelId: string,
+    response: SearchAvailableHotelsResponse | null,
+  ): HotelRoomResponse[] {
+    if (!response) {
+      return rooms;
     }
-    return Math.abs(hash);
+
+    const matchingHotel = response.hoteles.find((hotel) => hotel.hotel_id === hotelId);
+    if (!matchingHotel) {
+      return rooms;
+    }
+
+    const pricedByRoomId = new Map(
+      matchingHotel.habitaciones.map((room) => [
+        room.habitacion_id,
+        {
+          moneda: room.moneda,
+          precio_promedio_noche: room.precio_promedio_noche,
+          precio_total_reserva: room.precio_total_reserva,
+        },
+      ]),
+    );
+
+    return rooms.map((room) => {
+      const priced = pricedByRoomId.get(room.id);
+      return priced ? { ...room, ...priced } : room;
+    });
+  }
+
+  private getRoomNightlyPrice(room: HotelRoomResponse): number {
+    return room.precio_promedio_noche ?? 0;
   }
 
   private getLocale(): string {

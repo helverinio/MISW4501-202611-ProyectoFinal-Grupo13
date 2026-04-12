@@ -14,6 +14,7 @@ class ReservaModel(db.Model):
     id_habitacion = db.Column(db.String(36), db.ForeignKey('habitaciones.id'), nullable=False)
     id_estado = db.Column(db.String(36), db.ForeignKey('estados.id'), nullable=False)
     id_cotizacion = db.Column(db.String(36), db.ForeignKey('cotizaciones.id'), nullable=True)
+    created_at = db.Column(db.DateTime, nullable=True, server_default=db.func.now())
 
     pagos = db.relationship('PagoModel', backref='reserva', lazy=True)
     notificaciones = db.relationship('NotificacionModel', backref='reserva', lazy=True)
@@ -31,5 +32,6 @@ class ReservaModel(db.Model):
             'id_pais': self.id_pais,
             'id_habitacion': self.id_habitacion,
             'id_estado': self.id_estado,
-            'id_cotizacion': self.id_cotizacion
+            'id_cotizacion': self.id_cotizacion,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
         }

@@ -13,6 +13,9 @@ from app.application.use_cases.hotel_use_cases import (
 from app.application.use_cases.search_available_hotels_use_case import (
     SearchAvailableHotelsUseCase
 )
+from app.application.use_cases.popular_destinations_use_case import (
+    GetPopularDestinationsByCityUseCase
+)
 from app.application.use_cases.habitacion_use_cases import (
     CreateHabitacionUseCase, GetHabitacionUseCase, GetAllHabitacionesUseCase,
     GetHabitacionesByHotelUseCase, UpdateHabitacionUseCase, DeleteHabitacionUseCase
