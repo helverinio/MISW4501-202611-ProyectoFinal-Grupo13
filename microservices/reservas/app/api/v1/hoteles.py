@@ -4,11 +4,15 @@ from app.api.v1.auth import require_token
 from app.application.use_cases.comentario_hotel_use_cases import RatingAggregationService
 from app.application.use_cases import (
     CreateHotelUseCase, GetHotelUseCase, GetAllHotelesUseCase,
-    GetHotelesByCiudadUseCase, UpdateHotelUseCase, DeleteHotelUseCase
+    GetHotelesByCiudadUseCase, UpdateHotelUseCase, DeleteHotelUseCase,
+    GetPopularDestinationsByCityUseCase,
 )
 from app.infrastructure.repositories import (
+    SQLAlchemyCiudadRepository,
     SQLAlchemyHotelRepository,
     SQLAlchemyComentarioHotelRepository,
+    SQLAlchemyPaisRepository,
+    SQLAlchemyPricingRepository,
 )
 
 
@@ -18,6 +22,16 @@ def get_repository():
 
 def get_rating_aggregation_service():
     return RatingAggregationService(SQLAlchemyComentarioHotelRepository())
+
+
+def get_popular_destinations_use_case():
+    return GetPopularDestinationsByCityUseCase(
+        hotel_repository=SQLAlchemyHotelRepository(),
+        ciudad_repository=SQLAlchemyCiudadRepository(),
+        pais_repository=SQLAlchemyPaisRepository(),
+        rating_aggregation_service=get_rating_aggregation_service(),
+        pricing_repository=SQLAlchemyPricingRepository(),
+    )
 
 
 @api_v1_bp.route('/hoteles', methods=['POST'])
@@ -150,3 +164,18 @@ def delete_hotel(hotel_id, current_usuario=None):
         return jsonify({'error': 'Hotel not found'}), 404
 
     return jsonify({'message': 'Hotel deleted successfully'})
+
+
+@api_v1_bp.route('/hoteles/populares-por-ciudad', methods=['GET'])
+@require_token
+def get_popular_destinations_by_city(current_usuario=None):
+    limit = request.args.get('limit', default=4, type=int)
+    try:
+        destinations = get_popular_destinations_use_case().execute(limit=limit)
+    except ValueError as ex:
+        return jsonify({'error': str(ex)}), 400
+
+    return jsonify({
+        'total_ciudades': len(destinations),
+        'destinos': destinations,
+    }), 200

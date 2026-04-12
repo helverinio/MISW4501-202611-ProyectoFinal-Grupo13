@@ -73,6 +73,7 @@ def test_health_endpoints(client):
         ("post", "/api/v1/hoteles", {"name": "Hotel"}),
         ("get", "/api/v1/hoteles/1", None),
         ("get", "/api/v1/hoteles", None),
+        ("get", "/api/v1/hoteles/populares-por-ciudad?limit=4", None),
         ("put", "/api/v1/hoteles/1", {"name": "Hotel2"}),
         ("delete", "/api/v1/hoteles/1", None),
         ("get", "/api/v1/hoteles/1/habitaciones", None),

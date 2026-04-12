@@ -36,6 +36,7 @@ Todas las rutas son accesibles vía el **Gateway** en `http://localhost:8081/api
 | `PUT` | `/hoteles/{id}` | parcial | hotel |
 | `DELETE` | `/hoteles/{id}` | — | `{message}` |
 | `GET` | `/hoteles/{id}/habitaciones` | — | `[habitacion]` |
+| `GET` | `/hoteles/populares-por-ciudad?limit=4` | query `limit` opcional | `{total_ciudades, destinos:[{ciudad, pais, hotel_id, hotel_nombre, rating_promedio, cantidad_ratings, precio_minimo_noche, moneda, hoteles_disponibles_ciudad}]}` |
 
 ## Catálogo — Habitaciones
 

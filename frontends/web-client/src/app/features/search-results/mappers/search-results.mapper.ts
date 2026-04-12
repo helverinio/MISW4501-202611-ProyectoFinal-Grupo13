@@ -42,13 +42,16 @@ function calculateNights(checkInDate: string, checkOutDate: string): number {
   return nights > 0 ? nights : 1;
 }
 
-function mapHotelToVm(hotel: AvailableHotelApi, nights: number): HotelResultVm {
+function mapHotelToVm(hotel: AvailableHotelApi): HotelResultVm {
   const seed = seededNumber(hotel.hotel_id);
   const imageIndex = seed % PLACEHOLDER_IMAGES.length;
-  const rating = Number((4.0 + (seed % 10) / 10).toFixed(1));
-  const reviewsCount = 90 + (seed % 280);
-  const pricePerNight = 65 + (seed % 140);
-  const totalPrice = pricePerNight * nights;
+  const rating = Number((hotel.rating_promedio || 0).toFixed(1));
+  const reviewsCount = hotel.cantidad_ratings || 0;
+  const cheapestRoom = [...hotel.habitaciones].sort(
+    (a, b) => a.precio_promedio_noche - b.precio_promedio_noche,
+  )[0];
+  const pricePerNight = cheapestRoom?.precio_promedio_noche ?? 0;
+  const totalPrice = cheapestRoom?.precio_total_reserva ?? 0;
   const freeCancellation = seed % 3 !== 0;
   const distance = (0.3 + (seed % 60) / 10).toFixed(1);
 
@@ -66,7 +69,7 @@ function mapHotelToVm(hotel: AvailableHotelApi, nights: number): HotelResultVm {
     cancellationText: freeCancellation ? 'free' : 'non-refundable',
     pricePerNight,
     totalPrice,
-    currency: 'USD',
+    currency: cheapestRoom?.moneda || 'USD',
     imageUrl: PLACEHOLDER_IMAGES[imageIndex],
     imageAlt: `${hotel.nombre} hotel`,
     availableRooms: hotel.total_habitaciones_disponibles,
@@ -86,7 +89,5 @@ export function mapResponseToCriteria(response: SearchAvailableHotelsResponse): 
 }
 
 export function mapResponseToHotels(response: SearchAvailableHotelsResponse): HotelResultVm[] {
-  const nights = calculateNights(response.fecha_ingreso, response.fecha_salida);
-
-  return response.hoteles.map((hotel) => mapHotelToVm(hotel, nights));
+  return response.hoteles.map((hotel) => mapHotelToVm(hotel));
 }

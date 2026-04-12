@@ -8,30 +8,45 @@
     </div>
 
     <div id="destinations-carousel" class="relative">
-      <div class="flex space-x-6 overflow-x-auto pb-4">
-        @for (destination of popularDestinations; track destination.cityCountry) {
-          <div
-            class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-          >
-            <div class="h-48 overflow-hidden">
-              <img
-                class="w-full h-full object-cover"
-                [src]="destination.imageUrl"
-                [alt]="destination.imageAlt"
-              />
+      @if (isLoading) {
+        <p class="text-center text-gray-500">{{ t('homeSearch.popular.loading') }}</p>
+      } @else if (hasLoadError) {
+        <p class="text-center text-red-600">{{ t('homeSearch.popular.error') }}</p>
+      } @else {
+        <div class="flex space-x-6 overflow-x-auto pb-4">
+          @for (destination of popularDestinations; track destination.cityCountry) {
+            <div
+              class="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+            >
+              <div class="h-48 overflow-hidden">
+                <img
+                  class="w-full h-full object-cover"
+                  [src]="destination.imageUrl"
+                  [alt]="destination.imageAlt"
+                />
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                  {{ destination.cityCountry }}
+                </h3>
+                @if (destination.minPriceUsd === null) {
+                  <p class="text-gray-600 mb-4">{{ t('homeSearch.popular.priceUnavailable') }}</p>
+                } @else {
+                  <p class="text-gray-600 mb-4">
+                    {{ t('homeSearch.popular.from') }} {{ currencyService.currentCurrency() }}
+                    {{ convertAndFormat(destination.minPriceUsd)
+                    }}{{ t('homeSearch.popular.perNight') }}
+                  </p>
+                }
+                <span class="text-sm text-success font-medium"
+                  >{{ destination.availableHotelsCount }}
+                  {{ t('homeSearch.popular.hotelsAvailable') }}</span
+                >
+              </div>
             </div>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                {{ destination.cityCountry }}
-              </h3>
-              <p class="text-gray-600 mb-4">{{ t(destination.priceKey) }}</p>
-              <span class="text-sm text-success font-medium">{{
-                t(destination.availableHotelsKey)
-              }}</span>
-            </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     </div>
   </div>
 </section>

@@ -35,14 +35,14 @@ def require_token(f):
             if not usuario_data:
                 logger.warning(f"[RESERVAS] Invalid or expired token for {request.method} {request.path}")
                 return jsonify({'error': 'Invalid or expired token'}), 401
-
-            # Add usuario data to kwargs so the endpoint can access it
-            kwargs['current_usuario'] = usuario_data
-            
-            logger.info(f"[RESERVAS] Token validated for user {usuario_data.get('usuario')} - {request.method} {request.path}")
-            return f(*args, **kwargs)
         except Exception as e:
             logger.error(f"[RESERVAS] Error validating token: {str(e)}")
             return jsonify({'error': 'Token validation failed'}), 401
+
+        # Add usuario data to kwargs so the endpoint can access it
+        kwargs['current_usuario'] = usuario_data
+
+        logger.info(f"[RESERVAS] Token validated for user {usuario_data.get('usuario')} - {request.method} {request.path}")
+        return f(*args, **kwargs)
 
     return decorated_function

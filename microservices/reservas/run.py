@@ -21,6 +21,14 @@ with app.app_context():
         "ADD COLUMN IF NOT EXISTS id_cotizacion VARCHAR(36)"
     ))
     db.session.execute(text(
+        "ALTER TABLE IF EXISTS reservas "
+        "ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_id_usuario_created_at "
+        "ON reservas (id_usuario, created_at DESC)"
+    ))
+    db.session.execute(text(
         "CREATE TABLE IF NOT EXISTS comentarios_hoteles ("
         "id VARCHAR(36) PRIMARY KEY, "
         "id_hotel VARCHAR(36) NOT NULL REFERENCES hoteles(id), "
