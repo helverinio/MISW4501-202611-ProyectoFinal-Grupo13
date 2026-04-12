@@ -15,7 +15,23 @@ const AUTH_KEYS = {
 // Inyecta tokens directamente en localStorage para simular
 // una sesion autenticada SIN pasar por el formulario de login.
 // Esto es mas rapido y estable que llenar el formulario cada vez.
+//
+// IMPORTANTE: Tambien intercepta llamadas GET "de fondo" que la app
+// hace al cargar paginas autenticadas (hoteles populares, reservas
+// recientes, etc.). Sin estos intercepts, esas llamadas van al
+// backend real, retornan 401 con nuestro token falso, y el
+// interceptor HTTP de Angular redirige automaticamente a /login.
 Cypress.Commands.add('loginByToken', () => {
+  // Interceptar llamadas GET de fondo ANTES de visitar la pagina.
+  // Se definen primero para que los intercepts mas especificos
+  // (definidos despues en cada test) tengan prioridad en Cypress.
+  cy.intercept('GET', '**/api/v1/hoteles/populares-por-ciudad*', {
+    body: { total_ciudades: 0, destinos: [] },
+  }).as('popularHotels');
+  cy.intercept('GET', '**/api/v1/usuarios/*/reservas/recently-viewed*', {
+    body: [],
+  }).as('recentlyViewed');
+
   cy.fixture('user.json').then((user) => {
     cy.window().then((win) => {
       win.localStorage.setItem(

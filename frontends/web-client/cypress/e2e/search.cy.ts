@@ -179,8 +179,9 @@ describe('Flujo E2E #2: Busqueda de hoteles', () => {
       });
 
       it('filtrar por rating funciona', () => {
-        // Seleccionamos rating >= 4.5
-        cy.get('#rating-filter input[type="radio"]').first().check();
+        // Seleccionamos rating >= 3.0 (el ultimo radio) para que
+        // la mayoria de hoteles mock pasen el filtro
+        cy.get('#rating-filter input[type="radio"]').last().check();
 
         cy.get('#hotel-cards').should('exist');
       });
