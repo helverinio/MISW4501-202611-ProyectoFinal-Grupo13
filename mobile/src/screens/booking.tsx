@@ -18,12 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserStore } from '@/store/userStore';
 import { Hotel, Habitacion } from '../services/hotelService';
-import {
-  BookingService,
-  RoomHoldResponse,
-  EstadoResponse,
-  PaisResponse,
-} from '../services/bookingService';
+import { BookingService } from '../services/bookingService';
 
 interface BookingParams {
   hotelData: string;
@@ -233,27 +228,7 @@ export default function BookingScreen() {
     return emailRegex.test(emailValue);
   };
 
-  const resolveEstadoId = (estados: EstadoResponse[]): string => {
-    const normalized = (value: string) =>
-      value
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim();
-
-    const preferred = estados.find((estado) => {
-      const name = normalized(estado.nombre || '');
-      return (
-        name.includes('confirmada') ||
-        name.includes('reservada via pms') ||
-        name.includes('reservado')
-      );
-    });
-
-    return preferred?.id || estados[0]?.id || '';
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!isFormValid()) {
       setErrorMessage(t('booking.fillRequiredFields'));
       return;
@@ -269,61 +244,24 @@ export default function BookingScreen() {
       return;
     }
 
-    setSubmitting(true);
     setErrorMessage('');
 
-    try {
-      const estadosResult = await BookingService.getEstados();
-      if (!estadosResult.success || !estadosResult.data) {
-        throw new Error('Failed to get estados');
-      }
-
-      let idPais = '';
-      const paisesResult = await BookingService.getPaises();
-      if (paisesResult.success && paisesResult.data && hotelData.pais) {
-        const matchedPais = paisesResult.data.find(
-          (p) => p.nombre.toLowerCase() === hotelData.pais.toLowerCase()
-        );
-        if (matchedPais) {
-          idPais = matchedPais.id;
-        }
-      }
-
-      if (!idPais) {
-        throw new Error('Could not determine country for reservation');
-      }
-
-      const result = await BookingService.createReserva({
-        fecha_ingreso: toIsoDate(checkIn),
-        fecha_salida: toIsoDate(checkOut),
-        total: grandTotal,
-        nro_personas: guests,
-        id_usuario: String(user.id),
-        id_pais: idPais,
-        id_habitacion: roomData.habitacion_id,
-        id_estado: resolveEstadoId(estadosResult.data),
-        payment_method: 'card',
-      });
-
-      if (result.success && result.data) {
-        Alert.alert(
-          t('booking.successTitle'),
-          t('booking.successMessage'),
-          [
-            {
-              text: t('common.ok') || 'OK',
-              onPress: () => router.replace('/screens/landing'),
-            },
-          ]
-        );
-      } else {
-        setErrorMessage(result.error?.message || t('booking.createError'));
-      }
-    } catch (error: any) {
-      setErrorMessage(error.message || t('booking.createError'));
-    } finally {
-      setSubmitting(false);
-    }
+    router.push({
+      pathname: '/screens/payment',
+      params: {
+        hotelData: JSON.stringify(hotelData),
+        roomData: JSON.stringify(roomData),
+        checkIn,
+        checkOut,
+        guests: guests.toString(),
+        grandTotal: grandTotal.toString(),
+        firstName,
+        lastName,
+        email,
+        phone: `${phonePrefix}${phone}`,
+        holdId: holdId || '',
+      },
+    });
   };
 
   const handleGoBack = async () => {
