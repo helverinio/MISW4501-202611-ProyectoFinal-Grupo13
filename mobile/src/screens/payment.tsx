@@ -233,6 +233,20 @@ export default function PaymentScreen() {
       });
 
       if (result.success && result.data) {
+        if (result.data.payment?.payment_id) {
+          const paymentResult = await BookingService.processPayment(result.data.payment.payment_id);
+          if (!paymentResult.success) {
+            router.replace({
+              pathname: '/screens/paymentResult',
+              params: {
+                success: 'false',
+                errorMessage: paymentResult.error?.message || t('payment.paymentError'),
+              },
+            });
+            return;
+          }
+        }
+
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));

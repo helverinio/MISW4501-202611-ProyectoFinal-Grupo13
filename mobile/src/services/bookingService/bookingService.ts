@@ -45,6 +45,14 @@ export interface CreatedReservaResponse {
   } | null;
 }
 
+export interface ProcessPaymentResponse {
+  id: string;
+  payment_intent_id: string;
+  status: string;
+  amount: number;
+  currency: string;
+}
+
 export interface EstadoResponse {
   id: string;
   nombre: string;
@@ -238,6 +246,39 @@ export const BookingService = {
         success: false,
         error: {
           message: error.response?.data?.error || error.message || 'Failed to create reservation',
+          status: error.response?.status,
+        },
+      };
+    }
+  },
+
+  processPayment: async (
+    paymentId: string
+  ): Promise<BookingServiceResult<ProcessPaymentResponse>> => {
+    try {
+      const url = `/api/v1/payments/${paymentId}/process`;
+      const response = await customAxios.post(url);
+
+      if (response.status === 200 || response.status === 201) {
+        return {
+          success: true,
+          data: response.data,
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          message: 'Failed to process payment',
+          status: response.status,
+        },
+      };
+    } catch (error: any) {
+      console.error('Process payment error:', error);
+      return {
+        success: false,
+        error: {
+          message: error.response?.data?.error || error.message || 'Failed to process payment',
           status: error.response?.status,
         },
       };
