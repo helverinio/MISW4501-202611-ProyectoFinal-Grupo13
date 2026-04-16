@@ -255,6 +255,8 @@ export default function BookingScreen() {
         checkOut,
         guests: guests.toString(),
         grandTotal: grandTotal.toString(),
+        taxRate: taxRate.toString(),
+        taxesAmount: taxesAmount.toString(),
         firstName,
         lastName,
         email,

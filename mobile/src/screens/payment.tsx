@@ -34,6 +34,8 @@ interface PaymentParams {
   email: string;
   phone: string;
   holdId: string;
+  taxRate: string;
+  taxesAmount: string;
 }
 
 export default function PaymentScreen() {
@@ -57,6 +59,8 @@ export default function PaymentScreen() {
   const email = getParam('email');
   const phone = getParam('phone');
   const holdId = getParam('holdId');
+  const taxRate = parseFloat(getParam('taxRate') || '0.12');
+  const taxesAmount = parseFloat(getParam('taxesAmount') || '0');
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
   const [cardNumber, setCardNumber] = useState('');
@@ -206,7 +210,7 @@ export default function PaymentScreen() {
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-        const taxesFees = grandTotal * 0.15;
+        const taxesFees = taxesAmount;
         const roomPrice = grandTotal - taxesFees;
         const cardLast4 = cardNumber.replace(/\s/g, '').slice(-4);
 
@@ -364,6 +368,7 @@ export default function PaymentScreen() {
                     placeholderTextColor="#999"
                     keyboardType="numeric"
                     maxLength={19}
+                    autoComplete="off"
                   />
                   <Ionicons name="card-outline" size={20} color="#999" style={styles.inputIcon} />
                 </View>
@@ -380,6 +385,7 @@ export default function PaymentScreen() {
                     placeholderTextColor="#999"
                     keyboardType="numeric"
                     maxLength={5}
+                    autoComplete="off"
                   />
                 </View>
                 <View style={[styles.inputGroup, styles.halfWidth]}>
@@ -393,6 +399,7 @@ export default function PaymentScreen() {
                     keyboardType="numeric"
                     maxLength={4}
                     secureTextEntry
+                    autoComplete="off"
                   />
                 </View>
               </View>
@@ -406,6 +413,7 @@ export default function PaymentScreen() {
                   placeholder={t('payment.cardholderPlaceholder')}
                   placeholderTextColor="#999"
                   autoCapitalize="characters"
+                  autoComplete="off"
                 />
               </View>
 
