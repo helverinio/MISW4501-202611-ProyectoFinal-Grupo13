@@ -27,13 +27,13 @@ export const RegisterService = {
     try {
       const url = '/api/v1/usuarios';
 
-      const hashedPassword = await hashingUtility(data.contrasena);
+      // const hashedPassword = await hashingUtility(data.contrasena);
 
       const response = await customAxios.post(url, {
         nombre: data.nombre,
         email: data.email,
         usuario: data.usuario,
-        contrasena: hashedPassword,
+        contrasena: data.contrasena,
       });
 
       if (response.status === 201) {

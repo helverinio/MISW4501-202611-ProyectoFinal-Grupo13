@@ -1,7 +1,6 @@
 export interface User {
-  userId: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  createdOn: string;
+  id: string;
+  nombre: string;
+  email: string;
+  usuario: string;
 }
