@@ -18,6 +18,8 @@ interface HotelWithMinPrice extends Hotel {
   minPrice: number | null;
 }
 
+// TODO: Retrieve pictures from the backend
+
 export default function HotelResultsScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams();
@@ -143,8 +145,8 @@ export default function HotelResultsScreen() {
 
   const renderHotelCard = ({ item }: { item: HotelWithMinPrice }) => {
     const amenidadesList = getAmenidadesList(item.amenidades || '');
-    const rating = (item as any).rating || null;
-    const reviews = (item as any).reviews || null;
+    const rating = (item as any).rating_promedio ?? null;
+    const reviews = (item as any).cantidad_comentarios ?? null;
     const distancia = (item as any).distancia || null;
 
     return (

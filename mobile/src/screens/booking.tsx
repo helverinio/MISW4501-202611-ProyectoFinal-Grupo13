@@ -102,10 +102,10 @@ export default function BookingScreen() {
 
   const nights = calculateNights();
   const roomTotal = pricePerNight * nights;
-  const taxRate = 0.12;
+  const taxRate = 0.12; //TODO: Get from backend
   const taxesAmount = Math.round(roomTotal * taxRate * 100) / 100;
-  const serviceFee = 8.50;
-  const earlyBirdDiscount = nights >= 3 ? 15 : 0;
+  const serviceFee = 8.50; //TODO: Get from backend
+  const earlyBirdDiscount = nights >= 3 ? 15 : 0; //TODO: Get from backend
   const grandTotal = roomTotal + taxesAmount + serviceFee - earlyBirdDiscount;
 
   const formatDate = (dateStr: string) => {
