@@ -133,7 +133,7 @@ export default function BookingScreen() {
   };
 
   const acquireHold = useCallback(async () => {
-    if (!user?.userId || !roomData.habitacion_id) {
+    if (!user?.id || !roomData.habitacion_id) {
       setLoading(false);
       setErrorMessage(t('booking.missingData'));
       return;
@@ -141,7 +141,7 @@ export default function BookingScreen() {
 
     try {
       const result = await BookingService.acquireRoomHold(roomData.habitacion_id, {
-        id_usuario: String(user.userId),
+        id_usuario: String(user.id),
         fecha_ingreso: toIsoDate(checkIn),
         fecha_salida: toIsoDate(checkOut),
       });
@@ -263,7 +263,7 @@ export default function BookingScreen() {
       return;
     }
 
-    if (!user?.userId) {
+    if (!user?.id) {
       setErrorMessage(t('booking.userRequired'));
       return;
     }
@@ -290,7 +290,7 @@ export default function BookingScreen() {
         fecha_salida: toIsoDate(checkOut),
         total: grandTotal,
         nro_personas: guests,
-        id_usuario: String(user.userId),
+        id_usuario: String(user.id),
         id_pais: idPais || 'default-pais-id',
         id_habitacion: roomData.habitacion_id,
         id_estado: resolveEstadoId(estadosResult.data),
