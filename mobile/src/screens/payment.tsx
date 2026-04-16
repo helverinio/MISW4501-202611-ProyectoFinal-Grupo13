@@ -110,6 +110,22 @@ export default function PaymentScreen() {
     });
   };
 
+  const getEarlyBirdDiscount = (checkInDate: string): number => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkIn = new Date(checkInDate);
+    checkIn.setHours(0, 0, 0, 0);
+    const daysInAdvance = Math.floor((checkIn.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysInAdvance >= 30) return 20;  // 30+ days ahead → $20 off
+    if (daysInAdvance >= 14) return 10;  // 14-29 days ahead → $10 off
+    if (daysInAdvance >= 7) return 5;    // 7-13 days ahead → $5 off
+    return 0;                             // Less than 7 days → no discount
+  };
+
+  const earlyBirdDiscount = getEarlyBirdDiscount(checkIn);
+  const finalTotal = grandTotal - earlyBirdDiscount;
+
   const validateForm = (): boolean => {
     if (paymentMethod === 'card') {
       const cleanedCard = cardNumber.replace(/\s/g, '');
@@ -207,7 +223,7 @@ export default function PaymentScreen() {
       const result = await BookingService.createReserva({
         fecha_ingreso: toIsoDate(checkIn),
         fecha_salida: toIsoDate(checkOut),
-        total: grandTotal,
+        total: finalTotal,
         nro_personas: guests,
         id_usuario: String(user?.id),
         id_pais: idPais,
@@ -221,7 +237,7 @@ export default function PaymentScreen() {
         const checkOutDate = new Date(checkOut);
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
         const taxesFees = taxesAmount;
-        const roomPrice = grandTotal - taxesFees;
+        const roomPrice = finalTotal - taxesFees;
         const cleanedCard = cardNumber.replace(/\s/g, '');
         const cardLast4 = cleanedCard.slice(-4);
         const cardType = detectCardType(cleanedCard);
@@ -241,7 +257,7 @@ export default function PaymentScreen() {
             guests: guests.toString(),
             roomPrice: roomPrice.toFixed(2),
             taxesFees: taxesFees.toFixed(2),
-            grandTotal: grandTotal.toString(),
+            grandTotal: finalTotal.toString(),
             cardLast4,
             cardType,
           },
@@ -465,6 +481,15 @@ export default function PaymentScreen() {
 
           {/* Total */}
           <View style={styles.totalSection}>
+            {earlyBirdDiscount > 0 && (
+              <View style={styles.discountRow}>
+                <View style={styles.discountLabelRow}>
+                  <Ionicons name="pricetag" size={16} color="#22C55E" />
+                  <Text style={styles.discountLabel}>{t('payment.earlyBirdDiscount')}</Text>
+                </View>
+                <Text style={styles.discountValue}>-${earlyBirdDiscount.toFixed(2)}</Text>
+              </View>
+            )}
             <View style={styles.totalHeader}>
               <View>
                 <Text style={styles.totalLabel}>{t('payment.totalToPay')}</Text>
@@ -472,7 +497,7 @@ export default function PaymentScreen() {
                   {t('payment.allTaxesIncluded')} • USD
                 </Text>
               </View>
-              <Text style={styles.totalValue}>${grandTotal.toFixed(2)}</Text>
+              <Text style={styles.totalValue}>${finalTotal.toFixed(2)}</Text>
             </View>
             <View style={styles.cancellationRow}>
               <Ionicons name="checkmark-circle" size={18} color="#22C55E" />
@@ -524,7 +549,7 @@ export default function PaymentScreen() {
               <>
                 <Ionicons name="lock-closed" size={18} color="#fff" />
                 <Text style={styles.submitButtonText}>
-                  {t('payment.payNow')} - ${grandTotal.toFixed(2)}
+                  {t('payment.payNow')} - ${finalTotal.toFixed(2)}
                 </Text>
               </>
             )}
@@ -783,6 +808,30 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: '#4A7BF7',
+  },
+  discountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F0FDF4',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  discountLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  discountLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#166534',
+  },
+  discountValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#22C55E',
   },
   cancellationRow: {
     flexDirection: 'row',

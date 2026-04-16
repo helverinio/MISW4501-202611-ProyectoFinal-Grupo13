@@ -105,8 +105,7 @@ export default function BookingScreen() {
   const taxRate = 0.12; //TODO: Get from backend
   const taxesAmount = Math.round(roomTotal * taxRate * 100) / 100;
   const serviceFee = 8.50; //TODO: Get from backend
-  const earlyBirdDiscount = nights >= 3 ? 15 : 0; //TODO: Get from backend
-  const grandTotal = roomTotal + taxesAmount + serviceFee - earlyBirdDiscount;
+  const grandTotal = roomTotal + taxesAmount + serviceFee;
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '-';
@@ -457,13 +456,6 @@ export default function BookingScreen() {
               </View>
               <Text style={styles.priceValue}>${serviceFee.toFixed(2)}</Text>
             </View>
-
-            {earlyBirdDiscount > 0 && (
-              <View style={styles.priceRow}>
-                <Text style={styles.discountLabel}>{t('booking.earlyBirdDiscount')}</Text>
-                <Text style={styles.discountValue}>-${earlyBirdDiscount.toFixed(2)}</Text>
-              </View>
-            )}
 
             <View style={styles.divider} />
 

@@ -172,7 +172,8 @@
     "invalidCvv": "Por favor ingresa un CVV válido",
     "invalidName": "Por favor ingresa el nombre del titular",
     "acceptTerms": "Por favor acepta los términos y condiciones",
-    "paymentError": "Error al procesar el pago"
+    "paymentError": "Error al procesar el pago",
+    "earlyBirdDiscount": "Descuento por reserva anticipada"
   },
   "paymentResult": {
     "successTitle": "¡Pago Exitoso!",
