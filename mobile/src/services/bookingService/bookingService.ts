@@ -56,6 +56,11 @@ export interface CiudadResponse {
   id_pais: string;
 }
 
+export interface PaisResponse {
+  id: string;
+  nombre: string;
+}
+
 export interface BookingServiceResult<T> {
   success: boolean;
   data?: T;
@@ -171,6 +176,36 @@ export const BookingService = {
         success: false,
         error: {
           message: error.message || 'Failed to get ciudad',
+        },
+      };
+    }
+  },
+
+  getPaises: async (): Promise<BookingServiceResult<PaisResponse[]>> => {
+    try {
+      const url = '/api/v1/paises';
+      const response = await customAxios.get(url);
+
+      if (response.status === 200) {
+        return {
+          success: true,
+          data: response.data,
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          message: 'Failed to get paises',
+          status: response.status,
+        },
+      };
+    } catch (error: any) {
+      console.error('Get paises error:', error);
+      return {
+        success: false,
+        error: {
+          message: error.message || 'Failed to get paises',
         },
       };
     }

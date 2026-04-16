@@ -22,6 +22,7 @@ import {
   BookingService,
   RoomHoldResponse,
   EstadoResponse,
+  PaisResponse,
 } from '../services/bookingService';
 
 interface BookingParams {
@@ -278,11 +279,18 @@ export default function BookingScreen() {
       }
 
       let idPais = '';
-      if (hotelData.id_ciudad) {
-        const ciudadResult = await BookingService.getCiudadById(hotelData.id_ciudad);
-        if (ciudadResult.success && ciudadResult.data) {
-          idPais = ciudadResult.data.id_pais;
+      const paisesResult = await BookingService.getPaises();
+      if (paisesResult.success && paisesResult.data && hotelData.pais) {
+        const matchedPais = paisesResult.data.find(
+          (p) => p.nombre.toLowerCase() === hotelData.pais.toLowerCase()
+        );
+        if (matchedPais) {
+          idPais = matchedPais.id;
         }
+      }
+
+      if (!idPais) {
+        throw new Error('Could not determine country for reservation');
       }
 
       const result = await BookingService.createReserva({
@@ -291,7 +299,7 @@ export default function BookingScreen() {
         total: grandTotal,
         nro_personas: guests,
         id_usuario: String(user.id),
-        id_pais: idPais || 'default-pais-id',
+        id_pais: idPais,
         id_habitacion: roomData.habitacion_id,
         id_estado: resolveEstadoId(estadosResult.data),
         payment_method: 'card',
