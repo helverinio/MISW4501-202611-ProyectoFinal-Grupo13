@@ -147,6 +147,16 @@ export default function PaymentScreen() {
     return `${value}T00:00:00`;
   };
 
+  const detectCardType = (cardNumber: string): string => {
+    const firstDigit = cardNumber.charAt(0);
+    const firstTwo = cardNumber.slice(0, 2);
+    if (firstDigit === '4') return 'Visa';
+    if (['51', '52', '53', '54', '55'].includes(firstTwo)) return 'Mastercard';
+    if (['34', '37'].includes(firstTwo)) return 'Amex';
+    if (firstTwo === '60' || firstTwo === '65') return 'Discover';
+    return 'Card';
+  };
+
   const resolveEstadoId = (estados: EstadoResponse[]): string => {
     const normalized = (value: string) =>
       value
@@ -212,7 +222,9 @@ export default function PaymentScreen() {
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
         const taxesFees = taxesAmount;
         const roomPrice = grandTotal - taxesFees;
-        const cardLast4 = cardNumber.replace(/\s/g, '').slice(-4);
+        const cleanedCard = cardNumber.replace(/\s/g, '');
+        const cardLast4 = cleanedCard.slice(-4);
+        const cardType = detectCardType(cleanedCard);
 
         router.replace({
           pathname: '/screens/paymentResult',
@@ -221,7 +233,7 @@ export default function PaymentScreen() {
             bookingId: result.data.id,
             hotelName: hotelData.nombre,
             roomType: roomData.nombre || roomData.tipo || '',
-            rating: (hotelData.rating || hotelData.calificacion || 4.5).toString(),
+            rating: (hotelData.rating_promedio ?? 4.5).toString(),
             roomImage: roomData.imagen || hotelData.imagen || '',
             checkIn,
             checkOut,
@@ -231,6 +243,7 @@ export default function PaymentScreen() {
             taxesFees: taxesFees.toFixed(2),
             grandTotal: grandTotal.toString(),
             cardLast4,
+            cardType,
           },
         });
       } else {

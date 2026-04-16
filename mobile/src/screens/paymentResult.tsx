@@ -37,6 +37,7 @@ export default function PaymentResultScreen() {
   const taxesFees = getParam('taxesFees');
   const grandTotal = getParam('grandTotal');
   const cardLast4 = getParam('cardLast4');
+  const cardType = getParam('cardType') || 'Card';
   const errorMessage = getParam('errorMessage');
 
   const formatDate = (dateStr: string) => {
@@ -201,7 +202,7 @@ export default function PaymentResultScreen() {
               {cardLast4 && (
                 <View style={styles.cardInfo}>
                   <Ionicons name="card-outline" size={18} color="#64748B" />
-                  <Text style={styles.cardText}>•••• {cardLast4} (Visa)</Text>
+                  <Text style={styles.cardText}>•••• {cardLast4} ({cardType})</Text>
                   <Ionicons name="checkmark-circle" size={16} color="#22C55E" />
                 </View>
               )}

@@ -207,12 +207,6 @@ export default function HotelDetailsScreen() {
               {hotelData.ciudad}
             </Text>
           </View>
-{/* TODO: Include when API provides valet parking info
-          <View style={styles.locationItem}>
-            <Ionicons name="car" size={16} color="#666" />
-            <Text style={styles.locationText}>{t('hotelDetails.valetParking')}</Text>
-          </View>
-*/}
         </View>
 
         {/* Amenities Section */}
