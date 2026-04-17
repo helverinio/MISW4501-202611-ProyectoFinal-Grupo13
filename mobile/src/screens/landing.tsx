@@ -50,6 +50,10 @@ export default function LandingPage() {
     router.replace('/screens/login' as Href);
   };
 
+  const handleMyReservations = () => {
+    router.push('/screens/myReservations' as Href);
+  };
+
   const handleSearch = async (params: SearchParams) => {
     setSearchLoading(true);
     setLastSearch(params);
@@ -107,7 +111,17 @@ export default function LandingPage() {
         {/* Search Component */}
         <HotelSearch onSearch={handleSearch} loading={searchLoading} initialValues={lastSearch} />
 
-        {/* Quick Actions or Featured - can be expanded later */}
+        {/* Quick Actions */}
+        <View style={styles.quickActions}>
+          <TouchableOpacity style={styles.quickActionButton} onPress={handleMyReservations}>
+            <View style={styles.quickActionIcon}>
+              <Ionicons name="calendar" size={24} color="#3B82F6" />
+            </View>
+            <Text style={styles.quickActionText}>{t('landing.myReservations')}</Text>
+            <Ionicons name="chevron-forward" size={20} color="#94A3B8" />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.bottomPadding} />
       </ScrollView>
     </SafeAreaView>
@@ -187,5 +201,36 @@ const styles = StyleSheet.create({
   },
   bottomPadding: {
     height: 40,
+  },
+  quickActions: {
+    paddingHorizontal: 16,
+    marginTop: 24,
+  },
+  quickActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  quickActionIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#EFF6FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  quickActionText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1E293B',
   },
 });
