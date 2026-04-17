@@ -375,35 +375,45 @@ describe('HotelDetailsScreen', () => {
 
   describe('Select Room Functionality', () => {
     it('should handle select room button press', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      
       const { getAllByText } = render(<HotelDetailsScreen />);
       const selectButtons = getAllByText('hotelDetails.selectRoom');
       
       fireEvent.press(selectButtons[0]);
       
-      expect(consoleSpy).toHaveBeenCalledWith('Selected room:', expect.objectContaining({
-        habitacion_id: 'room-1',
-        tipo: 'Deluxe Suite',
-      }));
+      expect(router.push).toHaveBeenCalledWith({
+        pathname: '/screens/booking',
+        params: expect.objectContaining({
+          checkIn: '2024-06-01',
+          checkOut: '2024-06-05',
+          guests: '2',
+        }),
+      });
       
-      consoleSpy.mockRestore();
+      const callArgs = (router.push as jest.Mock).mock.calls[0][0];
+      const roomData = JSON.parse(callArgs.params.roomData);
+      expect(roomData.habitacion_id).toBe('room-1');
+      expect(roomData.tipo).toBe('Deluxe Suite');
     });
 
-    it('should log correct room data when second room is selected', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      
+    it('should navigate to booking with correct room data when second room is selected', () => {
       const { getAllByText } = render(<HotelDetailsScreen />);
       const selectButtons = getAllByText('hotelDetails.selectRoom');
       
       fireEvent.press(selectButtons[1]);
       
-      expect(consoleSpy).toHaveBeenCalledWith('Selected room:', expect.objectContaining({
-        habitacion_id: 'room-2',
-        tipo: 'Standard Room',
-      }));
+      expect(router.push).toHaveBeenCalledWith({
+        pathname: '/screens/booking',
+        params: expect.objectContaining({
+          checkIn: '2024-06-01',
+          checkOut: '2024-06-05',
+          guests: '2',
+        }),
+      });
       
-      consoleSpy.mockRestore();
+      const callArgs = (router.push as jest.Mock).mock.calls[0][0];
+      const roomData = JSON.parse(callArgs.params.roomData);
+      expect(roomData.habitacion_id).toBe('room-2');
+      expect(roomData.tipo).toBe('Standard Room');
     });
   });
 

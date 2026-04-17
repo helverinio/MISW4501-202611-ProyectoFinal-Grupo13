@@ -1,12 +1,9 @@
 import { RegisterService, RegisterData } from '../RegisterService';
 import customAxios from '../../../utils/api';
-import hashingUtility from '../../../utils/hashingUtility';
 
 jest.mock('../../../utils/api');
-jest.mock('../../../utils/hashingUtility');
 
 const mockAxios = customAxios as jest.Mocked<typeof customAxios>;
-const mockHashingUtility = hashingUtility as jest.MockedFunction<typeof hashingUtility>;
 
 describe('RegisterService', () => {
   beforeEach(() => {
@@ -20,24 +17,8 @@ describe('RegisterService', () => {
       usuario: 'johndoe',
       contrasena: 'password123',
     };
-    const hashedPassword = 'hashed_password_abc123';
 
-    beforeEach(() => {
-      mockHashingUtility.mockResolvedValue(hashedPassword);
-    });
-
-    it('should hash the password before sending', async () => {
-      mockAxios.post.mockResolvedValue({
-        status: 201,
-        data: { id: '1', ...validRegisterData },
-      });
-
-      await RegisterService.send(validRegisterData);
-
-      expect(mockHashingUtility).toHaveBeenCalledWith(validRegisterData.contrasena);
-    });
-
-    it('should call API with correct data and hashed password', async () => {
+    it('should call API with correct data', async () => {
       mockAxios.post.mockResolvedValue({
         status: 201,
         data: { id: '1' },
@@ -49,7 +30,7 @@ describe('RegisterService', () => {
         nombre: validRegisterData.nombre,
         email: validRegisterData.email,
         usuario: validRegisterData.usuario,
-        contrasena: hashedPassword,
+        contrasena: validRegisterData.contrasena,
       });
     });
 
@@ -164,20 +145,6 @@ describe('RegisterService', () => {
       });
     });
 
-    it('should handle hashing utility failure', async () => {
-      mockHashingUtility.mockRejectedValue(new Error('Hashing failed'));
-
-      const result = await RegisterService.send(validRegisterData);
-
-      expect(result).toEqual({
-        success: false,
-        error: {
-          message: 'Registration error',
-          status: undefined,
-        },
-      });
-    });
-
     it('should handle API error with validation message', async () => {
       const apiError = {
         response: {
@@ -215,12 +182,11 @@ describe('RegisterService', () => {
 
       await RegisterService.send(differentUserData);
 
-      expect(mockHashingUtility).toHaveBeenCalledWith('securePass456');
       expect(mockAxios.post).toHaveBeenCalledWith('/api/v1/usuarios', {
         nombre: 'Jane Smith',
         email: 'jane@test.org',
         usuario: 'janesmith',
-        contrasena: hashedPassword,
+        contrasena: 'securePass456',
       });
     });
   });

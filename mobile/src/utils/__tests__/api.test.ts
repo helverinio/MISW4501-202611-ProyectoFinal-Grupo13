@@ -11,6 +11,7 @@ jest.mock('axios', () => {
     },
     post: jest.fn(),
     get: jest.fn(),
+    request: jest.fn(),
     defaults: {},
   };
   return {
