@@ -100,7 +100,7 @@ export default function PaymentScreen() {
 
   const getCancellationDate = () => {
     if (!checkIn) return '';
-    const date = new Date(checkIn);
+    const date = new Date(checkIn + 'T00:00:00');
     date.setDate(date.getDate() - 1);
     return date.toLocaleDateString('es-ES', {
       month: 'short',
@@ -247,8 +247,8 @@ export default function PaymentScreen() {
           }
         }
 
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
+        const checkInDate = new Date(checkIn + 'T00:00:00');
+        const checkOutDate = new Date(checkOut + 'T00:00:00');
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
         const taxesFees = taxesAmount;
         const roomPrice = finalTotal - taxesFees;

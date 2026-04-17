@@ -54,6 +54,13 @@ export default function LandingPage() {
     router.push('/screens/myReservations' as Href);
   };
 
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleSearch = async (params: SearchParams) => {
     setSearchLoading(true);
     setLastSearch(params);
@@ -61,8 +68,8 @@ export default function LandingPage() {
     
     const searchParams = {
       destination: params.destination,
-      checkIn: params.checkIn.toISOString().split('T')[0],
-      checkOut: params.checkOut.toISOString().split('T')[0],
+      checkIn: formatLocalDate(params.checkIn),
+      checkOut: formatLocalDate(params.checkOut),
       guests: params.guests.toString(),
     };
 

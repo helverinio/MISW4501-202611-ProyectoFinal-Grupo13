@@ -266,8 +266,8 @@ export default function MyReservationsScreen() {
   };
 
   const getNights = (checkIn: string, checkOut: string): number => {
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
+    const start = new Date(checkIn + 'T00:00:00');
+    const end = new Date(checkOut + 'T00:00:00');
     const diffMs = end.getTime() - start.getTime();
     const nights = Math.round(diffMs / (1000 * 60 * 60 * 24));
     return nights > 0 ? nights : 1;
@@ -279,7 +279,7 @@ export default function MyReservationsScreen() {
 
   const formatDate = (dateStr: string): string => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
+    const date = new Date(dateStr + 'T00:00:00');
     const locale = i18n.language === 'en' ? 'en-US' : i18n.language === 'pt' ? 'pt-BR' : 'es-ES';
     return date.toLocaleDateString(locale, {
       month: 'short',

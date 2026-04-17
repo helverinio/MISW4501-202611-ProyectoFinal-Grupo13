@@ -93,8 +93,8 @@ export default function BookingScreen() {
   
   const calculateNights = useCallback(() => {
     if (!checkIn || !checkOut) return 1;
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
+    const start = new Date(checkIn + 'T00:00:00');
+    const end = new Date(checkOut + 'T00:00:00');
     const diffMs = end.getTime() - start.getTime();
     const value = Math.round(diffMs / (1000 * 60 * 60 * 24));
     return value > 0 ? value : 1;
@@ -109,7 +109,7 @@ export default function BookingScreen() {
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
+    const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('es-ES', {
       month: 'short',
       day: 'numeric',
