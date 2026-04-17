@@ -757,8 +757,8 @@ describe('HotelResultsScreen', () => {
     it('should display rating and reviews when provided', async () => {
       const hotelWithRating = {
         ...mockHotelsData[0],
-        rating: 4.5,
-        reviews: 120,
+        rating_promedio: 4.5,
+        cantidad_comentarios: 120,
       };
 
       mockHotelService.searchAvailableHotels.mockResolvedValue({

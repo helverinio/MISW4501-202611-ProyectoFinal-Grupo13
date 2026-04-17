@@ -71,8 +71,8 @@ export default function HotelResultsScreen() {
   };
 
   const formatDateRange = () => {
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
+    const checkInDate = new Date(checkIn + 'T00:00:00');
+    const checkOutDate = new Date(checkOut + 'T00:00:00');
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
     return `${checkInDate.toLocaleDateString('en-US', options)} - ${checkOutDate.toLocaleDateString('en-US', options)}`;
   };

@@ -167,7 +167,7 @@ customAxios.interceptors.response.use(
             onTokenRefreshed(token);
             originalRequest.headers.Authorization = `Bearer ${token}`;
             console.log('🔄 Retrying request after token refresh');
-            return customAxios(originalRequest);
+            return customAxios.request(originalRequest);
           }
         }
         

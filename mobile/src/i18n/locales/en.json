@@ -39,7 +39,8 @@
     "successMessage": "You have successfully logged in!",
     "signOut": "Sign Out",
     "findStay": "Find your perfect stay",
-    "discoverHotels": "Discover amazing hotels in Latin America"
+    "discoverHotels": "Discover amazing hotels in Latin America",
+    "myReservations": "My Reservations"
   },
   "search": {
     "destination": "Destination",
@@ -140,5 +141,40 @@
     "english": "English",
     "spanish": "Español",
     "portuguese": "Português"
+  },
+  "myReservations": {
+    "title": "My Reservations",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "cancelled": "Cancelled",
+    "loading": "Loading reservations...",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "total": "Total",
+    "adult": "Adult",
+    "adults": "Adults",
+    "child": "Child",
+    "children": "Children",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelledStatus": "Cancelled",
+    "viewDetails": "View Details",
+    "modify": "Modify",
+    "completePayment": "Complete Payment",
+    "cancel": "Cancel",
+    "emptyTitle": "No reservations",
+    "emptySubtitle": "You don't have any reservations in this category yet",
+    "loadError": "Could not load reservations",
+    "missingUser": "You must be logged in to view your reservations",
+    "retry": "Retry",
+    "defaultHotel": "Hotel",
+    "defaultHotelName": "TravelHub Hotel",
+    "standardRoom": "Standard Room",
+    "defaultLocation": "Colombia",
+    "checkInTime": "3:00 PM",
+    "checkOutTime": "11:00 AM",
+    "currency": "USD"
   }
 }

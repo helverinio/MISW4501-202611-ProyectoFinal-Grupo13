@@ -100,7 +100,7 @@ export default function PaymentScreen() {
 
   const getCancellationDate = () => {
     if (!checkIn) return '';
-    const date = new Date(checkIn);
+    const date = new Date(checkIn + 'T00:00:00');
     date.setDate(date.getDate() - 1);
     return date.toLocaleDateString('es-ES', {
       month: 'short',
@@ -233,8 +233,22 @@ export default function PaymentScreen() {
       });
 
       if (result.success && result.data) {
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
+        if (result.data.payment?.payment_id) {
+          const paymentResult = await BookingService.processPayment(result.data.payment.payment_id);
+          if (!paymentResult.success) {
+            router.replace({
+              pathname: '/screens/paymentResult',
+              params: {
+                success: 'false',
+                errorMessage: paymentResult.error?.message || t('payment.paymentError'),
+              },
+            });
+            return;
+          }
+        }
+
+        const checkInDate = new Date(checkIn + 'T00:00:00');
+        const checkOutDate = new Date(checkOut + 'T00:00:00');
         const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
         const taxesFees = taxesAmount;
         const roomPrice = finalTotal - taxesFees;
