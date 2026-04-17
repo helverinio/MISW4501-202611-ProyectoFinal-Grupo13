@@ -30,7 +30,11 @@ interface ReservationItemVm {
   id: string;
   hotelId: string;
   hotelName: string;
+  hotelEmail: string;
+  habitacionId: string;
   roomType: string;
+  roomCapacity: number;
+  roomBeds: number;
   location: string;
   checkIn: string;
   checkInTime: string;
@@ -147,21 +151,20 @@ export default function MyReservationsScreen() {
       let location = '';
       let rating = 4.0;
       let hotelId = '';
+      let hotelEmail = '';
 
-      if (habitacion) {
-        const hotel = hotelesMap.get(habitacion.id_hotel);
+      const hotel = habitacion ? hotelesMap.get(habitacion.id_hotel) : undefined;
 
-        if (hotel) {
-          hotelName = hotel.nombre;
-          hotelId = hotel.id;
-          rating = hotel.rating_promedio || 4.0;
+      if (habitacion && hotel) {
+        hotelName = hotel.nombre;
+        hotelId = hotel.id;
+        rating = hotel.rating_promedio || 4.0;
+        hotelEmail = hotel.email || '';
 
-          const ciudad = ciudadesMap.get(hotel.id_ciudad);
-
-          if (ciudad) {
-            const paisName = pais?.nombre || '';
-            location = `${ciudad.nombre}, ${paisName}`;
-          }
+        const ciudad = ciudadesMap.get(hotel.id_ciudad);
+        if (ciudad) {
+          const paisName = pais?.nombre || '';
+          location = `${ciudad.nombre}, ${paisName}`;
         }
       }
 
@@ -176,7 +179,11 @@ export default function MyReservationsScreen() {
         id: reserva.id,
         hotelId,
         hotelName,
+        hotelEmail: hotel?.email || '',
+        habitacionId: reserva.id_habitacion,
         roomType: habitacion?.tipo || t('myReservations.standardRoom'),
+        roomCapacity: habitacion?.capacidad || 2,
+        roomBeds: habitacion?.camas || 1,
         location,
         checkIn: toDateOnly(reserva.fecha_ingreso),
         checkInTime: t('myReservations.checkInTime'),
@@ -206,7 +213,11 @@ export default function MyReservationsScreen() {
       id: reserva.id,
       hotelId: '',
       hotelName: t('myReservations.defaultHotelName'),
+      hotelEmail: '',
+      habitacionId: reserva.id_habitacion,
       roomType: t('myReservations.standardRoom'),
+      roomCapacity: 2,
+      roomBeds: 1,
       location: t('myReservations.defaultLocation'),
       checkIn: toDateOnly(reserva.fecha_ingreso),
       checkInTime: t('myReservations.checkInTime'),
@@ -305,12 +316,27 @@ export default function MyReservationsScreen() {
 
   const handleViewDetails = (reservation: ReservationItemVm) => {
     router.push({
-      pathname: '/screens/hotelDetails',
+      pathname: '/screens/myReservationDetail',
       params: {
+        reservationId: reservation.id,
         hotelId: reservation.hotelId,
+        hotelName: reservation.hotelName,
+        hotelEmail: reservation.hotelEmail,
+        habitacionId: reservation.habitacionId,
+        roomType: reservation.roomType,
+        roomCapacity: reservation.roomCapacity.toString(),
+        roomBeds: reservation.roomBeds.toString(),
+        location: reservation.location,
         checkIn: reservation.checkIn,
+        checkInTime: reservation.checkInTime,
         checkOut: reservation.checkOut,
+        checkOutTime: reservation.checkOutTime,
         guests: reservation.guests.toString(),
+        children: reservation.children.toString(),
+        nights: reservation.nights.toString(),
+        total: reservation.total.toString(),
+        status: reservation.status,
+        rating: reservation.rating.toString(),
       },
     } as any);
   };
