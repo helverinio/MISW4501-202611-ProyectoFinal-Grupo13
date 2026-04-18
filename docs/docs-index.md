@@ -52,6 +52,7 @@ Este documento sirve como mapa de navegación para humanos e IA.
 ## 🔄 Cambios recientes
 
 - CHANGELOG.md
+- docs/RELEASE_NOTES_v0.1.0_SPRINT_1.md
 
 ---
 
