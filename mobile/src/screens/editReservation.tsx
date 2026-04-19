@@ -300,6 +300,50 @@ export default function EditReservationScreen() {
       return;
     }
 
+    const priceDiff = getPriceDifference();
+
+    // If modification results in a lower price (negative difference), redirect to payment module
+    if (priceDiff < 0) {
+      const selectedRoom = getSelectedRoom();
+      const nights = calculateNights();
+      const newTotal = calculateNewTotal();
+      const subtotal = (selectedRoom?.pricePerNight || 0) * nights;
+      const taxesAmount = subtotal * TAX_RATE;
+
+      router.push({
+        pathname: '/screens/payment',
+        params: {
+          hotelData: JSON.stringify({
+            id: params.hotelId,
+            name: params.hotelName,
+            location: params.location,
+          }),
+          roomData: JSON.stringify({
+            id: selectedRoomId,
+            type: selectedRoom?.type || params.roomType,
+            capacity: selectedRoom?.capacity || params.roomCapacity,
+            beds: selectedRoom?.beds || params.roomBeds,
+            pricePerNight: selectedRoom?.pricePerNight || 0,
+          }),
+          checkIn: checkInDate.toISOString().split('T')[0],
+          checkOut: checkOutDate.toISOString().split('T')[0],
+          guests: String(adults + children + infants),
+          grandTotal: String(Math.abs(priceDiff)),
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          holdId: params.reservationId,
+          taxRate: String(TAX_RATE),
+          taxesAmount: String(Math.round(taxesAmount * 100) / 100),
+          isModification: 'true',
+          originalTotal: String(originalTotal),
+          newTotal: String(newTotal),
+        },
+      });
+      return;
+    }
+
     try {
       setSaving(true);
 
