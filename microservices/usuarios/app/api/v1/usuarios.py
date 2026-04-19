@@ -49,6 +49,9 @@ def create_usuario():
         'email': usuario.email,
         'usuario': usuario.usuario,
         'ciudad_id': usuario.ciudad_id,
+        'role': usuario.role,
+        'status': usuario.status,
+        'mfa_enabled': usuario.mfa_enabled,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     }), 201
 
@@ -67,6 +70,9 @@ def get_usuario(usuario_id):
         'email': usuario.email,
         'usuario': usuario.usuario,
         'ciudad_id': usuario.ciudad_id,
+        'role': usuario.role,
+        'status': usuario.status,
+        'mfa_enabled': usuario.mfa_enabled,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 
@@ -82,6 +88,9 @@ def get_all_usuarios():
         'email': u.email,
         'usuario': u.usuario,
         'ciudad_id': u.ciudad_id,
+        'role': u.role,
+        'status': u.status,
+        'mfa_enabled': u.mfa_enabled,
         'creado_en': u.creado_en.isoformat() if u.creado_en else None
     } for u in usuarios])
 
@@ -104,6 +113,9 @@ def update_usuario(usuario_id):
         'email': usuario.email,
         'usuario': usuario.usuario,
         'ciudad_id': usuario.ciudad_id,
+        'role': usuario.role,
+        'status': usuario.status,
+        'mfa_enabled': usuario.mfa_enabled,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 

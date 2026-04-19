@@ -14,6 +14,14 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             usuario=usuario.usuario,
             ciudad_id=usuario.ciudad_id,
             contrasena=usuario.contrasena,
+            role=usuario.role,
+            status=usuario.status,
+            mfa_secret_encrypted=usuario.mfa_secret_encrypted,
+            mfa_enabled=usuario.mfa_enabled,
+            mfa_confirmed_at=usuario.mfa_confirmed_at,
+            failed_login_attempts=usuario.failed_login_attempts,
+            locked_until=usuario.locked_until,
+            updated_at=usuario.updated_at,
             creado_en=usuario.creado_en
         )
         db.session.add(model)
@@ -50,6 +58,14 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             model.usuario = usuario.usuario
             model.ciudad_id = usuario.ciudad_id
             model.contrasena = usuario.contrasena
+            model.role = usuario.role
+            model.status = usuario.status
+            model.mfa_secret_encrypted = usuario.mfa_secret_encrypted
+            model.mfa_enabled = usuario.mfa_enabled
+            model.mfa_confirmed_at = usuario.mfa_confirmed_at
+            model.failed_login_attempts = usuario.failed_login_attempts
+            model.locked_until = usuario.locked_until
+            model.updated_at = usuario.updated_at
             db.session.commit()
         return usuario
 
@@ -69,5 +85,13 @@ class SQLAlchemyUsuarioRepository(UsuarioRepository):
             usuario=model.usuario,
             ciudad_id=model.ciudad_id,
             contrasena=model.contrasena,
-            creado_en=model.creado_en
+            creado_en=model.creado_en,
+            role=model.role,
+            status=model.status,
+            mfa_secret_encrypted=model.mfa_secret_encrypted,
+            mfa_enabled=model.mfa_enabled,
+            mfa_confirmed_at=model.mfa_confirmed_at,
+            failed_login_attempts=model.failed_login_attempts,
+            locked_until=model.locked_until,
+            updated_at=model.updated_at,
         )
