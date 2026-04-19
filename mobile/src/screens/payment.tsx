@@ -36,6 +36,10 @@ interface PaymentParams {
   holdId: string;
   taxRate: string;
   taxesAmount: string;
+  isModification?: string;
+  reservationId?: string;
+  originalTotal?: string;
+  newTotal?: string;
 }
 
 export default function PaymentScreen() {
@@ -61,6 +65,10 @@ export default function PaymentScreen() {
   const holdId = getParam('holdId');
   const taxRate = parseFloat(getParam('taxRate') || '0.12');
   const taxesAmount = parseFloat(getParam('taxesAmount') || '0');
+  const isModification = getParam('isModification') === 'true';
+  const reservationId = getParam('reservationId');
+  const originalTotal = parseFloat(getParam('originalTotal') || '0');
+  const newTotal = parseFloat(getParam('newTotal') || '0');
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
   const [cardNumber, setCardNumber] = useState('');
@@ -205,6 +213,73 @@ export default function PaymentScreen() {
         throw new Error('Failed to get estados');
       }
 
+      // Handle modification scenario - skip reservation creation
+      if (isModification && reservationId) {
+        // For modifications, just update the existing reservation and process payment
+        const confirmedEstado = estadosResult.data.find((estado) => {
+          const name = estado.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+          return (
+            name.includes('confirmada') ||
+            name.includes('reservada via pms') ||
+            name.includes('reservado')
+          );
+        });
+
+        // Update reservation status to confirmed and set new total
+        const updateResult = await BookingService.updateReserva(reservationId, {
+          id_estado: confirmedEstado?.id || estadosResult.data[0]?.id,
+          total: Math.round(newTotal * 100) / 100,
+        });
+
+        if (!updateResult.success) {
+          router.replace({
+            pathname: '/screens/paymentResult',
+            params: {
+              success: 'false',
+              errorMessage: updateResult.error?.message || t('payment.paymentError'),
+            },
+          });
+          return;
+        }
+
+        // Navigate to success result for modification
+        const checkInDate = new Date(checkIn + 'T00:00:00');
+        const checkOutDate = new Date(checkOut + 'T00:00:00');
+        const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+        const cleanedCard = cardNumber.replace(/\s/g, '');
+        const cardLast4 = cleanedCard.slice(-4);
+        const cardType = detectCardType(cleanedCard);
+
+        router.replace({
+          pathname: '/screens/paymentResult',
+          params: {
+            success: 'true',
+            bookingId: reservationId,
+            hotelName: hotelData.nombre,
+            roomType: roomData.nombre || roomData.tipo || '',
+            rating: (hotelData.rating_promedio ?? 4.5).toString(),
+            roomImage: roomData.imagen || hotelData.imagen || '',
+            checkIn,
+            checkOut,
+            nights: nights.toString(),
+            guests: guests.toString(),
+            roomPrice: (newTotal - taxesAmount).toFixed(2),
+            taxesFees: taxesAmount.toFixed(2),
+            grandTotal: newTotal.toString(),
+            cardLast4,
+            cardType,
+            isModification: 'true',
+            priceDifference: finalTotal.toString(),
+          },
+        });
+        return;
+      }
+
+      // Standard new reservation flow
       let idPais = '';
       const paisesResult = await BookingService.getPaises();
       if (paisesResult.success && paisesResult.data && hotelData.pais) {
