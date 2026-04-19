@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -70,9 +70,19 @@ export default function EditReservationScreen() {
 
   const TAX_RATE = 0.15;
 
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
     loadReservationData();
   }, [params.reservationId]);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    fetchAvailableRooms(checkInDate, checkOutDate, adults + children);
+  }, [checkInDate, checkOutDate, adults, children]);
 
   const loadReservationData = async () => {
     try {
