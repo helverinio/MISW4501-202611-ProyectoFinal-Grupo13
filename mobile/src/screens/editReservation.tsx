@@ -339,6 +339,7 @@ export default function EditReservationScreen() {
           if (pendienteEstado) {
             await BookingService.updateReserva(params.reservationId!, {
               id_estado: pendienteEstado.id,
+              total: Math.round(newTotal * 100) / 100,
             });
           }
         }

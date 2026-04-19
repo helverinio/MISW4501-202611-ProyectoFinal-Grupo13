@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -367,20 +368,52 @@ export default function MyReservationsScreen() {
     } as any);
   };
 
-  const handleCompletePayment = (reservation: ReservationItemVm) => {
-    router.push({
-      pathname: '/screens/payment',
-      params: {
-        reservationId: reservation.id,
-        hotelName: reservation.hotelName,
-        roomType: reservation.roomType,
-        checkIn: reservation.checkIn,
-        checkOut: reservation.checkOut,
-        nights: reservation.nights.toString(),
-        guests: reservation.guests.toString(),
-        grandTotal: reservation.total.toString(),
-      },
-    } as any);
+  const handleCompletePayment = async (reservation: ReservationItemVm) => {
+    try {
+      setLoading(true);
+
+      // Acquire hold on the room before proceeding to payment
+      const holdResult = await BookingService.acquireRoomHold(reservation.habitacionId, {
+        id_usuario: String(user?.id),
+        fecha_ingreso: reservation.checkIn,
+        fecha_salida: reservation.checkOut,
+      });
+
+      if (!holdResult.success || !holdResult.data) {
+        Alert.alert('Error', holdResult.error?.message || t('myReservations.loadError'));
+        return;
+      }
+
+      router.push({
+        pathname: '/screens/payment',
+        params: {
+          reservationId: reservation.id,
+          hotelData: JSON.stringify({
+            id: reservation.hotelId,
+            nombre: reservation.hotelName,
+            location: reservation.location,
+            pais: reservation.pais,
+          }),
+          roomData: JSON.stringify({
+            habitacion_id: reservation.habitacionId,
+            tipo: reservation.roomType,
+            capacidad: reservation.roomCapacity,
+            camas: reservation.roomBeds,
+          }),
+          checkIn: reservation.checkIn,
+          checkOut: reservation.checkOut,
+          nights: reservation.nights.toString(),
+          guests: reservation.guests.toString(),
+          grandTotal: reservation.total.toString(),
+          holdId: holdResult.data.id,
+        },
+      } as any);
+    } catch (error) {
+      console.error('Complete payment error:', error);
+      Alert.alert('Error', t('myReservations.loadError'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = async (reservation: ReservationItemVm) => {
