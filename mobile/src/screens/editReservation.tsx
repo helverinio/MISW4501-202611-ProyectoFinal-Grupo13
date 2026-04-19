@@ -15,6 +15,7 @@ import i18n from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { HotelService, Habitacion } from '@/services/hotelService';
 import { BookingService } from '@/services/bookingService';
+import { useUserStore } from '@/store/userStore';
 
 type EditReservationParams = {
   reservationId?: string;
@@ -25,6 +26,7 @@ type EditReservationParams = {
   roomCapacity?: string;
   roomBeds?: string;
   location?: string;
+  pais?: string;
   checkIn?: string;
   checkOut?: string;
   guests?: string;
@@ -45,6 +47,7 @@ interface RoomOption {
 export default function EditReservationScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<EditReservationParams>();
+  const user = useUserStore((state) => state.user);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -303,10 +306,28 @@ export default function EditReservationScreen() {
     const priceDiff = getPriceDifference();
     console.log('priceDiff:', priceDiff, 'originalTotal:', originalTotal, 'newTotal:', calculateNewTotal());
 
-    // If modification results in a lower price (negative difference), redirect to payment module
+    // If modification results in a higher price (positive difference), redirect to payment module
     if (priceDiff > 0) {
       try {
         setSaving(true);
+
+        const selectedRoom = getSelectedRoom();
+        const nights = calculateNights();
+        const newTotal = calculateNewTotal();
+        const subtotal = (selectedRoom?.pricePerNight || 0) * nights;
+        const taxesAmount = subtotal * TAX_RATE;
+
+        // Acquire hold on the room before proceeding to payment
+        const holdResult = await BookingService.acquireRoomHold(selectedRoomId, {
+          id_usuario: String(user?.id),
+          fecha_ingreso: checkInDate.toISOString().split('T')[0],
+          fecha_salida: checkOutDate.toISOString().split('T')[0],
+        });
+
+        if (!holdResult.success || !holdResult.data) {
+          Alert.alert('Error', holdResult.error?.message || t('editReservation.errorSaving'));
+          return;
+        }
 
         // Fetch estados and update reservation status to "Pendiente"
         const estadosResult = await BookingService.getEstados();
@@ -322,25 +343,20 @@ export default function EditReservationScreen() {
           }
         }
 
-        const selectedRoom = getSelectedRoom();
-        const nights = calculateNights();
-        const newTotal = calculateNewTotal();
-        const subtotal = (selectedRoom?.pricePerNight || 0) * nights;
-        const taxesAmount = subtotal * TAX_RATE;
-
         router.push({
           pathname: '/screens/payment',
           params: {
             hotelData: JSON.stringify({
               id: params.hotelId,
-              name: params.hotelName,
+              nombre: params.hotelName,
               location: params.location,
+              pais: params.pais,
             }),
             roomData: JSON.stringify({
-              id: selectedRoomId,
-              type: selectedRoom?.type || params.roomType,
-              capacity: selectedRoom?.capacity || params.roomCapacity,
-              beds: selectedRoom?.beds || params.roomBeds,
+              habitacion_id: selectedRoomId,
+              tipo: selectedRoom?.type || params.roomType,
+              capacidad: selectedRoom?.capacity || params.roomCapacity,
+              camas: selectedRoom?.beds || params.roomBeds,
               pricePerNight: selectedRoom?.pricePerNight || 0,
             }),
             checkIn: checkInDate.toISOString().split('T')[0],
@@ -351,12 +367,13 @@ export default function EditReservationScreen() {
             lastName: '',
             email: '',
             phone: '',
-            holdId: params.reservationId,
+            holdId: holdResult.data.id,
             taxRate: String(TAX_RATE),
             taxesAmount: String(Math.round(taxesAmount * 100) / 100),
             isModification: 'true',
             originalTotal: String(originalTotal),
             newTotal: String(newTotal),
+            reservationId: params.reservationId,
           },
         });
       } catch (error) {

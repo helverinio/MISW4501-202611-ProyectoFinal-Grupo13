@@ -36,6 +36,7 @@ interface ReservationItemVm {
   roomCapacity: number;
   roomBeds: number;
   location: string;
+  pais: string;
   checkIn: string;
   checkInTime: string;
   checkOut: string;
@@ -185,6 +186,7 @@ export default function MyReservationsScreen() {
         roomCapacity: habitacion?.capacidad || 2,
         roomBeds: habitacion?.camas || 1,
         location,
+        pais: pais?.nombre || '',
         checkIn: toDateOnly(reserva.fecha_ingreso),
         checkInTime: t('myReservations.checkInTime'),
         checkOut: toDateOnly(reserva.fecha_salida),
@@ -219,6 +221,7 @@ export default function MyReservationsScreen() {
       roomCapacity: 2,
       roomBeds: 1,
       location: t('myReservations.defaultLocation'),
+      pais: '',
       checkIn: toDateOnly(reserva.fecha_ingreso),
       checkInTime: t('myReservations.checkInTime'),
       checkOut: toDateOnly(reserva.fecha_salida),
@@ -353,6 +356,7 @@ export default function MyReservationsScreen() {
         roomCapacity: reservation.roomCapacity.toString(),
         roomBeds: reservation.roomBeds.toString(),
         location: reservation.location,
+        pais: reservation.pais,
         checkIn: reservation.checkIn,
         checkOut: reservation.checkOut,
         guests: reservation.guests.toString(),
