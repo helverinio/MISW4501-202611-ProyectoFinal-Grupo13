@@ -189,8 +189,8 @@ export default function MyReservationsScreen() {
         checkInTime: t('myReservations.checkInTime'),
         checkOut: toDateOnly(reserva.fecha_salida),
         checkOutTime: t('myReservations.checkOutTime'),
-        guests: Math.max(1, reserva.nro_personas - 1),
-        children: reserva.nro_personas > 1 ? 1 : 0,
+        guests: reserva.nro_personas,
+        children: 0,
         nights,
         total: reserva.total,
         status,
@@ -343,12 +343,22 @@ export default function MyReservationsScreen() {
 
   const handleModify = (reservation: ReservationItemVm) => {
     router.push({
-      pathname: '/screens/hotelDetails',
+      pathname: '/screens/editReservation',
       params: {
+        reservationId: reservation.id,
         hotelId: reservation.hotelId,
+        hotelName: reservation.hotelName,
+        habitacionId: reservation.habitacionId,
+        roomType: reservation.roomType,
+        roomCapacity: reservation.roomCapacity.toString(),
+        roomBeds: reservation.roomBeds.toString(),
+        location: reservation.location,
         checkIn: reservation.checkIn,
         checkOut: reservation.checkOut,
         guests: reservation.guests.toString(),
+        children: reservation.children.toString(),
+        nights: reservation.nights.toString(),
+        total: reservation.total.toString(),
       },
     } as any);
   };
