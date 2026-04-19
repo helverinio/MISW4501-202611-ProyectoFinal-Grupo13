@@ -320,6 +320,11 @@ export default function PaymentScreen() {
             });
             return;
           }
+
+          // Update reservation total with finalTotal after successful payment
+          await BookingService.updateReserva(result.data.id, {
+            total: Math.round(finalTotal * 100) / 100,
+          });
         }
 
         const checkInDate = new Date(checkIn + 'T00:00:00');
