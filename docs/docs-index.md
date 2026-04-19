@@ -40,6 +40,7 @@ Este documento sirve como mapa de navegación para humanos e IA.
 - docs/runbooks/local-setup.md
 - docs/runbooks/aws-ecs-deployment.md
 - docs/runbooks/aws-codepipeline-terraform.md
+- docs/README_ADMIN_MFA_FLOW.md
 
 ---
 
@@ -52,6 +53,7 @@ Este documento sirve como mapa de navegación para humanos e IA.
 ## 🔄 Cambios recientes
 
 - CHANGELOG.md
+- docs/RELEASE_NOTES_v0.1.0_SPRINT_1.md
 
 ---
 
