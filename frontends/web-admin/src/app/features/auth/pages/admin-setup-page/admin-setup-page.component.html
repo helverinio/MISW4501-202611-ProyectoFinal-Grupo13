@@ -5,10 +5,33 @@
       <p class="text-sm text-gray-600 mb-6">Crea un administrador, escanea el QR en Google Authenticator y verifica el código.</p>
 
       <form class="space-y-4" [formGroup]="registerForm" (ngSubmit)="registerAdmin()">
-        <input formControlName="nombre" placeholder="Nombre" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
-        <input formControlName="email" type="email" placeholder="admin@travelhub.com" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
-        <input formControlName="contrasena" type="password" placeholder="Contraseña" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
-        <button type="submit" class="bg-primary-600 text-white rounded-xl px-4 py-3 w-full">Crear administrador</button>
+        <div>
+          <input formControlName="nombre" placeholder="Nombre" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
+          <p *ngIf="registerForm.controls.nombre.touched && registerForm.controls.nombre.invalid" class="text-xs text-red-600 mt-1">
+            El nombre es obligatorio.
+          </p>
+        </div>
+        <div>
+          <input formControlName="email" type="email" placeholder="admin@travelhub.com" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
+          <p *ngIf="registerForm.controls.email.touched && registerForm.controls.email.hasError('required')" class="text-xs text-red-600 mt-1">
+            El email es obligatorio.
+          </p>
+          <p *ngIf="registerForm.controls.email.touched && registerForm.controls.email.hasError('email')" class="text-xs text-red-600 mt-1">
+            Ingresa un email valido.
+          </p>
+        </div>
+        <div>
+          <input formControlName="contrasena" type="password" placeholder="Contraseña" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
+          <p *ngIf="registerForm.controls.contrasena.touched && registerForm.controls.contrasena.hasError('required')" class="text-xs text-red-600 mt-1">
+            La contraseña es obligatoria.
+          </p>
+          <p *ngIf="registerForm.controls.contrasena.touched && registerForm.controls.contrasena.hasError('minlength')" class="text-xs text-red-600 mt-1">
+            La contraseña debe tener al menos 8 caracteres.
+          </p>
+        </div>
+        <button [disabled]="isRegistering" type="submit" class="bg-primary-600 text-white rounded-xl px-4 py-3 w-full disabled:opacity-60 disabled:cursor-not-allowed">
+          {{ isRegistering ? 'Creando...' : 'Crear administrador' }}
+        </button>
       </form>
 
       <div *ngIf="registerError" class="text-sm text-red-600 mt-3">{{ registerError }}</div>
@@ -25,9 +48,27 @@
       />
 
       <form class="space-y-4 mt-4" [formGroup]="verifyForm" (ngSubmit)="verifySetup()">
-        <input formControlName="email" type="email" placeholder="Email admin" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
-        <input formControlName="code" placeholder="Código de 6 dígitos" maxlength="6" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
-        <button type="submit" class="bg-green-600 text-white rounded-xl px-4 py-3 w-full">Verificar setup</button>
+        <div>
+          <input formControlName="email" type="email" placeholder="Email admin" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
+          <p *ngIf="verifyForm.controls.email.touched && verifyForm.controls.email.hasError('required')" class="text-xs text-red-600 mt-1">
+            El email es obligatorio.
+          </p>
+          <p *ngIf="verifyForm.controls.email.touched && verifyForm.controls.email.hasError('email')" class="text-xs text-red-600 mt-1">
+            Ingresa un email valido.
+          </p>
+        </div>
+        <div>
+          <input formControlName="code" placeholder="Código de 6 dígitos" maxlength="6" class="w-full border border-gray-300 rounded-xl px-4 py-3" />
+          <p *ngIf="verifyForm.controls.code.touched && verifyForm.controls.code.hasError('required')" class="text-xs text-red-600 mt-1">
+            El codigo es obligatorio.
+          </p>
+          <p *ngIf="verifyForm.controls.code.touched && verifyForm.controls.code.hasError('pattern')" class="text-xs text-red-600 mt-1">
+            El codigo debe tener exactamente 6 digitos numericos.
+          </p>
+        </div>
+        <button [disabled]="isVerifying" type="submit" class="bg-green-600 text-white rounded-xl px-4 py-3 w-full disabled:opacity-60 disabled:cursor-not-allowed">
+          {{ isVerifying ? 'Verificando...' : 'Verificar setup' }}
+        </button>
       </form>
       <div *ngIf="verifyError" class="text-sm text-red-600">{{ verifyError }}</div>
       <div *ngIf="verifySuccess" class="text-sm text-green-700">{{ verifySuccess }}</div>

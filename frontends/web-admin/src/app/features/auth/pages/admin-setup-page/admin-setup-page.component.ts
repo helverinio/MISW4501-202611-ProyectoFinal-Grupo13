@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -21,10 +21,14 @@ export class AdminSetupPageComponent {
   registerError = '';
   verifyError = '';
   verifySuccess = '';
+  isRegistering = false;
+  isVerifying = false;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly ngZone: NgZone,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -46,6 +50,8 @@ export class AdminSetupPageComponent {
       return;
     }
 
+    this.isRegistering = true;
+
     this.authService
       .registerAdmin({
         nombre: this.registerForm.controls.nombre.value ?? '',
@@ -54,12 +60,20 @@ export class AdminSetupPageComponent {
       })
       .subscribe({
         next: (response: RegisterAdminResponse) => {
-          this.setupData = response;
-          this.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(response.otpauth_uri)}`;
-          this.verifyForm.controls.email.setValue(response.email);
+          this.ngZone.run(() => {
+            this.setupData = response;
+            this.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(response.otpauth_uri)}`;
+            this.verifyForm.controls.email.setValue(response.email);
+            this.isRegistering = false;
+            this.cdr.detectChanges();
+          });
         },
         error: (error: any) => {
-          this.registerError = error?.error?.error ?? 'No fue posible registrar administrador';
+          this.ngZone.run(() => {
+            this.registerError = error?.error?.error ?? 'No fue posible registrar administrador';
+            this.isRegistering = false;
+            this.cdr.detectChanges();
+          });
         },
       });
   }
@@ -73,14 +87,24 @@ export class AdminSetupPageComponent {
       return;
     }
 
+    this.isVerifying = true;
+
     this.authService
       .verifySetup(this.verifyForm.controls.email.value ?? '', this.verifyForm.controls.code.value ?? '')
       .subscribe({
         next: () => {
-          this.verifySuccess = 'MFA activado correctamente. Ya puedes iniciar sesión.';
+          this.ngZone.run(() => {
+            this.verifySuccess = 'MFA activado correctamente. Ya puedes iniciar sesión.';
+            this.isVerifying = false;
+            this.cdr.detectChanges();
+          });
         },
         error: (error: any) => {
-          this.verifyError = error?.error?.error ?? 'No fue posible verificar el código';
+          this.ngZone.run(() => {
+            this.verifyError = error?.error?.error ?? 'No fue posible verificar el código';
+            this.isVerifying = false;
+            this.cdr.detectChanges();
+          });
         },
       });
   }
