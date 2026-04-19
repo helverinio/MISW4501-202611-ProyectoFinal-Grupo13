@@ -6,27 +6,27 @@ import { AdminSetupPageComponent } from './features/auth/pages/admin-setup-page/
 import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component';
 
 export const routes: Routes = [
-	{
-		path: 'login',
-		canActivate: [publicOnlyGuard],
-		component: LoginPageComponent,
-	},
-	{
-		path: 'setup-admin',
-		component: AdminSetupPageComponent,
-	},
-	{
-		path: 'dashboard',
-		canActivate: [authGuard],
-		component: DashboardPageComponent,
-	},
-	{
-		path: '',
-		pathMatch: 'full',
-		redirectTo: 'login',
-	},
-	{
-		path: '**',
-		redirectTo: 'login',
-	},
+  {
+    path: 'login',
+    canActivate: [publicOnlyGuard],
+    component: LoginPageComponent,
+  },
+  {
+    path: 'setup-admin',
+    component: AdminSetupPageComponent,
+  },
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    component: DashboardPageComponent,
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'login',
+  },
+  {
+    path: '**',
+    redirectTo: 'login',
+  },
 ];

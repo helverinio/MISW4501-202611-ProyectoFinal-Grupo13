@@ -30,23 +30,31 @@ export class AuthService {
   constructor(private readonly http: HttpClient) {}
 
   registerAdmin(payload: RegisterAdminRequest): Observable<RegisterAdminResponse> {
-    return this.http.post<RegisterAdminResponse>(`${environment.apiBaseUrl}/admin/auth/register`, payload);
+    return this.http.post<RegisterAdminResponse>(
+      `${environment.apiBaseUrl}/admin/auth/register`,
+      payload,
+    );
   }
 
   verifySetup(email: string, code: string): Observable<void> {
-    return this.http.post<{ message: string }>(`${environment.apiBaseUrl}/admin/auth/verify-setup`, { email, code }).pipe(
-      map(() => void 0),
-    );
+    return this.http
+      .post<{
+        message: string;
+      }>(`${environment.apiBaseUrl}/admin/auth/verify-setup`, { email, code })
+      .pipe(map(() => void 0));
   }
 
   loginStep1(payload: AdminLoginStep1Request): Observable<AdminLoginStep1Response> {
-    return this.http.post<AdminLoginStep1Response>(`${environment.apiBaseUrl}/admin/auth/login/step1`, payload);
+    return this.http.post<AdminLoginStep1Response>(
+      `${environment.apiBaseUrl}/admin/auth/login/step1`,
+      payload,
+    );
   }
 
   loginStep2(payload: AdminLoginStep2Request): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/admin/auth/login/step2`, payload).pipe(
-      tap((response: LoginResponse) => this.persistSession(response)),
-    );
+    return this.http
+      .post<LoginResponse>(`${environment.apiBaseUrl}/admin/auth/login/step2`, payload)
+      .pipe(tap((response: LoginResponse) => this.persistSession(response)));
   }
 
   getAccessToken(): string | null {

@@ -90,7 +90,10 @@ export class AdminSetupPageComponent {
     this.isVerifying = true;
 
     this.authService
-      .verifySetup(this.verifyForm.controls.email.value ?? '', this.verifyForm.controls.code.value ?? '')
+      .verifySetup(
+        this.verifyForm.controls.email.value ?? '',
+        this.verifyForm.controls.code.value ?? '',
+      )
       .subscribe({
         next: () => {
           this.ngZone.run(() => {

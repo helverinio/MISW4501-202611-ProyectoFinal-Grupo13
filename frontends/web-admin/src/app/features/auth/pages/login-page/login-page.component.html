@@ -6,17 +6,27 @@
           <div class="flex-shrink-0">
             <div class="flex items-center">
               <div id="i505bu-2" class="flex items-center space-x-2">
-                <div id="id0g0l" class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                <div
+                  id="id0g0l"
+                  class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center"
+                >
                   <i id="inobr7" class="fa-solid fa-plane text-white text-sm"></i>
                 </div>
                 <span id="i1r3io" class="text-xl font-bold text-gray-900">TravelHub</span>
               </div>
-              <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+              <span
+                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
+                >Admin</span
+              >
             </div>
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="#" class="text-gray-600 hover:text-primary-600 text-sm font-medium transition-colors">Need Help?</a>
+          <a
+            href="#"
+            class="text-gray-600 hover:text-primary-600 text-sm font-medium transition-colors"
+            >Need Help?</a
+          >
         </div>
       </div>
     </div>
@@ -38,7 +48,9 @@
 
           <form id="login-form" class="space-y-6" [formGroup]="loginForm" (ngSubmit)="submit()">
             <div id="email-field">
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2"
+                >Email Address</label
+              >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-envelope text-gray-400 text-sm"></i>
@@ -56,7 +68,9 @@
             </div>
 
             <div id="password-field">
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-2"
+                >Password</label
+              >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-lock text-gray-400 text-sm"></i>
@@ -70,14 +84,26 @@
                   formControlName="password"
                   class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                 />
-                <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  <i [class]="showPassword ? 'fas fa-eye-slash text-gray-400 text-sm hover:text-gray-600 transition-colors' : 'fas fa-eye text-gray-400 text-sm hover:text-gray-600 transition-colors'"></i>
+                <button
+                  type="button"
+                  (click)="togglePassword()"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <i
+                    [class]="
+                      showPassword
+                        ? 'fas fa-eye-slash text-gray-400 text-sm hover:text-gray-600 transition-colors'
+                        : 'fas fa-eye text-gray-400 text-sm hover:text-gray-600 transition-colors'
+                    "
+                  ></i>
                 </button>
               </div>
             </div>
 
             <div id="mfa-field" *ngIf="showMfaField">
-              <label for="mfa-code" class="block text-sm font-medium text-gray-700 mb-2">Verification Code</label>
+              <label for="mfa-code" class="block text-sm font-medium text-gray-700 mb-2"
+                >Verification Code</label
+              >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-mobile-alt text-gray-400 text-sm"></i>
@@ -92,18 +118,31 @@
                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm text-center font-mono tracking-wider transition-colors"
                 />
               </div>
-              <p class="text-xs text-gray-500 mt-2">Enter the 6-digit code from your authenticator app</p>
+              <p class="text-xs text-gray-500 mt-2">
+                Enter the 6-digit code from your authenticator app
+              </p>
             </div>
 
             <div *ngIf="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</div>
 
             <div id="remember-section" class="flex items-center justify-between">
               <div class="flex items-center">
-                <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" />
-                <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                />
+                <label for="remember-me" class="ml-2 block text-sm text-gray-700"
+                  >Remember me</label
+                >
               </div>
               <div class="text-sm">
-                <a [routerLink]="['/setup-admin']" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">Setup Admin MFA</a>
+                <a
+                  [routerLink]="['/setup-admin']"
+                  class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+                  >Setup Admin MFA</a
+                >
               </div>
             </div>
 
@@ -114,7 +153,9 @@
                 class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
               >
                 <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                  <i class="fas fa-sign-in-alt text-primary-200 group-hover:text-primary-100 text-sm"></i>
+                  <i
+                    class="fas fa-sign-in-alt text-primary-200 group-hover:text-primary-100 text-sm"
+                  ></i>
                 </span>
                 {{ showMfaField ? 'Verify & Sign In' : 'Sign in to Admin Portal' }}
               </button>
