@@ -229,10 +229,12 @@ export default function PaymentScreen() {
           );
         });
 
-        // Update reservation status to confirmed and set new total
+        // Update reservation status to confirmed, set new total, and update dates
         const updateResult = await BookingService.updateReserva(reservationId, {
           id_estado: confirmedEstado?.id || estadosResult.data[0]?.id,
           total: Math.round(newTotal * 100) / 100,
+          fecha_ingreso: checkIn,
+          fecha_salida: checkOut,
         });
 
         if (!updateResult.success) {
