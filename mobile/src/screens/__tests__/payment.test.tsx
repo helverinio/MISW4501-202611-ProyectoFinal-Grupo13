@@ -20,6 +20,7 @@ jest.mock('../../services/bookingService', () => ({
     getPaises: jest.fn(),
     createReserva: jest.fn(),
     processPayment: jest.fn(),
+    updateReserva: jest.fn(),
   },
 }));
 
@@ -33,6 +34,7 @@ const mockGetEstados = BookingService.getEstados as jest.Mock;
 const mockGetPaises = BookingService.getPaises as jest.Mock;
 const mockCreateReserva = BookingService.createReserva as jest.Mock;
 const mockProcessPayment = BookingService.processPayment as jest.Mock;
+const mockUpdateReserva = BookingService.updateReserva as jest.Mock;
 
 const mockHotelData = {
   hotel_id: 'hotel-1',
@@ -104,6 +106,7 @@ describe('PaymentScreen', () => {
       data: { id: 'reserva-123', payment: { payment_id: 'payment-123' } },
     });
     mockProcessPayment.mockResolvedValue({ success: true });
+    mockUpdateReserva.mockResolvedValue({ success: true, data: {} });
   });
 
   describe('Rendering', () => {
