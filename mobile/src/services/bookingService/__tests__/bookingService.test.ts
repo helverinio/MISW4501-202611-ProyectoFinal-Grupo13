@@ -7,6 +7,9 @@ import BookingService, {
   EstadoResponse,
   CiudadResponse,
   PaisResponse,
+  ReservaResponse,
+  HabitacionResponse,
+  HotelResponse,
 } from '../bookingService';
 import customAxios from '@/utils/api';
 
@@ -738,6 +741,468 @@ describe('BookingService', () => {
 
       expect(result.success).toBe(false);
       expect(result.error?.message).toContain('timeout');
+    });
+  });
+
+  describe('getHabitaciones', () => {
+    const mockHabitaciones: HabitacionResponse[] = [
+      {
+        id: 'hab-1',
+        tipo: 'Suite',
+        nro_habitacion: 101,
+        capacidad: 2,
+        camas: 1,
+        id_hotel: 'hotel-1',
+      },
+    ];
+
+    it('should return habitaciones on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockHabitaciones,
+      });
+
+      const result = await BookingService.getHabitaciones();
+
+      expect(mockAxios.get).toHaveBeenCalledWith('/api/v1/habitaciones');
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockHabitaciones);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 503,
+        data: { error: 'Service unavailable' },
+      });
+
+      const result = await BookingService.getHabitaciones();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get habitaciones',
+        status: 503,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue(new Error('Network Error'));
+
+      const result = await BookingService.getHabitaciones();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Network Error',
+      });
+    });
+
+    it('should fallback to default message when error has no message', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getHabitaciones();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get habitaciones',
+      });
+    });
+  });
+
+  describe('getHoteles', () => {
+    const mockHoteles: HotelResponse[] = [
+      {
+        id: 'hotel-1',
+        nombre: 'Hotel Sunset',
+        descripcion: 'Ocean view',
+        email: 'contact@sunset.com',
+        id_ciudad: 'city-1',
+      },
+    ];
+
+    it('should return hoteles on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockHoteles,
+      });
+
+      const result = await BookingService.getHoteles();
+
+      expect(mockAxios.get).toHaveBeenCalledWith('/api/v1/hoteles');
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockHoteles);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 500,
+        data: { error: 'Internal server error' },
+      });
+
+      const result = await BookingService.getHoteles();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get hoteles',
+        status: 500,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getHoteles();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get hoteles',
+      });
+    });
+  });
+
+  describe('getCiudades', () => {
+    const mockCiudades: CiudadResponse[] = [
+      { id: 'city-1', nombre: 'Bogota', id_pais: 'pais-1' },
+    ];
+
+    it('should return ciudades on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockCiudades,
+      });
+
+      const result = await BookingService.getCiudades();
+
+      expect(mockAxios.get).toHaveBeenCalledWith('/api/v1/ciudades');
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockCiudades);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 403,
+        data: { error: 'Forbidden' },
+      });
+
+      const result = await BookingService.getCiudades();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get ciudades',
+        status: 403,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue(new Error('Network Error'));
+
+      const result = await BookingService.getCiudades();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Network Error',
+      });
+    });
+
+    it('should fallback to default message when error has no message', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getCiudades();
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get ciudades',
+      });
+    });
+  });
+
+  describe('getReservasByUsuario', () => {
+    const usuarioId = 'user-1';
+    const mockReservas: ReservaResponse[] = [
+      {
+        id: 'res-1',
+        fecha_ingreso: '2026-04-20',
+        fecha_salida: '2026-04-22',
+        total: 250000,
+        nro_personas: 2,
+        id_usuario: usuarioId,
+        id_pais: 'pais-1',
+        id_habitacion: 'hab-1',
+        id_estado: 'estado-1',
+      },
+    ];
+
+    it('should return reservas on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockReservas,
+      });
+
+      const result = await BookingService.getReservasByUsuario(usuarioId);
+
+      expect(mockAxios.get).toHaveBeenCalledWith(`/api/v1/usuarios/${usuarioId}/reservas`);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockReservas);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 404,
+        data: { error: 'Not found' },
+      });
+
+      const result = await BookingService.getReservasByUsuario(usuarioId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get reservations',
+        status: 404,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getReservasByUsuario(usuarioId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get reservations',
+      });
+    });
+  });
+
+  describe('getHabitacionById', () => {
+    const habitacionId = 'hab-1';
+    const mockHabitacion: HabitacionResponse = {
+      id: habitacionId,
+      tipo: 'Doble',
+      nro_habitacion: 202,
+      capacidad: 4,
+      camas: 2,
+      id_hotel: 'hotel-1',
+    };
+
+    it('should return habitacion on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockHabitacion,
+      });
+
+      const result = await BookingService.getHabitacionById(habitacionId);
+
+      expect(mockAxios.get).toHaveBeenCalledWith(`/api/v1/habitaciones/${habitacionId}`);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockHabitacion);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 400,
+        data: { error: 'Bad request' },
+      });
+
+      const result = await BookingService.getHabitacionById(habitacionId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get habitacion',
+        status: 400,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getHabitacionById(habitacionId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get habitacion',
+      });
+    });
+  });
+
+  describe('getHotelById', () => {
+    const hotelId = 'hotel-1';
+    const mockHotel: HotelResponse = {
+      id: hotelId,
+      nombre: 'Hotel Sunset',
+      descripcion: 'Ocean view',
+      email: 'contact@sunset.com',
+      id_ciudad: 'city-1',
+    };
+
+    it('should return hotel on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockHotel,
+      });
+
+      const result = await BookingService.getHotelById(hotelId);
+
+      expect(mockAxios.get).toHaveBeenCalledWith(`/api/v1/hoteles/${hotelId}`);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockHotel);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 404,
+        data: { error: 'Not found' },
+      });
+
+      const result = await BookingService.getHotelById(hotelId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get hotel',
+        status: 404,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue(new Error('Network Error'));
+
+      const result = await BookingService.getHotelById(hotelId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Network Error',
+      });
+    });
+
+    it('should fallback to default message when error has no message', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getHotelById(hotelId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get hotel',
+      });
+    });
+  });
+
+  describe('getPaisById', () => {
+    const paisId = 'pais-1';
+    const mockPais: PaisResponse = {
+      id: paisId,
+      nombre: 'Colombia',
+    };
+
+    it('should return pais on successful response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 200,
+        data: mockPais,
+      });
+
+      const result = await BookingService.getPaisById(paisId);
+
+      expect(mockAxios.get).toHaveBeenCalledWith(`/api/v1/paises/${paisId}`);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockPais);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.get.mockResolvedValue({
+        status: 403,
+        data: { error: 'Forbidden' },
+      });
+
+      const result = await BookingService.getPaisById(paisId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get pais',
+        status: 403,
+      });
+    });
+
+    it('should handle thrown error', async () => {
+      mockAxios.get.mockRejectedValue({});
+
+      const result = await BookingService.getPaisById(paisId);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to get pais',
+      });
+    });
+  });
+
+  describe('updateReserva', () => {
+    const reservaId = 'res-1';
+    const updatePayload: Partial<ReservaResponse> = {
+      id_estado: 'estado-2',
+      total: 300000,
+    };
+
+    const updatedReserva: ReservaResponse = {
+      id: reservaId,
+      fecha_ingreso: '2026-04-20',
+      fecha_salida: '2026-04-22',
+      total: 300000,
+      nro_personas: 2,
+      id_usuario: 'user-1',
+      id_pais: 'pais-1',
+      id_habitacion: 'hab-1',
+      id_estado: 'estado-2',
+    };
+
+    it('should update reservation on successful response', async () => {
+      mockAxios.put.mockResolvedValue({
+        status: 200,
+        data: updatedReserva,
+      });
+
+      const result = await BookingService.updateReserva(reservaId, updatePayload);
+
+      expect(mockAxios.put).toHaveBeenCalledWith(`/api/v1/reservas/${reservaId}`, updatePayload);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(updatedReserva);
+    });
+
+    it('should return error on non-200 response', async () => {
+      mockAxios.put.mockResolvedValue({
+        status: 409,
+        data: { error: 'Conflict' },
+      });
+
+      const result = await BookingService.updateReserva(reservaId, updatePayload);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to update reservation',
+        status: 409,
+      });
+    });
+
+    it('should handle axios error with response data', async () => {
+      mockAxios.put.mockRejectedValue({
+        response: {
+          status: 422,
+          data: { error: 'Validation failed' },
+        },
+        message: 'Request failed',
+      });
+
+      const result = await BookingService.updateReserva(reservaId, updatePayload);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Validation failed',
+        status: 422,
+      });
+    });
+
+    it('should fallback to default message when rejected error has no message and no response error', async () => {
+      mockAxios.put.mockRejectedValue({ response: {} });
+
+      const result = await BookingService.updateReserva(reservaId, updatePayload);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toEqual({
+        message: 'Failed to update reservation',
+      });
     });
   });
 });
