@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserStore } from '@/store/userStore';
+import { useStaticDataStore } from '@/store/staticDataStore';
 import BookingService, {
   ReservaResponse,
   EstadoResponse,
@@ -53,6 +54,9 @@ interface ReservationItemVm {
 export default function MyReservationsScreen() {
   const { t } = useTranslation();
   const user = useUserStore((state) => state.user);
+  const cachedEstados = useStaticDataStore((state) => state.estados);
+  const cachedCiudades = useStaticDataStore((state) => state.ciudades);
+  const cachedPaises = useStaticDataStore((state) => state.paises);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -63,7 +67,7 @@ export default function MyReservationsScreen() {
   const loadReservations = useCallback(async () => {
     try {
       setErrorMessage('');
-      
+
       if (!user?.id) {
         setErrorMessage(t('myReservations.missingUser'));
         setLoading(false);
@@ -72,20 +76,20 @@ export default function MyReservationsScreen() {
 
       const userId = user.id;
 
+      // Use cached static data (estados, ciudades, paises) from store
+      const estadosData = cachedEstados.length > 0 ? cachedEstados : [];
+      const ciudadesData = cachedCiudades.length > 0 ? cachedCiudades : [];
+      const paisesData = cachedPaises.length > 0 ? cachedPaises : [];
+
+      // Only fetch dynamic data (reservas, habitaciones, hoteles)
       const [
         reservasResult,
-        estadosResult,
         habitacionesResult,
         hotelesResult,
-        ciudadesResult,
-        paisesResult,
       ] = await Promise.all([
         BookingService.getReservasByUsuario(userId),
-        BookingService.getEstados(),
         BookingService.getHabitaciones(),
         BookingService.getHoteles(),
-        BookingService.getCiudades(),
-        BookingService.getPaises(),
       ]);
 
       if (!reservasResult.success || !reservasResult.data) {
@@ -94,9 +98,7 @@ export default function MyReservationsScreen() {
         return;
       }
 
-      if (estadosResult.success && estadosResult.data) {
-        setEstados(estadosResult.data);
-      }
+      setEstados(estadosData);
 
       const habitacionesMap = new Map<string, HabitacionResponse>();
       const hotelesMap = new Map<string, HotelResponse>();
@@ -105,13 +107,13 @@ export default function MyReservationsScreen() {
 
       habitacionesResult.data?.forEach((h) => habitacionesMap.set(h.id, h));
       hotelesResult.data?.forEach((h) => hotelesMap.set(h.id, h));
-      ciudadesResult.data?.forEach((c) => ciudadesMap.set(c.id, c));
-      paisesResult.data?.forEach((p) => paisesMap.set(p.id, p));
+      ciudadesData.forEach((c) => ciudadesMap.set(c.id, c));
+      paisesData.forEach((p) => paisesMap.set(p.id, p));
 
       const enrichedReservations = reservasResult.data.map((reserva) =>
         enrichReservation(
           reserva,
-          estadosResult.data || [],
+          estadosData,
           habitacionesMap,
           hotelesMap,
           ciudadesMap,
@@ -131,7 +133,7 @@ export default function MyReservationsScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [t, user]);
+  }, [t, user, cachedEstados, cachedCiudades, cachedPaises]);
 
   useEffect(() => {
     loadReservations();
