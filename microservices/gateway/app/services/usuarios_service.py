@@ -54,3 +54,16 @@ class UsuariosService:
     def logout(self, authorization_header: str = None) -> Dict[str, Any]:
         headers = {'Authorization': authorization_header} if authorization_header else {}
         return self._request('POST', 'auth/logout', headers=headers)
+
+    # Admin authentication with MFA
+    def register_admin(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'admin/auth/register', data)
+
+    def verify_admin_setup(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'admin/auth/verify-setup', data)
+
+    def admin_login_step1(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'admin/auth/login/step1', data)
+
+    def admin_login_step2(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'admin/auth/login/step2', data)

@@ -1,0 +1,196 @@
+{
+  "info": {
+    "_postman_id": "30f2f4bf-c301-4be4-b859-6348cf5c5d8f",
+    "name": "Admin Auth MFA Flow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Flujo de registro, setup MFA y login de administradores para TravelHub"
+  },
+  "item": [
+    {
+      "name": "Register Admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Admin Principal\",\n  \"email\": \"{{adminEmail}}\",\n  \"contrasena\": \"{{adminPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/admin/auth/register",
+          "host": [
+            "{{gatewayBaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "auth",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verify Setup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"code\": \"{{mfaCode}}\"\n}"
+        },
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/admin/auth/verify-setup",
+          "host": [
+            "{{gatewayBaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "auth",
+            "verify-setup"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Login Step 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.challenge_token) {",
+              "  pm.collectionVariables.set('challengeToken', json.challenge_token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"contrasena\": \"{{adminPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/admin/auth/login/step1",
+          "host": [
+            "{{gatewayBaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "auth",
+            "login",
+            "step1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Login Step 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.access_token) {",
+              "  pm.collectionVariables.set('accessToken', json.access_token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"challenge_token\": \"{{challengeToken}}\",\n  \"code\": \"{{mfaCode}}\"\n}"
+        },
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/admin/auth/login/step2",
+          "host": [
+            "{{gatewayBaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "auth",
+            "login",
+            "step2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Current User (Auth Me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/auth/me",
+          "host": [
+            "{{gatewayBaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "gatewayBaseUrl",
+      "value": "http://localhost:8081/api/v1"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@travelhub.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin12345*"
+    },
+    {
+      "key": "mfaCode",
+      "value": "000000"
+    },
+    {
+      "key": "challengeToken",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ]
+}

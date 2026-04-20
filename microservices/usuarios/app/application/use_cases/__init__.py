@@ -6,3 +6,9 @@ from app.application.use_cases.auth_use_cases import (
     AuthenticateUseCase, RefreshTokenUseCase, GetUsuarioByTokenUseCase,
     RevokeTokenUseCase
 )
+from app.application.use_cases.admin_auth_use_cases import (
+    RegisterAdminUseCase,
+    VerifyAdminSetupUseCase,
+    AdminLoginStep1UseCase,
+    AdminLoginStep2UseCase,
+)

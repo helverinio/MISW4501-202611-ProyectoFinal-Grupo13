@@ -79,6 +79,9 @@ def get_current_user():
         'email': usuario.email,
         'usuario': usuario.usuario,
         'ciudad_id': usuario.ciudad_id,
+        'role': usuario.role,
+        'status': usuario.status,
+        'mfa_enabled': usuario.mfa_enabled,
         'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
     })
 

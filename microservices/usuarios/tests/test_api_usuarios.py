@@ -23,6 +23,9 @@ def _user(user_id="u-1", nombre="Ana", email="ana@example.com", usuario="ana", c
         email=email,
         usuario=usuario,
         ciudad_id=ciudad_id,
+        role="USER",
+        status="ACTIVE",
+        mfa_enabled=False,
         creado_en=datetime(2026, 1, 1, 0, 0, 0),
         contrasena="$2b$12$hashed"
     )
