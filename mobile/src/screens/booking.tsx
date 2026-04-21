@@ -105,7 +105,7 @@ export default function BookingScreen() {
   const roomTotal = pricePerNight * nights;
   const taxRate = TAX_RATE;
   const taxesAmount = Math.round(roomTotal * taxRate * 100) / 100;
-  const serviceFee = SERVICE_FEE;
+  const serviceFee = Math.round(roomTotal * SERVICE_FEE * 100) / 100;
   const grandTotal = roomTotal + taxesAmount + serviceFee;
 
   const formatDate = (dateStr: string) => {

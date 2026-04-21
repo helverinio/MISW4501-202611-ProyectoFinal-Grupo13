@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HotelService, Habitacion } from '@/services/hotelService';
 import { BookingService } from '@/services/bookingService';
 import { useUserStore } from '@/store/userStore';
+import { TAX_RATE, SERVICE_FEE } from '@/utils/constants';
 
 type EditReservationParams = {
   reservationId?: string;
@@ -71,7 +72,6 @@ export default function EditReservationScreen() {
   const [roomOptions, setRoomOptions] = useState<RoomOption[]>([]);
   const [loadingRooms, setLoadingRooms] = useState(false);
 
-  const TAX_RATE = 0.15;
 
   const isInitialMount = useRef(true);
 
@@ -223,8 +223,16 @@ export default function EditReservationScreen() {
     const nights = calculateNights();
     const subtotal = room.pricePerNight * nights;
     const taxes = subtotal * TAX_RATE;
-    return Math.round((subtotal + taxes) * 100) / 100;
+    const serviceFee = subtotal * SERVICE_FEE;
+
+    return Math.round((subtotal + taxes + serviceFee) * 100) / 100;
   }, [selectedRoomId, roomOptions, calculateNights]);
+  
+
+  const calculateTaxesAndFees = (pricePerNight: number, nights: number): number => {
+    const subtotal = pricePerNight * nights;
+    return Math.round(((subtotal * TAX_RATE) + (subtotal * SERVICE_FEE)) * 100) / 100;
+  };
 
   const getPriceDifference = (): number => {
     return Math.round((calculateNewTotal() - originalTotal) * 100) / 100;
@@ -681,7 +689,7 @@ export default function EditReservationScreen() {
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>{t('editReservation.taxesAndFees')}</Text>
             <Text style={styles.priceValue}>
-              ${Math.round((selectedRoom?.pricePerNight || 0) * nights * TAX_RATE)}
+              ${calculateTaxesAndFees(selectedRoom?.pricePerNight || 0, nights)}
             </Text>
           </View>
 
