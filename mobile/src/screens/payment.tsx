@@ -310,8 +310,8 @@ export default function PaymentScreen() {
       });
 
       if (result.success && result.data) {
-        if (result.data.payment?.payment_id) {
-          const paymentResult = await BookingService.processPayment(result.data.payment.payment_id);
+        if (result.data.payment?.payment_intent_id) {
+          const paymentResult = await BookingService.processPayment(result.data.payment.payment_intent_id, paymentMethod);
           if (!paymentResult.success) {
             router.replace({
               pathname: '/screens/paymentResult',
