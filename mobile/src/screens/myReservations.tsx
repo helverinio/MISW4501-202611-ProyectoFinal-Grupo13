@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -14,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserStore } from '@/store/userStore';
+import { useStaticDataStore } from '@/store/staticDataStore';
 import BookingService, {
   ReservaResponse,
   EstadoResponse,
@@ -36,6 +38,7 @@ interface ReservationItemVm {
   roomCapacity: number;
   roomBeds: number;
   location: string;
+  pais: string;
   checkIn: string;
   checkInTime: string;
   checkOut: string;
@@ -51,6 +54,9 @@ interface ReservationItemVm {
 export default function MyReservationsScreen() {
   const { t } = useTranslation();
   const user = useUserStore((state) => state.user);
+  const cachedEstados = useStaticDataStore((state) => state.estados);
+  const cachedCiudades = useStaticDataStore((state) => state.ciudades);
+  const cachedPaises = useStaticDataStore((state) => state.paises);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -61,7 +67,7 @@ export default function MyReservationsScreen() {
   const loadReservations = useCallback(async () => {
     try {
       setErrorMessage('');
-      
+
       if (!user?.id) {
         setErrorMessage(t('myReservations.missingUser'));
         setLoading(false);
@@ -70,20 +76,20 @@ export default function MyReservationsScreen() {
 
       const userId = user.id;
 
+      // Use cached static data (estados, ciudades, paises) from store
+      const estadosData = cachedEstados.length > 0 ? cachedEstados : [];
+      const ciudadesData = cachedCiudades.length > 0 ? cachedCiudades : [];
+      const paisesData = cachedPaises.length > 0 ? cachedPaises : [];
+
+      // Only fetch dynamic data (reservas, habitaciones, hoteles)
       const [
         reservasResult,
-        estadosResult,
         habitacionesResult,
         hotelesResult,
-        ciudadesResult,
-        paisesResult,
       ] = await Promise.all([
         BookingService.getReservasByUsuario(userId),
-        BookingService.getEstados(),
         BookingService.getHabitaciones(),
         BookingService.getHoteles(),
-        BookingService.getCiudades(),
-        BookingService.getPaises(),
       ]);
 
       if (!reservasResult.success || !reservasResult.data) {
@@ -92,9 +98,7 @@ export default function MyReservationsScreen() {
         return;
       }
 
-      if (estadosResult.success && estadosResult.data) {
-        setEstados(estadosResult.data);
-      }
+      setEstados(estadosData);
 
       const habitacionesMap = new Map<string, HabitacionResponse>();
       const hotelesMap = new Map<string, HotelResponse>();
@@ -103,13 +107,13 @@ export default function MyReservationsScreen() {
 
       habitacionesResult.data?.forEach((h) => habitacionesMap.set(h.id, h));
       hotelesResult.data?.forEach((h) => hotelesMap.set(h.id, h));
-      ciudadesResult.data?.forEach((c) => ciudadesMap.set(c.id, c));
-      paisesResult.data?.forEach((p) => paisesMap.set(p.id, p));
+      ciudadesData.forEach((c) => ciudadesMap.set(c.id, c));
+      paisesData.forEach((p) => paisesMap.set(p.id, p));
 
       const enrichedReservations = reservasResult.data.map((reserva) =>
         enrichReservation(
           reserva,
-          estadosResult.data || [],
+          estadosData,
           habitacionesMap,
           hotelesMap,
           ciudadesMap,
@@ -129,7 +133,7 @@ export default function MyReservationsScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [t, user]);
+  }, [t, user, cachedEstados, cachedCiudades, cachedPaises]);
 
   useEffect(() => {
     loadReservations();
@@ -185,12 +189,13 @@ export default function MyReservationsScreen() {
         roomCapacity: habitacion?.capacidad || 2,
         roomBeds: habitacion?.camas || 1,
         location,
+        pais: pais?.nombre || '',
         checkIn: toDateOnly(reserva.fecha_ingreso),
         checkInTime: t('myReservations.checkInTime'),
         checkOut: toDateOnly(reserva.fecha_salida),
         checkOutTime: t('myReservations.checkOutTime'),
-        guests: Math.max(1, reserva.nro_personas - 1),
-        children: reserva.nro_personas > 1 ? 1 : 0,
+        guests: reserva.nro_personas,
+        children: 0,
         nights,
         total: reserva.total,
         status,
@@ -219,6 +224,7 @@ export default function MyReservationsScreen() {
       roomCapacity: 2,
       roomBeds: 1,
       location: t('myReservations.defaultLocation'),
+      pais: '',
       checkIn: toDateOnly(reserva.fecha_ingreso),
       checkInTime: t('myReservations.checkInTime'),
       checkOut: toDateOnly(reserva.fecha_salida),
@@ -343,30 +349,73 @@ export default function MyReservationsScreen() {
 
   const handleModify = (reservation: ReservationItemVm) => {
     router.push({
-      pathname: '/screens/hotelDetails',
+      pathname: '/screens/editReservation',
       params: {
+        reservationId: reservation.id,
         hotelId: reservation.hotelId,
+        hotelName: reservation.hotelName,
+        habitacionId: reservation.habitacionId,
+        roomType: reservation.roomType,
+        roomCapacity: reservation.roomCapacity.toString(),
+        roomBeds: reservation.roomBeds.toString(),
+        location: reservation.location,
+        pais: reservation.pais,
         checkIn: reservation.checkIn,
         checkOut: reservation.checkOut,
         guests: reservation.guests.toString(),
+        children: reservation.children.toString(),
+        nights: reservation.nights.toString(),
+        total: reservation.total.toString(),
       },
     } as any);
   };
 
-  const handleCompletePayment = (reservation: ReservationItemVm) => {
-    router.push({
-      pathname: '/screens/payment',
-      params: {
-        reservationId: reservation.id,
-        hotelName: reservation.hotelName,
-        roomType: reservation.roomType,
-        checkIn: reservation.checkIn,
-        checkOut: reservation.checkOut,
-        nights: reservation.nights.toString(),
-        guests: reservation.guests.toString(),
-        grandTotal: reservation.total.toString(),
-      },
-    } as any);
+  const handleCompletePayment = async (reservation: ReservationItemVm) => {
+    try {
+      setLoading(true);
+
+      // Acquire hold on the room before proceeding to payment
+      const holdResult = await BookingService.acquireRoomHold(reservation.habitacionId, {
+        id_usuario: String(user?.id),
+        fecha_ingreso: reservation.checkIn,
+        fecha_salida: reservation.checkOut,
+      });
+
+      if (!holdResult.success || !holdResult.data) {
+        Alert.alert('Error', holdResult.error?.message || t('myReservations.loadError'));
+        return;
+      }
+
+      router.push({
+        pathname: '/screens/payment',
+        params: {
+          reservationId: reservation.id,
+          hotelData: JSON.stringify({
+            id: reservation.hotelId,
+            nombre: reservation.hotelName,
+            location: reservation.location,
+            pais: reservation.pais,
+          }),
+          roomData: JSON.stringify({
+            habitacion_id: reservation.habitacionId,
+            tipo: reservation.roomType,
+            capacidad: reservation.roomCapacity,
+            camas: reservation.roomBeds,
+          }),
+          checkIn: reservation.checkIn,
+          checkOut: reservation.checkOut,
+          nights: reservation.nights.toString(),
+          guests: reservation.guests.toString(),
+          grandTotal: reservation.total.toString(),
+          holdId: holdResult.data.id,
+        },
+      } as any);
+    } catch (error) {
+      console.error('Complete payment error:', error);
+      Alert.alert('Error', t('myReservations.loadError'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = async (reservation: ReservationItemVm) => {
