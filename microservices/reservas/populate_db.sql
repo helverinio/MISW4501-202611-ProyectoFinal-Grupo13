@@ -10,14 +10,19 @@
 CREATE EXTENSION IF NOT EXISTS unaccent;
 
 -- 🗑️ Opcional: Limpiar antes de popular (comentar si ya hay datos que quieres mantener)
- -- DELETE FROM habitaciones;
- -- DELETE FROM reglas_tarifarias;
- -- DELETE FROM planes_tarifarios;
- -- DELETE FROM tipos_habitacion;
- -- DELETE FROM hoteles;
- -- DELETE FROM ciudades;
- -- DELETE FROM paises;
- -- DELETE FROM estados;
+--DELETE FROM reserva_detalle_tarifa;
+--DELETE FROM reglas_tarifarias;
+--DELETE FROM planes_tarifarios;
+--DELETE FROM tipos_habitacion;
+--DELETE FROM room_holds;
+--DELETE FROM comentarios_hoteles;
+--DELETE FROM notificaciones;
+--DELETE FROM reservas;
+--DELETE FROM habitaciones;
+--DELETE FROM hoteles;
+--DELETE FROM ciudades;
+--DELETE FROM paises;
+--DELETE FROM estados;
 
 -- =============================================================================
 -- PAISES

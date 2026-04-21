@@ -55,7 +55,7 @@ class ProcessPaymentUseCase:
         self.repository = repository
         self.external_service = external_service
     
-    def execute(self, payment_id: str) -> Dict[str, Any]:
+    def execute(self, payment_id: str, payment_method: Optional[str] = None) -> Dict[str, Any]:
         payment = self.repository.try_lock_for_processing(payment_id)
         if not payment:
             existing = self.repository.find_by_id(payment_id)
@@ -64,6 +64,10 @@ class ProcessPaymentUseCase:
             if existing.status == 'procesando':
                 return {'error': 'Payment is already being processed'}
             return {'error': f'Payment is not in pendiente status, current status: {existing.status}'}
+
+        if payment_method and payment_method != payment.payment_method:
+            self.repository.update_payment_method(payment_id, payment_method)
+            payment.payment_method = payment_method
         
         payment_response = self.external_service.make_payment(
             payment.payment_intent_id, payment.payment_method
