@@ -70,6 +70,10 @@ locals {
     "web-client" = {}
     "web-admin"  = {}
   }
+
+  codedeploy_service_configs = {
+    for key, value in local.service_configs : key => value if key != "ext-payments"
+  }
 }
 
 resource "random_password" "db" {
@@ -568,6 +572,27 @@ resource "aws_lb_target_group" "green" {
   tags = local.common_tags
 }
 
+resource "aws_lb_target_group" "ext_payments_public" {
+  name        = substr("${var.resource_prefix}-ext-pay-pub", 0, 32)
+  port        = local.service_configs["ext-payments"].port
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    interval            = 30
+    matcher             = "200-399"
+    path                = "/health"
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 3
+  }
+
+  tags = local.common_tags
+}
+
 resource "aws_lb_listener" "public_prod" {
   load_balancer_arn = aws_lb.public.arn
   port              = local.service_configs.gateway.prod_port
@@ -604,7 +629,7 @@ resource "aws_lb_listener_rule" "ext_payments_public_prod" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.blue["ext-payments"].arn
+    target_group_arn = aws_lb_target_group.ext_payments_public.arn
   }
 
   condition {
@@ -626,7 +651,7 @@ resource "aws_lb_listener_rule" "ext_payments_public_test" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.green["ext-payments"].arn
+    target_group_arn = aws_lb_target_group.ext_payments_public.arn
   }
 
   condition {
@@ -747,7 +772,7 @@ resource "aws_ecs_service" "services" {
   enable_execute_command            = true
 
   deployment_controller {
-    type = var.enable_codedeploy ? "CODE_DEPLOY" : "ECS"
+    type = (var.enable_codedeploy && each.key != "ext-payments") ? "CODE_DEPLOY" : "ECS"
   }
 
   network_configuration {
@@ -756,10 +781,22 @@ resource "aws_ecs_service" "services" {
     assign_public_ip = true
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.blue[each.key].arn
-    container_name   = each.key
-    container_port   = each.value.port
+  dynamic "load_balancer" {
+    for_each = each.key == "ext-payments" ? [1] : []
+    content {
+      target_group_arn = aws_lb_target_group.ext_payments_public.arn
+      container_name   = each.key
+      container_port   = each.value.port
+    }
+  }
+
+  dynamic "load_balancer" {
+    for_each = each.key != "ext-payments" ? [1] : []
+    content {
+      target_group_arn = aws_lb_target_group.blue[each.key].arn
+      container_name   = each.key
+      container_port   = each.value.port
+    }
   }
 
   lifecycle {
@@ -1104,13 +1141,13 @@ resource "aws_iam_role_policy_attachment" "github_actions_admin" {
 }
 
 resource "aws_codedeploy_app" "services" {
-  for_each         = var.enable_codedeploy ? local.service_configs : {}
+  for_each         = var.enable_codedeploy ? local.codedeploy_service_configs : {}
   compute_platform = "ECS"
   name             = "${local.name_prefix}-${each.key}"
 }
 
 resource "aws_codedeploy_deployment_group" "services" {
-  for_each = var.enable_codedeploy ? local.service_configs : {}
+  for_each = var.enable_codedeploy ? local.codedeploy_service_configs : {}
 
   app_name               = aws_codedeploy_app.services[each.key].name
   deployment_group_name  = "${local.name_prefix}-${each.key}"

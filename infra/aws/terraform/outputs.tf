@@ -60,7 +60,7 @@ output "codedeploy_deployment_groups" {
 
 output "codedeploy_prod_listener_arns" {
   value = var.enable_codedeploy ? {
-    for name, config in local.service_configs : name => (
+    for name, config in local.codedeploy_service_configs : name => (
       name == "gateway" ? aws_lb_listener.public_prod.arn : aws_lb_listener.internal_prod[name].arn
     )
   } : {}

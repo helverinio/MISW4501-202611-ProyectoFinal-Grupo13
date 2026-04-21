@@ -24,7 +24,7 @@
       ],
       "environment": [
         { "name": "FLASK_ENV", "value": "production" },
-        { "name": "EXT_PAYMENTS_URL", "value": "http://__INTERNAL_ALB_DNS__:5001" },
+        { "name": "EXT_PAYMENTS_URL", "value": "http://__PUBLIC_ALB_DNS__/ext-payments" },
         { "name": "PAGOS_WEBHOOK_URL", "value": "http://__PUBLIC_ALB_DNS__" },
         { "name": "MQ_HOST", "value": "__MQ_HOST__" },
         { "name": "MQ_PORT", "value": "__MQ_PORT__" },
