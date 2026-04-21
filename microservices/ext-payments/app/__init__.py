@@ -45,6 +45,8 @@ def create_app(config_name='default'):
     
     from app.api.v1 import api_v1_bp
     app.register_blueprint(api_v1_bp, url_prefix='/api/v1')
+    # Public alias used by ALB path-based routing to expose ext-payments separately.
+    app.register_blueprint(api_v1_bp, name='api_v1_public', url_prefix='/ext-payments/api/v1')
     
     @app.route('/health')
     def health():

@@ -8,3 +8,5 @@ gunicorn==21.2.0
 psycopg2-binary==2.9.9
 PyJWT==2.8.0
 bcrypt==4.1.2
+cryptography==42.0.7
+pyotp==2.9.0

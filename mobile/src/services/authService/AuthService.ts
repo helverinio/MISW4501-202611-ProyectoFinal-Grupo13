@@ -12,11 +12,11 @@ export const AuthService = {
 
       const url = '/api/v1/auth/login';
 
-      const hashedPwd = await hashingUtility(password);
+      // const hashedPwd = await hashingUtility(password);
 
       const response = await customAxios.post(url, {
         usuario: email,
-        contrasena: hashedPwd,
+        contrasena: password,
       });
 
       if (response.status === 200) {

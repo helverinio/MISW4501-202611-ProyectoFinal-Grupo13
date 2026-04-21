@@ -75,3 +75,39 @@ def logout():
     auth_header = request.headers.get('Authorization')
     result = get_service().logout(auth_header)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/auth/register', methods=['POST'])
+def register_admin():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().register_admin(data)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/auth/verify-setup', methods=['POST'])
+def verify_admin_setup():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().verify_admin_setup(data)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/auth/login/step1', methods=['POST'])
+def admin_login_step1():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().admin_login_step1(data)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/auth/login/step2', methods=['POST'])
+def admin_login_step2():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    result = get_service().admin_login_step2(data)
+    return jsonify(result['data']), result['status_code']
