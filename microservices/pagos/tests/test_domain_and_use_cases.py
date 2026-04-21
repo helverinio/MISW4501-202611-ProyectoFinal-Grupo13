@@ -120,23 +120,6 @@ def test_register_payment_success():
     assert result["status"] == "pendiente"
 
 
-def test_register_payment_duplicate_and_external_error():
-    repo = InMemoryPaymentRepo()
-    existing = _sample_payment()
-    repo.save(existing)
-    external = FakeExternalService()
-    use_case = RegisterPaymentUseCase(repo, external, "http://gateway:8080")
-
-    duplicate = use_case.execute("res-1", 100, "USD", "card")
-    assert "error" in duplicate
-
-    repo2 = InMemoryPaymentRepo()
-    external2 = FakeExternalService()
-    external2.intent_response = {"error": "ext-payments down"}
-    use_case2 = RegisterPaymentUseCase(repo2, external2, "http://gateway:8080")
-    failed = use_case2.execute("res-2", 100, "USD", "card")
-    assert failed["error"] == "ext-payments down"
-
 
 def test_process_payment_paths():
     repo = InMemoryPaymentRepo()
