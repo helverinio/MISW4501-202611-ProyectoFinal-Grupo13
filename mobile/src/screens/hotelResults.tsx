@@ -18,6 +18,8 @@ interface HotelWithMinPrice extends Hotel {
   minPrice: number | null;
 }
 
+// TODO: Retrieve pictures from the backend
+
 export default function HotelResultsScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams();
@@ -69,8 +71,8 @@ export default function HotelResultsScreen() {
   };
 
   const formatDateRange = () => {
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
+    const checkInDate = new Date(checkIn + 'T00:00:00');
+    const checkOutDate = new Date(checkOut + 'T00:00:00');
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
     return `${checkInDate.toLocaleDateString('en-US', options)} - ${checkOutDate.toLocaleDateString('en-US', options)}`;
   };
@@ -143,8 +145,8 @@ export default function HotelResultsScreen() {
 
   const renderHotelCard = ({ item }: { item: HotelWithMinPrice }) => {
     const amenidadesList = getAmenidadesList(item.amenidades || '');
-    const rating = (item as any).rating || null;
-    const reviews = (item as any).reviews || null;
+    const rating = (item as any).rating_promedio ?? null;
+    const reviews = (item as any).cantidad_comentarios ?? null;
     const distancia = (item as any).distancia || null;
 
     return (

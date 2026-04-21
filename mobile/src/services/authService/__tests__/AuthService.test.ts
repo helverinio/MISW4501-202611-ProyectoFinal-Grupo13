@@ -1,16 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthService } from '../AuthService';
 import customAxios from '@/utils/api';
-import hashingUtility from '../../../utils/hashingUtility';
 import { useUserStore } from '@/store/userStore';
 
 jest.mock('@react-native-async-storage/async-storage');
 jest.mock('@/utils/api');
-jest.mock('../../../utils/hashingUtility');
 jest.mock('@/store/userStore');
 
 const mockAxios = customAxios as jest.Mocked<typeof customAxios>;
-const mockHashingUtility = hashingUtility as jest.MockedFunction<typeof hashingUtility>;
 const mockAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 
 describe('AuthService', () => {
@@ -26,11 +23,6 @@ describe('AuthService', () => {
   describe('send', () => {
     const validEmail = 'test@example.com';
     const validPassword = 'password123';
-    const hashedPassword = 'hashed_password_123';
-
-    beforeEach(() => {
-      mockHashingUtility.mockResolvedValue(hashedPassword);
-    });
 
     it('should remove existing token before login attempt', async () => {
       mockAxios.post.mockResolvedValue({
@@ -43,17 +35,6 @@ describe('AuthService', () => {
       expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith('_x');
     });
 
-    it('should hash the password before sending', async () => {
-      mockAxios.post.mockResolvedValue({
-        status: 200,
-        data: { access_token: 'token', refresh_token: 'refresh', usuario: {} },
-      });
-
-      await AuthService.send(validEmail, validPassword);
-
-      expect(mockHashingUtility).toHaveBeenCalledWith(validPassword);
-    });
-
     it('should call API with correct credentials', async () => {
       mockAxios.post.mockResolvedValue({
         status: 200,
@@ -64,7 +45,7 @@ describe('AuthService', () => {
 
       expect(mockAxios.post).toHaveBeenCalledWith('/api/v1/auth/login', {
         usuario: validEmail,
-        contrasena: hashedPassword,
+        contrasena: validPassword,
       });
     });
 
@@ -176,17 +157,5 @@ describe('AuthService', () => {
       expect(mockAsyncStorage.removeItem).toHaveBeenLastCalledWith('_x');
     });
 
-    it('should handle hashing utility failure', async () => {
-      mockHashingUtility.mockRejectedValue(new Error('Hashing failed'));
-
-      const result = await AuthService.send(validEmail, validPassword);
-
-      expect(result).toEqual({
-        success: false,
-        error: {
-          message: 'Authentication error',
-        },
-      });
-    });
   });
 });

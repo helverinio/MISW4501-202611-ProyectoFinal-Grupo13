@@ -9,7 +9,7 @@ const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'https://d1r8df79ch2otn.cloudfront.net'; // For Android emulator (nginx gateway)
+  backendUrl = 'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
@@ -167,7 +167,7 @@ customAxios.interceptors.response.use(
             onTokenRefreshed(token);
             originalRequest.headers.Authorization = `Bearer ${token}`;
             console.log('🔄 Retrying request after token refresh');
-            return customAxios(originalRequest);
+            return customAxios.request(originalRequest);
           }
         }
         

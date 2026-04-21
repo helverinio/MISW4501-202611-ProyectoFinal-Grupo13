@@ -30,7 +30,12 @@ const renderAndWaitForAuth = async () => {
 describe('LoginScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.useFakeTimers();
     mockAsyncStorage.getItem.mockResolvedValue(null);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('Rendering', () => {

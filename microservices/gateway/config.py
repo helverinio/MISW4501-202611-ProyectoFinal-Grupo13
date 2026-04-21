@@ -6,6 +6,8 @@ class Config:
         'https://d21pufplfuuvcd.cloudfront.net',
         'http://localhost:4200',
         'http://127.0.0.1:4200',
+        'http://localhost:4201',
+        'http://127.0.0.1:4201',
     ]
 
     _raw_cors_origins = os.environ.get('CORS_ORIGINS', '')

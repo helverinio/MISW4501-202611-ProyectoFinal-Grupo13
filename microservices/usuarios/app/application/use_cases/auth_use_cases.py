@@ -10,6 +10,62 @@ from app.domain.repositories.usuario_repository import UsuarioRepository
 from app.domain.repositories.token_repository import TokenRepository
 
 
+def issue_tokens_for_user(
+    user: Usuario,
+    token_repository: TokenRepository,
+    include_mfa_verified: bool = False,
+) -> Dict[str, Any]:
+    access_token_expires = timedelta(seconds=current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES', 3600))
+    refresh_token_expires = timedelta(seconds=current_app.config.get('JWT_REFRESH_TOKEN_EXPIRES', 604800))
+
+    now = datetime.utcnow()
+    access_token_expires_at = now + access_token_expires
+    refresh_token_expires_at = now + refresh_token_expires
+
+    payload = {
+        'sub': user.id,
+        'email': user.email,
+        'role': user.role,
+        'exp': access_token_expires_at,
+        'iat': now,
+        'type': 'access'
+    }
+    if include_mfa_verified:
+        payload['mfa_verified'] = True
+
+    access_token = jwt.encode(
+        payload,
+        current_app.config.get('JWT_SECRET_KEY'),
+        algorithm='HS256'
+    )
+
+    refresh_token = secrets.token_urlsafe(64)
+
+    token = Token.create(
+        usuario_id=user.id,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        access_token_expires_at=access_token_expires_at,
+        refresh_token_expires_at=refresh_token_expires_at
+    )
+    token_repository.save(token)
+
+    return {
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'token_type': 'Bearer',
+        'expires_in': int(access_token_expires.total_seconds()),
+        'usuario': {
+            'id': user.id,
+            'nombre': user.nombre,
+            'email': user.email,
+            'usuario': user.usuario,
+            'role': user.role,
+            'status': user.status,
+        }
+    }
+
+
 class AuthenticateUseCase:
     def __init__(self, usuario_repository: UsuarioRepository, token_repository: TokenRepository):
         self.usuario_repository = usuario_repository
@@ -28,48 +84,7 @@ class AuthenticateUseCase:
         if not bcrypt.checkpw(contrasena.encode('utf-8'), user.contrasena.encode('utf-8')):
             return None
         
-        access_token_expires = timedelta(seconds=current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES', 3600))
-        refresh_token_expires = timedelta(seconds=current_app.config.get('JWT_REFRESH_TOKEN_EXPIRES', 604800))
-        
-        now = datetime.utcnow()
-        access_token_expires_at = now + access_token_expires
-        refresh_token_expires_at = now + refresh_token_expires
-        
-        access_token = jwt.encode(
-            {
-                'sub': user.id,
-                'email': user.email,
-                'exp': access_token_expires_at,
-                'iat': now,
-                'type': 'access'
-            },
-            current_app.config.get('JWT_SECRET_KEY'),
-            algorithm='HS256'
-        )
-        
-        refresh_token = secrets.token_urlsafe(64)
-        
-        token = Token.create(
-            usuario_id=user.id,
-            access_token=access_token,
-            refresh_token=refresh_token,
-            access_token_expires_at=access_token_expires_at,
-            refresh_token_expires_at=refresh_token_expires_at
-        )
-        self.token_repository.save(token)
-        
-        return {
-            'access_token': access_token,
-            'refresh_token': refresh_token,
-            'token_type': 'Bearer',
-            'expires_in': int(access_token_expires.total_seconds()),
-            'usuario': {
-                'id': user.id,
-                'nombre': user.nombre,
-                'email': user.email,
-                'usuario': user.usuario
-            }
-        }
+        return issue_tokens_for_user(user, self.token_repository)
 
 
 class RefreshTokenUseCase:
@@ -92,48 +107,7 @@ class RefreshTokenUseCase:
         
         self.token_repository.revoke(token.id)
         
-        access_token_expires = timedelta(seconds=current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES', 3600))
-        refresh_token_expires = timedelta(seconds=current_app.config.get('JWT_REFRESH_TOKEN_EXPIRES', 604800))
-        
-        now = datetime.utcnow()
-        access_token_expires_at = now + access_token_expires
-        refresh_token_expires_at = now + refresh_token_expires
-        
-        new_access_token = jwt.encode(
-            {
-                'sub': user.id,
-                'email': user.email,
-                'exp': access_token_expires_at,
-                'iat': now,
-                'type': 'access'
-            },
-            current_app.config.get('JWT_SECRET_KEY'),
-            algorithm='HS256'
-        )
-        
-        new_refresh_token = secrets.token_urlsafe(64)
-        
-        new_token = Token.create(
-            usuario_id=user.id,
-            access_token=new_access_token,
-            refresh_token=new_refresh_token,
-            access_token_expires_at=access_token_expires_at,
-            refresh_token_expires_at=refresh_token_expires_at
-        )
-        self.token_repository.save(new_token)
-        
-        return {
-            'access_token': new_access_token,
-            'refresh_token': new_refresh_token,
-            'token_type': 'Bearer',
-            'expires_in': int(access_token_expires.total_seconds()),
-            'usuario': {
-                'id': user.id,
-                'nombre': user.nombre,
-                'email': user.email,
-                'usuario': user.usuario
-            }
-        }
+        return issue_tokens_for_user(user, self.token_repository)
 
 
 class GetUsuarioByTokenUseCase:
