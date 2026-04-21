@@ -79,6 +79,13 @@ export interface ReservaResponse {
   id_pais: string;
   id_habitacion: string;
   id_estado: string;
+  id_cotizacion?: string | null;
+  payment_id?: string | null;
+  payment?: {
+    payment_id?: string | null;
+    payment_intent_id?: string | null;
+    payment_status?: string | null;
+  } | null;
 }
 
 export interface HabitacionResponse {

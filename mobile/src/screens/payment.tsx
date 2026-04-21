@@ -347,7 +347,7 @@ export default function PaymentScreen() {
         });
 
         const updateResult = await BookingService.updateReserva(reservationId, {
-          id_estado: confirmedEstado?.id || estados[0]?.id,
+          // id_estado: confirmedEstado?.id || estados[0]?.id,
           total: Math.round(newTotal * 100) / 100,
           fecha_ingreso: checkIn,
           fecha_salida: checkOut,
@@ -362,6 +362,21 @@ export default function PaymentScreen() {
             },
           });
           return;
+        }
+
+        const modificationPaymentIntentId = updateResult.data?.payment?.payment_intent_id;
+        if (modificationPaymentIntentId) {
+          const paymentResult = await BookingService.processPayment(modificationPaymentIntentId);
+          if (!paymentResult.success) {
+            router.replace({
+              pathname: '/screens/paymentResult',
+              params: {
+                success: 'false',
+                errorMessage: paymentResult.error?.message || t('payment.paymentError'),
+              },
+            });
+            return;
+          }
         }
 
         const checkInDate = new Date(checkIn + 'T00:00:00');
@@ -413,7 +428,7 @@ export default function PaymentScreen() {
         });
 
         const updateResult = await BookingService.updateReserva(reservationId, {
-          id_estado: confirmedEstado?.id || estados[0]?.id,
+          // id_estado: confirmedEstado?.id || estados[0]?.id,
           total: Math.round(finalTotal * 100) / 100,
         });
 
@@ -426,6 +441,21 @@ export default function PaymentScreen() {
             },
           });
           return;
+        }
+
+        const pendingPaymentIntentId = updateResult.data?.payment?.payment_intent_id;
+        if (pendingPaymentIntentId) {
+          const paymentResult = await BookingService.processPayment(pendingPaymentIntentId);
+          if (!paymentResult.success) {
+            router.replace({
+              pathname: '/screens/paymentResult',
+              params: {
+                success: 'false',
+                errorMessage: paymentResult.error?.message || t('payment.paymentError'),
+              },
+            });
+            return;
+          }
         }
 
         const checkInDate = new Date(checkIn + 'T00:00:00');
