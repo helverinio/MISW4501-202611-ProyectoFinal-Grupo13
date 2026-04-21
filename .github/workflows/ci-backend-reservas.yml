@@ -19,6 +19,7 @@ on:
       - develop
       - main
       - feature/srpint1
+      - feature/sprint2
     types:
       - opened
       - reopened

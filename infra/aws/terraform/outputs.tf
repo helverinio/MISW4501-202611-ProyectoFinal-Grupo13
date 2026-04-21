@@ -11,9 +11,10 @@ output "ecs_cluster_name" {
 }
 
 output "ecs_services" {
-  value = {
-    for name, service in aws_ecs_service.services : name => service.name
-  }
+  value = merge(
+    { for name, service in aws_ecs_service.services : name => service.name },
+    { "ext-payments" = aws_ecs_service.ext_payments.name }
+  )
 }
 
 output "ecs_task_execution_role_arn" {
@@ -60,7 +61,7 @@ output "codedeploy_deployment_groups" {
 
 output "codedeploy_prod_listener_arns" {
   value = var.enable_codedeploy ? {
-    for name, config in local.service_configs : name => (
+    for name, config in local.codedeploy_service_configs : name => (
       name == "gateway" ? aws_lb_listener.public_prod.arn : aws_lb_listener.internal_prod[name].arn
     )
   } : {}
@@ -94,6 +95,14 @@ output "mq_port" {
 
 output "api_cloudfront_domain_name" {
   value = aws_cloudfront_distribution.api.domain_name
+}
+
+output "ext_payments_public_base_url" {
+  value = "https://${aws_cloudfront_distribution.api.domain_name}/ext-payments/api/v1"
+}
+
+output "ext_payments_public_health_url" {
+  value = "https://${aws_cloudfront_distribution.api.domain_name}/ext-payments/api/v1/health"
 }
 
 output "frontend_buckets" {

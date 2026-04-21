@@ -70,6 +70,10 @@ locals {
     "web-client" = {}
     "web-admin"  = {}
   }
+
+  codedeploy_service_configs = {
+    for key, value in local.service_configs : key => value if key != "ext-payments"
+  }
 }
 
 resource "random_password" "db" {
@@ -239,6 +243,14 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_8080" 
   referenced_security_group_id = aws_security_group.public_alb.id
   from_port                    = 8080
   to_port                      = 8080
+  ip_protocol                  = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_5001" {
+  security_group_id            = aws_security_group.ecs_tasks.id
+  referenced_security_group_id = aws_security_group.public_alb.id
+  from_port                    = 5001
+  to_port                      = 5001
   ip_protocol                  = "tcp"
 }
 
@@ -560,6 +572,27 @@ resource "aws_lb_target_group" "green" {
   tags = local.common_tags
 }
 
+resource "aws_lb_target_group" "ext_payments_public" {
+  name        = substr("${var.resource_prefix}-ext-pay-pub", 0, 32)
+  port        = local.service_configs["ext-payments"].port
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    interval            = 30
+    matcher             = "200-399"
+    path                = "/health"
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 3
+  }
+
+  tags = local.common_tags
+}
+
 resource "aws_lb_listener" "public_prod" {
   load_balancer_arn = aws_lb.public.arn
   port              = local.service_configs.gateway.prod_port
@@ -587,6 +620,50 @@ resource "aws_lb_listener" "public_test" {
 
   lifecycle {
     ignore_changes = [default_action]
+  }
+}
+
+resource "aws_lb_listener_rule" "ext_payments_public_prod" {
+  listener_arn = aws_lb_listener.public_prod.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ext_payments_public.arn
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/ext-payments/api/v1/health",
+        "/ext-payments/api/v1/payment-intents",
+        "/ext-payments/api/v1/payment-intents/*",
+        "/ext-payments/api/v1/payments",
+        "/ext-payments/api/v1/payments/*",
+      ]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "ext_payments_public_test" {
+  listener_arn = aws_lb_listener.public_test.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ext_payments_public.arn
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/ext-payments/api/v1/health",
+        "/ext-payments/api/v1/payment-intents",
+        "/ext-payments/api/v1/payment-intents/*",
+        "/ext-payments/api/v1/payments",
+        "/ext-payments/api/v1/payments/*",
+      ]
+    }
   }
 }
 
@@ -682,8 +759,9 @@ resource "aws_ecs_task_definition" "bootstrap" {
   tags = local.common_tags
 }
 
+# ECS services that use CodeDeploy (blue/green) – ext-payments is managed separately below
 resource "aws_ecs_service" "services" {
-  for_each = local.service_configs
+  for_each = local.codedeploy_service_configs
 
   name            = "${local.name_prefix}-${each.key}"
   cluster         = aws_ecs_cluster.main.id
@@ -729,8 +807,50 @@ resource "aws_ecs_service" "services" {
   tags = local.common_tags
 }
 
+# ext-payments uses ECS rolling deployment (not CodeDeploy blue/green)
+resource "aws_ecs_service" "ext_payments" {
+  name            = "${local.name_prefix}-ext-payments"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.bootstrap["ext-payments"].arn
+  desired_count   = local.service_configs["ext-payments"].desired_count
+  launch_type     = "FARGATE"
+
+  health_check_grace_period_seconds = 60
+  enable_execute_command            = true
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  network_configuration {
+    subnets          = values(aws_subnet.public)[*].id
+    security_groups  = [aws_security_group.ecs_tasks.id]
+    assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.ext_payments_public.arn
+    container_name   = "ext-payments"
+    container_port   = local.service_configs["ext-payments"].port
+  }
+
+  lifecycle {
+    ignore_changes = [
+      desired_count,
+      task_definition,
+    ]
+  }
+
+  depends_on = [
+    aws_lb_listener.public_prod,
+    aws_lb_listener.public_test,
+  ]
+
+  tags = local.common_tags
+}
+
 resource "aws_appautoscaling_target" "services" {
-  for_each = local.service_configs
+  for_each = local.codedeploy_service_configs
 
   max_capacity       = each.value.max_count
   min_capacity       = each.value.desired_count
@@ -740,13 +860,39 @@ resource "aws_appautoscaling_target" "services" {
 }
 
 resource "aws_appautoscaling_policy" "services_cpu" {
-  for_each = local.service_configs
+  for_each = local.codedeploy_service_configs
 
   name               = "${local.name_prefix}-${each.key}-cpu"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.services[each.key].resource_id
   scalable_dimension = aws_appautoscaling_target.services[each.key].scalable_dimension
   service_namespace  = aws_appautoscaling_target.services[each.key].service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value       = 60
+    scale_in_cooldown  = 120
+    scale_out_cooldown = 60
+  }
+}
+
+resource "aws_appautoscaling_target" "ext_payments" {
+  max_capacity       = local.service_configs["ext-payments"].max_count
+  min_capacity       = local.service_configs["ext-payments"].desired_count
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.ext_payments.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ext_payments_cpu" {
+  name               = "${local.name_prefix}-ext-payments-cpu"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ext_payments.resource_id
+  scalable_dimension = aws_appautoscaling_target.ext_payments.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ext_payments.service_namespace
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
@@ -1052,13 +1198,13 @@ resource "aws_iam_role_policy_attachment" "github_actions_admin" {
 }
 
 resource "aws_codedeploy_app" "services" {
-  for_each         = var.enable_codedeploy ? local.service_configs : {}
+  for_each         = var.enable_codedeploy ? local.codedeploy_service_configs : {}
   compute_platform = "ECS"
   name             = "${local.name_prefix}-${each.key}"
 }
 
 resource "aws_codedeploy_deployment_group" "services" {
-  for_each = var.enable_codedeploy ? local.service_configs : {}
+  for_each = var.enable_codedeploy ? local.codedeploy_service_configs : {}
 
   app_name               = aws_codedeploy_app.services[each.key].name
   deployment_group_name  = "${local.name_prefix}-${each.key}"

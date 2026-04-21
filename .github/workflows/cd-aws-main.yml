@@ -62,6 +62,33 @@ jobs:
             -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
             -backend-config="encrypt=true"
 
+      - name: Migrate ext-payments ECS state to dedicated resource
+        working-directory: infra/aws/terraform
+        run: |
+          # Move the ext-payments service from the for_each resource to the dedicated resource
+          # so Terraform recreates it with deployment_controller=ECS instead of CODE_DEPLOY.
+          # This is idempotent: if already moved, `state show` will fail and we skip gracefully.
+          if terraform state show 'aws_ecs_service.services["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_ecs_service.services[ext-payments] → aws_ecs_service.ext_payments"
+            terraform state mv 'aws_ecs_service.services["ext-payments"]' 'aws_ecs_service.ext_payments' || true
+          else
+            echo "aws_ecs_service.services[ext-payments] not in state (already moved or never existed) – skipping"
+          fi
+          # Same for autoscaling target
+          if terraform state show 'aws_appautoscaling_target.services["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_appautoscaling_target.services[ext-payments] → aws_appautoscaling_target.ext_payments"
+            terraform state mv 'aws_appautoscaling_target.services["ext-payments"]' 'aws_appautoscaling_target.ext_payments' || true
+          else
+            echo "aws_appautoscaling_target.services[ext-payments] not in state – skipping"
+          fi
+          # Same for autoscaling policy
+          if terraform state show 'aws_appautoscaling_policy.services_cpu["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_appautoscaling_policy.services_cpu[ext-payments] → aws_appautoscaling_policy.ext_payments_cpu"
+            terraform state mv 'aws_appautoscaling_policy.services_cpu["ext-payments"]' 'aws_appautoscaling_policy.ext_payments_cpu' || true
+          else
+            echo "aws_appautoscaling_policy.services_cpu[ext-payments] not in state – skipping"
+          fi
+
       - name: Terraform apply
         working-directory: infra/aws/terraform
         run: terraform apply -lock-timeout=15m -auto-approve
@@ -168,6 +195,19 @@ jobs:
             service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
             prod_listener_arn=$(jq -r --arg s "$service" '.codedeploy_prod_listener_arns.value[$s]' "$TF_OUTPUTS")
 
+            service_name="${service_name//$'\r'/}"
+            prod_listener_arn="${prod_listener_arn//$'\r'/}"
+
+            if [[ "$service_name" == "null" || -z "$service_name" ]]; then
+              echo "Skipping listener reconcile for $service: ECS service name not found"
+              return 0
+            fi
+
+            if [[ "$prod_listener_arn" == "null" || -z "$prod_listener_arn" || "$prod_listener_arn" != arn:aws*:elasticloadbalancing:*:listener/* ]]; then
+              echo "Skipping listener reconcile for $service: no CodeDeploy listener configured"
+              return 0
+            fi
+
             expected_target_group=$(aws ecs describe-services \
               --cluster "$cluster_name" \
               --services "$service_name" \
@@ -228,7 +268,7 @@ jobs:
 
           deploy_service() {
             local service="$1"
-            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status
+            local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status cluster_name service_name
 
             image_repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
             family=$(jq -r --arg s "$service" '.service_families.value[$s]' "$TF_OUTPUTS")
@@ -240,6 +280,22 @@ jobs:
 
             taskdef_file=$(render_taskdef "$service" "$image_uri" "$family" "$log_group")
             taskdef_arn=$(aws ecs register-task-definition --cli-input-json "file://$taskdef_file" --query 'taskDefinition.taskDefinitionArn' --output text)
+
+            app_name="${app_name//$'\r'/}"
+            group_name="${group_name//$'\r'/}"
+
+            if [[ "$app_name" == "null" || "$group_name" == "null" || -z "$app_name" || -z "$group_name" ]]; then
+              cluster_name=$(jq -r '.ecs_cluster_name.value' "$TF_OUTPUTS")
+              service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
+              service_name="${service_name//$'\r'/}"
+              echo "CodeDeploy not configured for $service. Using ECS rolling deployment."
+              aws ecs update-service \
+                --cluster "$cluster_name" \
+                --service "$service_name" \
+                --task-definition "$taskdef_arn" \
+                --force-new-deployment >/dev/null
+              return 0
+            fi
 
             appspec_file="/tmp/${service}-appspec.json"
             jq -n --arg taskdef "$taskdef_arn" --arg container "$service" --argjson port "$port" '{version:1,Resources:[{TargetService:{Type:"AWS::ECS::Service",Properties:{TaskDefinition:$taskdef,LoadBalancerInfo:{ContainerName:$container,ContainerPort:$port},PlatformVersion:"LATEST"}}}]}' > "$appspec_file"
