@@ -136,7 +136,7 @@ PY
 
 deploy_backend_service() {
   local service="$1"
-  local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status attempts
+  local image_repo family log_group app_name group_name port image_uri taskdef_file taskdef_arn appspec_file deploy_input_file deployment_id status attempts cluster_name service_name
 
   image_repo=$(jq -r --arg s "$service" '.ecr_repositories.value[$s]' "$TF_OUTPUTS")
   family=$(jq -r --arg s "$service" '.service_families.value[$s]' "$TF_OUTPUTS")
@@ -148,6 +148,18 @@ deploy_backend_service() {
 
   taskdef_file=$(render_taskdef "$service" "$image_uri" "$family" "$log_group") || return 0
   taskdef_arn=$(aws ecs register-task-definition --cli-input-json "file://${taskdef_file}" --query 'taskDefinition.taskDefinitionArn' --output text)
+
+  if [[ "$app_name" == "null" || "$group_name" == "null" || -z "$app_name" || -z "$group_name" ]]; then
+    cluster_name=$(jq -r '.ecs_cluster_name.value' "$TF_OUTPUTS")
+    service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
+    echo "CodeDeploy not configured for ${service}. Using ECS rolling deployment."
+    aws ecs update-service \
+      --cluster "$cluster_name" \
+      --service "$service_name" \
+      --task-definition "$taskdef_arn" \
+      --force-new-deployment >/dev/null
+    return 0
+  fi
 
   appspec_file="/tmp/${service}-appspec.json"
   jq -n --arg taskdef "$taskdef_arn" --arg container "$service" --argjson port "$port" '{version:1,Resources:[{TargetService:{Type:"AWS::ECS::Service",Properties:{TaskDefinition:$taskdef,LoadBalancerInfo:{ContainerName:$container,ContainerPort:$port},PlatformVersion:"LATEST"}}}]}' > "$appspec_file"
@@ -203,6 +215,11 @@ deploy_backends() {
     cluster_name=$(jq -r '.ecs_cluster_name.value' "$TF_OUTPUTS")
     service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
     prod_listener_arn=$(jq -r --arg s "$service" '.codedeploy_prod_listener_arns.value[$s]' "$TF_OUTPUTS")
+
+    if [[ "$prod_listener_arn" == "null" || -z "$prod_listener_arn" ]]; then
+      echo "Skipping listener reconcile for ${service}: no CodeDeploy listener configured"
+      return 0
+    fi
 
     expected_target_group=$(aws ecs describe-services \
       --cluster "$cluster_name" \
