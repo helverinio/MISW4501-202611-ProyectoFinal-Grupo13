@@ -216,7 +216,16 @@ deploy_backends() {
     service_name=$(jq -r --arg s "$service" '.ecs_services.value[$s]' "$TF_OUTPUTS")
     prod_listener_arn=$(jq -r --arg s "$service" '.codedeploy_prod_listener_arns.value[$s]' "$TF_OUTPUTS")
 
-    if [[ "$prod_listener_arn" == "null" || -z "$prod_listener_arn" ]]; then
+    # Trim potential CR/LF from jq output when env vars were created on Windows.
+    service_name="${service_name//$'\r'/}"
+    prod_listener_arn="${prod_listener_arn//$'\r'/}"
+
+    if [[ "$service_name" == "null" || -z "$service_name" ]]; then
+      echo "Skipping listener reconcile for ${service}: ECS service name not found"
+      return 0
+    fi
+
+    if [[ "$prod_listener_arn" == "null" || -z "$prod_listener_arn" || "$prod_listener_arn" != arn:aws*:elasticloadbalancing:*:listener/* ]]; then
       echo "Skipping listener reconcile for ${service}: no CodeDeploy listener configured"
       return 0
     fi
