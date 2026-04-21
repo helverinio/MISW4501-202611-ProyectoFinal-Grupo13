@@ -20,6 +20,7 @@ import {
   EstadoResponse,
   CreatedReservaResponse,
 } from '../services/bookingService';
+import { TAX_RATE, SERVICE_FEE } from '../utils/constants';
 
 type PaymentMethod = 'card' | 'paypal' | 'applepay';
 
@@ -82,6 +83,7 @@ export default function PaymentScreen() {
   const [createdReserva, setCreatedReserva] = useState<CreatedReservaResponse | null>(null);
   const [initializingReservation, setInitializingReservation] = useState(false);
   const [isModificationFlow, setIsModificationFlow] = useState(false);
+  const [isReservedButPendingPayment, setIsReservedButPendingPayment] = useState(false);
   const [cachedEstados, setCachedEstados] = useState<EstadoResponse[] | null>(null);
 
   const formatCardNumber = (value: string) => {
@@ -136,7 +138,9 @@ export default function PaymentScreen() {
   };
 
   const earlyBirdDiscount = getEarlyBirdDiscount(checkIn);
-  const finalTotal = grandTotal - earlyBirdDiscount;
+  const finalTotal = isReservedButPendingPayment
+    ? grandTotal + (grandTotal * TAX_RATE) + (grandTotal * SERVICE_FEE) - earlyBirdDiscount
+    : grandTotal - earlyBirdDiscount;
 
   const validateForm = (): boolean => {
     if (paymentMethod === 'card') {
@@ -233,14 +237,34 @@ export default function PaymentScreen() {
                 .trim();
               modification =
                 normalizedNombre.includes('pago recibido') ||
-                normalizedNombre.includes('confirmada') ||
+                normalizedNombre.includes('confirmada')
+            }
+          }
+        }
+
+        let isPendingPayment = false;
+        if (reservationId) {
+          const reservaResult = await BookingService.getReservaById(reservationId);
+          if (reservaResult.success && reservaResult.data) {
+            const estadoActual = estadosResult.data.find(
+              (e) => e.id === reservaResult.data!.id_estado
+            );
+            if (estadoActual) {
+              const normalizedNombre = estadoActual.nombre
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .trim();
+              isPendingPayment =
                 normalizedNombre.includes('pendiente');
             }
           }
         }
-        setIsModificationFlow(modification);
 
-        if (!modification) {
+        setIsModificationFlow(modification);
+        setIsReservedButPendingPayment(isPendingPayment);
+
+        if (!modification && !isPendingPayment) {
           // Standard new reservation flow - create reservation on screen load
           let idPais = '';
           const paisesResult = await BookingService.getPaises();
@@ -294,7 +318,7 @@ export default function PaymentScreen() {
     initializeReservation();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handlePayment = async () => {
+  const handlePayment = async () => {    
     if (!validateForm()) return;
 
     setProcessing(true);
@@ -366,6 +390,69 @@ export default function PaymentScreen() {
             cardType,
             isModification: 'true',
             priceDifference: finalTotal.toString(),
+          },
+        });
+        return;
+      }
+
+      // Pending payment reservation - reservation exists, just needs payment + status update
+      if (isReservedButPendingPayment && reservationId) {
+        const confirmedEstado = estados.find((estado) => {
+          const name = estado.nombre
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+          return (
+            name.includes('confirmada') ||
+            name.includes('reservada via pms') ||
+            name.includes('reservado')
+          );
+        });
+
+        const updateResult = await BookingService.updateReserva(reservationId, {
+          id_estado: confirmedEstado?.id || estados[0]?.id,
+          total: Math.round(finalTotal * 100) / 100,
+        });
+
+        if (!updateResult.success) {
+          router.replace({
+            pathname: '/screens/paymentResult',
+            params: {
+              success: 'false',
+              errorMessage: updateResult.error?.message || t('payment.paymentError'),
+            },
+          });
+          return;
+        }
+
+        const checkInDate = new Date(checkIn + 'T00:00:00');
+        const checkOutDate = new Date(checkOut + 'T00:00:00');
+        const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+        const taxesFees = grandTotal * TAX_RATE + grandTotal * SERVICE_FEE;
+        const roomPrice = finalTotal - taxesFees;
+        const cleanedCard = cardNumber.replace(/\s/g, '');
+        const cardLast4 = cleanedCard.slice(-4);
+        const cardType = detectCardType(cleanedCard);
+
+        router.replace({
+          pathname: '/screens/paymentResult',
+          params: {
+            success: 'true',
+            bookingId: reservationId,
+            hotelName: hotelData.nombre,
+            roomType: roomData.nombre || roomData.tipo || '',
+            rating: (hotelData.rating_promedio ?? 4.5).toString(),
+            roomImage: roomData.imagen || hotelData.imagen || '',
+            checkIn,
+            checkOut,
+            nights: nights.toString(),
+            guests: guests.toString(),
+            roomPrice: roomPrice.toFixed(2),
+            taxesFees: taxesFees.toFixed(2),
+            grandTotal: finalTotal.toString(),
+            cardLast4,
+            cardType,
           },
         });
         return;
@@ -694,7 +781,7 @@ export default function PaymentScreen() {
           <TouchableOpacity
             style={[styles.submitButton, (processing || initializingReservation) && styles.submitButtonDisabled]}
             onPress={handlePayment}
-            disabled={processing || initializingReservation || (!isModificationFlow && !createdReserva && !initializingReservation)}
+            disabled={processing || initializingReservation || (!isModificationFlow && !isReservedButPendingPayment && !createdReserva && !initializingReservation)}
           >
             {(processing || initializingReservation) ? (
               <ActivityIndicator color="#fff" />
