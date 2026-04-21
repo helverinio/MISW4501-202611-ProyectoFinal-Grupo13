@@ -545,6 +545,38 @@ export const BookingService = {
     }
   },
 
+  getReservaById: async (
+    reservaId: string
+  ): Promise<BookingServiceResult<ReservaResponse>> => {
+    try {
+      const url = `/api/v1/reservas/${reservaId}`;
+      const response = await customAxios.get(url);
+
+      if (response.status === 200) {
+        return {
+          success: true,
+          data: response.data,
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          message: 'Failed to get reserva',
+          status: response.status,
+        },
+      };
+    } catch (error: any) {
+      console.error('Get reserva error:', error);
+      return {
+        success: false,
+        error: {
+          message: error.message || 'Failed to get reserva',
+        },
+      };
+    }
+  },
+
   updateReserva: async (
     reservaId: string,
     payload: Partial<ReservaResponse>

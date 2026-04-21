@@ -65,7 +65,6 @@ export default function PaymentScreen() {
   const holdId = getParam('holdId');
   const taxRate = parseFloat(getParam('taxRate') || '0.12');
   const taxesAmount = parseFloat(getParam('taxesAmount') || '0');
-  const isModification = getParam('isModification') === 'true';
   const reservationId = getParam('reservationId');
   const originalTotal = parseFloat(getParam('originalTotal') || '0');
   const newTotal = parseFloat(getParam('newTotal') || '0');
@@ -211,6 +210,27 @@ export default function PaymentScreen() {
       const estadosResult = await BookingService.getEstados();
       if (!estadosResult.success || !estadosResult.data) {
         throw new Error('Failed to get estados');
+      }
+
+      // Determine isModification by consulting the backend reservation status
+      let isModification = false;
+      if (reservationId) {
+        const reservaResult = await BookingService.getReservaById(reservationId);
+        if (reservaResult.success && reservaResult.data) {
+          const estadoActual = estadosResult.data.find(
+            (e) => e.id === reservaResult.data!.id_estado
+          );
+          if (estadoActual) {
+            const normalizedNombre = estadoActual.nombre
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase()
+              .trim();
+            isModification =
+              normalizedNombre.includes('pago recibido') ||
+              normalizedNombre.includes('confirmada');
+          }
+        }
       }
 
       // Handle modification scenario - skip reservation creation
