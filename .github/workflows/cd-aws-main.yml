@@ -62,6 +62,33 @@ jobs:
             -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
             -backend-config="encrypt=true"
 
+      - name: Migrate ext-payments ECS state to dedicated resource
+        working-directory: infra/aws/terraform
+        run: |
+          # Move the ext-payments service from the for_each resource to the dedicated resource
+          # so Terraform recreates it with deployment_controller=ECS instead of CODE_DEPLOY.
+          # This is idempotent: if already moved, `state show` will fail and we skip gracefully.
+          if terraform state show 'aws_ecs_service.services["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_ecs_service.services[ext-payments] → aws_ecs_service.ext_payments"
+            terraform state mv 'aws_ecs_service.services["ext-payments"]' 'aws_ecs_service.ext_payments' || true
+          else
+            echo "aws_ecs_service.services[ext-payments] not in state (already moved or never existed) – skipping"
+          fi
+          # Same for autoscaling target
+          if terraform state show 'aws_appautoscaling_target.services["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_appautoscaling_target.services[ext-payments] → aws_appautoscaling_target.ext_payments"
+            terraform state mv 'aws_appautoscaling_target.services["ext-payments"]' 'aws_appautoscaling_target.ext_payments' || true
+          else
+            echo "aws_appautoscaling_target.services[ext-payments] not in state – skipping"
+          fi
+          # Same for autoscaling policy
+          if terraform state show 'aws_appautoscaling_policy.services_cpu["ext-payments"]' > /dev/null 2>&1; then
+            echo "Moving aws_appautoscaling_policy.services_cpu[ext-payments] → aws_appautoscaling_policy.ext_payments_cpu"
+            terraform state mv 'aws_appautoscaling_policy.services_cpu["ext-payments"]' 'aws_appautoscaling_policy.ext_payments_cpu' || true
+          else
+            echo "aws_appautoscaling_policy.services_cpu[ext-payments] not in state – skipping"
+          fi
+
       - name: Terraform apply
         working-directory: infra/aws/terraform
         run: terraform apply -lock-timeout=15m -auto-approve
