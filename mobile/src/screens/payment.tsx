@@ -332,6 +332,7 @@ export default function PaymentScreen() {
 
       // Handle modification scenario
       if (isModificationFlow && reservationId) {
+        console.log('Modification flow - updating existing reservation');
         const confirmedEstado = estados.find((estado) => {
           const name = estado.nombre
             .normalize('NFD')
@@ -396,7 +397,8 @@ export default function PaymentScreen() {
       }
 
       // Pending payment reservation - reservation exists, just needs payment + status update
-      if (isReservedButPendingPayment && reservationId) {
+      if (isReservedButPendingPayment && reservationId) {        
+        console.log('Pending payment reservation - reservation exists, just needs payment + status update');
         const confirmedEstado = estados.find((estado) => {
           const name = estado.nombre
             .normalize('NFD')
