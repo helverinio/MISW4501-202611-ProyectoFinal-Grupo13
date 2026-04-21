@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUserStore } from '@/store/userStore';
 import { Hotel, Habitacion } from '../services/hotelService';
 import { BookingService } from '../services/bookingService';
+import { TAX_RATE, SERVICE_FEE } from '../utils/constants';
 
 interface BookingParams {
   hotelData: string;
@@ -78,7 +79,7 @@ export default function BookingScreen() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phonePrefix, setPhonePrefix] = useState('+52');
+  const [phonePrefix, setPhonePrefix] = useState('+57');
   const [phone, setPhone] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
 
@@ -102,9 +103,9 @@ export default function BookingScreen() {
 
   const nights = calculateNights();
   const roomTotal = pricePerNight * nights;
-  const taxRate = 0.12; //TODO: Get from backend
+  const taxRate = TAX_RATE;
   const taxesAmount = Math.round(roomTotal * taxRate * 100) / 100;
-  const serviceFee = 8.50; //TODO: Get from backend
+  const serviceFee = SERVICE_FEE;
   const grandTotal = roomTotal + taxesAmount + serviceFee;
 
   const formatDate = (dateStr: string) => {
