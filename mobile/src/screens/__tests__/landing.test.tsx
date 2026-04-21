@@ -21,8 +21,8 @@ jest.mock('../../common/HotelSearch', () => {
         onPress={() =>
           onSearch({
             destination: 'Paris',
-            checkIn: new Date('2024-06-01'),
-            checkOut: new Date('2024-06-05'),
+            checkIn: new Date('2024-06-01T12:00:00'),
+            checkOut: new Date('2024-06-05T12:00:00'),
             guests: 2,
           })
         }

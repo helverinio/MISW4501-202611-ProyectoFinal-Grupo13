@@ -6,10 +6,11 @@ import Constants from 'expo-constants';
 // Backend URL configuration
 let backendUrl = '';
 const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
+const extPaymentsBaseUrl = Constants.expoConfig?.extra?.REACT_APP_EXT_PAYMENTS_URL || (__DEV__ ? 'http://10.0.2.2:5001' : ''); //(__DEV__ ? 'http://10.0.2.2:5001' : '');
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
+  backendUrl = 'http://10.0.2.2:8081'//'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
@@ -21,6 +22,10 @@ console.log('API configured with backend URL:', backendUrl);
 
 const customAxios = axios.create({
   baseURL: backendUrl,
+});
+
+export const extPaymentsAxios = axios.create({
+  baseURL: extPaymentsBaseUrl,
 });
 
 axiosRetry(customAxios, {

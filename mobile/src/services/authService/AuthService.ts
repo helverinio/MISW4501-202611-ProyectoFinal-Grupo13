@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import hashingUtility from '../../utils/hashingUtility';
 import { AuthResult } from './models/AuthResult';
 import { useUserStore } from '@/store/userStore';
+import { useStaticDataStore } from '@/store/staticDataStore';
 import customAxios from '@/utils/api';
 import { GetUserByToken } from '../userService/GetUserByTokenService';
 
@@ -36,6 +37,9 @@ export const AuthService = {
           // Update the user store with the fetched user data
           // useUserStore.getState().setUser(userResult.data.result);
         // }
+
+        // Fetch and cache static data (estados, ciudades, paises) after login
+        useStaticDataStore.getState().fetchAndCacheStaticData();
 
         return {
           success: true,
