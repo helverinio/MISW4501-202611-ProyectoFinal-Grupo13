@@ -96,6 +96,14 @@ output "api_cloudfront_domain_name" {
   value = aws_cloudfront_distribution.api.domain_name
 }
 
+output "ext_payments_public_base_url" {
+  value = "https://${aws_cloudfront_distribution.api.domain_name}/ext-payments/api/v1"
+}
+
+output "ext_payments_public_health_url" {
+  value = "https://${aws_cloudfront_distribution.api.domain_name}/ext-payments/api/v1/health"
+}
+
 output "frontend_buckets" {
   value = {
     for name, bucket in aws_s3_bucket.frontends : name => bucket.bucket

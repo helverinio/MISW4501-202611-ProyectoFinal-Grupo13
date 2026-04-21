@@ -242,6 +242,14 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_8080" 
   ip_protocol                  = "tcp"
 }
 
+resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_public_alb_5001" {
+  security_group_id            = aws_security_group.ecs_tasks.id
+  referenced_security_group_id = aws_security_group.public_alb.id
+  from_port                    = 5001
+  to_port                      = 5001
+  ip_protocol                  = "tcp"
+}
+
 resource "aws_vpc_security_group_ingress_rule" "ecs_tasks_from_internal_alb_5000_5003" {
   security_group_id            = aws_security_group.ecs_tasks.id
   referenced_security_group_id = aws_security_group.internal_alb.id
@@ -587,6 +595,50 @@ resource "aws_lb_listener" "public_test" {
 
   lifecycle {
     ignore_changes = [default_action]
+  }
+}
+
+resource "aws_lb_listener_rule" "ext_payments_public_prod" {
+  listener_arn = aws_lb_listener.public_prod.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.blue["ext-payments"].arn
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/ext-payments/api/v1/health",
+        "/ext-payments/api/v1/payment-intents",
+        "/ext-payments/api/v1/payment-intents/*",
+        "/ext-payments/api/v1/payments",
+        "/ext-payments/api/v1/payments/*",
+      ]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "ext_payments_public_test" {
+  listener_arn = aws_lb_listener.public_test.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.green["ext-payments"].arn
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/ext-payments/api/v1/health",
+        "/ext-payments/api/v1/payment-intents",
+        "/ext-payments/api/v1/payment-intents/*",
+        "/ext-payments/api/v1/payments",
+        "/ext-payments/api/v1/payments/*",
+      ]
+    }
   }
 }
 
