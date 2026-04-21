@@ -377,10 +377,17 @@ export const BookingService = {
   ): Promise<BookingServiceResult<ProcessPaymentResponse>> => {
     try {
       const url = `/api/v1/payments`;
-      const response = await extPaymentsAxios.post(url, {
+      const payload = {
         payment_intent_id: paymentId,
         payment_method: 'card',
-      });
+      };
+      console.log(`[processPayment] POST ${extPaymentsAxios.defaults.baseURL}${url}`);
+      console.log('[processPayment] Payload:', JSON.stringify(payload, null, 2));
+
+      const response = await extPaymentsAxios.post(url, payload);
+
+      console.log(`[processPayment] Response status: ${response.status}`);
+      console.log('[processPayment] Response data:', JSON.stringify(response.data, null, 2));
 
       if (response.status === 200 || response.status === 201) {
         return {
@@ -397,6 +404,9 @@ export const BookingService = {
         },
       };
     } catch (error: any) {
+      console.error(`[processPayment] Error: ${error.message}`);
+      console.error('[processPayment] Error response status:', error.response?.status);
+      console.error('[processPayment] Error response data:', JSON.stringify(error.response?.data, null, 2));
       return {
         success: false,
         error: {
