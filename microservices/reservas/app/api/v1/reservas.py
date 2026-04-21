@@ -302,6 +302,11 @@ def update_reserva(reserva_id, current_usuario=None):
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
+    repository = get_repository()
+    existing_reserva = GetReservaUseCase(repository).execute(reserva_id)
+    if not existing_reserva:
+        return jsonify({'error': 'Reserva not found'}), 404
+
     update_data = {}
     if 'fecha_ingreso' in data:
         update_data['fecha_ingreso'] = parse_datetime(data['fecha_ingreso'])
@@ -320,15 +325,54 @@ def update_reserva(reserva_id, current_usuario=None):
     if 'id_estado' in data:
         update_data['id_estado'] = data['id_estado']
 
-    use_case = UpdateReservaUseCase(get_repository())
+    total_edited = (
+        'total' in update_data
+        and update_data['total'] is not None
+        and update_data['total'] != existing_reserva.total
+    )
+
+    use_case = UpdateReservaUseCase(repository)
     reserva = use_case.execute(reserva_id, **update_data)
 
     if not reserva:
         return jsonify({'error': 'Reserva not found'}), 404
 
-    return jsonify({
-        **_serialize_reserva(reserva)
-    })
+    response_payload = _serialize_reserva(reserva)
+
+    if total_edited:
+        payment_method = data.get('payment_method', 'card')
+        moneda = data.get('moneda', 'USD')
+        current_app.logger.info(
+            f"[RESERVAS] Total edited for reserva {reserva.id}, registering new payment..."
+        )
+        pagos_service = get_pagos_service()
+        payment_result = pagos_service.create_payment(
+            reservation_id=reserva.id,
+            amount=reserva.total,
+            currency=moneda,
+            payment_method=payment_method,
+            description=f"Payment for updated reservation {reserva.id}"
+        )
+
+        payment_info = None
+        if 'error' not in payment_result:
+            payment_info = {
+                'payment_id': payment_result.get('id'),
+                'payment_intent_id': payment_result.get('payment_intent_id'),
+                'payment_status': payment_result.get('status')
+            }
+            current_app.logger.info(
+                f"[RESERVAS] Payment registered with status: {payment_result.get('status')}"
+            )
+        else:
+            current_app.logger.error(
+                f"[RESERVAS] Failed to register payment: {payment_result.get('error')}"
+            )
+
+        response_payload['payment'] = payment_info
+        response_payload['payment_id'] = payment_info['payment_id'] if payment_info else None
+
+    return jsonify(response_payload)
 
 
 @api_v1_bp.route('/reservas/<reserva_id>', methods=['DELETE'])

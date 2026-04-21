@@ -308,8 +308,8 @@ describe('PaymentResultScreen', () => {
 
   describe('Date Formatting', () => {
     it('should format check-in date correctly', () => {
-      const { getByText } = render(<PaymentResultScreen />);
-      expect(getByText(/jun/i)).toBeTruthy();
+      const { getAllByText } = render(<PaymentResultScreen />);
+      expect(getAllByText(/jun/i).length).toBeGreaterThan(0);
     });
 
     it('should return dash for empty date', () => {

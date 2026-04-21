@@ -12,9 +12,8 @@ class RegisterPaymentUseCase:
     
     def execute(self, reservation_id: str, amount: float, currency: str, 
                 payment_method: str, description: Optional[str] = None) -> Dict[str, Any]:
-        existing_payment = self.repository.find_by_reservation_id(reservation_id)
-        if existing_payment:
-            return {'error': f'Payment already exists for reservation {reservation_id}'}
+                
+        # Orlando Arnedo: Deleted the duplicate verification to allow multiple payments for the same reservation like modifications etc
         
         webhook_url = f"{self.webhook_base_url}/api/v1/payments/webhook"
         
