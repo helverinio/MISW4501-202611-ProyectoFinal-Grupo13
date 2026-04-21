@@ -1,4 +1,4 @@
-import customAxios from '@/utils/api';
+import customAxios, { extPaymentsAxios } from '@/utils/api';
 
 export interface AcquireHoldPayload {
   id_usuario: string;
@@ -376,8 +376,11 @@ export const BookingService = {
     paymentId: string
   ): Promise<BookingServiceResult<ProcessPaymentResponse>> => {
     try {
-      const url = `/api/v1/payments/${paymentId}/process`;
-      const response = await customAxios.post(url);
+      const url = `/api/v1/payments`;
+      const response = await extPaymentsAxios.post(url, {
+        payment_intent_id: paymentId,
+        payment_method: 'card',
+      });
 
       if (response.status === 200 || response.status === 201) {
         return {

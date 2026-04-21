@@ -11,11 +11,12 @@ import BookingService, {
   HabitacionResponse,
   HotelResponse,
 } from '../bookingService';
-import customAxios from '@/utils/api';
+import customAxios, { extPaymentsAxios } from '@/utils/api';
 
 jest.mock('@/utils/api');
 
 const mockAxios = customAxios as jest.Mocked<typeof customAxios>;
+const mockExtPaymentsAxios = extPaymentsAxios as jest.Mocked<typeof extPaymentsAxios>;
 
 describe('BookingService', () => {
   beforeEach(() => {
@@ -603,21 +604,24 @@ describe('BookingService', () => {
     };
 
     it('should return payment result on successful 200 response', async () => {
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 200,
         data: mockPaymentResponse,
       });
 
       const result = await BookingService.processPayment(paymentId);
 
-      expect(mockAxios.post).toHaveBeenCalledWith(`/api/v1/payments/${paymentId}/process`);
+      expect(mockExtPaymentsAxios.post).toHaveBeenCalledWith('/api/v1/payments', {
+        payment_intent_id: paymentId,
+        payment_method: 'card',
+      });
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockPaymentResponse);
       expect(result.error).toBeUndefined();
     });
 
     it('should return payment result on successful 201 response', async () => {
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 201,
         data: mockPaymentResponse,
       });
@@ -633,7 +637,7 @@ describe('BookingService', () => {
         ...mockPaymentResponse,
         status: 'pending',
       };
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 200,
         data: pendingPayment,
       });
@@ -649,7 +653,7 @@ describe('BookingService', () => {
         ...mockPaymentResponse,
         status: 'failed',
       };
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 200,
         data: failedPayment,
       });
@@ -661,7 +665,7 @@ describe('BookingService', () => {
     });
 
     it('should return error on non-success response', async () => {
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 400,
         data: { error: 'Invalid payment' },
       });
@@ -676,7 +680,7 @@ describe('BookingService', () => {
     });
 
     it('should return error on 404 not found', async () => {
-      mockAxios.post.mockResolvedValue({
+      mockExtPaymentsAxios.post.mockResolvedValue({
         status: 404,
         data: { error: 'Payment not found' },
       });
@@ -692,7 +696,7 @@ describe('BookingService', () => {
 
     it('should handle network error', async () => {
       const networkError = new Error('Network Error');
-      mockAxios.post.mockRejectedValue(networkError);
+      mockExtPaymentsAxios.post.mockRejectedValue(networkError);
 
       const result = await BookingService.processPayment(paymentId);
 
@@ -710,7 +714,7 @@ describe('BookingService', () => {
         },
         message: 'Request failed',
       };
-      mockAxios.post.mockRejectedValue(axiosError);
+      mockExtPaymentsAxios.post.mockRejectedValue(axiosError);
 
       const result = await BookingService.processPayment(paymentId);
 
@@ -723,7 +727,7 @@ describe('BookingService', () => {
 
     it('should handle error without message', async () => {
       const error = {};
-      mockAxios.post.mockRejectedValue(error);
+      mockExtPaymentsAxios.post.mockRejectedValue(error);
 
       const result = await BookingService.processPayment(paymentId);
 
@@ -735,7 +739,7 @@ describe('BookingService', () => {
 
     it('should handle timeout error', async () => {
       const timeoutError = new Error('timeout of 30000ms exceeded');
-      mockAxios.post.mockRejectedValue(timeoutError);
+      mockExtPaymentsAxios.post.mockRejectedValue(timeoutError);
 
       const result = await BookingService.processPayment(paymentId);
 
