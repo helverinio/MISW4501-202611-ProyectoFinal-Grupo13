@@ -11,9 +11,10 @@ output "ecs_cluster_name" {
 }
 
 output "ecs_services" {
-  value = {
-    for name, service in aws_ecs_service.services : name => service.name
-  }
+  value = merge(
+    { for name, service in aws_ecs_service.services : name => service.name },
+    { "ext-payments" = aws_ecs_service.ext_payments.name }
+  )
 }
 
 output "ecs_task_execution_role_arn" {
