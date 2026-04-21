@@ -1,6 +1,4 @@
 import customAxios from '@/utils/api';
-import axios from 'axios';
-import Constants from 'expo-constants';
 
 export interface AcquireHoldPayload {
   id_usuario: string;
@@ -375,20 +373,11 @@ export const BookingService = {
   },
 
   processPayment: async (
-    paymentIntentId: string,
-    paymentMethod: string
+    paymentId: string
   ): Promise<BookingServiceResult<ProcessPaymentResponse>> => {
-    const extPaymentsUrl = __DEV__
-      ? 'http://10.0.2.2:5001'
-      : Constants.expoConfig?.extra?.REACT_APP_EXT_PAYMENTS_URL || '';
     try {
-      const url = `${extPaymentsUrl}/api/v1/payments`;
-      console.log('[processPayment] POST', url, { payment_intent_id: paymentIntentId, payment_method: paymentMethod });
-      const response = await axios.post(url, {
-        payment_intent_id: paymentIntentId,
-        payment_method: paymentMethod,
-      });
-      console.log('[processPayment] response status:', response.status, 'data:', response.data);
+      const url = `/api/v1/payments/${paymentId}/process`;
+      const response = await customAxios.post(url);
 
       if (response.status === 200 || response.status === 201) {
         return {
@@ -397,7 +386,6 @@ export const BookingService = {
         };
       }
 
-      console.warn('[processPayment] unexpected status:', response.status);
       return {
         success: false,
         error: {
@@ -406,7 +394,6 @@ export const BookingService = {
         },
       };
     } catch (error: any) {
-      console.error('[processPayment] error:', error?.response?.status, error?.response?.data || error?.message);
       return {
         success: false,
         error: {

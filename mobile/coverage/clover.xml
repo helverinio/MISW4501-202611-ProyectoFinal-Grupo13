@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1776708560041" clover="3.2.0">
-  <project timestamp="1776708560041" name="All files">
-    <metrics statements="1452" coveredstatements="1311" conditionals="1048" coveredconditionals="836" methods="295" coveredmethods="236" elements="2795" coveredelements="2383" complexity="0" loc="1452" ncloc="1452" packages="11" files="28" classes="28"/>
+<coverage generated="1776749510099" clover="3.2.0">
+  <project timestamp="1776749510099" name="All files">
+    <metrics statements="1451" coveredstatements="1310" conditionals="1048" coveredconditionals="836" methods="295" coveredmethods="236" elements="2794" coveredelements="2382" complexity="0" loc="1451" ncloc="1451" packages="11" files="28" classes="28"/>
     <package name="src">
       <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
       <file name="_layout.tsx" path="D:\Repos\MISW4501-202611-ProyectoFinal-Grupo13\mobile\src\_layout.tsx">
@@ -1233,9 +1233,9 @@
       </file>
     </package>
     <package name="src.services.bookingService">
-      <metrics statements="119" coveredstatements="119" conditionals="68" coveredconditionals="68" methods="15" coveredmethods="15"/>
+      <metrics statements="118" coveredstatements="118" conditionals="68" coveredconditionals="68" methods="15" coveredmethods="15"/>
       <file name="bookingService.ts" path="D:\Repos\MISW4501-202611-ProyectoFinal-Grupo13\mobile\src\services\bookingService\bookingService.ts">
-        <metrics statements="119" coveredstatements="119" conditionals="68" coveredconditionals="68" methods="15" coveredmethods="15"/>
+        <metrics statements="118" coveredstatements="118" conditionals="68" coveredconditionals="68" methods="15" coveredmethods="15"/>
         <line num="111" count="3" type="stmt"/>
         <line num="116" count="7" type="stmt"/>
         <line num="117" count="7" type="stmt"/>
@@ -1314,47 +1314,46 @@
         <line num="383" count="4" type="stmt"/>
         <line num="389" count="2" type="stmt"/>
         <line num="397" count="4" type="stmt"/>
-        <line num="398" count="4" type="stmt"/>
+        <line num="410" count="3" type="stmt"/>
         <line num="411" count="3" type="stmt"/>
         <line num="412" count="3" type="stmt"/>
-        <line num="413" count="3" type="stmt"/>
-        <line num="415" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="416" count="1" type="stmt"/>
-        <line num="422" count="1" type="stmt"/>
+        <line num="414" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="415" count="1" type="stmt"/>
+        <line num="421" count="1" type="stmt"/>
+        <line num="429" count="1" type="stmt"/>
         <line num="430" count="1" type="stmt"/>
-        <line num="431" count="1" type="stmt"/>
+        <line num="442" count="3" type="stmt"/>
         <line num="443" count="3" type="stmt"/>
         <line num="444" count="3" type="stmt"/>
-        <line num="445" count="3" type="stmt"/>
-        <line num="447" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="448" count="1" type="stmt"/>
-        <line num="454" count="1" type="stmt"/>
+        <line num="446" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="447" count="1" type="stmt"/>
+        <line num="453" count="1" type="stmt"/>
+        <line num="461" count="1" type="stmt"/>
         <line num="462" count="1" type="stmt"/>
-        <line num="463" count="1" type="stmt"/>
+        <line num="474" count="4" type="stmt"/>
         <line num="475" count="4" type="stmt"/>
         <line num="476" count="4" type="stmt"/>
-        <line num="477" count="4" type="stmt"/>
-        <line num="479" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="480" count="1" type="stmt"/>
-        <line num="486" count="1" type="stmt"/>
+        <line num="478" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="479" count="1" type="stmt"/>
+        <line num="485" count="1" type="stmt"/>
+        <line num="493" count="2" type="stmt"/>
         <line num="494" count="2" type="stmt"/>
-        <line num="495" count="2" type="stmt"/>
+        <line num="506" count="3" type="stmt"/>
         <line num="507" count="3" type="stmt"/>
         <line num="508" count="3" type="stmt"/>
-        <line num="509" count="3" type="stmt"/>
-        <line num="511" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="512" count="1" type="stmt"/>
-        <line num="518" count="1" type="stmt"/>
+        <line num="510" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="511" count="1" type="stmt"/>
+        <line num="517" count="1" type="stmt"/>
+        <line num="525" count="1" type="stmt"/>
         <line num="526" count="1" type="stmt"/>
-        <line num="527" count="1" type="stmt"/>
+        <line num="539" count="4" type="stmt"/>
         <line num="540" count="4" type="stmt"/>
         <line num="541" count="4" type="stmt"/>
-        <line num="542" count="4" type="stmt"/>
-        <line num="544" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="545" count="1" type="stmt"/>
-        <line num="551" count="1" type="stmt"/>
+        <line num="543" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="544" count="1" type="stmt"/>
+        <line num="550" count="1" type="stmt"/>
+        <line num="558" count="2" type="stmt"/>
         <line num="559" count="2" type="stmt"/>
-        <line num="560" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.services.hotelService">
