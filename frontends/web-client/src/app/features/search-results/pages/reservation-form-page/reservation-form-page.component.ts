@@ -6,6 +6,10 @@ import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
+import {
+  BookingConfirmationEmailPayload,
+  EmailDeliveryService,
+} from '../../../../core/services/email-delivery.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import {
   HotelByIdResponse,
@@ -119,6 +123,7 @@ export class ReservationFormPageComponent {
   private readonly i18n = inject(I18nService);
   private readonly authService = inject(AuthService);
   private readonly currencyService = inject(CurrencyService);
+  private readonly emailDeliveryService = inject(EmailDeliveryService);
   private readonly searchHotelsService = inject(SearchHotelsService);
   private readonly reservationService = inject(ReservationService);
 
@@ -138,6 +143,8 @@ export class ReservationFormPageComponent {
   protected readonly paymentStatus = signal<string>('');
   protected readonly paymentStatusMessage = signal<string>('');
   protected readonly paymentError = signal<string>('');
+  protected readonly emailDeliveryState = signal<'pending' | 'sent' | 'failed'>('pending');
+  protected readonly emailDeliveryDetail = signal<string>('');
   protected readonly paymentId = signal<string | null>(null);
   protected readonly paymentSubmitAttempted = signal<boolean>(false);
   protected readonly detectedCardBrand = signal<SupportedCardBrand | null>(null);
@@ -1023,6 +1030,8 @@ export class ReservationFormPageComponent {
     this.paymentCompleted.set(true);
     this.paymentStatus.set((payment.status || 'completado').toLowerCase());
     this.paymentError.set('');
+    this.emailDeliveryState.set('pending');
+    this.emailDeliveryDetail.set('');
 
     const reservation = this.createdReservation();
     const hotel = this.hotel();
@@ -1033,15 +1042,42 @@ export class ReservationFormPageComponent {
 
     const firstName = this.reservationForm.controls.firstName.value;
     const lastName = this.reservationForm.controls.lastName.value;
+    const email = this.reservationForm.controls.email.value.trim();
 
-    this.reservationService
-      .createNotificacion({
-        fecha_notif: new Date().toISOString(),
-        titulo: `Pago confirmado - ${hotel.nombre}`,
-        id_reserva: reservation.id,
-        descripcion: `Pago completado para reserva de ${this.nights()} noches en ${hotel.nombre}. Huesped: ${firstName} ${lastName}.`,
-      })
-      .subscribe();
+    const emailPayload: BookingConfirmationEmailPayload = {
+      toEmail: email,
+      bookingId: reservation.id,
+      hotelName: hotel.nombre || '-',
+      roomType: this.selectedRoom()?.tipo || '-',
+      checkIn: this.formatDate(reservation.fecha_ingreso),
+      checkOut: this.formatDate(reservation.fecha_salida),
+      guestName: `${firstName} ${lastName}`.trim(),
+      guestEmail: email,
+      phone:
+        `${this.reservationForm.controls.phonePrefix.value} ${this.reservationForm.controls.phone.value}`.trim(),
+      guests: String(reservation.nro_personas),
+      nights: String(this.nights()),
+      totalPaid: this.formatPrice(this.grandTotal()),
+      paymentMethod: this.paymentMethodLabel(),
+    };
+
+    try {
+      this.emailDeliveryService.sendBookingConfirmation(emailPayload).subscribe({
+        next: () => {
+          this.emailDeliveryState.set('sent');
+        },
+        error: (sendError) => {
+          this.emailDeliveryState.set('failed');
+          const detail = sendError?.error || sendError?.message || '';
+          this.emailDeliveryDetail.set(typeof detail === 'string' ? detail : '');
+          console.warn('[EMAIL] Failed to send booking confirmation from frontend', sendError);
+        },
+      });
+    } catch (sendError) {
+      this.emailDeliveryState.set('failed');
+      this.emailDeliveryDetail.set('EmailJS is not configured.');
+      console.warn('[EMAIL] Email provider is not configured', sendError);
+    }
   }
 
   private resolveEstadoId(estados: EstadoResponse[]): string {

@@ -180,20 +180,59 @@
       </div>
 
       <!-- Confirmation email banner -->
-      <section class="bg-blue-50 border border-blue-100 rounded-xl p-4 sm:p-6 mb-6">
+      <section
+        class="rounded-xl p-4 sm:p-6 mb-6 border"
+        [class.bg-blue-50]="emailDeliveryState() !== 'failed'"
+        [class.border-blue-100]="emailDeliveryState() !== 'failed'"
+        [class.bg-red-50]="emailDeliveryState() === 'failed'"
+        [class.border-red-100]="emailDeliveryState() === 'failed'"
+      >
         <div class="flex items-start gap-3 sm:gap-4">
-          <i class="fa-solid fa-envelope text-primary text-xl sm:text-2xl flex-shrink-0 mt-0.5"></i>
+          <i
+            class="fa-solid text-xl sm:text-2xl flex-shrink-0 mt-0.5"
+            [class.fa-envelope]="emailDeliveryState() !== 'failed'"
+            [class.text-primary]="emailDeliveryState() !== 'failed'"
+            [class.fa-triangle-exclamation]="emailDeliveryState() === 'failed'"
+            [class.text-red-600]="emailDeliveryState() === 'failed'"
+          ></i>
           <div>
-            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-              {{ label('confirmationEmailSent') }}
-            </h3>
-            <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-              {{ label('confirmationEmailBody') }}
-              <span class="font-semibold text-gray-900">{{
-                reservationForm.controls.email.value
-              }}</span>
-              {{ label('confirmationEmailInbox') }}
-            </p>
+            @if (emailDeliveryState() === 'sent') {
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                {{ label('confirmationEmailSent') }}
+              </h3>
+              <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {{ label('confirmationEmailBody') }}
+                <span class="font-semibold text-gray-900">{{
+                  reservationForm.controls.email.value
+                }}</span>
+                {{ label('confirmationEmailInbox') }}
+              </p>
+            } @else if (emailDeliveryState() === 'pending') {
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                Sending confirmation email
+              </h3>
+              <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                We are sending your booking details to
+                <span class="font-semibold text-gray-900">{{
+                  reservationForm.controls.email.value
+                }}</span
+                >.
+              </p>
+            } @else {
+              <h3 class="text-base sm:text-lg font-semibold text-red-700 mb-2">
+                Could not send confirmation email
+              </h3>
+              <p class="text-sm sm:text-base text-red-700 leading-relaxed">
+                Your reservation was created, but email delivery failed for
+                <span class="font-semibold">{{ reservationForm.controls.email.value }}</span
+                >. Please verify your EmailJS template recipient and check browser console/network.
+              </p>
+              @if (emailDeliveryDetail()) {
+                <p class="text-xs text-red-600 mt-2 break-all">
+                  Error: {{ emailDeliveryDetail() }}
+                </p>
+              }
+            }
           </div>
         </div>
       </section>
