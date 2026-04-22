@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_35" tests="1" failures="1" time="97.0">
+    <testcase id="room-reservation-flow" name="room-reservation-flow" classname="room-reservation-flow" time="97.0" status="ERROR">
+      <failure>Element not found: Text matching regex: 24</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
