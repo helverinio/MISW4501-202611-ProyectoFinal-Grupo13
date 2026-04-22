@@ -97,6 +97,9 @@ appId: com.travelhub.app
 - swipe:
     direction: UP
     duration: 600
+- swipe:
+    direction: UP
+    duration: 600
 
 - extendedWaitUntil:
     visible:
@@ -136,6 +139,9 @@ appId: com.travelhub.app
 - inputText: "ORLANDO ARNEDO"
 
 # Scroll to reveal terms + Pay button
+- swipe:
+    direction: UP
+    duration: 600
 - swipe:
     direction: UP
     duration: 600
