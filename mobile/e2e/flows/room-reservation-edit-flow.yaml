@@ -1,0 +1,170 @@
+appId: com.travelhub.app
+---
+# Room Reservation Edit E2E Test Flow
+# This test performs a full reservation modification flow:
+# - Login
+# - Tap "Mis Reservas" from the landing page
+# - Find a confirmed reservation and tap "Modificar"
+# - Add one day to the checkout date using the forward chevron
+# - Scroll to the bottom and tap "Guardar Cambios"
+# - Fill out payment details (card number, expiry, CVV, cardholder name)
+# - Accept terms and tap "Pagar Ahora"
+# - Wait for the successful payment confirmation
+
+- launchApp:
+    clearState: true
+
+# ============================================
+# Step 1: Login
+# ============================================
+- extendedWaitUntil:
+    visible:
+      text: "TravelHub"
+    timeout: 30000
+
+- tapOn:
+    text: "tu@email.com"
+- inputText: "orlando@example.com"
+
+- tapOn:
+    text: "••••••••"
+- inputText: "password2"
+
+# Dismiss keyboard
+- tapOn:
+    text: "TravelHub"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+- tapOn:
+    text: "Iniciar Sesión"
+    index: 1
+
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
+# ============================================
+# Step 2: Wait for landing page and open Mis Reservas
+# ============================================
+- extendedWaitUntil:
+    visible: "Encuentra tu estadía perfecta"
+    timeout: 10000
+
+- tapOn:
+    text: "Mis Reservas"
+
+# ============================================
+# Step 3: Find a confirmed reservation and tap "Modificar"
+# "Modificar" only renders for reservations with status "confirmed"
+# ============================================
+- extendedWaitUntil:
+    visible: "Mis Reservas"
+    timeout: 10000
+
+- assertVisible:
+    text: "Confirmada"
+
+- tapOn:
+    text: "Modificar"
+    index: 0
+
+# ============================================
+# Step 4: Edit reservation screen - add one day to checkout date
+# The check-out forward chevron is identified by its testID.
+# ============================================
+- extendedWaitUntil:
+    visible: "Editar Reserva"
+    timeout: 15000
+
+- assertVisible: "Cambiar Fechas"
+
+- tapOn:
+    id: "checkout-increment"
+
+# Scroll to the bottom and verify the price difference warning is visible
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+- extendedWaitUntil:
+    visible:
+      text: "Diferencia de precio:.*"
+    timeout: 10000
+
+# ============================================
+# Step 5: Tap "Guardar Cambios"
+# ============================================
+
+- tapOn:
+    text: "Guardar Cambios"
+
+# ============================================
+# Step 6: Payment screen - fill card details
+# Adding a day raises the total, so the save flow routes to payment.
+# ============================================
+- extendedWaitUntil:
+    visible: "Método de Pago"
+    timeout: 20000
+
+- tapOn:
+    text: "1234 5678 9012 3456"
+- inputText: "4111111111111111"
+
+- tapOn:
+    text: "MM/AA"
+- inputText: "1230"
+
+- tapOn:
+    text: "123"
+- inputText: "123"
+- hideKeyboard
+
+- tapOn:
+    text: "Nombre en la tarjeta"
+- inputText: "ORLANDO ARNEDO"
+
+# Scroll to reveal terms + Pay button
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# Accept terms (tap the terms row text)
+- tapOn:
+    text: "Al completar este pago, acepto la.*"
+
+# ============================================
+# Step 7: Submit payment
+# ============================================
+- tapOn:
+    text: "Pagar Ahora.*"
+
+# ============================================
+# Step 8: Wait for successful payment confirmation
+# Payment takes around 2.5s to process; allow generous timeout
+# ============================================
+- extendedWaitUntil:
+    visible: "¡Pago Exitoso!"
+    timeout: 30000
+
+- assertVisible: "Referencia de Reserva"
