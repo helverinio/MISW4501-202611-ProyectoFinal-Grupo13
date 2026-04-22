@@ -87,22 +87,25 @@ appId: com.travelhub.app
 - tapOn:
     id: "checkout-increment"
 
-# Verify the nights counter increased by one (3 nights now)
-- assertVisible:
-    text: "3 noches seleccionadas"
+# Scroll to the bottom and verify the price difference warning is visible
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+- extendedWaitUntil:
+    visible:
+      text: "Diferencia de precio:.*"
+    timeout: 10000
 
 # ============================================
-# Step 5: Scroll to the bottom and tap "Guardar Cambios"
+# Step 5: Tap "Guardar Cambios"
 # ============================================
-- swipe:
-    direction: UP
-    duration: 600
-- swipe:
-    direction: UP
-    duration: 600
-- swipe:
-    direction: UP
-    duration: 600
 
 - tapOn:
     text: "Guardar Cambios"
