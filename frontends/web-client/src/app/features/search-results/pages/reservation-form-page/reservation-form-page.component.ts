@@ -66,7 +66,8 @@ function cardBrandValidator(control: AbstractControl): { unsupportedCard: boolea
 
 function expiryDateNotPastValidator(
   control: AbstractControl,
-): { invalidExpiry: boolean } | { expiredCard: boolean } | null {
+): { invalidExpiry: boolean } | { expiredCard: boolean } | { futureExpiry: boolean } | null {
+  const maxExpiryYearsAhead = 20;
   const raw = `${control.value || ''}`.trim();
   if (!raw) {
     return null;
@@ -79,12 +80,14 @@ function expiryDateNotPastValidator(
 
   const month = Number(match[1]);
   const yearTwoDigits = Number(match[2]);
+  const fullYear = 2000 + yearTwoDigits;
 
   if (month < 1 || month > 12) {
     return { invalidExpiry: true };
   }
 
   const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
   const currentYearTwoDigits = currentDate.getFullYear() % 100;
   const currentMonth = currentDate.getMonth() + 1;
 
@@ -94,6 +97,10 @@ function expiryDateNotPastValidator(
 
   if (yearTwoDigits === currentYearTwoDigits && month < currentMonth) {
     return { expiredCard: true };
+  }
+
+  if (fullYear > currentYear + maxExpiryYearsAhead) {
+    return { futureExpiry: true };
   }
 
   return null;
@@ -217,18 +224,19 @@ export class ReservationFormPageComponent {
       return 0;
     }
 
-    if ((room.precio_total_reserva ?? 0) > 0) {
-      return room.precio_total_reserva as number;
-    }
-
     return this.getRoomNightlyPrice(room) * this.nights();
   });
 
-  protected readonly discountAmount = computed(() => (this.nights() >= 3 ? 25 : 0));
+  protected readonly discountAmount = computed(() => {
+    const discountRate = this.getAdvanceDiscountRate(
+      this.reservationForm.controls.fechaIngreso.value,
+    );
+    return Math.round(this.totalPrice() * discountRate * 100) / 100;
+  });
 
   protected readonly taxesAmount = computed(() => {
     const taxable = Math.max(this.totalPrice() - this.discountAmount(), 0);
-    return Math.round(taxable * 0.12 * 100) / 100;
+    return Math.round(taxable * 0.1 * 100) / 100;
   });
 
   protected readonly grandTotal = computed(
@@ -518,7 +526,7 @@ export class ReservationFormPageComponent {
         paymentMethod: 'Metodo de pago',
         pricePerNight: 'Precio por noche',
         nightsLabel: 'noches',
-        earlyBirdDiscount: 'Descuento anticipado',
+        earlyBirdDiscount: 'Descuento por reserva anticipada',
         taxesFees: 'Impuestos',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pago cifrado SSL',
@@ -578,7 +586,7 @@ export class ReservationFormPageComponent {
         paymentMethod: 'Metodo de pagamento',
         pricePerNight: 'Preco por noite',
         nightsLabel: 'noites',
-        earlyBirdDiscount: 'Desconto antecipado',
+        earlyBirdDiscount: 'Desconto por reserva antecipada',
         taxesFees: 'Impostos',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pagamento SSL criptografado',
@@ -664,6 +672,7 @@ export class ReservationFormPageComponent {
     const hotelId = this.reservationForm.controls.hotelId.value;
     void this.router.navigate(['/app/hoteles', hotelId], {
       queryParams: {
+        busqueda: (this.route.snapshot.queryParamMap.get('busqueda') || '').trim(),
         fecha_ingreso: this.reservationForm.controls.fechaIngreso.value,
         fecha_salida: this.reservationForm.controls.fechaSalida.value,
         nro_personas: this.reservationForm.controls.nroPersonas.value,
@@ -777,6 +786,10 @@ export class ReservationFormPageComponent {
 
     if (field === 'expiryDate' && control.hasError('expiredCard')) {
       return 'La fecha de expiracion no puede ser pasada.';
+    }
+
+    if (field === 'expiryDate' && control.hasError('futureExpiry')) {
+      return 'La fecha de expiracion no puede superar 20 años a futuro.';
     }
 
     if (field === 'cvv' && control.hasError('pattern')) {
@@ -906,7 +919,9 @@ export class ReservationFormPageComponent {
           this.detectedCardBrand.set(null);
 
           const guestFullName = `${firstName} ${lastName}`.trim();
-          this.successMessage.set(`${this.label('successPrefix')} ${response.id}. Guest: ${guestFullName}`);
+          this.successMessage.set(
+            `${this.label('successPrefix')} ${response.id}. Guest: ${guestFullName}`,
+          );
         },
         error: (error) => {
           this.errorMessage.set(error?.error?.error || this.label('loadError'));
@@ -931,7 +946,8 @@ export class ReservationFormPageComponent {
           this.startPaymentStatusPolling(paymentId);
         },
         error: (error) => {
-          const backendMessage = error?.error?.error || error?.message || 'Payment processing failed.';
+          const backendMessage =
+            error?.error?.error || error?.message || 'Payment processing failed.';
           this.paymentError.set(backendMessage);
 
           if (
@@ -1072,6 +1088,36 @@ export class ReservationFormPageComponent {
       fecha_salida: checkOutDate,
       nro_personas: guests,
     };
+  }
+
+  private getAdvanceDiscountRate(checkInDate: string): number {
+    if (!checkInDate) {
+      return 0;
+    }
+
+    const checkIn = new Date(`${checkInDate}T00:00:00`);
+    if (Number.isNaN(checkIn.getTime())) {
+      return 0;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const oneMonthAhead = new Date(today);
+    oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
+
+    const threeMonthsAhead = new Date(today);
+    threeMonthsAhead.setMonth(threeMonthsAhead.getMonth() + 3);
+
+    if (checkIn >= threeMonthsAhead) {
+      return 0.15;
+    }
+
+    if (checkIn >= oneMonthAhead) {
+      return 0.1;
+    }
+
+    return 0;
   }
 
   private mergeRoomPricing(
@@ -1251,6 +1297,7 @@ export class ReservationFormPageComponent {
 
     void this.router.navigate(['/app/hoteles', hotelId], {
       queryParams: {
+        busqueda: (this.route.snapshot.queryParamMap.get('busqueda') || '').trim(),
         fecha_ingreso: this.reservationForm.controls.fechaIngreso.value,
         fecha_salida: this.reservationForm.controls.fechaSalida.value,
         nro_personas: this.reservationForm.controls.nroPersonas.value,

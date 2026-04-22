@@ -103,6 +103,12 @@
       box-shadow: inset 0 0 0 1px #2563eb;
     }
 
+    .method-pill-static {
+      cursor: default;
+      justify-content: flex-start;
+      max-width: 220px;
+    }
+
     .field-wrap {
       display: grid;
       gap: 0.35rem;
@@ -123,6 +129,43 @@
         padding: 0.62rem 0.75rem;
       }
 
+      .input-with-brand {
+        position: relative;
+
+        input {
+          padding-right: 0.75rem;
+        }
+      }
+
+      .input-with-brand.has-brand {
+        input {
+          padding-right: 5.25rem;
+        }
+      }
+
+      .brand-inside-input {
+        position: absolute;
+        top: 0.3rem;
+        right: 0.35rem;
+        bottom: 0.3rem;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 4rem;
+        padding: 0 0.6rem;
+        border-left: 1px solid #dbeafe;
+        border-radius: 0 0.45rem 0.45rem 0;
+        background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+        color: #2563eb;
+        pointer-events: none;
+        transform: none;
+
+        i {
+          font-size: 1.8rem;
+        }
+      }
+
       .field-error {
         color: #dc2626;
         font-size: 0.75rem;
@@ -131,25 +174,6 @@
       .field-hint {
         color: #1d4ed8;
         font-size: 0.75rem;
-      }
-
-      .card-brand-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        width: fit-content;
-        margin-top: 0.1rem;
-        border: 1px solid #bfdbfe;
-        background: #eff6ff;
-        color: #1d4ed8;
-        border-radius: 9999px;
-        padding: 0.2rem 0.55rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-
-        i {
-          font-size: 1.05rem;
-        }
       }
     }
 
