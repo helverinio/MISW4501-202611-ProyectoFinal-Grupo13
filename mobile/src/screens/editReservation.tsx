@@ -528,14 +528,24 @@ export default function EditReservationScreen() {
             <View style={styles.datePickerContainer}>
               <Text style={styles.datePickerLabel}>{t('editReservation.checkIn')}</Text>
               <View style={styles.datePickerButton}>
-                <TouchableOpacity onPress={decrementCheckIn} style={styles.dateArrowButton}>
+                <TouchableOpacity
+                  testID="checkin-decrement"
+                  accessibilityLabel="checkin-decrement"
+                  onPress={decrementCheckIn}
+                  style={styles.dateArrowButton}
+                >
                   <Ionicons name="chevron-back" size={18} color="#64748B" />
                 </TouchableOpacity>
                 <View style={styles.dateValueContainer}>
                   <Text style={styles.datePickerValue}>{formatDateShort(checkInDate)}</Text>
                   <Ionicons name="calendar" size={18} color="#3B82F6" />
                 </View>
-                <TouchableOpacity onPress={incrementCheckIn} style={styles.dateArrowButton}>
+                <TouchableOpacity
+                  testID="checkin-increment"
+                  accessibilityLabel="checkin-increment"
+                  onPress={incrementCheckIn}
+                  style={styles.dateArrowButton}
+                >
                   <Ionicons name="chevron-forward" size={18} color="#64748B" />
                 </TouchableOpacity>
               </View>
@@ -544,14 +554,24 @@ export default function EditReservationScreen() {
             <View style={styles.datePickerContainer}>
               <Text style={styles.datePickerLabel}>{t('editReservation.checkOut')}</Text>
               <View style={styles.datePickerButton}>
-                <TouchableOpacity onPress={decrementCheckOut} style={styles.dateArrowButton}>
+                <TouchableOpacity
+                  testID="checkout-decrement"
+                  accessibilityLabel="checkout-decrement"
+                  onPress={decrementCheckOut}
+                  style={styles.dateArrowButton}
+                >
                   <Ionicons name="chevron-back" size={18} color="#64748B" />
                 </TouchableOpacity>
                 <View style={styles.dateValueContainer}>
                   <Text style={styles.datePickerValue}>{formatDateShort(checkOutDate)}</Text>
                   <Ionicons name="calendar" size={18} color="#3B82F6" />
                 </View>
-                <TouchableOpacity onPress={incrementCheckOut} style={styles.dateArrowButton}>
+                <TouchableOpacity
+                  testID="checkout-increment"
+                  accessibilityLabel="checkout-increment"
+                  onPress={incrementCheckOut}
+                  style={styles.dateArrowButton}
+                >
                   <Ionicons name="chevron-forward" size={18} color="#64748B" />
                 </TouchableOpacity>
               </View>

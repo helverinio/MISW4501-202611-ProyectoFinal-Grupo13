@@ -76,9 +76,7 @@ appId: com.travelhub.app
 
 # ============================================
 # Step 4: Edit reservation screen - add one day to checkout date
-# The check-out forward chevron has no text label, so we tap it using
-# a relative screen point. It is the rightmost arrow of the second
-# date picker inside the "Cambiar Fechas" card.
+# The check-out forward chevron is identified by its testID.
 # ============================================
 - extendedWaitUntil:
     visible: "Editar Reserva"
@@ -87,11 +85,11 @@ appId: com.travelhub.app
 - assertVisible: "Cambiar Fechas"
 
 - tapOn:
-    point: "94%,38%"
+    id: "checkout-increment"
 
-# Verify the nights counter increased (at least 2 nights now)
+# Verify the nights counter increased by one (3 nights now)
 - assertVisible:
-    text: ".*noches seleccionadas"
+    text: "3 noches seleccionadas"
 
 # ============================================
 # Step 5: Scroll to the bottom and tap "Guardar Cambios"
