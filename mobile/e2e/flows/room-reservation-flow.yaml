@@ -144,11 +144,11 @@ appId: com.travelhub.app
 
 - tapOn:
     text: "Ingresa tu apellido"
-- inputText: "Perez"
+- inputText: "Arnedo"
 
 - tapOn:
     text: "Ingresa tu correo electrónico"
-- inputText: "orlando2@example.com"
+- inputText: "orlando@example.com"
 
 - tapOn:
     text: "Número de teléfono"
@@ -191,7 +191,7 @@ appId: com.travelhub.app
 
 - tapOn:
     text: "Nombre en la tarjeta"
-- inputText: "ORLANDO PEREZ"
+- inputText: "ORLANDO ARNEDO"
 
 # Scroll to reveal terms + Pay button
 - swipe:
