@@ -386,6 +386,8 @@ export default function PaymentScreen() {
         const cardLast4 = cleanedCard.slice(-4);
         const cardType = detectCardType(cleanedCard);
 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         router.replace({
           pathname: '/screens/paymentResult',
           params: {
@@ -467,6 +469,8 @@ export default function PaymentScreen() {
         const cardLast4 = cleanedCard.slice(-4);
         const cardType = detectCardType(cleanedCard);
 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         router.replace({
           pathname: '/screens/paymentResult',
           params: {
@@ -522,6 +526,8 @@ export default function PaymentScreen() {
       const cleanedCard = cardNumber.replace(/\s/g, '');
       const cardLast4 = cleanedCard.slice(-4);
       const cardType = detectCardType(cleanedCard);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       router.replace({
         pathname: '/screens/paymentResult',
