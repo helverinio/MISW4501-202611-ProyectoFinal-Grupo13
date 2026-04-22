@@ -1,0 +1,222 @@
+appId: com.travelhub.app
+---
+# Room Reservation E2E Test Flow
+# This test performs a full reservation flow:
+# - Login
+# - Search hotels in Bogota for tomorrow -> day after tomorrow, 1 guest
+# - Open a hotel's details
+# - Select an available room
+# - Fill out the booking/guest form and continue to payment
+# - Fill out card details and pay
+# - Wait for the successful payment confirmation
+
+- launchApp:
+    clearState: true
+
+# ============================================
+# Step 1: Login
+# ============================================
+- extendedWaitUntil:
+    visible:
+      text: "TravelHub"
+    timeout: 30000
+
+- tapOn:
+    text: "tu@email.com"
+- inputText: "orlando@example.com"
+
+- tapOn:
+    text: "••••••••"
+- inputText: "password2"
+
+# Dismiss keyboard
+- tapOn:
+    text: "TravelHub"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+- tapOn:
+    text: "Iniciar Sesión"
+    index: 1
+
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
+# ============================================
+# Step 2: Wait for landing page
+# ============================================
+- extendedWaitUntil:
+    visible: "Encuentra tu estadía perfecta"
+    timeout: 10000
+
+# ============================================
+# Step 3: Fill destination (Bogota)
+# ============================================
+- tapOn:
+    text: "¿A dónde vas?"
+- inputText: "Bogota"
+
+- tapOn:
+    text: "Encuentra tu estadía perfecta"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+# ============================================
+# Step 4: Select Check-in date (Tomorrow)
+# ============================================
+- tapOn:
+    text: "ENTRADA"
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-tomorrow.js
+- tapOn:
+    text: "${output.tomorrowDay}"
+
+# ============================================
+# Step 5: Select Check-out date (Day after tomorrow)
+# ============================================
+- tapOn:
+    text: "SALIDA"
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-day-after-tomorrow.js
+- tapOn:
+    text: "${output.dayAfterTomorrowDay}"
+
+# ============================================
+# Step 6: Submit search
+# ============================================
+- assertVisible:
+    text: "1 Adulto"
+
+- tapOn:
+    text: "Buscar Hoteles"
+
+# ============================================
+# Step 7: Hotel results - open first hotel details
+# ============================================
+- extendedWaitUntil:
+    visible: "Ver Detalles"
+    timeout: 15000
+
+- tapOn:
+    text: "Ver Detalles"
+    index: 0
+
+# ============================================
+# Step 8: Hotel Details - select first available room
+# ============================================
+- extendedWaitUntil:
+    visible: "Habitaciones Disponibles"
+    timeout: 10000
+
+# Scroll down to reveal room cards if needed
+- swipe:
+    direction: UP
+    duration: 600
+
+- tapOn:
+    text: "Seleccionar Habitación"
+    index: 0
+
+# ============================================
+# Step 9: Booking form - fill guest information
+# ============================================
+- extendedWaitUntil:
+    visible: "Información del Huésped"
+    timeout: 15000
+
+- tapOn:
+    text: "Ingresa tu nombre"
+- inputText: "Orlando"
+
+- tapOn:
+    text: "Ingresa tu apellido"
+- inputText: "Perez"
+
+- tapOn:
+    text: "Ingresa tu correo electrónico"
+- inputText: "orlando2@example.com"
+
+- tapOn:
+    text: "Número de teléfono"
+- inputText: "3001234567"
+
+# Scroll to terms/submit
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# Accept Terms & Conditions (tap the checkbox row label)
+- tapOn:
+    text: "Acepto los.*"
+
+- tapOn:
+    text: "Continuar al Pago"
+
+# ============================================
+# Step 10: Payment screen - fill card details
+# ============================================
+- extendedWaitUntil:
+    visible: "Método de Pago"
+    timeout: 15000
+
+- tapOn:
+    text: "1234 5678 9012 3456"
+- inputText: "4111111111111111"
+
+- tapOn:
+    text: "MM/AA"
+- inputText: "1230"
+
+- tapOn:
+    text: "123"
+- inputText: "123"
+- hideKeyboard
+
+- tapOn:
+    text: "Nombre en la tarjeta"
+- inputText: "ORLANDO PEREZ"
+
+# Scroll to reveal terms + Pay button
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# Accept terms (tap the terms row text)
+- tapOn:
+    text: "Al completar este pago, acepto la.*"
+
+# ============================================
+# Step 11: Submit payment
+# ============================================
+- tapOn:
+    text: "Pagar Ahora.*"
+
+# ============================================
+# Step 12: Wait for successful payment confirmation
+# Payment takes around 2.5s to process; allow generous timeout
+# ============================================
+- extendedWaitUntil:
+    visible: "¡Pago Exitoso!"
+    timeout: 30000
+
+- assertVisible: "Referencia de Reserva"
