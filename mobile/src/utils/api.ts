@@ -6,7 +6,10 @@ import Constants from 'expo-constants';
 // Backend URL configuration
 let backendUrl = '';
 const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
-const extPaymentsBaseUrl = Constants.expoConfig?.extra?.REACT_APP_EXT_PAYMENTS_URL || (__DEV__ ? 'https://d1r8df79ch2otn.cloudfront.net/ext-payments' : ''); //(__DEV__ ? 'http://10.0.2.2:5001' : '');
+const extPaymentsBaseUrl =
+  Constants.expoConfig?.extra?.REACT_APP_EXT_PAYMENTS_URL ||
+  'https://d1r8df79ch2otn.cloudfront.net/ext-payments';
+console.log('ext-payments configured with URL:', extPaymentsBaseUrl);
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
