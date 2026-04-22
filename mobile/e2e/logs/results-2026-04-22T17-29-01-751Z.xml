@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<testsuites>
-  <testsuite name="Test Suite" device="Medium_Phone_API_35" tests="1" failures="0" time="156.0">
-    <testcase id="room-reservation-flow" name="room-reservation-flow" classname="room-reservation-flow" time="156.0" status="SUCCESS"/>
-  </testsuite>
-</testsuites>
