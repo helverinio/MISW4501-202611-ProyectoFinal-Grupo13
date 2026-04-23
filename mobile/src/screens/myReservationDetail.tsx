@@ -127,32 +127,38 @@ export default function MyReservationDetailScreen() {
     try {
       setLoading(true);
 
-      const hasParams = Boolean(params.reservationId && params.hotelName);
-
-      // If navigation params are complete, use them directly and cache for offline use.
-      if (hasParams) {
-        const detail = buildDetailFromParams();
-        setReservation(detail);
-        if (detail.id) {
-          // Cache the raw params so we can rebuild the view offline without losing i18n-sensitive fields.
-          await ReservationsOfflineCache.saveDetail(detail.id, params);
-        }
+      if (!params.reservationId) {
+        setReservation(null);
         return;
       }
 
-      // Params missing (likely a fresh launch offline): try to load from offline cache.
-      if (params.reservationId) {
+      // Try to fill missing params from the offline cache without replacing values already provided.
+      let overrides: Partial<ReservationDetailParams> = {};
+      try {
         const cached = await ReservationsOfflineCache.loadDetail<ReservationDetailParams>(
           params.reservationId
         );
         if (cached?.data) {
-          setReservation(buildDetailFromParams(cached.data));
-          return;
+          const cachedData = cached.data;
+          for (const key of Object.keys(cachedData) as (keyof ReservationDetailParams)[]) {
+            if (params[key] === undefined && cachedData[key] !== undefined) {
+              overrides[key] = cachedData[key];
+            }
+          }
         }
+      } catch (cacheError) {
+        console.warn('Offline cache read failed:', cacheError);
       }
 
-      // Nothing usable
-      setReservation(null);
+      const detail = buildDetailFromParams(overrides);
+      setReservation(detail);
+
+      // Persist the latest known params for this reservation so future offline launches can hydrate.
+      try {
+        await ReservationsOfflineCache.saveDetail(params.reservationId, { ...overrides, ...params });
+      } catch (cacheError) {
+        console.warn('Offline cache write failed:', cacheError);
+      }
     } catch (error) {
       console.error('Load reservation detail error:', error);
     } finally {
