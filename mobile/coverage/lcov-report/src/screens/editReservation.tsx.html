@@ -1180,7 +1180,27 @@
 <a name='L1115'></a><a href='#L1115'>1115</a>
 <a name='L1116'></a><a href='#L1116'>1116</a>
 <a name='L1117'></a><a href='#L1117'>1117</a>
-<a name='L1118'></a><a href='#L1118'>1118</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1118'></a><a href='#L1118'>1118</a>
+<a name='L1119'></a><a href='#L1119'>1119</a>
+<a name='L1120'></a><a href='#L1120'>1120</a>
+<a name='L1121'></a><a href='#L1121'>1121</a>
+<a name='L1122'></a><a href='#L1122'>1122</a>
+<a name='L1123'></a><a href='#L1123'>1123</a>
+<a name='L1124'></a><a href='#L1124'>1124</a>
+<a name='L1125'></a><a href='#L1125'>1125</a>
+<a name='L1126'></a><a href='#L1126'>1126</a>
+<a name='L1127'></a><a href='#L1127'>1127</a>
+<a name='L1128'></a><a href='#L1128'>1128</a>
+<a name='L1129'></a><a href='#L1129'>1129</a>
+<a name='L1130'></a><a href='#L1130'>1130</a>
+<a name='L1131'></a><a href='#L1131'>1131</a>
+<a name='L1132'></a><a href='#L1132'>1132</a>
+<a name='L1133'></a><a href='#L1133'>1133</a>
+<a name='L1134'></a><a href='#L1134'>1134</a>
+<a name='L1135'></a><a href='#L1135'>1135</a>
+<a name='L1136'></a><a href='#L1136'>1136</a>
+<a name='L1137'></a><a href='#L1137'>1137</a>
+<a name='L1138'></a><a href='#L1138'>1138</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1649,6 +1669,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2827,14 +2867,24 @@ export default function EditReservationScreen() {
             &lt;View style={styles.datePickerContainer}&gt;
               &lt;Text style={styles.datePickerLabel}&gt;{t('editReservation.checkIn')}&lt;/Text&gt;
               &lt;View style={styles.datePickerButton}&gt;
-                &lt;TouchableOpacity onPress={decrementCheckIn} style={styles.dateArrowButton}&gt;
+                &lt;TouchableOpacity
+                  testID="checkin-decrement"
+                  accessibilityLabel="checkin-decrement"
+                  onPress={decrementCheckIn}
+                  style={styles.dateArrowButton}
+                &gt;
                   &lt;Ionicons name="chevron-back" size={18} color="#64748B" /&gt;
                 &lt;/TouchableOpacity&gt;
                 &lt;View style={styles.dateValueContainer}&gt;
                   &lt;Text style={styles.datePickerValue}&gt;{formatDateShort(checkInDate)}&lt;/Text&gt;
                   &lt;Ionicons name="calendar" size={18} color="#3B82F6" /&gt;
                 &lt;/View&gt;
-                &lt;TouchableOpacity onPress={incrementCheckIn} style={styles.dateArrowButton}&gt;
+                &lt;TouchableOpacity
+                  testID="checkin-increment"
+                  accessibilityLabel="checkin-increment"
+                  onPress={incrementCheckIn}
+                  style={styles.dateArrowButton}
+                &gt;
                   &lt;Ionicons name="chevron-forward" size={18} color="#64748B" /&gt;
                 &lt;/TouchableOpacity&gt;
               &lt;/View&gt;
@@ -2843,14 +2893,24 @@ export default function EditReservationScreen() {
             &lt;View style={styles.datePickerContainer}&gt;
               &lt;Text style={styles.datePickerLabel}&gt;{t('editReservation.checkOut')}&lt;/Text&gt;
               &lt;View style={styles.datePickerButton}&gt;
-                &lt;TouchableOpacity onPress={decrementCheckOut} style={styles.dateArrowButton}&gt;
+                &lt;TouchableOpacity
+                  testID="checkout-decrement"
+                  accessibilityLabel="checkout-decrement"
+                  onPress={decrementCheckOut}
+                  style={styles.dateArrowButton}
+                &gt;
                   &lt;Ionicons name="chevron-back" size={18} color="#64748B" /&gt;
                 &lt;/TouchableOpacity&gt;
                 &lt;View style={styles.dateValueContainer}&gt;
                   &lt;Text style={styles.datePickerValue}&gt;{formatDateShort(checkOutDate)}&lt;/Text&gt;
                   &lt;Ionicons name="calendar" size={18} color="#3B82F6" /&gt;
                 &lt;/View&gt;
-                &lt;TouchableOpacity onPress={incrementCheckOut} style={styles.dateArrowButton}&gt;
+                &lt;TouchableOpacity
+                  testID="checkout-increment"
+                  accessibilityLabel="checkout-increment"
+                  onPress={incrementCheckOut}
+                  style={styles.dateArrowButton}
+                &gt;
                   &lt;Ionicons name="chevron-forward" size={18} color="#64748B" /&gt;
                 &lt;/TouchableOpacity&gt;
               &lt;/View&gt;
@@ -3421,7 +3481,7 @@ const styles = StyleSheet.create({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-04-21T22:56:46.904Z
+                at 2026-04-23T18:26:57.957Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

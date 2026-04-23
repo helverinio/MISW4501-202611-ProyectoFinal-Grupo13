@@ -1,5 +1,9 @@
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act, configure } from '@testing-library/react-native';
+
+// PaymentScreen awaits a 2s setTimeout in the payment flow; bump RTL's waitFor timeout
+// above the default 1000ms so payment-processing assertions have time to resolve under real timers.
+configure({ asyncUtilTimeout: 5000 });
 import PaymentScreen from '../payment';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BookingService } from '../../services/bookingService';
@@ -95,6 +99,15 @@ const mockPaises = [
 ];
 
 describe('PaymentScreen', () => {
+  beforeAll(() => {
+    // PaymentScreen uses a 2s setTimeout during the payment flow; real timers let it resolve.
+    jest.useRealTimers();
+  });
+
+  afterAll(() => {
+    jest.useFakeTimers();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseLocalSearchParams.mockReturnValue(mockSearchParams);
