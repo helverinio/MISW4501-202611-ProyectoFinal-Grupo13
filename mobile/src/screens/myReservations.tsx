@@ -24,6 +24,9 @@ import BookingService, {
   CiudadResponse,
   PaisResponse,
 } from '@/services/bookingService';
+import ReservationsOfflineCache from '@/services/offlineCache';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import OfflineBanner from '@/common/OfflineBanner';
 
 type ReservationTab = 'upcoming' | 'past' | 'cancelled';
 type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled';
@@ -57,12 +60,29 @@ export default function MyReservationsScreen() {
   const cachedEstados = useStaticDataStore((state) => state.estados);
   const cachedCiudades = useStaticDataStore((state) => state.ciudades);
   const cachedPaises = useStaticDataStore((state) => state.paises);
+  const { isOffline } = useNetworkStatus();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [reservations, setReservations] = useState<ReservationItemVm[]>([]);
   const [activeTab, setActiveTab] = useState<ReservationTab>('upcoming');
   const [estados, setEstados] = useState<EstadoResponse[]>([]);
+  const [isShowingCached, setIsShowingCached] = useState(false);
+
+  const loadFromCache = useCallback(async (userId: string): Promise<boolean> => {
+    const cached = await ReservationsOfflineCache.loadList<{
+      reservations: ReservationItemVm[];
+      estados: EstadoResponse[];
+    }>(userId);
+
+    if (cached?.data?.reservations?.length) {
+      setReservations(cached.data.reservations);
+      setEstados(cached.data.estados || []);
+      setIsShowingCached(true);
+      return true;
+    }
+    return false;
+  }, []);
 
   const loadReservations = useCallback(async () => {
     try {
@@ -75,6 +95,17 @@ export default function MyReservationsScreen() {
       }
 
       const userId = user.id;
+
+      // If offline, load exclusively from AsyncStorage cache
+      if (isOffline) {
+        const hasCached = await loadFromCache(userId);
+        if (!hasCached) {
+          setErrorMessage(t('offline.noCachedData'));
+        }
+        setLoading(false);
+        setRefreshing(false);
+        return;
+      }
 
       // Use cached static data (estados, ciudades, paises) from store
       const estadosData = cachedEstados.length > 0 ? cachedEstados : [];
@@ -93,8 +124,13 @@ export default function MyReservationsScreen() {
       ]);
 
       if (!reservasResult.success || !reservasResult.data) {
-        setErrorMessage(t('myReservations.loadError'));
+        // Fallback to cached data on network failure
+        const hasCached = await loadFromCache(userId);
+        if (!hasCached) {
+          setErrorMessage(t('myReservations.loadError'));
+        }
         setLoading(false);
+        setRefreshing(false);
         return;
       }
 
@@ -126,14 +162,33 @@ export default function MyReservationsScreen() {
       );
 
       setReservations(sorted);
+      setIsShowingCached(false);
+
+      // Persist a fresh snapshot of the reservations + estados for offline use
+      await ReservationsOfflineCache.saveList(userId, {
+        reservations: sorted,
+        estados: estadosData,
+      });
+      // Also cache each reservation individually for the detail screen
+      await Promise.all(
+        sorted.map((r) => ReservationsOfflineCache.saveDetail(r.id, r))
+      );
     } catch (error) {
       console.error('Load reservations error:', error);
-      setErrorMessage(t('myReservations.loadError'));
+      // Network/exception path: fallback to cache
+      if (user?.id) {
+        const hasCached = await loadFromCache(user.id);
+        if (!hasCached) {
+          setErrorMessage(t('myReservations.loadError'));
+        }
+      } else {
+        setErrorMessage(t('myReservations.loadError'));
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [t, user, cachedEstados, cachedCiudades, cachedPaises]);
+  }, [t, user, cachedEstados, cachedCiudades, cachedPaises, isOffline, loadFromCache]);
 
   useEffect(() => {
     loadReservations();
@@ -348,6 +403,13 @@ export default function MyReservationsScreen() {
   };
 
   const handleModify = (reservation: ReservationItemVm) => {
+    if (isOffline) {
+      Alert.alert(
+        t('offline.actionUnavailableTitle'),
+        t('offline.actionUnavailableMessage')
+      );
+      return;
+    }
     router.push({
       pathname: '/screens/editReservation',
       params: {
@@ -371,6 +433,13 @@ export default function MyReservationsScreen() {
   };
 
   const handleCompletePayment = async (reservation: ReservationItemVm) => {
+    if (isOffline) {
+      Alert.alert(
+        t('offline.actionUnavailableTitle'),
+        t('offline.actionUnavailableMessage')
+      );
+      return;
+    }
     try {
       setLoading(true);
 
@@ -419,6 +488,13 @@ export default function MyReservationsScreen() {
   };
 
   const handleCancel = async (reservation: ReservationItemVm) => {
+    if (isOffline) {
+      Alert.alert(
+        t('offline.actionUnavailableTitle'),
+        t('offline.actionUnavailableMessage')
+      );
+      return;
+    }
     try {
       const cancelledEstado = estados.find(
         (e) => normalize(e.nombre).includes('cancel')
@@ -564,18 +640,30 @@ export default function MyReservationsScreen() {
           {reservation.status === 'pending' ? (
             <>
               <TouchableOpacity
-                style={styles.primaryButton}
+                style={[styles.primaryButton, isOffline && styles.disabledButton]}
                 onPress={() => handleCompletePayment(reservation)}
+                disabled={isOffline}
               >
-                <Text style={styles.primaryButtonText}>
+                <Text
+                  style={[
+                    styles.primaryButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
                   {t('myReservations.completePayment')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.cancelButton}
+                style={[styles.cancelButton, isOffline && styles.disabledButton]}
                 onPress={() => handleCancel(reservation)}
+                disabled={isOffline}
               >
-                <Text style={styles.cancelButtonText}>
+                <Text
+                  style={[
+                    styles.cancelButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
                   {t('myReservations.cancel')}
                 </Text>
               </TouchableOpacity>
@@ -591,10 +679,16 @@ export default function MyReservationsScreen() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.secondaryButton}
+                style={[styles.secondaryButton, isOffline && styles.disabledButton]}
                 onPress={() => handleModify(reservation)}
+                disabled={isOffline}
               >
-                <Text style={styles.secondaryButtonText}>
+                <Text
+                  style={[
+                    styles.secondaryButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
                   {t('myReservations.modify')}
                 </Text>
               </TouchableOpacity>
@@ -624,11 +718,24 @@ export default function MyReservationsScreen() {
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#1E293B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('myReservations.title')}</Text>
+        <View style={styles.headerTitleRow}>
+          <Text style={styles.headerTitle}>{t('myReservations.title')}</Text>
+          {isOffline ? (
+            <Ionicons
+              name="cloud-offline"
+              size={18}
+              color="#DC2626"
+              style={styles.headerOfflineIcon}
+              testID="offline-header-icon"
+            />
+          ) : null}
+        </View>
         <TouchableOpacity style={styles.menuButton}>
           <Ionicons name="ellipsis-vertical" size={24} color="#1E293B" />
         </TouchableOpacity>
       </View>
+
+      <OfflineBanner visible={isOffline} />
 
       <View style={styles.tabsContainer}>
         <TouchableOpacity
@@ -738,6 +845,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#1E293B',
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerOfflineIcon: {
+    marginLeft: 4,
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  disabledButtonText: {
+    color: '#94A3B8',
   },
   menuButton: {
     padding: 4,
