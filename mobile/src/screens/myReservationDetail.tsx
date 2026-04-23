@@ -13,6 +13,9 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
+import ReservationsOfflineCache from '@/services/offlineCache';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import OfflineBanner from '@/common/OfflineBanner';
 
 type ReservationDetailParams = {
   reservationId?: string;
@@ -68,6 +71,7 @@ interface ReservationDetailVm {
 export default function MyReservationDetailScreen() {
   const { t } = useTranslation();
   const params = useLocalSearchParams<ReservationDetailParams>();
+  const { isOffline } = useNetworkStatus();
   const [loading, setLoading] = useState(true);
   const [reservation, setReservation] = useState<ReservationDetailVm | null>(null);
 
@@ -75,52 +79,80 @@ export default function MyReservationDetailScreen() {
     loadReservationDetails();
   }, [params.reservationId]);
 
+  const buildDetailFromParams = (overrides?: Partial<ReservationDetailParams>): ReservationDetailVm => {
+    const src = { ...params, ...overrides };
+    const nights = parseInt(src.nights || '1', 10);
+    const total = parseFloat(src.total || '0');
+    const roomRate = total * 0.885;
+    const serviceFee = total * 0.044;
+    const taxes = total * 0.071;
+
+    const bookingId = `TH-${new Date().getFullYear()}-${src.reservationId?.slice(-4).toUpperCase() || '0000'}`;
+
+    const roomBeds = parseInt(src.roomBeds || '1', 10);
+    const roomCapacity = parseInt(src.roomCapacity || '2', 10);
+    const bedLabel = roomBeds === 1 ? t('reservationDetail.kingBed') : `${roomBeds} ${t('reservationDetail.beds')}`;
+
+    return {
+      id: src.reservationId || '',
+      bookingId,
+      hotelId: src.hotelId || '',
+      hotelName: src.hotelName || t('reservationDetail.defaultHotel'),
+      hotelEmail: src.hotelEmail || '',
+      hotelPhone: '+57 1 000-0000',
+      hotelAddress: src.location || '',
+      roomType: src.roomType || t('reservationDetail.standardRoom'),
+      roomDetails: `${bedLabel} • ${t('reservationDetail.capacity')}: ${roomCapacity}`,
+      roomSize: '35m²',
+      location: src.location || '',
+      checkIn: src.checkIn || '',
+      checkInTime: src.checkInTime || t('reservationDetail.afterTime'),
+      checkOut: src.checkOut || '',
+      checkOutTime: src.checkOutTime || t('reservationDetail.beforeTime'),
+      guests: parseInt(src.guests || '1', 10),
+      guestNames: '',
+      nights,
+      roomRate: Math.round(roomRate * 100) / 100,
+      serviceFee: Math.round(serviceFee * 100) / 100,
+      taxes: Math.round(taxes * 100) / 100,
+      total,
+      status: (src.status as ReservationDetailVm['status']) || 'confirmed',
+      isCheckInAvailable: src.status === 'confirmed',
+      rating: parseFloat(src.rating || '0.0'),
+      reviewCount: Math.floor(Math.random() * 3000) + 500,//TODO: Get from API
+    };
+  };
+
   const loadReservationDetails = async () => {
     try {
       setLoading(true);
 
-      const nights = parseInt(params.nights || '1', 10);
-      const total = parseFloat(params.total || '0');
-      const roomRate = total * 0.885;
-      const serviceFee = total * 0.044;
-      const taxes = total * 0.071;
+      const hasParams = Boolean(params.reservationId && params.hotelName);
 
-      const bookingId = `TH-${new Date().getFullYear()}-${params.reservationId?.slice(-4).toUpperCase() || '0000'}`;
+      // If navigation params are complete, use them directly and cache for offline use.
+      if (hasParams) {
+        const detail = buildDetailFromParams();
+        setReservation(detail);
+        if (detail.id) {
+          // Cache the raw params so we can rebuild the view offline without losing i18n-sensitive fields.
+          await ReservationsOfflineCache.saveDetail(detail.id, params);
+        }
+        return;
+      }
 
-      const roomBeds = parseInt(params.roomBeds || '1', 10);
-      const roomCapacity = parseInt(params.roomCapacity || '2', 10);
-      const bedLabel = roomBeds === 1 ? t('reservationDetail.kingBed') : `${roomBeds} ${t('reservationDetail.beds')}`;
+      // Params missing (likely a fresh launch offline): try to load from offline cache.
+      if (params.reservationId) {
+        const cached = await ReservationsOfflineCache.loadDetail<ReservationDetailParams>(
+          params.reservationId
+        );
+        if (cached?.data) {
+          setReservation(buildDetailFromParams(cached.data));
+          return;
+        }
+      }
 
-      const detail: ReservationDetailVm = {
-        id: params.reservationId || '',
-        bookingId,
-        hotelId: params.hotelId || '',
-        hotelName: params.hotelName || t('reservationDetail.defaultHotel'),
-        hotelEmail: params.hotelEmail || '',
-        hotelPhone: '+57 1 000-0000',
-        hotelAddress: params.location || '',
-        roomType: params.roomType || t('reservationDetail.standardRoom'),
-        roomDetails: `${bedLabel} • ${t('reservationDetail.capacity')}: ${roomCapacity}`,
-        roomSize: '35m²',
-        location: params.location || '',
-        checkIn: params.checkIn || '',
-        checkInTime: params.checkInTime || t('reservationDetail.afterTime'),
-        checkOut: params.checkOut || '',
-        checkOutTime: params.checkOutTime || t('reservationDetail.beforeTime'),
-        guests: parseInt(params.guests || '1', 10),
-        guestNames: '',
-        nights,
-        roomRate: Math.round(roomRate * 100) / 100,
-        serviceFee: Math.round(serviceFee * 100) / 100,
-        taxes: Math.round(taxes * 100) / 100,
-        total,
-        status: (params.status as ReservationDetailVm['status']) || 'confirmed',
-        isCheckInAvailable: params.status === 'confirmed',
-        rating: parseFloat(params.rating || '0.0'),
-        reviewCount: Math.floor(Math.random() * 3000) + 500,//TODO: Get from API
-      };
-
-      setReservation(detail);
+      // Nothing usable
+      setReservation(null);
     } catch (error) {
       console.error('Load reservation detail error:', error);
     } finally {
@@ -235,11 +267,24 @@ export default function MyReservationDetailScreen() {
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#1E293B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('reservationDetail.title')}</Text>
+        <View style={styles.headerTitleRow}>
+          <Text style={styles.headerTitle}>{t('reservationDetail.title')}</Text>
+          {isOffline ? (
+            <Ionicons
+              name="cloud-offline"
+              size={18}
+              color="#DC2626"
+              style={styles.headerOfflineIcon}
+              testID="offline-header-icon"
+            />
+          ) : null}
+        </View>
         <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
           <Ionicons name="ellipsis-vertical" size={24} color="#1E293B" />
         </TouchableOpacity>
       </View>
+
+      <OfflineBanner visible={isOffline} />
 
       <ScrollView
         style={styles.scrollView}
@@ -482,6 +527,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#1E293B',
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerOfflineIcon: {
+    marginLeft: 4,
   },
   menuButton: {
     padding: 4,
