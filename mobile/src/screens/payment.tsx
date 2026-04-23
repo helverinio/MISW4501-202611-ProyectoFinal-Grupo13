@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -85,6 +85,15 @@ export default function PaymentScreen() {
   const [isModificationFlow, setIsModificationFlow] = useState(false);
   const [isReservedButPendingPayment, setIsReservedButPendingPayment] = useState(false);
   const [cachedEstados, setCachedEstados] = useState<EstadoResponse[] | null>(null);
+  const processingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (processingTimerRef.current) {
+        clearTimeout(processingTimerRef.current);
+      }
+    };
+  }, []);
 
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\D/g, '');
@@ -386,7 +395,7 @@ export default function PaymentScreen() {
         const cardLast4 = cleanedCard.slice(-4);
         const cardType = detectCardType(cleanedCard);
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => { processingTimerRef.current = setTimeout(resolve, 2000); });
 
         router.replace({
           pathname: '/screens/paymentResult',
@@ -469,7 +478,7 @@ export default function PaymentScreen() {
         const cardLast4 = cleanedCard.slice(-4);
         const cardType = detectCardType(cleanedCard);
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => { processingTimerRef.current = setTimeout(resolve, 2000); });
 
         router.replace({
           pathname: '/screens/paymentResult',
@@ -527,7 +536,7 @@ export default function PaymentScreen() {
       const cardLast4 = cleanedCard.slice(-4);
       const cardType = detectCardType(cleanedCard);
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => { processingTimerRef.current = setTimeout(resolve, 2000); });
 
       router.replace({
         pathname: '/screens/paymentResult',

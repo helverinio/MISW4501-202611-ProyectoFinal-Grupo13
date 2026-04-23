@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/authService/AuthService.ts</title>
+    <title>Code coverage report for src/services/offlineCache/reservationsCache.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/services/authService</a> AuthService.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/services/offlineCache</a> reservationsCache.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>32/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -135,7 +135,32 @@
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,142 +168,183 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import AsyncStorage from '@react-native-async-storage/async-storage';
-import hashingUtility from '../../utils/hashingUtility';
-import { AuthResult } from './models/AuthResult';
-import { useUserStore } from '@/store/userStore';
-import { useStaticDataStore } from '@/store/staticDataStore';
-import customAxios from '@/utils/api';
-import { GetUserByToken } from '../userService/GetUserByTokenService';
 &nbsp;
-export const AuthService = {
-  send: async (email: string, password: string): Promise&lt;AuthResult&gt; =&gt; {
+const RESERVATIONS_CACHE_KEY = 'offline-cache:reservations';
+const RESERVATION_DETAIL_CACHE_PREFIX = 'offline-cache:reservation-detail:';
+&nbsp;
+export interface CachedReservationsPayload&lt;T&gt; {
+  userId: string;
+  data: T;
+  cachedAt: number;
+}
+&nbsp;
+export interface CachedReservationDetailPayload&lt;T&gt; {
+  reservationId: string;
+  data: T;
+  cachedAt: number;
+}
+&nbsp;
+export const ReservationsOfflineCache = {
+  saveList: async &lt;T&gt;(userId: string, data: T): Promise&lt;void&gt; =&gt; {
     try {
-      await AsyncStorage.removeItem('_x');
-&nbsp;
-      const url = '/api/v1/auth/login';
-&nbsp;
-      // const hashedPwd = await hashingUtility(password);
-&nbsp;
-      const response = await customAxios.post(url, {
-        usuario: email,
-        contrasena: password,
-      });
-&nbsp;
-      if (response.status === 200) {
-        await AsyncStorage.setItem('_x', JSON.stringify(response.data.access_token));
-        await AsyncStorage.setItem('_c', JSON.stringify(response.data.refresh_token));
-&nbsp;
-        console.log('response.data.access_token', response.data.access_token);
-&nbsp;
-        useUserStore.getState().setUser(response.data.usuario);
-&nbsp;
-        // await AsyncStorage.setItem('_c', JSON.stringify(response.data.refreshToken));
-        // await AsyncStorage.setItem('_lang', response.data.language);
-&nbsp;
-        // Fetch user data after successful authentication
-        // const userResult = await GetUserByToken.send();
-        // if (userResult.success &amp;&amp; userResult.data) {
-          // Update the user store with the fetched user data
-          // useUserStore.getState().setUser(userResult.data.result);
-        // }
-&nbsp;
-        // Fetch and cache static data (estados, ciudades, paises) after login
-        useStaticDataStore.getState().fetchAndCacheStaticData();
-&nbsp;
-        return {
-          success: true,
-          data: response.data,
-        };
-      }
-&nbsp;
-      await AsyncStorage.removeItem('_x');
-&nbsp;
-      return {
-        success: false,
-        error: {
-          message: 'Authentication failed',
-          status: response.status,
-        },
+      const payload: CachedReservationsPayload&lt;T&gt; = {
+        userId,
+        data,
+        cachedAt: Date.now(),
       };
+      await AsyncStorage.setItem(
+        `${RESERVATIONS_CACHE_KEY}:${userId}`,
+        JSON.stringify(payload)
+      );
     } catch (error) {
-      console.error('Authentication error:', error);
-      await AsyncStorage.removeItem('_x');
-      return {
-        success: false,
-        error: {
-          message: 'Authentication error',
-        },
+      console.warn('Failed to cache reservations list:', error);
+    }
+  },
+&nbsp;
+  loadList: async &lt;T&gt;(userId: string): Promise&lt;CachedReservationsPayload&lt;T&gt; | null&gt; =&gt; {
+    try {
+      const raw = await AsyncStorage.getItem(`${RESERVATIONS_CACHE_KEY}:${userId}`);
+      if (!raw) return null;
+      return JSON.parse(raw) as CachedReservationsPayload&lt;T&gt;;
+    } catch (error) {
+      console.warn('Failed to load cached reservations list:', error);
+      return null;
+    }
+  },
+&nbsp;
+  saveDetail: async &lt;T&gt;(reservationId: string, data: T): Promise&lt;void&gt; =&gt; {
+    try {
+      const payload: CachedReservationDetailPayload&lt;T&gt; = {
+        reservationId,
+        data,
+        cachedAt: Date.now(),
       };
+      await AsyncStorage.setItem(
+        `${RESERVATION_DETAIL_CACHE_PREFIX}${reservationId}`,
+        JSON.stringify(payload)
+      );
+    } catch (error) {
+      console.warn('Failed to cache reservation detail:', error);
+    }
+  },
+&nbsp;
+  loadDetail: async &lt;T&gt;(
+    reservationId: string
+  ): Promise&lt;CachedReservationDetailPayload&lt;T&gt; | null&gt; =&gt; {
+    try {
+      const raw = await AsyncStorage.getItem(
+        `${RESERVATION_DETAIL_CACHE_PREFIX}${reservationId}`
+      );
+      if (!raw) return null;
+      return JSON.parse(raw) as CachedReservationDetailPayload&lt;T&gt;;
+    } catch (error) {
+      console.warn('Failed to load cached reservation detail:', error);
+      return null;
+    }
+  },
+&nbsp;
+  clearAll: async (): Promise&lt;void&gt; =&gt; {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const toRemove = keys.filter(
+        (key) =&gt;
+          key.startsWith(RESERVATIONS_CACHE_KEY) ||
+          key.startsWith(RESERVATION_DETAIL_CACHE_PREFIX)
+      );
+      if (toRemove.length &gt; 0) {
+        await AsyncStorage.multiRemove(toRemove);
+      }
+    } catch (error) {
+      console.warn('Failed to clear reservations cache:', error);
     }
   },
 };
 &nbsp;
-export default AuthService;
+export default ReservationsOfflineCache;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

@@ -296,6 +296,13 @@
     "afterTime": "Después de las 3:00 PM",
     "beforeTime": "Antes de las 12:00 PM"
   },
+  "offline": {
+    "banner": "Sin conexión - mostrando datos guardados",
+    "cachedNotice": "Mostrando datos guardados localmente",
+    "actionUnavailableTitle": "Acción no disponible sin conexión",
+    "actionUnavailableMessage": "Necesitas conexión a internet para realizar esta acción. Intenta de nuevo cuando estés en línea.",
+    "noCachedData": "No hay datos guardados para mostrar sin conexión"
+  },
   "editReservation": {
     "title": "Editar Reserva",
     "loading": "Cargando...",

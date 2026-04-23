@@ -90,6 +90,13 @@
     "spanish": "Español",
     "portuguese": "Português"
   },
+  "offline": {
+    "banner": "Sem conexão - mostrando dados salvos",
+    "cachedNotice": "Mostrando dados salvos localmente",
+    "actionUnavailableTitle": "Ação indisponível sem conexão",
+    "actionUnavailableMessage": "Você precisa de conexão com a internet para realizar esta ação. Tente novamente quando estiver online.",
+    "noCachedData": "Nenhum dado salvo para mostrar offline"
+  },
   "myReservations": {
     "title": "Minhas Reservas",
     "upcoming": "Próximas",
