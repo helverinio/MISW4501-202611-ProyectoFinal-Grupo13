@@ -82,7 +82,7 @@ def valid_create_payload(**overrides):
 
 
 def test_create_reserva_returns_400_when_no_payload(client, auth_headers):
-    response = client.post("/api/v1/reservas", headers=auth_headers)
+    response = client.post("/api/v1/reservas", headers=auth_headers, content_type="application/json")
 
     assert response.status_code == 400
     assert response.get_json()["error"] == "No data provided"
@@ -263,7 +263,7 @@ def test_get_reservas_by_habitacion_returns_200(client, auth_headers, monkeypatc
 
 
 def test_update_reserva_returns_400_when_no_payload(client, auth_headers):
-    response = client.put("/api/v1/reservas/res-1", headers=auth_headers)
+    response = client.put("/api/v1/reservas/res-1", headers=auth_headers, content_type="application/json")
 
     assert response.status_code == 400
     assert response.get_json()["error"] == "No data provided"
@@ -379,7 +379,7 @@ def test_create_reserva_pms_webhook_returns_201(client, monkeypatch):
 
 
 def test_payment_webhook_returns_400_when_no_payload(client):
-    response = client.post("/api/v1/payments/webhook")
+    response = client.post("/api/v1/payments/webhook", content_type="application/json")
 
     assert response.status_code == 400
     assert response.get_json()["error"] == "No data provided"
