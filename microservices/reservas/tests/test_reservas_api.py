@@ -85,7 +85,7 @@ def test_create_reserva_returns_400_when_no_payload(client, auth_headers):
     response = client.post("/api/v1/reservas", headers=auth_headers, content_type="application/json")
 
     assert response.status_code == 400
-    assert response.get_json()["error"] == "No data provided"
+    assert response.get_json(force=True)["error"] == "No data provided"
 
 
 def test_create_reserva_returns_400_when_required_fields_missing(client, auth_headers):
@@ -266,7 +266,7 @@ def test_update_reserva_returns_400_when_no_payload(client, auth_headers):
     response = client.put("/api/v1/reservas/res-1", headers=auth_headers, content_type="application/json")
 
     assert response.status_code == 400
-    assert response.get_json()["error"] == "No data provided"
+    assert response.get_json(force=True)["error"] == "No data provided"
 
 
 def test_update_reserva_returns_404_when_missing(client, auth_headers, monkeypatch):
@@ -382,7 +382,7 @@ def test_payment_webhook_returns_400_when_no_payload(client):
     response = client.post("/api/v1/payments/webhook", content_type="application/json")
 
     assert response.status_code == 400
-    assert response.get_json()["error"] == "No data provided"
+    assert response.get_json(force=True)["error"] == "No data provided"
 
 
 def test_payment_webhook_returns_400_when_required_fields_missing(client):
