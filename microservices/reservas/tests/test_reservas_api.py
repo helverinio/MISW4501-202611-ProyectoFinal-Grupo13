@@ -8,7 +8,6 @@ import app.api.v1.auth as auth_module
 import app.api.v1.reservas as reservas_api
 import app.infrastructure.services as services_module
 
-
 class FakeHealthyRedisService:
     def health_check(self):
         return {"status": "healthy"}
