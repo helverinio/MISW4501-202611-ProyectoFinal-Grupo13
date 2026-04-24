@@ -50,6 +50,19 @@ with app.app_context():
         "CREATE INDEX IF NOT EXISTS ix_comentarios_hoteles_id_hotel_created_at "
         "ON comentarios_hoteles (id_hotel, created_at)"
     ))
+    db.session.execute(text(
+        "CREATE TABLE IF NOT EXISTS admin_hoteles ("
+        "id VARCHAR(36) PRIMARY KEY, "
+        "id_usuario VARCHAR(36) NOT NULL, "
+        "id_hotel VARCHAR(36) NOT NULL REFERENCES hoteles(id), "
+        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+        "CONSTRAINT uq_admin_hotel UNIQUE (id_usuario, id_hotel)"
+        ")"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_usuario "
+        "ON admin_hoteles (id_usuario)"
+    ))
     db.session.commit()
 
 if __name__ == '__main__':
