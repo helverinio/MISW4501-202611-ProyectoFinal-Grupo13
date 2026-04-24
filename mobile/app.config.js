@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "travel-hub",
     slug: "travel-hub",
-    version: "0.2.0",
+    version: "0.2.1",
     orientation: "portrait",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
