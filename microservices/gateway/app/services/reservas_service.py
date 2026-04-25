@@ -263,6 +263,12 @@ class ReservasService:
     def desasignar_hotel(self, hotel_id: str) -> Dict[str, Any]:
         return self._request('DELETE', f'admin/hoteles/{hotel_id}/desasignar')
 
+    def get_admin_reservas_dashboard(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/reservas/dashboard', params=params)
+
+    def update_reserva_estado(self, reserva_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('PUT', f'admin/reservas/{reserva_id}/estado', data)
+
     # Tipos habitacion
     def get_tipos_habitacion_by_hotel(self, hotel_id: str) -> Dict[str, Any]:
         return self._request('GET', f'hoteles/{hotel_id}/tipos-habitacion')

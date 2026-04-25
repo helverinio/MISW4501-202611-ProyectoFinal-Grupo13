@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from app.api.v1 import api_v1_bp
 from app.services import ReservasService
 from flask import current_app
@@ -23,4 +23,18 @@ def asignar_hotel(hotel_id):
 @api_v1_bp.route('/admin/hoteles/<hotel_id>/desasignar', methods=['DELETE'])
 def desasignar_hotel(hotel_id):
     result = get_service().desasignar_hotel(hotel_id)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/reservas/dashboard', methods=['GET'])
+def get_admin_reservas_dashboard():
+    params = request.args.to_dict()
+    result = get_service().get_admin_reservas_dashboard(params=params or None)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/reservas/<reserva_id>/estado', methods=['PUT'])
+def update_reserva_estado(reserva_id):
+    data = request.get_json() or {}
+    result = get_service().update_reserva_estado(reserva_id, data)
     return jsonify(result['data']), result['status_code']

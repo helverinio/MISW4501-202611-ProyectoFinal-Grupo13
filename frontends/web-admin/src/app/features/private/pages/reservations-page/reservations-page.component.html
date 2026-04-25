@@ -1,0 +1,423 @@
+<div class="bg-gray-50 font-inter min-h-screen">
+  <!-- ─── HEADER ─────────────────────────────────────────────────────────── -->
+  <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-hotel text-white text-sm"></i>
+            </div>
+            <span class="text-xl font-bold text-gray-900">TravelHub</span>
+            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors" type="button">
+            <i class="fas fa-bell text-lg"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+            <img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
+              alt="Admin"
+              class="w-8 h-8 rounded-full"
+            />
+            <div class="hidden md:block">
+              <p class="text-sm font-medium text-gray-900">{{ currentUser()?.nombre || 'Admin User' }}</p>
+              <p class="text-xs text-gray-500">{{ currentUser()?.role || 'Hotel Manager' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- ─── SIDEBAR ─────────────────────────────────────────────────────── -->
+    <aside class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
+      <nav class="p-4 space-y-1">
+        <a
+          [routerLink]="['/dashboard']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-chart-line w-5 mr-3"></i>
+          Dashboard
+        </a>
+        <a
+          [routerLink]="['/reservations']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
+        >
+          <i class="fas fa-calendar-check w-5 mr-3"></i>
+          Reservations
+        </a>
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-hotel w-5 mr-3"></i>
+          Properties
+        </a>
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-users w-5 mr-3"></i>
+          Guests
+        </a>
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-dollar-sign w-5 mr-3"></i>
+          Revenue
+        </a>
+        <a
+          [routerLink]="['/room-rate-management']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-cog w-5 mr-3"></i>
+          Settings
+        </a>
+        <div class="pt-4 mt-4 border-t border-gray-100">
+          <button
+            class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+            type="button"
+            (click)="logout()"
+          >
+            <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+            Logout
+          </button>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ─── MAIN ───────────────────────────────────────────────────────── -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8">
+
+      <!-- Page header -->
+      <div class="mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">All Reservations</h1>
+            <p class="text-gray-600 text-sm">Manage and monitor all hotel reservations</p>
+          </div>
+          <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+            <button
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+              type="button"
+            >
+              <i class="fas fa-download mr-2"></i>
+              Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error banner -->
+      <div *ngIf="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        {{ error }}
+        <button type="button" class="ml-auto text-red-500 hover:text-red-700" (click)="loadDashboard()">
+          <i class="fas fa-redo"></i> Retry
+        </button>
+      </div>
+
+      <!-- ── FILTERS ──────────────────────────────────────────────────── -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+
+            <div class="col-span-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Booking Code</label>
+              <div class="relative">
+                <input
+                  type="text"
+                  formControlName="codigo"
+                  placeholder="Search code..."
+                  class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+                <i class="fas fa-search absolute right-3 top-3 text-gray-400 text-sm"></i>
+              </div>
+            </div>
+
+            <div class="col-span-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Check-in From</label>
+              <input
+                type="date"
+                formControlName="fecha_desde"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+
+            <div class="col-span-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Check-in To</label>
+              <input
+                type="date"
+                formControlName="fecha_hasta"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+
+            <div class="col-span-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <select
+                formControlName="id_estado"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="">All Status</option>
+                <option *ngFor="let e of estados" [value]="e.id">{{ e.nombre }}</option>
+              </select>
+            </div>
+
+            <div class="col-span-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Room Type</label>
+              <input
+                type="text"
+                formControlName="tipo_habitacion"
+                placeholder="e.g. Suite"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+
+            <div class="col-span-1 flex items-end space-x-2">
+              <button
+                type="submit"
+                class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
+              >
+                <i class="fas fa-filter mr-2"></i>
+                Filter
+              </button>
+              <button
+                type="button"
+                class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+                (click)="clearFilters()"
+                title="Clear filters"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ── STATS CARDS ─────────────────────────────────────────────── -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-calendar-check text-primary-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">Total Reservations</h3>
+          <p class="text-3xl font-bold text-gray-900">
+            <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
+            <span *ngIf="!loading">{{ stats.total | number }}</span>
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">Confirmed</h3>
+          <p class="text-3xl font-bold text-gray-900">
+            <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
+            <span *ngIf="!loading">{{ stats.confirmadas | number }}</span>
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-clock text-orange-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">Pending</h3>
+          <p class="text-3xl font-bold text-gray-900">
+            <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
+            <span *ngIf="!loading">{{ stats.pendientes | number }}</span>
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-times-circle text-red-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">Cancelled / Rejected</h3>
+          <p class="text-3xl font-bold text-gray-900">
+            <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
+            <span *ngIf="!loading">{{ stats.canceladas + stats.rechazadas | number }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- ── TABLE ───────────────────────────────────────────────────── -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <div class="p-6 border-b border-gray-100">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900 mb-1">Reservations List</h2>
+              <p class="text-sm text-gray-600">Complete list of all reservations</p>
+            </div>
+            <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+              <select
+                [value]="filterForm.get('per_page')?.value"
+                (change)="filterForm.get('per_page')?.setValue(+$any($event.target).value); loadDashboard(true)"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              >
+                <option [value]="25">25 per page</option>
+                <option [value]="50">50 per page</option>
+                <option [value]="100">100 per page</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading overlay skeleton -->
+        <div *ngIf="loading" class="p-8 text-center text-gray-400">
+          <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+          <p class="text-sm">Loading reservations…</p>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!loading && reservations.length === 0" class="p-12 text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-calendar-times text-gray-400 text-2xl"></i>
+          </div>
+          <h3 class="text-gray-700 font-semibold mb-1">No reservations found</h3>
+          <p class="text-gray-500 text-sm">Try adjusting your filters or check back later.</p>
+        </div>
+
+        <!-- Table -->
+        <div *ngIf="!loading && reservations.length > 0" class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Guest ID</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">Property</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Check-in</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Check-out</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">Nights</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+                <th class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr *ngFor="let r of reservations" class="hover:bg-gray-50 transition-colors">
+
+                <!-- ID -->
+                <td class="py-4 px-6">
+                  <span class="text-sm font-medium text-primary-600">#{{ r.id_corto }}</span>
+                </td>
+
+                <!-- Guest ID (cross-service limitation: only id_usuario available) -->
+                <td class="py-4 px-6">
+                  <div class="flex items-center">
+                    <div class="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <i class="fas fa-user text-primary-600 text-xs"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900 font-mono">{{ r.id_usuario | slice:0:8 }}&hellip;</p>
+                      <p class="text-xs text-gray-500">{{ r.nro_personas }} guest{{ r.nro_personas !== 1 ? 's' : '' }}</p>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Property -->
+                <td class="py-4 px-6 hidden lg:table-cell">
+                  <p class="text-sm text-gray-900">{{ r.hotel.nombre }}</p>
+                  <p class="text-xs text-gray-500">{{ r.habitacion.tipo }} #{{ r.habitacion.nro_habitacion }}</p>
+                </td>
+
+                <!-- Check-in -->
+                <td class="py-4 px-6">
+                  <p class="text-sm text-gray-900">{{ formatDate(r.fecha_ingreso) }}</p>
+                  <p class="text-xs text-gray-500">3:00 PM</p>
+                </td>
+
+                <!-- Check-out -->
+                <td class="py-4 px-6 hidden md:table-cell">
+                  <p class="text-sm text-gray-900">{{ formatDate(r.fecha_salida) }}</p>
+                  <p class="text-xs text-gray-500">11:00 AM</p>
+                </td>
+
+                <!-- Nights -->
+                <td class="py-4 px-6 hidden sm:table-cell">
+                  <p class="text-sm text-gray-900">{{ r.nro_noches ?? '—' }}</p>
+                </td>
+
+                <!-- Amount -->
+                <td class="py-4 px-6">
+                  <p class="text-sm font-semibold text-gray-900">{{ formatCurrency(r.total) }}</p>
+                </td>
+
+                <!-- Status -->
+                <td class="py-4 px-6">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="statusClass(r.estado.nombre)"
+                  >
+                    <i class="fas mr-1" [ngClass]="statusIcon(r.estado.nombre)"></i>
+                    {{ r.estado.nombre }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ── PAGINATION ─────────────────────────────────────────── -->
+        <div *ngIf="!loading && pages > 0" class="p-6 border-t border-gray-100">
+          <div class="flex flex-col sm:flex-row items-center justify-between">
+            <p class="text-sm text-gray-600 mb-4 sm:mb-0">
+              Showing {{ showingFrom | number }} to {{ showingTo | number }} of {{ total | number }} reservations
+            </p>
+            <div class="flex items-center space-x-2">
+              <button
+                type="button"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="page <= 1"
+                (click)="goToPage(page - 1)"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+
+              <ng-container *ngFor="let p of pageNumbers; let i = index">
+                <!-- Ellipsis gap -->
+                <span
+                  *ngIf="i > 0 && p - pageNumbers[i - 1] > 1"
+                  class="px-2 text-gray-500"
+                >…</span>
+                <button
+                  type="button"
+                  class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  [ngClass]="p === page
+                    ? 'bg-primary-600 text-white'
+                    : 'border border-gray-300 text-gray-600 hover:bg-gray-50'"
+                  (click)="goToPage(p)"
+                >{{ p }}</button>
+              </ng-container>
+
+              <button
+                type="button"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="page >= pages"
+                (click)="goToPage(page + 1)"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end table card -->
+    </main>
+  </div><!-- end flex -->
+</div>
