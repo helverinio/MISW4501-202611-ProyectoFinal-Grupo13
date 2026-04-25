@@ -63,6 +63,26 @@ with app.app_context():
         "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_usuario "
         "ON admin_hoteles (id_usuario)"
     ))
+
+    # HU-P-22: estado 'Rechazada' + performance indexes for dashboard queries
+    db.session.execute(text(
+        "INSERT INTO estados (id, nombre, descripcion) VALUES "
+        "('f290f1ee-6c54-4b01-90e6-d701748f0857', 'Rechazada', "
+        "'La reserva fue rechazada por el administrador del hotel') "
+        "ON CONFLICT (id) DO NOTHING"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_fecha_ingreso "
+        "ON reservas (fecha_ingreso)"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_id_estado "
+        "ON reservas (id_estado)"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_hotel "
+        "ON admin_hoteles (id_hotel)"
+    ))
     db.session.commit()
 
 if __name__ == '__main__':
