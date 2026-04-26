@@ -32,6 +32,23 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
 
+jest.mock('@react-native-community/netinfo', () =>
+  require('@react-native-community/netinfo/jest/netinfo-mock.js')
+);
+
+// Reset AsyncStorage between tests so offline caches don't leak across specs
+beforeEach(async () => {
+  try {
+    const asModule = require('@react-native-async-storage/async-storage');
+    const AsyncStorage = asModule.default || asModule;
+    if (AsyncStorage && typeof AsyncStorage.clear === 'function') {
+      await AsyncStorage.clear();
+    }
+  } catch {
+    // ignore if not available in this test environment
+  }
+});
+
 jest.mock('@expo/vector-icons', () => ({
   Ionicons: 'Ionicons',
 }));
