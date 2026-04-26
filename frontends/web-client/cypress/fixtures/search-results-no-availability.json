@@ -1,0 +1,23 @@
+{
+  "total_hoteles": 1,
+  "busqueda": "Bogota",
+  "fecha_ingreso": "2026-04-10",
+  "fecha_salida": "2026-04-15",
+  "nro_personas": 2,
+  "hoteles": [
+    {
+      "hotel_id": "h001",
+      "nombre": "Hotel Tequendama",
+      "descripcion": "Lujoso hotel en el corazon de Bogota.",
+      "amenidades": "Free WiFi, Swimming Pool",
+      "email": "reservas@tequendama.com",
+      "ciudad": "Bogota",
+      "pais": "Colombia",
+      "rating_promedio": 4.5,
+      "cantidad_ratings": 320,
+      "cantidad_comentarios": 150,
+      "total_habitaciones_disponibles": 0,
+      "habitaciones": []
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "h001",
+  "nombre": "Hotel Tequendama",
+  "email": "reservas@tequendama.com",
+  "descripcion": "Lujoso hotel en el corazon de Bogota con vistas a los cerros orientales.",
+  "amenidades": "Free WiFi, Swimming Pool, Free Breakfast, Free Parking",
+  "id_ciudad": "c001"
+}
