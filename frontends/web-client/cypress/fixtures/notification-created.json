@@ -1,0 +1,7 @@
+{
+  "id": "notif-001",
+  "fecha_notif": "2026-04-23T10:00:00",
+  "titulo": "Reserva confirmada - Hotel Tequendama",
+  "descripcion": "Reserva de 5 noches en Hotel Tequendama. Huesped: John Doe.",
+  "id_reserva": "res-abc-123"
+}
