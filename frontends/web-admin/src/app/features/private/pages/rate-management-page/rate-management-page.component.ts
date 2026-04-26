@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { RateManagementService } from '../../../../core/services/rate-management.service';
+import { I18nService } from '../../../../core/services/i18n.service';
+import { LanguageCode } from '../../../../core/i18n/translations';
 import {
   CreateHabitacionRequest,
   CreatePlanTarifarioRequest,
@@ -27,6 +29,7 @@ export class RateManagementPageComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly rateService = inject(RateManagementService);
   private readonly router = inject(Router);
+  private readonly i18nService = inject(I18nService);
 
   readonly currentUser = this.authService.currentUser;
 
@@ -420,6 +423,18 @@ export class RateManagementPageComponent implements OnInit {
   logout(): void {
     this.authService.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  t(key: Parameters<I18nService['t']>[0]): string {
+    return this.i18nService.t(key);
+  }
+
+  get currentLanguage() {
+    return this.i18nService.currentLanguage();
+  }
+
+  setLanguage(lang: LanguageCode): void {
+    this.i18nService.setLanguage(lang);
   }
 
   getSelectedHotel(): Hotel | undefined {
