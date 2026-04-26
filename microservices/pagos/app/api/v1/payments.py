@@ -47,8 +47,11 @@ def register_payment():
 
 @api_v1_bp.route('/payments/<payment_id>/process', methods=['POST'])
 def process_payment(payment_id):
+    data = request.get_json(silent=True) or {}
+    payment_method = data.get('payment_method')
+
     use_case = ProcessPaymentUseCase(get_repository(), get_external_service())
-    result = use_case.execute(payment_id)
+    result = use_case.execute(payment_id, payment_method=payment_method)
     
     if 'error' in result:
         return jsonify(result), 400

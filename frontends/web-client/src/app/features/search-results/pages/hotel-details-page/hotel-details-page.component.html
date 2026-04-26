@@ -132,26 +132,32 @@
                     </div>
                     <div class="md:col-span-2 text-sm text-gray-700">{{ room.capacityLabel }}</div>
                     <div class="md:col-span-2 text-sm font-semibold text-gray-900">
-                      {{ formatPrice(room.pricePerNight) }}
+                      {{ displayRoomPrice(room.pricePerNight, room.canReserve) }}
                     </div>
                     <div class="md:col-span-2 text-sm font-semibold text-gray-900">
-                      {{ formatPrice(room.totalPrice) }}
+                      {{ displayRoomPrice(room.totalPrice, room.canReserve) }}
                     </div>
                     <div class="md:col-span-2 md:text-right md:pr-3">
                       <button
                         type="button"
                         class="w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                        [class.bg-gray-200]="!room.canReserve"
+                        [class.text-gray-500]="!room.canReserve"
+                        [class.cursor-not-allowed]="!room.canReserve"
                         [class.bg-primary]="activeRoomCard()?.id !== room.id"
                         [class.text-white]="activeRoomCard()?.id !== room.id"
                         [class.hover:bg-primary-dark]="activeRoomCard()?.id !== room.id"
                         [class.bg-emerald-600]="activeRoomCard()?.id === room.id"
                         [class.text-white]="activeRoomCard()?.id === room.id"
+                        [disabled]="!room.canReserve"
                         (click)="selectRoom(room)"
                       >
                         {{
-                          activeRoomCard()?.id === room.id
-                            ? '\u2713 ' + label('select')
-                            : label('select')
+                          !room.canReserve
+                            ? label('notAvailable')
+                            : activeRoomCard()?.id === room.id
+                              ? '\u2713 ' + label('select')
+                              : label('select')
                         }}
                       </button>
                     </div>
@@ -168,7 +174,9 @@
       <aside class="xl:col-span-4 xl:sticky xl:top-24">
         <section class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div class="mb-4">
-            <p class="text-3xl font-bold text-gray-900">{{ formatPrice(heroPrice()) }}</p>
+            <p class="text-3xl font-bold text-gray-900">
+              {{ displayRoomPrice(heroPrice(), !!activeRoomCard()?.canReserve) }}
+            </p>
             <p class="text-sm text-gray-500">/{{ t('searchResults.card.night') }}</p>
           </div>
 
@@ -228,33 +236,39 @@
           <div class="space-y-2 text-sm border-t border-gray-100 pt-4">
             <div class="flex items-center justify-between text-gray-600">
               <span
-                >{{ formatPrice(heroPrice()) }} x {{ nights() }}
-                {{ t('searchResults.summary.nights') }}</span
+                >{{ displayRoomPrice(heroPrice(), !!activeRoomCard()?.canReserve) }} x
+                {{ nights() }} {{ t('searchResults.summary.nights') }}</span
               >
-              <span>{{ formatPrice(totalPrice()) }}</span>
+              <span>{{ displayRoomPrice(totalPrice(), !!activeRoomCard()?.canReserve) }}</span>
+            </div>
+            <div class="flex items-center justify-between text-gray-600">
+              <span>{{ label('earlyBirdDiscount') }}</span>
+              <span>{{ displayDiscount(discountAmount(), !!activeRoomCard()?.canReserve) }}</span>
             </div>
             <div class="flex items-center justify-between text-gray-600">
               <span>{{ label('taxesFees') }}</span>
-              <span>{{ formatPrice(taxesAndFees()) }}</span>
+              <span>{{ displayRoomPrice(taxesAndFees(), !!activeRoomCard()?.canReserve) }}</span>
             </div>
             <div
               class="flex items-center justify-between text-base font-semibold text-gray-900 pt-2 border-t border-gray-100"
             >
               <span>{{ t('searchResults.card.total') }}</span>
-              <span>{{ formatPrice(grandTotal()) }}</span>
+              <span>{{ displayRoomPrice(grandTotal(), !!activeRoomCard()?.canReserve) }}</span>
             </div>
           </div>
 
           <button
             type="button"
             class="w-full mt-5 px-4 py-3 rounded-lg font-semibold transition-colors"
-            [class.bg-primary]="!guestsExceedCapacity()"
-            [class.text-white]="!guestsExceedCapacity()"
-            [class.hover:bg-primary-dark]="!guestsExceedCapacity()"
-            [class.bg-gray-200]="guestsExceedCapacity()"
-            [class.text-gray-400]="guestsExceedCapacity()"
-            [class.cursor-not-allowed]="guestsExceedCapacity()"
-            [disabled]="guestsExceedCapacity()"
+            [class.bg-primary]="!guestsExceedCapacity() && !!activeRoomCard()?.canReserve"
+            [class.text-white]="!guestsExceedCapacity() && !!activeRoomCard()?.canReserve"
+            [class.hover:bg-primary-dark]="
+              !guestsExceedCapacity() && !!activeRoomCard()?.canReserve
+            "
+            [class.bg-gray-200]="guestsExceedCapacity() || !activeRoomCard()?.canReserve"
+            [class.text-gray-400]="guestsExceedCapacity() || !activeRoomCard()?.canReserve"
+            [class.cursor-not-allowed]="guestsExceedCapacity() || !activeRoomCard()?.canReserve"
+            [disabled]="guestsExceedCapacity() || !activeRoomCard()?.canReserve"
             (click)="onReserveNow()"
           >
             {{ label('reserveNow') }}

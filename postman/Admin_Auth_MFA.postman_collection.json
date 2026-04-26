@@ -165,6 +165,70 @@
           ]
         }
       }
+    },
+    {
+      "name": "Admin-Hotel Assignment",
+      "item": [
+        {
+          "name": "Get My Hotels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}/admin/mis-hoteles",
+              "host": ["{{gatewayBaseUrl}}"],
+              "path": ["admin", "mis-hoteles"]
+            }
+          }
+        },
+        {
+          "name": "Assign Hotel to Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{gatewayBaseUrl}}/admin/hoteles/{{hotelId}}/asignar",
+              "host": ["{{gatewayBaseUrl}}"],
+              "path": ["admin", "hoteles", "{{hotelId}}", "asignar"]
+            }
+          }
+        },
+        {
+          "name": "Unassign Hotel from Admin",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}/admin/hoteles/{{hotelId}}/desasignar",
+              "host": ["{{gatewayBaseUrl}}"],
+              "path": ["admin", "hoteles", "{{hotelId}}", "desasignar"]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
@@ -190,6 +254,10 @@
     },
     {
       "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "hotelId",
       "value": ""
     }
   ]
