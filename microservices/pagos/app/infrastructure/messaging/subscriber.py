@@ -1,5 +1,6 @@
 import json
 import logging
+import ssl
 import threading
 import stomp
 from datetime import datetime
@@ -167,6 +168,8 @@ class PaymentStatusSubscriber:
                     ssl_options = {'for_hosts': [(self.host, self.port)]}
                     if self.ca_cert_path:
                         ssl_options['ca_certs'] = self.ca_cert_path
+                    else:
+                        ssl_options['cert_reqs'] = ssl.CERT_NONE
                     self._connection.set_ssl(**ssl_options)
                 listener = PaymentStatusListener(
                     app=self.app,
