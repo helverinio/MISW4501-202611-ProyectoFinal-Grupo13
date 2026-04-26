@@ -270,6 +270,7 @@ def test_update_reserva_returns_400_when_no_payload(client, auth_headers):
 
 
 def test_update_reserva_returns_404_when_missing(client, auth_headers, monkeypatch):
+    monkeypatch.setattr(reservas_api, "GetReservaUseCase", lambda _repo: FixedResultUseCase(None))
     monkeypatch.setattr(reservas_api, "UpdateReservaUseCase", lambda _repo: FixedResultUseCase(None))
 
     response = client.put("/api/v1/reservas/not-found", headers=auth_headers, json={"total": 10})
