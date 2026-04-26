@@ -75,6 +75,31 @@ export interface CreatedReservaResponse {
   } | null;
 }
 
+export interface PaymentResponse {
+  id: string;
+  payment_intent_id: string;
+  reservation_id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  payment_method: string;
+  external_payment_id?: string | null;
+  message?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ProcessPaymentPayload {
+  payment_method: 'card' | 'pse' | 'transfer';
+  card_number?: string;
+  expiry_date?: string;
+  cvv?: string;
+  cardholder_name?: string;
+  billing_address?: string;
+  city?: string;
+  postal_code?: string;
+}
+
 export interface ReservaResponse {
   id: string;
   fecha_ingreso: string;
@@ -190,6 +215,18 @@ export class ReservationService {
   createReserva(payload: CreateReservaPayload): Observable<CreatedReservaResponse> {
     return this.http
       .post<CreatedReservaResponse>(`${environment.apiBaseUrl}/reservas`, payload)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  processPayment(paymentId: string, payload: ProcessPaymentPayload): Observable<PaymentResponse> {
+    return this.http
+      .post<PaymentResponse>(`${environment.apiBaseUrl}/payments/${paymentId}/process`, payload)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getPayment(paymentId: string): Observable<PaymentResponse> {
+    return this.http
+      .get<PaymentResponse>(`${environment.apiBaseUrl}/payments/${paymentId}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 

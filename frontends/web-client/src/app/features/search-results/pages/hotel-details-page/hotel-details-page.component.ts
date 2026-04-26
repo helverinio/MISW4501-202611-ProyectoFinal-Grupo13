@@ -22,6 +22,7 @@ interface RoomCardVm {
   capacityLabel: string;
   pricePerNight: number;
   totalPrice: number;
+  canReserve: boolean;
   availabilityLabel: string;
   availabilityClass: string;
 }
@@ -75,8 +76,18 @@ export class HotelDetailsPageComponent {
 
     return this.rooms()
       .slice()
-      .sort((a, b) => this.getRoomNightlyPrice(a) - this.getRoomNightlyPrice(b))
+      .sort((a, b) => {
+        const aHasPrice = this.hasRoomPrice(a);
+        const bHasPrice = this.hasRoomPrice(b);
+
+        if (aHasPrice !== bHasPrice) {
+          return aHasPrice ? -1 : 1;
+        }
+
+        return this.getRoomNightlyPrice(a) - this.getRoomNightlyPrice(b);
+      })
       .map((room, index) => {
+        const canReserve = this.hasRoomPrice(room);
         const pricePerNight = this.getRoomNightlyPrice(room);
         const totalPrice = this.getRoomTotalPrice(room, nights);
 
@@ -88,16 +99,32 @@ export class HotelDetailsPageComponent {
           capacityLabel: `${room.capacidad} ${this.getGuestWord(room.capacidad)}`,
           pricePerNight,
           totalPrice,
-          availabilityLabel:
-            index < 2 ? this.label('freeCancellationShort') : this.label('limitedAvailability'),
-          availabilityClass: index < 2 ? 'text-emerald-600' : 'text-amber-600',
+          canReserve,
+          availabilityLabel: !canReserve
+            ? this.label('notAvailable')
+            : index < 2
+              ? this.label('freeCancellationShort')
+              : this.label('limitedAvailability'),
+          availabilityClass: !canReserve
+            ? 'text-gray-500'
+            : index < 2
+              ? 'text-emerald-600'
+              : 'text-amber-600',
         };
       });
   });
 
-  protected readonly activeRoomCard = computed<RoomCardVm | null>(
-    () => this.selectedRoomCard() ?? this.roomCards()[0] ?? null,
-  );
+  protected readonly activeRoomCard = computed<RoomCardVm | null>(() => {
+    const selectedId = this.selectedRoomCard()?.id;
+    if (selectedId) {
+      const selected = this.roomCards().find((room) => room.id === selectedId && room.canReserve);
+      if (selected) {
+        return selected;
+      }
+    }
+
+    return this.roomCards().find((room) => room.canReserve) ?? null;
+  });
 
   protected readonly guestsExceedCapacity = computed(() => {
     const room = this.activeRoomCard();
@@ -109,9 +136,20 @@ export class HotelDetailsPageComponent {
 
   protected readonly totalPrice = computed(() => this.heroPrice() * this.nights());
 
-  protected readonly taxesAndFees = computed(() => Math.round(this.totalPrice() * 0.1));
+  protected readonly discountAmount = computed(() => {
+    const discountRate = this.getAdvanceDiscountRate(this.checkInDate());
+    return Math.round(this.totalPrice() * discountRate * 100) / 100;
+  });
 
-  protected readonly grandTotal = computed(() => this.totalPrice() + this.taxesAndFees());
+  protected readonly taxableAmount = computed(() =>
+    Math.max(this.totalPrice() - this.discountAmount(), 0),
+  );
+
+  protected readonly taxesAndFees = computed(
+    () => Math.round(this.taxableAmount() * 0.1 * 100) / 100,
+  );
+
+  protected readonly grandTotal = computed(() => this.taxableAmount() + this.taxesAndFees());
 
   protected readonly galleryImages = computed(() => {
     const hotelName = this.hotel()?.nombre || 'Hotel';
@@ -209,11 +247,18 @@ export class HotelDetailsPageComponent {
   }
 
   protected selectRoom(room: RoomCardVm): void {
+    if (!room.canReserve) {
+      return;
+    }
+
     this.selectedRoomCard.set(room);
   }
 
   protected onReserveNow(): void {
     const selectedRoom = this.activeRoomCard();
+    if (!selectedRoom?.canReserve) {
+      return;
+    }
 
     void this.router.navigate(['/app/reservas/nueva'], {
       queryParams: {
@@ -252,6 +297,7 @@ export class HotelDetailsPageComponent {
       | 'select'
       | 'reserveNow'
       | 'noChargeYet'
+      | 'earlyBirdDiscount'
       | 'taxesFees'
       | 'holdExpiredError'
       | 'roomType'
@@ -278,6 +324,7 @@ export class HotelDetailsPageComponent {
         select: 'Select',
         reserveNow: 'Reserve Now',
         noChargeYet: 'You will not be charged yet',
+        earlyBirdDiscount: 'Early bird discount',
         taxesFees: 'Taxes & fees',
         holdExpiredError:
           'You exceeded the maximum time to complete the reservation. Please try again.',
@@ -302,6 +349,7 @@ export class HotelDetailsPageComponent {
         select: 'Seleccionar',
         reserveNow: 'Reservar ahora',
         noChargeYet: 'Todavia no se realizara ningun cobro',
+        earlyBirdDiscount: 'Descuento por reserva anticipada',
         taxesFees: 'Impuestos y cargos',
         holdExpiredError:
           'Has excedido el tiempo maximo para completar la reserva. Intentalo nuevamente.',
@@ -326,6 +374,7 @@ export class HotelDetailsPageComponent {
         select: 'Selecionar',
         reserveNow: 'Reservar agora',
         noChargeYet: 'Voce ainda nao sera cobrado',
+        earlyBirdDiscount: 'Desconto por reserva antecipada',
         taxesFees: 'Impostos e taxas',
         holdExpiredError: 'Voce excedeu o tempo maximo para concluir a reserva. Tente novamente.',
         roomType: 'Tipo de quarto',
@@ -347,6 +396,14 @@ export class HotelDetailsPageComponent {
       currency,
       maximumFractionDigits: currency === 'COP' || currency === 'CLP' ? 0 : 2,
     }).format(converted);
+  }
+
+  protected displayRoomPrice(amountUsd: number, canReserve: boolean): string {
+    return canReserve ? this.formatPrice(amountUsd) : this.label('notAvailable');
+  }
+
+  protected displayDiscount(amountUsd: number, canReserve: boolean): string {
+    return canReserve ? `-${this.formatPrice(amountUsd)}` : this.label('notAvailable');
   }
 
   protected getGuestsLabel(count: number): string {
@@ -494,11 +551,41 @@ export class HotelDetailsPageComponent {
     return room.precio_promedio_noche ?? 0;
   }
 
-  private getRoomTotalPrice(room: HotelRoomResponse, nights: number): number {
-    if ((room.precio_total_reserva ?? 0) > 0) {
-      return room.precio_total_reserva as number;
+  private getAdvanceDiscountRate(checkInDate: string): number {
+    if (!checkInDate) {
+      return 0;
     }
 
+    const checkIn = new Date(`${checkInDate}T00:00:00`);
+    if (Number.isNaN(checkIn.getTime())) {
+      return 0;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const oneMonthAhead = new Date(today);
+    oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
+
+    const threeMonthsAhead = new Date(today);
+    threeMonthsAhead.setMonth(threeMonthsAhead.getMonth() + 3);
+
+    if (checkIn >= threeMonthsAhead) {
+      return 0.15;
+    }
+
+    if (checkIn >= oneMonthAhead) {
+      return 0.1;
+    }
+
+    return 0;
+  }
+
+  private hasRoomPrice(room: HotelRoomResponse): boolean {
+    return (room.precio_promedio_noche ?? 0) > 0;
+  }
+
+  private getRoomTotalPrice(room: HotelRoomResponse, nights: number): number {
     return this.getRoomNightlyPrice(room) * nights;
   }
 

@@ -66,6 +66,14 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
             db.session.commit()
             return self._to_entity(model)
         return None
+
+    def update_payment_method(self, payment_id: str, payment_method: str) -> Optional[Payment]:
+        model = PaymentModel.query.get(payment_id)
+        if model:
+            model.payment_method = payment_method
+            db.session.commit()
+            return self._to_entity(model)
+        return None
     
     def try_lock_for_processing(self, payment_id: str) -> Optional[Payment]:
         rows_updated = PaymentModel.query.filter_by(
