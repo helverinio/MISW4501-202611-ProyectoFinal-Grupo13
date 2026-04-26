@@ -92,7 +92,12 @@ export class ReservationsPageComponent implements OnInit {
       })
       .subscribe({
         next: (data: ReservationDashboardResponse) => {
-          console.log('[Reservations] Dashboard next, total=', data?.total, 'reservations=', data?.reservations?.length);
+          console.log(
+            '[Reservations] Dashboard next, total=',
+            data?.total,
+            'reservations=',
+            data?.reservations?.length,
+          );
           this.stats = data.stats ?? this.stats;
           this.reservations = data.reservations ?? [];
           this.total = data.total ?? 0;

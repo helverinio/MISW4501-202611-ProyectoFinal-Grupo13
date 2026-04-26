@@ -233,20 +233,22 @@ export class RateManagementPageComponent implements OnInit {
     }
     const tipo = this.tiposHabitacion().find((t) => t.id === tipoId);
     this.saving.set(true);
-    this.rateService.createHabitacion(tipoId, hotelId, tipo?.nombre ?? '', this.newHabitacion).subscribe({
-      next: (hab) => {
-        this.habitacionesMap.update((prev) => ({
-          ...prev,
-          [tipoId]: [...(prev[tipoId] ?? []), hab],
-        }));
-        this.showAddHabitacionModal.set(false);
-        this.saving.set(false);
-      },
-      error: (err) => {
-        this.errorMsg.set(err?.error?.error ?? 'Error al crear la habitación.');
-        this.saving.set(false);
-      },
-    });
+    this.rateService
+      .createHabitacion(tipoId, hotelId, tipo?.nombre ?? '', this.newHabitacion)
+      .subscribe({
+        next: (hab) => {
+          this.habitacionesMap.update((prev) => ({
+            ...prev,
+            [tipoId]: [...(prev[tipoId] ?? []), hab],
+          }));
+          this.showAddHabitacionModal.set(false);
+          this.saving.set(false);
+        },
+        error: (err) => {
+          this.errorMsg.set(err?.error?.error ?? 'Error al crear la habitación.');
+          this.saving.set(false);
+        },
+      });
   }
 
   startEditHabitacion(hab: Habitacion): void {
@@ -361,7 +363,10 @@ export class RateManagementPageComponent implements OnInit {
   startEditRegla(regla: ReglaTarifaria): void {
     this.editingRegla.update((prev) => ({
       ...prev,
-      [regla.id]: { precio_base_noche: regla.precio_base_noche, min_noches: regla.min_noches ?? undefined },
+      [regla.id]: {
+        precio_base_noche: regla.precio_base_noche,
+        min_noches: regla.min_noches ?? undefined,
+      },
     }));
   }
 

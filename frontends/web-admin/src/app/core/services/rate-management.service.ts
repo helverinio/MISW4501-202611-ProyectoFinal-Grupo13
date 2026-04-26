@@ -39,11 +39,17 @@ export class RateManagementService {
     return this.http.get<TipoHabitacion[]>(`${this.base}/hoteles/${hotelId}/tipos-habitacion`);
   }
 
-  createTipoHabitacion(hotelId: string, data: CreateTipoHabitacionRequest): Observable<TipoHabitacion> {
+  createTipoHabitacion(
+    hotelId: string,
+    data: CreateTipoHabitacionRequest,
+  ): Observable<TipoHabitacion> {
     return this.http.post<TipoHabitacion>(`${this.base}/hoteles/${hotelId}/tipos-habitacion`, data);
   }
 
-  updateTipoHabitacion(tipoId: string, data: Partial<CreateTipoHabitacionRequest>): Observable<TipoHabitacion> {
+  updateTipoHabitacion(
+    tipoId: string,
+    data: Partial<CreateTipoHabitacionRequest>,
+  ): Observable<TipoHabitacion> {
     return this.http.put<TipoHabitacion>(`${this.base}/tipos-habitacion/${tipoId}`, data);
   }
 
@@ -53,18 +59,26 @@ export class RateManagementService {
 
   // Planes tarifarios
   getPlanesForTipo(tipoId: string): Observable<PlanTarifario[]> {
-    return this.http.get<PlanTarifario[]>(`${this.base}/tipos-habitacion/${tipoId}/planes-tarifarios`);
+    return this.http.get<PlanTarifario[]>(
+      `${this.base}/tipos-habitacion/${tipoId}/planes-tarifarios`,
+    );
   }
 
   createPlan(tipoId: string, data: CreatePlanTarifarioRequest): Observable<PlanTarifario> {
-    return this.http.post<PlanTarifario>(`${this.base}/tipos-habitacion/${tipoId}/planes-tarifarios`, data);
+    return this.http.post<PlanTarifario>(
+      `${this.base}/tipos-habitacion/${tipoId}/planes-tarifarios`,
+      data,
+    );
   }
 
   getPlan(planId: string): Observable<PlanTarifario> {
     return this.http.get<PlanTarifario>(`${this.base}/planes-tarifarios/${planId}`);
   }
 
-  updatePlan(planId: string, data: Partial<CreatePlanTarifarioRequest & { activo: boolean }>): Observable<PlanTarifario> {
+  updatePlan(
+    planId: string,
+    data: Partial<CreatePlanTarifarioRequest & { activo: boolean }>,
+  ): Observable<PlanTarifario> {
     return this.http.put<PlanTarifario>(`${this.base}/planes-tarifarios/${planId}`, data);
   }
 
@@ -81,7 +95,10 @@ export class RateManagementService {
     return this.http.post<ReglaTarifaria>(`${this.base}/planes-tarifarios/${planId}/reglas`, data);
   }
 
-  updateRegla(reglaId: string, data: Partial<CreateReglaRequest & { activo: boolean }>): Observable<ReglaTarifaria> {
+  updateRegla(
+    reglaId: string,
+    data: Partial<CreateReglaRequest & { activo: boolean }>,
+  ): Observable<ReglaTarifaria> {
     return this.http.put<ReglaTarifaria>(`${this.base}/reglas-tarifarias/${reglaId}`, data);
   }
 

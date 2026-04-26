@@ -20,15 +20,15 @@ export class ReservationsService {
     if (params.fecha_desde) httpParams = httpParams.set('fecha_desde', params.fecha_desde);
     if (params.fecha_hasta) httpParams = httpParams.set('fecha_hasta', params.fecha_hasta);
     if (params.id_estado) httpParams = httpParams.set('id_estado', params.id_estado);
-    if (params.tipo_habitacion) httpParams = httpParams.set('tipo_habitacion', params.tipo_habitacion);
+    if (params.tipo_habitacion)
+      httpParams = httpParams.set('tipo_habitacion', params.tipo_habitacion);
     if (params.codigo) httpParams = httpParams.set('codigo', params.codigo);
     if (params.page != null) httpParams = httpParams.set('page', String(params.page));
     if (params.per_page != null) httpParams = httpParams.set('per_page', String(params.per_page));
 
-    return this.http.get<ReservationDashboardResponse>(
-      `${this.base}/admin/reservas/dashboard`,
-      { params: httpParams },
-    );
+    return this.http.get<ReservationDashboardResponse>(`${this.base}/admin/reservas/dashboard`, {
+      params: httpParams,
+    });
   }
 
   getEstados(): Observable<Estado[]> {
@@ -36,6 +36,8 @@ export class ReservationsService {
   }
 
   updateReservaEstado(reservaId: string, idEstado: string): Observable<unknown> {
-    return this.http.put(`${this.base}/admin/reservas/${reservaId}/estado`, { id_estado: idEstado });
+    return this.http.put(`${this.base}/admin/reservas/${reservaId}/estado`, {
+      id_estado: idEstado,
+    });
   }
 }
