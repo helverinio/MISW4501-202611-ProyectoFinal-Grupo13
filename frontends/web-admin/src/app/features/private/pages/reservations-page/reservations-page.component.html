@@ -15,6 +15,42 @@
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <!-- Language selector -->
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              (click)="setLanguage('es')"
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              ES
+            </button>
+            <button
+              type="button"
+              (click)="setLanguage('en')"
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              (click)="setLanguage('pt')"
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              PT
+            </button>
+          </div>
           <button
             class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
             type="button"
@@ -49,42 +85,42 @@
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-chart-line w-5 mr-3"></i>
-          Dashboard
+          {{ t('sidebar.dashboard') }}
         </a>
         <a
           [routerLink]="['/reservations']"
           class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
         >
           <i class="fas fa-calendar-check w-5 mr-3"></i>
-          Reservations
+          {{ t('sidebar.reservations') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-hotel w-5 mr-3"></i>
-          Properties
+          {{ t('sidebar.properties') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-users w-5 mr-3"></i>
-          Guests
+          {{ t('sidebar.guests') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
-          Revenue
+          {{ t('sidebar.revenue') }}
         </a>
         <a
           [routerLink]="['/room-rate-management']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-cog w-5 mr-3"></i>
-          Settings
+          {{ t('sidebar.settings') }}
         </a>
         <div class="pt-4 mt-4 border-t border-gray-100">
           <button
@@ -93,7 +129,7 @@
             (click)="logout()"
           >
             <i class="fas fa-sign-out-alt w-5 mr-3"></i>
-            Logout
+            {{ t('common.logout') }}
           </button>
         </div>
       </nav>
@@ -105,8 +141,10 @@
       <div class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">All Reservations</h1>
-            <p class="text-gray-600 text-sm">Manage and monitor all hotel reservations</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {{ t('reservations.title') }}
+            </h1>
+            <p class="text-gray-600 text-sm">{{ t('reservations.subtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
             <button
@@ -114,7 +152,7 @@
               type="button"
             >
               <i class="fas fa-download mr-2"></i>
-              Export
+              {{ t('common.export') }}
             </button>
           </div>
         </div>
@@ -132,7 +170,7 @@
           class="ml-auto text-red-500 hover:text-red-700"
           (click)="loadDashboard()"
         >
-          <i class="fas fa-redo"></i> Retry
+          <i class="fas fa-redo"></i> {{ t('common.retry') }}
         </button>
       </div>
 
@@ -141,12 +179,14 @@
         <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Booking Code</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.bookingCode')
+              }}</label>
               <div class="relative">
                 <input
                   type="text"
                   formControlName="codigo"
-                  placeholder="Search code..."
+                  [placeholder]="t('reservations.filter.searchCode')"
                   class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
                 <i class="fas fa-search absolute right-3 top-3 text-gray-400 text-sm"></i>
@@ -154,7 +194,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Check-in From</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.checkInFrom')
+              }}</label>
               <input
                 type="date"
                 formControlName="fecha_desde"
@@ -163,7 +205,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Check-in To</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.checkInTo')
+              }}</label>
               <input
                 type="date"
                 formControlName="fecha_hasta"
@@ -172,22 +216,26 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.status')
+              }}</label>
               <select
                 formControlName="id_estado"
                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value="">All Status</option>
+                <option value="">{{ t('reservations.filter.allStatus') }}</option>
                 <option *ngFor="let e of estados" [value]="e.id">{{ e.nombre }}</option>
               </select>
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Room Type</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.roomType')
+              }}</label>
               <input
                 type="text"
                 formControlName="tipo_habitacion"
-                placeholder="e.g. Suite"
+                [placeholder]="t('reservations.filter.roomTypePlaceholder')"
                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -198,13 +246,13 @@
                 class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
               >
                 <i class="fas fa-filter mr-2"></i>
-                Filter
+                {{ t('common.filter') }}
               </button>
               <button
                 type="button"
                 class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors"
                 (click)="clearFilters()"
-                title="Clear filters"
+                [title]="t('common.clearFilters')"
               >
                 <i class="fas fa-times"></i>
               </button>
@@ -221,7 +269,9 @@
               <i class="fas fa-calendar-check text-primary-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Total Reservations</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.total') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.total | number }}</span>
@@ -234,7 +284,9 @@
               <i class="fas fa-check-circle text-green-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Confirmed</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.confirmed') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.confirmadas | number }}</span>
@@ -247,7 +299,9 @@
               <i class="fas fa-clock text-orange-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Pending</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.pending') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.pendientes | number }}</span>
@@ -260,7 +314,9 @@
               <i class="fas fa-times-circle text-red-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Cancelled / Rejected</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.cancelledRejected') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.canceladas + stats.rechazadas | number }}</span>
@@ -273,8 +329,10 @@
         <div class="p-6 border-b border-gray-100">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 mb-1">Reservations List</h2>
-              <p class="text-sm text-gray-600">Complete list of all reservations</p>
+              <h2 class="text-xl font-bold text-gray-900 mb-1">
+                {{ t('reservations.list.title') }}
+              </h2>
+              <p class="text-sm text-gray-600">{{ t('reservations.list.subtitle') }}</p>
             </div>
             <div class="mt-4 sm:mt-0 flex items-center space-x-3">
               <select
@@ -285,9 +343,9 @@
                 "
                 class="px-3 py-2 border border-gray-300 rounded-lg text-sm"
               >
-                <option [value]="25">25 per page</option>
-                <option [value]="50">50 per page</option>
-                <option [value]="100">100 per page</option>
+                <option [value]="25">25 {{ t('reservations.perPage') }}</option>
+                <option [value]="50">50 {{ t('reservations.perPage') }}</option>
+                <option [value]="100">100 {{ t('reservations.perPage') }}</option>
               </select>
             </div>
           </div>
@@ -296,7 +354,7 @@
         <!-- Loading overlay skeleton -->
         <div *ngIf="loading" class="p-8 text-center text-gray-400">
           <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
-          <p class="text-sm">Loading reservations…</p>
+          <p class="text-sm">{{ t('reservations.list.loading') }}</p>
         </div>
 
         <!-- Empty state -->
@@ -306,8 +364,8 @@
           >
             <i class="fas fa-calendar-times text-gray-400 text-2xl"></i>
           </div>
-          <h3 class="text-gray-700 font-semibold mb-1">No reservations found</h3>
-          <p class="text-gray-500 text-sm">Try adjusting your filters or check back later.</p>
+          <h3 class="text-gray-700 font-semibold mb-1">{{ t('reservations.list.noFound') }}</h3>
+          <p class="text-gray-500 text-sm">{{ t('reservations.list.noFoundHint') }}</p>
         </div>
 
         <!-- Table -->
@@ -318,42 +376,42 @@
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  ID
+                  {{ t('reservations.table.id') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Guest ID
+                  {{ t('reservations.table.guestId') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell"
                 >
-                  Property
+                  {{ t('reservations.table.property') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Check-in
+                  {{ t('reservations.table.checkIn') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell"
                 >
-                  Check-out
+                  {{ t('reservations.table.checkOut') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell"
                 >
-                  Nights
+                  {{ t('reservations.table.nights') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Amount
+                  {{ t('reservations.table.amount') }}
                 </th>
                 <th
                   class="text-left py-4 px-6 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Status
+                  {{ t('reservations.table.status') }}
                 </th>
               </tr>
             </thead>
@@ -432,8 +490,10 @@
         <div *ngIf="!loading && pages > 0" class="p-6 border-t border-gray-100">
           <div class="flex flex-col sm:flex-row items-center justify-between">
             <p class="text-sm text-gray-600 mb-4 sm:mb-0">
-              Showing {{ showingFrom | number }} to {{ showingTo | number }} of
-              {{ total | number }} reservations
+              {{ t('reservations.pagination.showing') }} {{ showingFrom | number }}
+              {{ t('reservations.pagination.to') }} {{ showingTo | number }}
+              {{ t('reservations.pagination.of') }} {{ total | number }}
+              {{ t('reservations.pagination.results') }}
             </p>
             <div class="flex items-center space-x-2">
               <button
