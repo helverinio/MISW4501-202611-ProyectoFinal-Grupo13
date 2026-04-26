@@ -1,5 +1,9 @@
 import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act, configure } from '@testing-library/react-native';
+
+// PaymentScreen awaits a 2s setTimeout in the payment flow; bump RTL's waitFor timeout
+// above the default 1000ms so payment-processing assertions have time to resolve under real timers.
+configure({ asyncUtilTimeout: 5000 });
 import PaymentScreen from '../payment';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BookingService } from '../../services/bookingService';
@@ -20,6 +24,7 @@ jest.mock('../../services/bookingService', () => ({
     getPaises: jest.fn(),
     createReserva: jest.fn(),
     processPayment: jest.fn(),
+    updateReserva: jest.fn(),
   },
 }));
 
@@ -33,6 +38,7 @@ const mockGetEstados = BookingService.getEstados as jest.Mock;
 const mockGetPaises = BookingService.getPaises as jest.Mock;
 const mockCreateReserva = BookingService.createReserva as jest.Mock;
 const mockProcessPayment = BookingService.processPayment as jest.Mock;
+const mockUpdateReserva = BookingService.updateReserva as jest.Mock;
 
 const mockHotelData = {
   hotel_id: 'hotel-1',
@@ -93,6 +99,15 @@ const mockPaises = [
 ];
 
 describe('PaymentScreen', () => {
+  beforeAll(() => {
+    // PaymentScreen uses a 2s setTimeout during the payment flow; real timers let it resolve.
+    jest.useRealTimers();
+  });
+
+  afterAll(() => {
+    jest.useFakeTimers();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseLocalSearchParams.mockReturnValue(mockSearchParams);
@@ -101,9 +116,16 @@ describe('PaymentScreen', () => {
     mockGetPaises.mockResolvedValue({ success: true, data: mockPaises });
     mockCreateReserva.mockResolvedValue({
       success: true,
-      data: { id: 'reserva-123', payment: { payment_id: 'payment-123' } },
+      data: {
+        id: 'reserva-123',
+        payment: {
+          payment_id: 'payment-123',
+          payment_intent_id: 'pi-123',
+        },
+      },
     });
     mockProcessPayment.mockResolvedValue({ success: true });
+    mockUpdateReserva.mockResolvedValue({ success: true, data: {} });
   });
 
   describe('Rendering', () => {
@@ -149,9 +171,9 @@ describe('PaymentScreen', () => {
       expect(getByText('payment.termsOfService')).toBeTruthy();
     });
 
-    it('should render pay button', () => {
-      const { getByText } = render(<PaymentScreen />);
-      expect(getByText(/payment\.payNow/)).toBeTruthy();
+    it('should render pay button', async () => {
+      const { findByText } = render(<PaymentScreen />);
+      expect(await findByText(/payment\.payNow/)).toBeTruthy();
     });
   });
 
@@ -297,7 +319,9 @@ describe('PaymentScreen', () => {
 
   describe('Form Validation', () => {
     it('should show error when card number is too short', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '1225');
@@ -313,7 +337,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should show error when expiry date is invalid', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '13/25');
@@ -329,7 +355,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should show error when CVV is too short', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
@@ -345,7 +373,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should show error when cardholder name is empty', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
@@ -360,7 +390,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should show error when terms are not accepted', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
@@ -375,7 +407,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should not require card details for paypal', async () => {
-      const { getByText, queryByText } = render(<PaymentScreen />);
+      const { getByText, queryByText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.press(getByText('payment.paypal'));
       fireEvent.press(getByText(/payment\.termsAgreement/));
@@ -398,7 +432,9 @@ describe('PaymentScreen', () => {
     };
 
     it('should call booking service on successful payment', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fillValidCardForm(getByPlaceholderText, getByText);
       
@@ -413,7 +449,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should navigate to success result on successful payment', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fillValidCardForm(getByPlaceholderText, getByText);
       
@@ -433,79 +471,39 @@ describe('PaymentScreen', () => {
       });
     });
 
-    it('should navigate to error result when estados fetch fails', async () => {
+    it('should show error message when estados fetch fails during init', async () => {
       mockGetEstados.mockResolvedValue({ success: false });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { findByText } = render(<PaymentScreen />);
       
-      fillValidCardForm(getByPlaceholderText, getByText);
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
-      
-      await waitFor(() => {
-        expect(router.replace).toHaveBeenCalledWith(
-          expect.objectContaining({
-            pathname: '/screens/paymentResult',
-            params: expect.objectContaining({
-              success: 'false',
-            }),
-          })
-        );
-      });
+      expect(await findByText('Failed to get estados')).toBeTruthy();
+      expect(router.replace).not.toHaveBeenCalled();
     });
 
-    it('should navigate to error result when country not found', async () => {
+    it('should show error message when country not found during init', async () => {
       mockGetPaises.mockResolvedValue({ success: true, data: [{ id: 'pais-1', nombre: 'Germany' }] });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { findByText } = render(<PaymentScreen />);
       
-      fillValidCardForm(getByPlaceholderText, getByText);
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
-      
-      await waitFor(() => {
-        expect(router.replace).toHaveBeenCalledWith(
-          expect.objectContaining({
-            pathname: '/screens/paymentResult',
-            params: expect.objectContaining({
-              success: 'false',
-            }),
-          })
-        );
-      });
+      expect(await findByText('Could not determine country for reservation')).toBeTruthy();
+      expect(router.replace).not.toHaveBeenCalled();
     });
 
-    it('should navigate to error result when reserva creation fails', async () => {
+    it('should show error message when reserva creation fails during init', async () => {
       mockCreateReserva.mockResolvedValue({ success: false, error: { message: 'Creation failed' } });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { findByText } = render(<PaymentScreen />);
       
-      fillValidCardForm(getByPlaceholderText, getByText);
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
-      
-      await waitFor(() => {
-        expect(router.replace).toHaveBeenCalledWith(
-          expect.objectContaining({
-            pathname: '/screens/paymentResult',
-            params: expect.objectContaining({
-              success: 'false',
-            }),
-          })
-        );
-      });
+      expect(await findByText('Creation failed')).toBeTruthy();
+      expect(router.replace).not.toHaveBeenCalled();
     });
 
     it('should navigate to error result when payment processing fails', async () => {
       mockProcessPayment.mockResolvedValue({ success: false, error: { message: 'Payment declined' } });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fillValidCardForm(getByPlaceholderText, getByText);
       
@@ -525,28 +523,13 @@ describe('PaymentScreen', () => {
       });
     });
 
-    it('should handle exception during payment', async () => {
+    it('should handle exception during init', async () => {
       mockGetEstados.mockRejectedValue(new Error('Network error'));
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { findByText } = render(<PaymentScreen />);
       
-      fillValidCardForm(getByPlaceholderText, getByText);
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
-      
-      await waitFor(() => {
-        expect(router.replace).toHaveBeenCalledWith(
-          expect.objectContaining({
-            pathname: '/screens/paymentResult',
-            params: expect.objectContaining({
-              success: 'false',
-              errorMessage: 'Network error',
-            }),
-          })
-        );
-      });
+      expect(await findByText('Network error')).toBeTruthy();
+      expect(router.replace).not.toHaveBeenCalled();
     });
   });
 
@@ -704,7 +687,9 @@ describe('PaymentScreen', () => {
     };
 
     it('should detect Visa card', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       await fillCardAndSubmit('4111111111111111', getByPlaceholderText, getByText);
       
@@ -720,7 +705,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should detect Mastercard', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       await fillCardAndSubmit('5111111111111118', getByPlaceholderText, getByText);
       
@@ -736,7 +723,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should detect Amex card', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       await fillCardAndSubmit('341111111111111', getByPlaceholderText, getByText);
       
@@ -752,7 +741,9 @@ describe('PaymentScreen', () => {
     });
 
     it('should detect Discover card', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       await fillCardAndSubmit('6011111111111117', getByPlaceholderText, getByText);
       
@@ -769,7 +760,7 @@ describe('PaymentScreen', () => {
   });
 
   describe('Estado Resolution', () => {
-    it('should resolve estado with confirmada in name', async () => {
+    it('should create reserva with pendiente estado id when Pendiente present', async () => {
       mockGetEstados.mockResolvedValue({
         success: true,
         data: [
@@ -778,28 +769,18 @@ describe('PaymentScreen', () => {
         ],
       });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
-      
-      fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
-      fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
-      fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
-      fireEvent.press(getByText(/payment\.termsAgreement/));
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
+      render(<PaymentScreen />);
       
       await waitFor(() => {
         expect(mockCreateReserva).toHaveBeenCalledWith(
           expect.objectContaining({
-            id_estado: 'estado-confirmed',
+            id_estado: 'estado-pending',
           })
         );
       });
     });
 
-    it('should resolve estado with reservada via pms in name', async () => {
+    it('should create reserva with pendiente estado id alongside Reservada via PMS', async () => {
       mockGetEstados.mockResolvedValue({
         success: true,
         data: [
@@ -808,22 +789,12 @@ describe('PaymentScreen', () => {
         ],
       });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
-      
-      fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
-      fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
-      fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
-      fireEvent.press(getByText(/payment\.termsAgreement/));
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
+      render(<PaymentScreen />);
       
       await waitFor(() => {
         expect(mockCreateReserva).toHaveBeenCalledWith(
           expect.objectContaining({
-            id_estado: 'estado-pms',
+            id_estado: 'estado-pending',
           })
         );
       });
@@ -838,17 +809,7 @@ describe('PaymentScreen', () => {
         ],
       });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
-      
-      fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
-      fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
-      fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
-      fireEvent.press(getByText(/payment\.termsAgreement/));
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
+      render(<PaymentScreen />);
       
       await waitFor(() => {
         expect(mockCreateReserva).toHaveBeenCalledWith(
@@ -862,17 +823,7 @@ describe('PaymentScreen', () => {
 
   describe('Reserva Creation Parameters', () => {
     it('should create reserva with correct parameters', async () => {
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
-      
-      fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
-      fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
-      fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
-      fireEvent.press(getByText(/payment\.termsAgreement/));
-      
-      await act(async () => {
-        fireEvent.press(getByText(/payment\.payNow/));
-      });
+      render(<PaymentScreen />);
       
       await waitFor(() => {
         expect(mockCreateReserva).toHaveBeenCalledWith(
@@ -897,7 +848,9 @@ describe('PaymentScreen', () => {
         data: { id: 'reserva-123' },
       });
       
-      const { getByText, getByPlaceholderText } = render(<PaymentScreen />);
+      const { getByText, getByPlaceholderText, findByText } = render(<PaymentScreen />);
+      await findByText(/payment\.payNow/);
+      await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
       fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');

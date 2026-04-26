@@ -1,4 +1,4 @@
-import customAxios from '@/utils/api';
+import customAxios, { extPaymentsAxios } from '@/utils/api';
 
 export interface AcquireHoldPayload {
   id_usuario: string;
@@ -79,6 +79,13 @@ export interface ReservaResponse {
   id_pais: string;
   id_habitacion: string;
   id_estado: string;
+  id_cotizacion?: string | null;
+  payment_id?: string | null;
+  payment?: {
+    payment_id?: string | null;
+    payment_intent_id?: string | null;
+    payment_status?: string | null;
+  } | null;
 }
 
 export interface HabitacionResponse {
@@ -376,8 +383,18 @@ export const BookingService = {
     paymentId: string
   ): Promise<BookingServiceResult<ProcessPaymentResponse>> => {
     try {
-      const url = `/api/v1/payments/${paymentId}/process`;
-      const response = await customAxios.post(url);
+      const url = `/api/v1/payments`;
+      const payload = {
+        payment_intent_id: paymentId,
+        payment_method: 'card',
+      };
+      console.log(`[processPayment] POST ${extPaymentsAxios.defaults.baseURL}${url}`);
+      console.log('[processPayment] Payload:', JSON.stringify(payload, null, 2));
+
+      const response = await extPaymentsAxios.post(url, payload);
+
+      console.log(`[processPayment] Response status: ${response.status}`);
+      console.log('[processPayment] Response data:', JSON.stringify(response.data, null, 2));
 
       if (response.status === 200 || response.status === 201) {
         return {
@@ -394,7 +411,9 @@ export const BookingService = {
         },
       };
     } catch (error: any) {
-      console.error('Process payment error:', error);
+      console.error(`[processPayment] Error: ${error.message}`);
+      console.error('[processPayment] Error response status:', error.response?.status);
+      console.error('[processPayment] Error response data:', JSON.stringify(error.response?.data, null, 2));
       return {
         success: false,
         error: {
@@ -528,6 +547,38 @@ export const BookingService = {
         success: false,
         error: {
           message: error.message || 'Failed to get pais',
+        },
+      };
+    }
+  },
+
+  getReservaById: async (
+    reservaId: string
+  ): Promise<BookingServiceResult<ReservaResponse>> => {
+    try {
+      const url = `/api/v1/reservas/${reservaId}`;
+      const response = await customAxios.get(url);
+
+      if (response.status === 200) {
+        return {
+          success: true,
+          data: response.data,
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          message: 'Failed to get reserva',
+          status: response.status,
+        },
+      };
+    } catch (error: any) {
+      console.error('Get reserva error:', error);
+      return {
+        success: false,
+        error: {
+          message: error.message || 'Failed to get reserva',
         },
       };
     }

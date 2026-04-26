@@ -142,6 +142,13 @@
     "spanish": "Español",
     "portuguese": "Português"
   },
+  "offline": {
+    "banner": "Offline - showing saved data",
+    "cachedNotice": "Showing locally saved data",
+    "actionUnavailableTitle": "Action unavailable offline",
+    "actionUnavailableMessage": "You need an internet connection to perform this action. Try again when you are back online.",
+    "noCachedData": "No saved data available to show offline"
+  },
   "myReservations": {
     "title": "My Reservations",
     "upcoming": "Upcoming",
