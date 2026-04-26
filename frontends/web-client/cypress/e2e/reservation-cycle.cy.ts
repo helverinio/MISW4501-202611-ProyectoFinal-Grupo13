@@ -436,7 +436,11 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
   describe('D. Confirmacion visual y por correo (TFP-15.2)', () => {
     beforeEach(() => {
       // Sprint2: para llegar a la vista de confirmacion hay que completar
-      // el flujo completo (huesped → reserva → pago → polling).
+      // el flujo completo (huesped → reserva → pago → polling → email).
+      // Esperamos explicitamente a @sendEmailJs para asegurar que el envio
+      // ya ocurrio antes de cada test (evita race condition donde el
+      // componente cambia a vista de confirmacion antes de despachar el
+      // email asincrono).
       cy.visit(reservationUrl);
       cy.wait(['@getHotelById', '@getHotelRooms', '@acquireHold']);
       cy.fillReservationForm({ email: 'buyer@test.com' });
@@ -447,6 +451,7 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.contains('button', /complete payment/i).click();
       cy.wait('@processPayment');
       cy.wait('@getPaymentStatus');
+      cy.wait('@sendEmailJs');
     });
 
     it('D.1 muestra el stepper completo con los 5 pasos en "done"', () => {
@@ -468,8 +473,8 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
     });
 
     it('D.4 el envio del email a EmailJS incluye los datos del huesped y la reserva', () => {
-      // Sprint2 dejo de usar POST /notificaciones (backend) y migro a
-      // EmailJS (servicio externo). Verificamos el payload del intercept.
+      // El beforeEach ya esperó a @sendEmailJs, asi que cy.get retorna
+      // el interception capturado de manera deterministica.
       cy.get('@sendEmailJs').then((interception: any) => {
         const body = interception.request.body;
         expect(body).to.have.property('template_params');
