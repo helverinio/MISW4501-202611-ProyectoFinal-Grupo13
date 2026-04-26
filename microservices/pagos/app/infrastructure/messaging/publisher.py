@@ -1,5 +1,6 @@
 import json
 import logging
+import ssl
 import stomp
 from typing import Optional
 from flask import current_app
@@ -46,6 +47,8 @@ class MessagePublisher:
                 ssl_options = {'for_hosts': [(self.host, self.port)]}
                 if self.ca_cert_path:
                     ssl_options['ca_certs'] = self.ca_cert_path
+                else:
+                    ssl_options['cert_reqs'] = ssl.CERT_NONE
                 self._connection.set_ssl(**ssl_options)
             self._connection.connect(self.username, self.password, wait=True)
             logger.info(f"[MQ] Connected to ActiveMQ at {self.host}:{self.port} (ssl={self.use_ssl})")
