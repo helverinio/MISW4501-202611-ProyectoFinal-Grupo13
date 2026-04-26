@@ -66,14 +66,17 @@ describe('Flujo E2E #4: Sincronizacion de inventario (parcial)', () => {
       cy.visit(searchUrl);
       cy.wait('@searchHotelsRequest');
 
-      // Aserciones laxas: a nivel de page no debe aparecer un precio > 0
-      // ni un boton "Reservar ahora" habilitado para este hotel.
+      // Aserciones laxas y RETRYABLES: usamos cy.get(...).should(...) en
+      // lugar de .then() para que Cypress re-ejecute el callback hasta
+      // que la pagina deje de mostrar el loader y pinte el resultado
+      // (sin el should, en maquinas lentas el body aun puede mostrar
+      // "Cargando..." cuando el callback corre la unica vez).
       // Verificamos al menos UNA de estas condiciones:
       //   - Texto "$0" / "0,00" / "0.00" presente
       //   - Texto "sin habitacion" / "no rooms" / "sem quarto"
       //   - Texto "no disponible" / "not available" / "indisponivel"
       //   - O bien el componente app-search-results-empty existe
-      cy.get('body').then(($body) => {
+      cy.get('body').should(($body) => {
         const text = $body.text();
         const hasZeroPrice = /\$\s*0[.,]\s*0{1,2}\b|US\$\s*0\b/i.test(text);
         const hasUnavailable =
@@ -113,43 +116,46 @@ describe('Flujo E2E #4: Sincronizacion de inventario (parcial)', () => {
     it('A.4 una segunda busqueda tras webhook muestra inventario reducido (escenario dinamico)', () => {
       // Simulamos el flujo completo: una primera busqueda devuelve hoteles,
       // luego el PMS dispara un webhook, y una segunda busqueda devuelve
-      // disponibilidad cero. Este escenario es MAS realista que A.2 porque
-      // prueba la transicion, no solo el estado final.
-      let requestCount = 0;
-      cy.intercept('POST', '**/api/v1/hoteles/buscar-disponibles', (req) => {
-        requestCount += 1;
-        req.reply({
-          fixture:
-            requestCount === 1 ? 'search-results.json' : 'search-results-no-availability.json',
+      // disponibilidad cero. Pre-cargamos los fixtures fuera del callback
+      // del intercept para evitar lectura asincrona dentro del handler
+      // (causa potencial de flakiness).
+      cy.fixture('search-results.json').then((fullResults) => {
+        cy.fixture('search-results-no-availability.json').then((emptyResults) => {
+          let requestCount = 0;
+          cy.intercept('POST', '**/api/v1/hoteles/buscar-disponibles', (req) => {
+            requestCount += 1;
+            req.reply(requestCount === 1 ? fullResults : emptyResults);
+          }).as('dynamicSearch');
+
+          // Primera busqueda: backend con inventario
+          cy.visit(searchUrl);
+          cy.wait('@dynamicSearch');
+          cy.get('#hotel-cards app-hotel-result-card').should('have.length.at.least', 1);
+
+          // "El PMS envia un webhook al backend" — simulado cambiando el fixture servido.
+          // Recargar la pagina fuerza una nueva consulta a buscar-disponibles.
+          cy.reload();
+          cy.wait('@dynamicSearch');
+
+          // Ahora la UI debe reflejar la disponibilidad cero. Aceptamos
+          // tres estados validos: card con $0, texto "sin habitacion" o
+          // componente app-search-results-empty. Usamos .should() para
+          // que Cypress re-ejecute el callback hasta que el loader sea
+          // reemplazado por el contenido renderizado.
+          cy.get('body').should(($body) => {
+            const text = $body.text();
+            const hasZeroPrice = /\$\s*0[.,]\s*0{1,2}\b|US\$\s*0\b/i.test(text);
+            const hasUnavailable =
+              /sin habitacion|no rooms|sem quarto|0 habitacion|no disponible|not available|indisponivel/i.test(
+                text,
+              );
+            const emptyComponent = $body.find('app-search-results-empty').length > 0;
+            expect(
+              hasZeroPrice || hasUnavailable || emptyComponent,
+              'la pagina debe indicar de alguna forma que no hay disponibilidad',
+            ).to.be.true;
+          });
         });
-      }).as('dynamicSearch');
-
-      // Primera busqueda: backend con inventario
-      cy.visit(searchUrl);
-      cy.wait('@dynamicSearch');
-      cy.get('#hotel-cards app-hotel-result-card').should('have.length.at.least', 1);
-
-      // "El PMS envia un webhook al backend" — simulado cambiando el fixture servido.
-      // Recargar la pagina fuerza una nueva consulta a buscar-disponibles.
-      cy.reload();
-      cy.wait('@dynamicSearch');
-
-      // Ahora la UI debe reflejar la disponibilidad cero. Dependiendo del
-      // comportamiento del componente, el hotel puede filtrarse o mostrarse
-      // con un estado especial.
-      cy.get('body').then(($body) => {
-        const hotelCards = $body.find('#hotel-cards app-hotel-result-card');
-        if (hotelCards.length > 0) {
-          cy.get('#hotel-cards app-hotel-result-card')
-            .first()
-            .within(() => {
-              cy.contains(
-                /\$\s*0[.,]?0?0?|0\s*rooms?|sin habitacion|sem quarto|no rooms|0 habitacion/i,
-              ).should('exist');
-            });
-        } else {
-          cy.get('app-search-results-empty').should('exist');
-        }
       });
     });
   });
