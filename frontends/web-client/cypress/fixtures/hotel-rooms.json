@@ -1,0 +1,35 @@
+[
+  {
+    "id": "r001",
+    "tipo": "Suite",
+    "nro_habitacion": 501,
+    "capacidad": 3,
+    "camas": 2,
+    "id_hotel": "h001",
+    "moneda": "USD",
+    "precio_promedio_noche": 180,
+    "precio_total_reserva": 900
+  },
+  {
+    "id": "r002",
+    "tipo": "Habitacion Doble",
+    "nro_habitacion": 302,
+    "capacidad": 2,
+    "camas": 2,
+    "id_hotel": "h001",
+    "moneda": "USD",
+    "precio_promedio_noche": 120,
+    "precio_total_reserva": 600
+  },
+  {
+    "id": "r003",
+    "tipo": "Habitacion Sencilla",
+    "nro_habitacion": 102,
+    "capacidad": 1,
+    "camas": 1,
+    "id_hotel": "h001",
+    "moneda": "USD",
+    "precio_promedio_noche": 90,
+    "precio_total_reserva": 450
+  }
+]

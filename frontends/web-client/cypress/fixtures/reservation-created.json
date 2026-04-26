@@ -1,0 +1,16 @@
+{
+  "id": "res-abc-123",
+  "fecha_ingreso": "2026-04-10T00:00:00",
+  "fecha_salida": "2026-04-15T00:00:00",
+  "total": 672.0,
+  "nro_personas": 2,
+  "id_usuario": "1",
+  "id_pais": "p001",
+  "id_habitacion": "r003",
+  "id_estado": "e001",
+  "payment": {
+    "payment_id": "pay-xyz-456",
+    "payment_intent_id": "pi-abc-789",
+    "payment_status": "succeeded"
+  }
+}
