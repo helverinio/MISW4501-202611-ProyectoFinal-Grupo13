@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
+import {
+  BookingConfirmationEmailPayload,
+  EmailDeliveryService,
+} from '../../../../core/services/email-delivery.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import {
   HotelByIdResponse,
@@ -16,11 +20,95 @@ import {
 import {
   CreateReservaPayload,
   EstadoResponse,
+  ProcessPaymentPayload,
+  PaymentResponse,
   ReservationService,
   RoomHoldResponse,
   CreatedReservaResponse,
 } from '../../services/reservation.service';
 import { SearchHotelsService } from '../../services/search-hotels.service';
+
+type SupportedCardBrand = 'visa' | 'mastercard' | 'amex' | 'discover';
+
+function detectCardBrandFromDigits(digits: string): SupportedCardBrand | null {
+  if (!digits) {
+    return null;
+  }
+
+  if (digits.startsWith('4')) {
+    return 'visa';
+  }
+
+  if (/^3[47]/.test(digits)) {
+    return 'amex';
+  }
+
+  const twoDigits = Number(digits.slice(0, 2));
+  const fourDigits = Number(digits.slice(0, 4));
+
+  if ((twoDigits >= 51 && twoDigits <= 55) || (fourDigits >= 2221 && fourDigits <= 2720)) {
+    return 'mastercard';
+  }
+
+  if (digits.startsWith('6011') || digits.startsWith('65')) {
+    return 'discover';
+  }
+
+  return null;
+}
+
+function cardBrandValidator(control: AbstractControl): { unsupportedCard: boolean } | null {
+  const raw = `${control.value || ''}`;
+  const digits = raw.replace(/\D/g, '');
+
+  if (!digits) {
+    return null;
+  }
+
+  return detectCardBrandFromDigits(digits) ? null : { unsupportedCard: true };
+}
+
+function expiryDateNotPastValidator(
+  control: AbstractControl,
+): { invalidExpiry: boolean } | { expiredCard: boolean } | { futureExpiry: boolean } | null {
+  const maxExpiryYearsAhead = 20;
+  const raw = `${control.value || ''}`.trim();
+  if (!raw) {
+    return null;
+  }
+
+  const match = raw.match(/^(\d{2})\/(\d{2})$/);
+  if (!match) {
+    return null;
+  }
+
+  const month = Number(match[1]);
+  const yearTwoDigits = Number(match[2]);
+  const fullYear = 2000 + yearTwoDigits;
+
+  if (month < 1 || month > 12) {
+    return { invalidExpiry: true };
+  }
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentYearTwoDigits = currentDate.getFullYear() % 100;
+  const currentMonth = currentDate.getMonth() + 1;
+
+  if (yearTwoDigits < currentYearTwoDigits) {
+    return { expiredCard: true };
+  }
+
+  if (yearTwoDigits === currentYearTwoDigits && month < currentMonth) {
+    return { expiredCard: true };
+  }
+
+  if (fullYear > currentYear + maxExpiryYearsAhead) {
+    return { futureExpiry: true };
+  }
+
+  return null;
+}
 
 @Component({
   selector: 'app-reservation-form-page',
@@ -35,6 +123,7 @@ export class ReservationFormPageComponent {
   private readonly i18n = inject(I18nService);
   private readonly authService = inject(AuthService);
   private readonly currencyService = inject(CurrencyService);
+  private readonly emailDeliveryService = inject(EmailDeliveryService);
   private readonly searchHotelsService = inject(SearchHotelsService);
   private readonly reservationService = inject(ReservationService);
 
@@ -49,6 +138,16 @@ export class ReservationFormPageComponent {
   protected readonly remainingHoldSeconds = signal<number>(0);
   protected readonly currentHoldId = signal<string | null>(null);
   protected readonly createdReservation = signal<CreatedReservaResponse | null>(null);
+  protected readonly paymentCompleted = signal<boolean>(false);
+  protected readonly processingPayment = signal<boolean>(false);
+  protected readonly paymentStatus = signal<string>('');
+  protected readonly paymentStatusMessage = signal<string>('');
+  protected readonly paymentError = signal<string>('');
+  protected readonly emailDeliveryState = signal<'pending' | 'sent' | 'failed'>('pending');
+  protected readonly emailDeliveryDetail = signal<string>('');
+  protected readonly paymentId = signal<string | null>(null);
+  protected readonly paymentSubmitAttempted = signal<boolean>(false);
+  protected readonly detectedCardBrand = signal<SupportedCardBrand | null>(null);
 
   protected readonly hotel = signal<HotelByIdResponse | null>(null);
   protected readonly rooms = signal<HotelRoomResponse[]>([]);
@@ -82,6 +181,20 @@ export class ReservationFormPageComponent {
     phone: ['', [Validators.required]],
     specialRequests: [''],
     arrivalTime: ['unknown'],
+  });
+
+  protected readonly paymentForm = this.fb.nonNullable.group({
+    paymentMethod: ['card' as 'card' | 'pse' | 'transfer', [Validators.required]],
+    cardNumber: ['', [Validators.required, cardBrandValidator]],
+    expiryDate: [
+      '',
+      [Validators.required, Validators.pattern(/^\d{2}\/\d{2}$/), expiryDateNotPastValidator],
+    ],
+    cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
+    cardholderName: ['', [Validators.required]],
+    billingAddress: ['', [Validators.required]],
+    city: ['', [Validators.required]],
+    postalCode: ['', [Validators.required]],
   });
 
   protected readonly selectedRoom = computed(() => {
@@ -118,18 +231,19 @@ export class ReservationFormPageComponent {
       return 0;
     }
 
-    if ((room.precio_total_reserva ?? 0) > 0) {
-      return room.precio_total_reserva as number;
-    }
-
     return this.getRoomNightlyPrice(room) * this.nights();
   });
 
-  protected readonly discountAmount = computed(() => (this.nights() >= 3 ? 25 : 0));
+  protected readonly discountAmount = computed(() => {
+    const discountRate = this.getAdvanceDiscountRate(
+      this.reservationForm.controls.fechaIngreso.value,
+    );
+    return Math.round(this.totalPrice() * discountRate * 100) / 100;
+  });
 
   protected readonly taxesAmount = computed(() => {
     const taxable = Math.max(this.totalPrice() - this.discountAmount(), 0);
-    return Math.round(taxable * 0.12 * 100) / 100;
+    return Math.round(taxable * 0.1 * 100) / 100;
   });
 
   protected readonly grandTotal = computed(
@@ -149,6 +263,7 @@ export class ReservationFormPageComponent {
   protected readonly hasActiveHold = computed(() => this.remainingHoldSeconds() > 0);
 
   private holdTimerId: ReturnType<typeof setInterval> | null = null;
+  private paymentPollTimerId: ReturnType<typeof setInterval> | null = null;
   private hasNavigatedOnHoldExpiry = false;
 
   constructor() {
@@ -177,6 +292,19 @@ export class ReservationFormPageComponent {
             specialRequests: '',
             arrivalTime: 'unknown',
           });
+
+          this.paymentForm.reset({
+            paymentMethod: 'card',
+            cardNumber: '',
+            expiryDate: '',
+            cvv: '',
+            cardholderName: '',
+            billingAddress: '',
+            city: '',
+            postalCode: '',
+          });
+          this.paymentSubmitAttempted.set(false);
+          this.detectedCardBrand.set(null);
 
           if (!hotelId) {
             this.loading.set(false);
@@ -248,6 +376,7 @@ export class ReservationFormPageComponent {
 
   ngOnDestroy(): void {
     this.clearHoldTimer();
+    this.clearPaymentPollingTimer();
   }
 
   protected t(key: string): string {
@@ -404,7 +533,7 @@ export class ReservationFormPageComponent {
         paymentMethod: 'Metodo de pago',
         pricePerNight: 'Precio por noche',
         nightsLabel: 'noches',
-        earlyBirdDiscount: 'Descuento anticipado',
+        earlyBirdDiscount: 'Descuento por reserva anticipada',
         taxesFees: 'Impuestos',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pago cifrado SSL',
@@ -464,7 +593,7 @@ export class ReservationFormPageComponent {
         paymentMethod: 'Metodo de pagamento',
         pricePerNight: 'Preco por noite',
         nightsLabel: 'noites',
-        earlyBirdDiscount: 'Desconto antecipado',
+        earlyBirdDiscount: 'Desconto por reserva antecipada',
         taxesFees: 'Impostos',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pagamento SSL criptografado',
@@ -550,6 +679,7 @@ export class ReservationFormPageComponent {
     const hotelId = this.reservationForm.controls.hotelId.value;
     void this.router.navigate(['/app/hoteles', hotelId], {
       queryParams: {
+        busqueda: (this.route.snapshot.queryParamMap.get('busqueda') || '').trim(),
         fecha_ingreso: this.reservationForm.controls.fechaIngreso.value,
         fecha_salida: this.reservationForm.controls.fechaSalida.value,
         nro_personas: this.reservationForm.controls.nroPersonas.value,
@@ -576,6 +706,143 @@ export class ReservationFormPageComponent {
     const reservation = this.createdReservation();
     const value = reservation?.id?.trim();
     return value || 'Pending ID';
+  }
+
+  protected paymentStatusLabel(): string {
+    const status = (this.paymentStatus() || '').toLowerCase();
+    if (status === 'completado') return 'Completed';
+    if (status === 'procesando') return 'Processing';
+    if (status === 'pendiente') return 'Pending';
+    if (status === 'abandonado') return 'Abandoned';
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Pending';
+  }
+
+  protected canRetryPayment(): boolean {
+    const status = (this.paymentStatus() || '').toLowerCase();
+    return ['abandonado', 'fallido', 'rechazado', 'error'].includes(status);
+  }
+
+  protected retryPayment(): void {
+    this.confirmPayment();
+  }
+
+  protected selectPaymentMethod(method: 'card' | 'pse' | 'transfer'): void {
+    this.paymentForm.controls.paymentMethod.setValue(method);
+    this.reservationForm.controls.paymentMethod.setValue(method);
+  }
+
+  protected confirmPayment(): void {
+    const currentPaymentId = this.paymentId();
+    if (!currentPaymentId || this.processingPayment()) {
+      return;
+    }
+
+    this.paymentError.set('');
+    this.paymentSubmitAttempted.set(true);
+
+    if (!this.isPaymentDataValid()) {
+      this.paymentForm.markAllAsTouched();
+      this.paymentError.set('Completa los datos de pago antes de confirmar.');
+      return;
+    }
+
+    this.startPaymentProcessing(currentPaymentId, this.buildPaymentPayload());
+  }
+
+  protected isPaymentFieldInvalid(
+    field:
+      | 'cardNumber'
+      | 'expiryDate'
+      | 'cvv'
+      | 'cardholderName'
+      | 'billingAddress'
+      | 'city'
+      | 'postalCode',
+  ): boolean {
+    const control = this.paymentForm.controls[field];
+    return control.invalid && (control.touched || this.paymentSubmitAttempted());
+  }
+
+  protected paymentFieldError(
+    field:
+      | 'cardNumber'
+      | 'expiryDate'
+      | 'cvv'
+      | 'cardholderName'
+      | 'billingAddress'
+      | 'city'
+      | 'postalCode',
+  ): string {
+    const control = this.paymentForm.controls[field];
+
+    if (control.hasError('required')) {
+      return 'Este campo no puede estar vacio.';
+    }
+
+    if (field === 'cardNumber' && control.hasError('unsupportedCard')) {
+      return 'Tarjeta no valida. Usa Visa, MasterCard, American Express o Discover.';
+    }
+
+    if (field === 'expiryDate' && control.hasError('pattern')) {
+      return 'Fecha invalida. Usa formato MM/YY.';
+    }
+
+    if (field === 'expiryDate' && control.hasError('invalidExpiry')) {
+      return 'Fecha invalida. El mes debe estar entre 01 y 12.';
+    }
+
+    if (field === 'expiryDate' && control.hasError('expiredCard')) {
+      return 'La fecha de expiracion no puede ser pasada.';
+    }
+
+    if (field === 'expiryDate' && control.hasError('futureExpiry')) {
+      return 'La fecha de expiracion no puede superar 20 años a futuro.';
+    }
+
+    if (field === 'cvv' && control.hasError('pattern')) {
+      return 'CVV invalido. Debe tener 3 digitos numericos.';
+    }
+
+    return 'Campo invalido.';
+  }
+
+  protected cardBrandLabel(): string {
+    const brand = this.detectedCardBrand();
+    if (brand === 'visa') return 'Visa';
+    if (brand === 'mastercard') return 'MasterCard';
+    if (brand === 'amex') return 'American Express';
+    if (brand === 'discover') return 'Discover';
+    return '';
+  }
+
+  protected cardBrandIconClass(): string {
+    const brand = this.detectedCardBrand();
+    if (brand === 'visa') return 'fa-brands fa-cc-visa';
+    if (brand === 'mastercard') return 'fa-brands fa-cc-mastercard';
+    if (brand === 'amex') return 'fa-brands fa-cc-amex';
+    if (brand === 'discover') return 'fa-brands fa-cc-discover';
+    return 'fa-regular fa-credit-card';
+  }
+
+  protected onCardNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 16);
+    const formatted = digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+    this.paymentForm.controls.cardNumber.setValue(formatted, { emitEvent: false });
+    this.detectedCardBrand.set(digits.length >= 4 ? detectCardBrandFromDigits(digits) : null);
+  }
+
+  protected onExpiryDateInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 4);
+    const formatted = digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+    this.paymentForm.controls.expiryDate.setValue(formatted, { emitEvent: false });
+  }
+
+  protected onCvvInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 3);
+    this.paymentForm.controls.cvv.setValue(digits, { emitEvent: false });
   }
 
   protected submit(): void {
@@ -638,19 +905,179 @@ export class ReservationFormPageComponent {
         next: (response) => {
           this.clearHoldTimer();
           this.createdReservation.set(response);
-          this.reservationService
-            .createNotificacion({
-              fecha_notif: new Date().toISOString(),
-              titulo: `Reserva confirmada - ${hotel.nombre}`,
-              id_reserva: response.id,
-              descripcion: `Reserva de ${this.nights()} noches en ${hotel.nombre}. Huesped: ${firstName} ${lastName}.`,
-            })
-            .subscribe();
+          this.paymentCompleted.set(false);
+          this.paymentError.set('');
+
+          const registeredPaymentId = response.payment?.payment_id || null;
+          if (!registeredPaymentId) {
+            this.paymentStatus.set('error');
+            this.paymentError.set('No se pudo inicializar el pago para esta reserva.');
+            return;
+          }
+
+          this.paymentId.set(registeredPaymentId);
+          this.paymentStatus.set((response.payment?.payment_status || 'pendiente').toLowerCase());
+          this.paymentStatusMessage.set('Completa los datos y confirma para procesar el pago.');
+          this.paymentForm.patchValue({
+            paymentMethod: this.reservationForm.controls.paymentMethod.value,
+            cardholderName: `${firstName} ${lastName}`.trim(),
+          });
+          this.paymentSubmitAttempted.set(false);
+          this.detectedCardBrand.set(null);
+
+          const guestFullName = `${firstName} ${lastName}`.trim();
+          this.successMessage.set(
+            `${this.label('successPrefix')} ${response.id}. Guest: ${guestFullName}`,
+          );
         },
         error: (error) => {
           this.errorMessage.set(error?.error?.error || this.label('loadError'));
         },
       });
+  }
+
+  private startPaymentProcessing(paymentId: string, payload: ProcessPaymentPayload): void {
+    this.processingPayment.set(true);
+    this.paymentError.set('');
+    this.paymentStatusMessage.set('Processing payment...');
+
+    this.reservationService
+      .processPayment(paymentId, payload)
+      .pipe(finalize(() => this.processingPayment.set(false)))
+      .subscribe({
+        next: (response: PaymentResponse) => {
+          this.paymentStatus.set((response.status || 'procesando').toLowerCase());
+          this.paymentStatusMessage.set(
+            response.message || 'Payment initiated. Waiting for provider confirmation.',
+          );
+          this.startPaymentStatusPolling(paymentId);
+        },
+        error: (error) => {
+          const backendMessage =
+            error?.error?.error || error?.message || 'Payment processing failed.';
+          this.paymentError.set(backendMessage);
+
+          if (
+            `${backendMessage}`.toLowerCase().includes('already being processed') ||
+            `${backendMessage}`.toLowerCase().includes('current status')
+          ) {
+            this.startPaymentStatusPolling(paymentId);
+          }
+        },
+      });
+  }
+
+  private startPaymentStatusPolling(paymentId: string): void {
+    this.clearPaymentPollingTimer();
+
+    const pollStatus = () => {
+      this.reservationService.getPayment(paymentId).subscribe({
+        next: (payment) => {
+          const status = (payment.status || '').toLowerCase();
+          this.paymentStatus.set(status);
+
+          if (status === 'completado') {
+            this.paymentStatusMessage.set('Payment confirmed successfully.');
+            this.onPaymentCompleted(payment);
+            return;
+          }
+
+          if (['abandonado', 'fallido', 'rechazado'].includes(status)) {
+            this.paymentStatusMessage.set('Payment was not completed. You can retry.');
+            this.paymentError.set(`Estado del pago: ${status}`);
+            this.clearPaymentPollingTimer();
+            return;
+          }
+
+          this.paymentStatusMessage.set('Waiting for payment confirmation...');
+        },
+        error: () => {
+          this.paymentStatusMessage.set('Unable to fetch payment status. Retrying...');
+        },
+      });
+    };
+
+    pollStatus();
+    this.paymentPollTimerId = setInterval(pollStatus, 2500);
+  }
+
+  private isPaymentDataValid(): boolean {
+    return this.paymentForm.valid;
+  }
+
+  private buildPaymentPayload(): ProcessPaymentPayload {
+    const method = this.paymentForm.controls.paymentMethod.value;
+
+    return {
+      payment_method: method,
+      card_number: this.paymentForm.controls.cardNumber.value,
+      expiry_date: this.paymentForm.controls.expiryDate.value,
+      cvv: this.paymentForm.controls.cvv.value,
+      cardholder_name: this.paymentForm.controls.cardholderName.value,
+      billing_address: this.paymentForm.controls.billingAddress.value,
+      city: this.paymentForm.controls.city.value,
+      postal_code: this.paymentForm.controls.postalCode.value,
+    };
+  }
+
+  private onPaymentCompleted(payment: PaymentResponse): void {
+    if (this.paymentCompleted()) {
+      this.clearPaymentPollingTimer();
+      return;
+    }
+
+    this.clearPaymentPollingTimer();
+    this.paymentCompleted.set(true);
+    this.paymentStatus.set((payment.status || 'completado').toLowerCase());
+    this.paymentError.set('');
+    this.emailDeliveryState.set('pending');
+    this.emailDeliveryDetail.set('');
+
+    const reservation = this.createdReservation();
+    const hotel = this.hotel();
+
+    if (!reservation || !hotel) {
+      return;
+    }
+
+    const firstName = this.reservationForm.controls.firstName.value;
+    const lastName = this.reservationForm.controls.lastName.value;
+    const email = this.reservationForm.controls.email.value.trim();
+
+    const emailPayload: BookingConfirmationEmailPayload = {
+      toEmail: email,
+      bookingId: reservation.id,
+      hotelName: hotel.nombre || '-',
+      roomType: this.selectedRoom()?.tipo || '-',
+      checkIn: this.formatDate(reservation.fecha_ingreso),
+      checkOut: this.formatDate(reservation.fecha_salida),
+      guestName: `${firstName} ${lastName}`.trim(),
+      guestEmail: email,
+      phone:
+        `${this.reservationForm.controls.phonePrefix.value} ${this.reservationForm.controls.phone.value}`.trim(),
+      guests: String(reservation.nro_personas),
+      nights: String(this.nights()),
+      totalPaid: this.formatPrice(this.grandTotal()),
+      paymentMethod: this.paymentMethodLabel(),
+    };
+
+    try {
+      this.emailDeliveryService.sendBookingConfirmation(emailPayload).subscribe({
+        next: () => {
+          this.emailDeliveryState.set('sent');
+        },
+        error: (sendError) => {
+          this.emailDeliveryState.set('failed');
+          const detail = sendError?.error || sendError?.message || '';
+          this.emailDeliveryDetail.set(typeof detail === 'string' ? detail : '');
+          console.warn('[EMAIL] Failed to send booking confirmation from frontend', sendError);
+        },
+      });
+    } catch (sendError) {
+      this.emailDeliveryState.set('failed');
+      this.emailDeliveryDetail.set('EmailJS is not configured.');
+      console.warn('[EMAIL] Email provider is not configured', sendError);
+    }
   }
 
   private resolveEstadoId(estados: EstadoResponse[]): string {
@@ -697,6 +1124,36 @@ export class ReservationFormPageComponent {
       fecha_salida: checkOutDate,
       nro_personas: guests,
     };
+  }
+
+  private getAdvanceDiscountRate(checkInDate: string): number {
+    if (!checkInDate) {
+      return 0;
+    }
+
+    const checkIn = new Date(`${checkInDate}T00:00:00`);
+    if (Number.isNaN(checkIn.getTime())) {
+      return 0;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const oneMonthAhead = new Date(today);
+    oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
+
+    const threeMonthsAhead = new Date(today);
+    threeMonthsAhead.setMonth(threeMonthsAhead.getMonth() + 3);
+
+    if (checkIn >= threeMonthsAhead) {
+      return 0.15;
+    }
+
+    if (checkIn >= oneMonthAhead) {
+      return 0.1;
+    }
+
+    return 0;
   }
 
   private mergeRoomPricing(
@@ -808,6 +1265,13 @@ export class ReservationFormPageComponent {
     }
   }
 
+  private clearPaymentPollingTimer(): void {
+    if (this.paymentPollTimerId) {
+      clearInterval(this.paymentPollTimerId);
+      this.paymentPollTimerId = null;
+    }
+  }
+
   private releaseCurrentHoldSilently(): void {
     const holdId = this.currentHoldId();
     if (!holdId) {
@@ -838,6 +1302,18 @@ export class ReservationFormPageComponent {
       specialRequests: '',
       arrivalTime: 'unknown',
     });
+    this.paymentForm.patchValue({
+      paymentMethod: 'card',
+      cardNumber: '',
+      expiryDate: '',
+      cvv: '',
+      cardholderName: '',
+      billingAddress: '',
+      city: '',
+      postalCode: '',
+    });
+    this.paymentSubmitAttempted.set(false);
+    this.detectedCardBrand.set(null);
   }
 
   private handleHoldExpired(): void {
@@ -857,6 +1333,7 @@ export class ReservationFormPageComponent {
 
     void this.router.navigate(['/app/hoteles', hotelId], {
       queryParams: {
+        busqueda: (this.route.snapshot.queryParamMap.get('busqueda') || '').trim(),
         fecha_ingreso: this.reservationForm.controls.fechaIngreso.value,
         fecha_salida: this.reservationForm.controls.fechaSalida.value,
         nro_personas: this.reservationForm.controls.nroPersonas.value,
