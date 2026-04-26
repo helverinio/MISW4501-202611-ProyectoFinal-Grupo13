@@ -183,7 +183,87 @@ La mejor estrategia costo/beneficio para este repositorio es:
 
 Si el equipo necesita una sola accion con impacto real este mes, debe ser la automatizacion de `cost-parking.ps1`.
 
-## 8. Alcance oficial de infraestructura
+## 8. Acceso directo a RDS desde cliente local (temporal)
+
+RDS no tiene acceso público por defecto (`PubliclyAccessible = false`, subnets privadas).
+Para conectarse desde un cliente local (DBeaver, psql, DataGrip, etc.) se deben abrir dos accesos temporales y cerrarlos al terminar.
+
+**Datos de conexión**
+
+| Campo | Valor |
+|---|---|
+| Host | `th-prod-postgres.clk4y4iwyn0d.us-east-2.rds.amazonaws.com` |
+| Puerto | `5432` |
+| SG del RDS | `sg-06d647e354842cb02` |
+
+**Credenciales**: obtenerlas de Secrets Manager:
+```powershell
+$env:AWS_PROFILE = "grupo13"; $env:AWS_DEFAULT_REGION = "us-east-2"
+aws secretsmanager get-secret-value --secret-id th-prod/app-config --query SecretString --output text | ConvertFrom-Json
+```
+
+---
+
+### Abrir acceso temporal
+
+> Reemplaza `<TU_IP>` con tu IP pública actual. Verificar con: `(Invoke-RestMethod https://checkip.amazonaws.com).Trim()`
+
+```powershell
+$env:AWS_PROFILE = "grupo13"; $env:AWS_DEFAULT_REGION = "us-east-2"
+$MI_IP = (Invoke-RestMethod -Uri "https://checkip.amazonaws.com").Trim()
+
+# 1. Agregar regla al security group del RDS
+aws ec2 authorize-security-group-ingress `
+  --group-id sg-06d647e354842cb02 `
+  --protocol tcp --port 5432 `
+  --cidr "$MI_IP/32" `
+  --region us-east-2
+
+# 2. Activar acceso público en RDS (~3 min en aplicar)
+aws rds modify-db-instance `
+  --db-instance-identifier th-prod-postgres `
+  --publicly-accessible `
+  --apply-immediately `
+  --region us-east-2
+
+# 3. Esperar a que quede "available"
+aws rds wait db-instance-available --db-instance-identifier th-prod-postgres --region us-east-2
+Write-Host "RDS listo para conexion directa"
+```
+
+---
+
+### Cerrar acceso temporal (ejecutar siempre al terminar)
+
+```powershell
+$env:AWS_PROFILE = "grupo13"; $env:AWS_DEFAULT_REGION = "us-east-2"
+$MI_IP = (Invoke-RestMethod -Uri "https://checkip.amazonaws.com").Trim()
+
+# 1. Quitar regla del security group
+aws ec2 revoke-security-group-ingress `
+  --group-id sg-06d647e354842cb02 `
+  --protocol tcp --port 5432 `
+  --cidr "$MI_IP/32" `
+  --region us-east-2
+
+# 2. Desactivar acceso público en RDS
+aws rds modify-db-instance `
+  --db-instance-identifier th-prod-postgres `
+  --no-publicly-accessible `
+  --apply-immediately `
+  --region us-east-2
+
+Write-Host "Acceso RDS cerrado"
+
+aws secretsmanager get-secret-value --secret-id th-prod/app-config --query SecretString --output text | ConvertFrom-Json
+```
+
+cur.execute("SELECT * FROM user_accounts;")
+print(cur.fetchall())
+
+---
+
+## 9. Alcance oficial de infraestructura
 
 Para evitar confusiones durante la migracion de region, este es el criterio oficial.
 

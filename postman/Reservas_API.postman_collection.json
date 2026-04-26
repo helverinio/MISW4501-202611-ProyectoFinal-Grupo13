@@ -1363,6 +1363,261 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Tipos Habitacion",
+      "description": "Room type management endpoints",
+      "item": [
+        {
+          "name": "Get Tipos Habitacion by Hotel",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/{{hotelId}}/tipos-habitacion",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "hoteles", "{{hotelId}}", "tipos-habitacion"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tipo Habitacion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Deluxe King Room\",\n  \"descripcion\": \"Spacious room with king bed\",\n  \"capacidad\": 2,\n  \"camas\": 1\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/hoteles/{{hotelId}}/tipos-habitacion",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "hoteles", "{{hotelId}}", "tipos-habitacion"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tipo Habitacion by ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/tipos-habitacion/{{tipoHabitacionId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "tipos-habitacion", "{{tipoHabitacionId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tipo Habitacion",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Updated Room Name\",\n  \"capacidad\": 3\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/tipos-habitacion/{{tipoHabitacionId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "tipos-habitacion", "{{tipoHabitacionId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tipo Habitacion",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/tipos-habitacion/{{tipoHabitacionId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "tipos-habitacion", "{{tipoHabitacionId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Planes Tarifarios",
+      "description": "Rate plan management endpoints",
+      "item": [
+        {
+          "name": "Get Planes by Tipo Habitacion",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/tipos-habitacion/{{tipoHabitacionId}}/planes-tarifarios",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "tipos-habitacion", "{{tipoHabitacionId}}", "planes-tarifarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Plan Tarifario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Standard Rate\",\n  \"descripcion\": \"Base rate for all seasons\",\n  \"moneda\": \"USD\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/tipos-habitacion/{{tipoHabitacionId}}/planes-tarifarios",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "tipos-habitacion", "{{tipoHabitacionId}}", "planes-tarifarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Plan Tarifario by ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/planes-tarifarios/{{planTarifarioId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "planes-tarifarios", "{{planTarifarioId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Plan Tarifario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Updated Plan\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/planes-tarifarios/{{planTarifarioId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "planes-tarifarios", "{{planTarifarioId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate Plan Tarifario",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/planes-tarifarios/{{planTarifarioId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "planes-tarifarios", "{{planTarifarioId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reglas Tarifarias",
+      "description": "Pricing rule management endpoints",
+      "item": [
+        {
+          "name": "Get Reglas by Plan",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/planes-tarifarios/{{planTarifarioId}}/reglas",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "planes-tarifarios", "{{planTarifarioId}}", "reglas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Regla Tarifaria",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio_base_noche\": 150.00,\n  \"fecha_inicio\": \"2026-06-01\",\n  \"fecha_fin\": \"2026-08-31\",\n  \"min_noches\": 2,\n  \"prioridad\": 1\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/planes-tarifarios/{{planTarifarioId}}/reglas",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "planes-tarifarios", "{{planTarifarioId}}", "reglas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Regla Tarifaria by ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reglas-tarifarias/{{reglaTarifId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "reglas-tarifarias", "{{reglaTarifId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Regla Tarifaria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{access_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio_base_noche\": 175.00,\n  \"min_noches\": 3\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reglas-tarifarias/{{reglaTarifId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "reglas-tarifarias", "{{reglaTarifId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate Regla Tarifaria",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/reglas-tarifarias/{{reglaTarifId}}",
+              "host": ["{{reservas_url}}"],
+              "path": ["api", "v1", "reglas-tarifarias", "{{reglaTarifId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

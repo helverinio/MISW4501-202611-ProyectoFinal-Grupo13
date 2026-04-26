@@ -3,6 +3,7 @@ from flask import Flask
 
 from app.services.pagos_service import PagosService
 from app.services.reservas_service import ReservasService
+from app.services.usuarios_service import UsuariosService
 
 
 class DummyResponse:
@@ -249,3 +250,117 @@ def test_pagos_wrappers_delegate_to_request(monkeypatch, method_name, args):
 
     assert result["status_code"] == 200
     assert captured["method"] in {"GET", "POST", "PUT", "DELETE"}
+
+
+# ── UsuariosService ────────────────────────────────────────────────────────────
+
+def test_usuarios_service_request_variants(monkeypatch):
+    service = UsuariosService("http://usuarios")
+
+    monkeypatch.setattr(
+        "app.services.usuarios_service.requests.get",
+        lambda url, headers, timeout: DummyResponse(200, {"method": "GET", "url": url}),
+    )
+    monkeypatch.setattr(
+        "app.services.usuarios_service.requests.post",
+        lambda url, json, headers, timeout: DummyResponse(201, {"method": "POST", "json": json}),
+    )
+    monkeypatch.setattr(
+        "app.services.usuarios_service.requests.put",
+        lambda url, json, headers, timeout: DummyResponse(202, {"method": "PUT", "json": json}),
+    )
+    monkeypatch.setattr(
+        "app.services.usuarios_service.requests.delete",
+        lambda url, headers, timeout: DummyResponse(204, {"method": "DELETE"}),
+    )
+
+    get_result = service._request("GET", "usuarios")
+    assert get_result["status_code"] == 200
+    assert get_result["data"]["method"] == "GET"
+
+    post_result = service._request("POST", "usuarios", {"email": "a@b.com"})
+    assert post_result["status_code"] == 201
+
+    put_result = service._request("PUT", "usuarios/u1", {"nombre": "Updated"})
+    assert put_result["status_code"] == 202
+
+    delete_result = service._request("DELETE", "usuarios/u1")
+    assert delete_result["status_code"] == 204
+
+    invalid_result = service._request("PATCH", "usuarios/u1")
+    assert invalid_result["status_code"] == 400
+
+
+def test_usuarios_service_request_with_headers(monkeypatch):
+    captured = {}
+
+    def fake_get(url, headers, timeout):
+        captured["headers"] = headers
+        return DummyResponse(200, {"ok": True})
+
+    monkeypatch.setattr("app.services.usuarios_service.requests.get", fake_get)
+
+    service = UsuariosService("http://usuarios")
+    result = service._request("GET", "auth/me", headers={"Authorization": "Bearer tok-123"})
+
+    assert result["status_code"] == 200
+    assert captured["headers"] == {"Authorization": "Bearer tok-123"}
+
+
+def test_usuarios_service_request_exception(monkeypatch):
+    class BoomRequestException(Exception):
+        pass
+
+    def failing_get(url, headers, timeout):
+        raise BoomRequestException("usuarios down")
+
+    monkeypatch.setattr("app.services.usuarios_service.requests.get", failing_get)
+    monkeypatch.setattr(
+        "app.services.usuarios_service.requests.RequestException", BoomRequestException
+    )
+
+    service = UsuariosService("http://usuarios")
+    result = service._request("GET", "usuarios")
+
+    assert result["status_code"] == 500
+    assert "usuarios down" in result["data"]["error"]
+
+
+@pytest.mark.parametrize(
+    "method_name,args",
+    [
+        ("create_usuario", ({"email": "a@b.com"},)),
+        ("get_usuario", ("u1",)),
+        ("get_all_usuarios", ()),
+        ("update_usuario", ("u1", {"email": "new@b.com"})),
+        ("delete_usuario", ("u1",)),
+        ("login", ({"email": "a@b.com", "contrasena": "pass"},)),
+        ("refresh_token", ({"token": "tok"},)),
+        ("get_current_user", ()),
+        ("get_current_user", ("Bearer tok",)),
+        ("logout", ()),
+        ("logout", ("Bearer tok",)),
+        ("register_admin", ({"email": "admin@b.com"},)),
+        ("verify_admin_setup", ({"token": "abc"},)),
+        ("admin_login_step1", ({"email": "a@b.com", "contrasena": "p"},)),
+        ("admin_login_step2", ({"mfa_code": "123456"},)),
+    ],
+)
+def test_usuarios_wrappers_delegate_to_request(monkeypatch, method_name, args):
+    captured = {}
+
+    def fake_request(method, endpoint, data=None, headers=None):
+        captured["method"] = method
+        captured["endpoint"] = endpoint
+        captured["data"] = data
+        captured["headers"] = headers
+        return {"status_code": 200, "data": {"ok": True}}
+
+    service = UsuariosService("http://usuarios")
+    monkeypatch.setattr(service, "_request", fake_request)
+
+    result = getattr(service, method_name)(*args)
+
+    assert result["status_code"] == 200
+    assert captured["method"] in {"GET", "POST", "PUT", "DELETE"}
+
