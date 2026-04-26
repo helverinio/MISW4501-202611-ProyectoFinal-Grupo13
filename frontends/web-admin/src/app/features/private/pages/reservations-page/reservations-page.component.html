@@ -20,18 +20,36 @@
             <button
               type="button"
               (click)="setLanguage('es')"
-              [class]="currentLanguage === 'es' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >ES</button>
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              ES
+            </button>
             <button
               type="button"
               (click)="setLanguage('en')"
-              [class]="currentLanguage === 'en' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >EN</button>
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              EN
+            </button>
             <button
               type="button"
               (click)="setLanguage('pt')"
-              [class]="currentLanguage === 'pt' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >PT</button>
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              PT
+            </button>
           </div>
           <button
             class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
@@ -123,7 +141,9 @@
       <div class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{{ t('reservations.title') }}</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {{ t('reservations.title') }}
+            </h1>
             <p class="text-gray-600 text-sm">{{ t('reservations.subtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
@@ -159,7 +179,9 @@
         <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('reservations.filter.bookingCode') }}</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.bookingCode')
+              }}</label>
               <div class="relative">
                 <input
                   type="text"
@@ -172,7 +194,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('reservations.filter.checkInFrom') }}</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.checkInFrom')
+              }}</label>
               <input
                 type="date"
                 formControlName="fecha_desde"
@@ -181,7 +205,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('reservations.filter.checkInTo') }}</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.checkInTo')
+              }}</label>
               <input
                 type="date"
                 formControlName="fecha_hasta"
@@ -190,7 +216,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('reservations.filter.status') }}</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.status')
+              }}</label>
               <select
                 formControlName="id_estado"
                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -201,7 +229,9 @@
             </div>
 
             <div class="col-span-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('reservations.filter.roomType') }}</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('reservations.filter.roomType')
+              }}</label>
               <input
                 type="text"
                 formControlName="tipo_habitacion"
@@ -239,7 +269,9 @@
               <i class="fas fa-calendar-check text-primary-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">{{ t('reservations.stats.total') }}</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.total') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.total | number }}</span>
@@ -252,7 +284,9 @@
               <i class="fas fa-check-circle text-green-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">{{ t('reservations.stats.confirmed') }}</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.confirmed') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.confirmadas | number }}</span>
@@ -265,7 +299,9 @@
               <i class="fas fa-clock text-orange-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">{{ t('reservations.stats.pending') }}</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.pending') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.pendientes | number }}</span>
@@ -278,7 +314,9 @@
               <i class="fas fa-times-circle text-red-600 text-xl"></i>
             </div>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">{{ t('reservations.stats.cancelledRejected') }}</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reservations.stats.cancelledRejected') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin text-gray-400"></i></span>
             <span *ngIf="!loading">{{ stats.canceladas + stats.rechazadas | number }}</span>
@@ -291,7 +329,9 @@
         <div class="p-6 border-b border-gray-100">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 mb-1">{{ t('reservations.list.title') }}</h2>
+              <h2 class="text-xl font-bold text-gray-900 mb-1">
+                {{ t('reservations.list.title') }}
+              </h2>
               <p class="text-sm text-gray-600">{{ t('reservations.list.subtitle') }}</p>
             </div>
             <div class="mt-4 sm:mt-0 flex items-center space-x-3">
@@ -450,8 +490,10 @@
         <div *ngIf="!loading && pages > 0" class="p-6 border-t border-gray-100">
           <div class="flex flex-col sm:flex-row items-center justify-between">
             <p class="text-sm text-gray-600 mb-4 sm:mb-0">
-              {{ t('reservations.pagination.showing') }} {{ showingFrom | number }} {{ t('reservations.pagination.to') }} {{ showingTo | number }} {{ t('reservations.pagination.of') }}
-              {{ total | number }} {{ t('reservations.pagination.results') }}
+              {{ t('reservations.pagination.showing') }} {{ showingFrom | number }}
+              {{ t('reservations.pagination.to') }} {{ showingTo | number }}
+              {{ t('reservations.pagination.of') }} {{ total | number }}
+              {{ t('reservations.pagination.results') }}
             </p>
             <div class="flex items-center space-x-2">
               <button

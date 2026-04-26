@@ -27,18 +27,36 @@
             <button
               type="button"
               (click)="setLanguage('es')"
-              [class]="currentLanguage === 'es' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >ES</button>
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              ES
+            </button>
             <button
               type="button"
               (click)="setLanguage('en')"
-              [class]="currentLanguage === 'en' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >EN</button>
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              EN
+            </button>
             <button
               type="button"
               (click)="setLanguage('pt')"
-              [class]="currentLanguage === 'pt' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
-            >PT</button>
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              PT
+            </button>
           </div>
           <a
             href="#"
@@ -66,9 +84,9 @@
 
           <form id="login-form" class="space-y-6" [formGroup]="loginForm" (ngSubmit)="submit()">
             <div id="email-field">
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2"
-                >{{ t('login.email') }}</label
-              >
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('login.email')
+              }}</label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-envelope text-gray-400 text-sm"></i>
@@ -86,9 +104,9 @@
             </div>
 
             <div id="password-field">
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-2"
-                >{{ t('login.password') }}</label
-              >
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('login.password')
+              }}</label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-lock text-gray-400 text-sm"></i>
@@ -119,9 +137,9 @@
             </div>
 
             <div id="mfa-field" *ngIf="showMfaField">
-              <label for="mfa-code" class="block text-sm font-medium text-gray-700 mb-2"
-                >{{ t('login.mfaCode') }}</label
-              >
+              <label for="mfa-code" class="block text-sm font-medium text-gray-700 mb-2">{{
+                t('login.mfaCode')
+              }}</label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="fas fa-mobile-alt text-gray-400 text-sm"></i>
@@ -151,9 +169,9 @@
                   type="checkbox"
                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
-                <label for="remember-me" class="ml-2 block text-sm text-gray-700"
-                  >{{ t('login.rememberMe') }}</label
-                >
+                <label for="remember-me" class="ml-2 block text-sm text-gray-700">{{
+                  t('login.rememberMe')
+                }}</label>
               </div>
               <div class="text-sm">
                 <a

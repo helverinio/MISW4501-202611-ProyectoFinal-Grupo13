@@ -443,7 +443,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.perPage': 'por página',
 
     'rateManagement.title': 'Gestión de habitaciones y tarifas',
-    'rateManagement.subtitle': 'Gestiona habitaciones, tarifas, descuentos y políticas de cancelación',
+    'rateManagement.subtitle':
+      'Gestiona habitaciones, tarifas, descuentos y políticas de cancelación',
     'rateManagement.rateHistory': 'Historial de tarifas',
     'rateManagement.addRoomType': 'Agregar tipo de habitación',
     'rateManagement.selectProperty': 'Seleccionar propiedad',
