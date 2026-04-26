@@ -3,6 +3,8 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { I18nService } from '../../../../core/services/i18n.service';
+import { LanguageCode } from '../../../../core/i18n/translations';
 
 declare const Plotly:
   | {
@@ -93,10 +95,23 @@ export class DashboardPageComponent implements AfterViewInit {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
+    readonly i18n: I18nService,
   ) {}
 
   currentUser() {
     return this.authService.currentUser();
+  }
+
+  t(key: Parameters<I18nService['t']>[0]): string {
+    return this.i18n.t(key);
+  }
+
+  get currentLanguage() {
+    return this.i18n.currentLanguage();
+  }
+
+  setLanguage(lang: LanguageCode): void {
+    this.i18n.setLanguage(lang);
   }
 
   ngAfterViewInit(): void {

@@ -22,10 +22,28 @@
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <!-- Language selector -->
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              (click)="setLanguage('es')"
+              [class]="currentLanguage === 'es' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+            >ES</button>
+            <button
+              type="button"
+              (click)="setLanguage('en')"
+              [class]="currentLanguage === 'en' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+            >EN</button>
+            <button
+              type="button"
+              (click)="setLanguage('pt')"
+              [class]="currentLanguage === 'pt' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+            >PT</button>
+          </div>
           <a
             href="#"
             class="text-gray-600 hover:text-primary-600 text-sm font-medium transition-colors"
-            >Need Help?</a
+            >{{ t('login.needHelp') }}</a
           >
         </div>
       </div>
@@ -42,14 +60,14 @@
                 <i class="fas fa-shield-halved text-primary-600 text-2xl"></i>
               </div>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Admin Portal</h2>
-            <p class="text-gray-600 text-sm">Sign in to manage your hotel properties</p>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ t('login.title') }}</h2>
+            <p class="text-gray-600 text-sm">{{ t('login.subtitle') }}</p>
           </div>
 
           <form id="login-form" class="space-y-6" [formGroup]="loginForm" (ngSubmit)="submit()">
             <div id="email-field">
               <label for="email" class="block text-sm font-medium text-gray-700 mb-2"
-                >Email Address</label
+                >{{ t('login.email') }}</label
               >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -60,7 +78,7 @@
                   name="email"
                   type="email"
                   required
-                  placeholder="admin@hotel.com"
+                  [placeholder]="t('login.emailPlaceholder')"
                   formControlName="email"
                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                 />
@@ -69,7 +87,7 @@
 
             <div id="password-field">
               <label for="password" class="block text-sm font-medium text-gray-700 mb-2"
-                >Password</label
+                >{{ t('login.password') }}</label
               >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -80,7 +98,7 @@
                   name="password"
                   [type]="showPassword ? 'text' : 'password'"
                   required
-                  placeholder="Enter your password"
+                  [placeholder]="t('login.passwordPlaceholder')"
                   formControlName="password"
                   class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-colors"
                 />
@@ -102,7 +120,7 @@
 
             <div id="mfa-field" *ngIf="showMfaField">
               <label for="mfa-code" class="block text-sm font-medium text-gray-700 mb-2"
-                >Verification Code</label
+                >{{ t('login.mfaCode') }}</label
               >
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -119,7 +137,7 @@
                 />
               </div>
               <p class="text-xs text-gray-500 mt-2">
-                Enter the 6-digit code from your authenticator app
+                {{ t('login.mfaCodeHint') }}
               </p>
             </div>
 
@@ -134,14 +152,14 @@
                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label for="remember-me" class="ml-2 block text-sm text-gray-700"
-                  >Remember me</label
+                  >{{ t('login.rememberMe') }}</label
                 >
               </div>
               <div class="text-sm">
                 <a
                   [routerLink]="['/setup-admin']"
                   class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
-                  >Setup Admin MFA</a
+                  >{{ t('login.setupAdmin') }}</a
                 >
               </div>
             </div>
@@ -157,7 +175,7 @@
                     class="fas fa-sign-in-alt text-primary-200 group-hover:text-primary-100 text-sm"
                   ></i>
                 </span>
-                {{ showMfaField ? 'Verify & Sign In' : 'Sign in to Admin Portal' }}
+                {{ showMfaField ? t('login.verifySignIn') : t('login.signIn') }}
               </button>
             </div>
           </form>
