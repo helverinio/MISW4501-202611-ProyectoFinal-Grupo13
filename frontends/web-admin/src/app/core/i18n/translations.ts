@@ -1,0 +1,671 @@
+export type LanguageCode = 'en' | 'es' | 'pt';
+
+export interface AdminTranslation {
+  // Common / Language selector
+  'common.language': string;
+  'common.logout': string;
+  'common.save': string;
+  'common.cancel': string;
+  'common.active': string;
+  'common.saving': string;
+  'common.retry': string;
+  'common.export': string;
+  'common.filter': string;
+  'common.clearFilters': string;
+  'common.loading': string;
+  'common.needHelp': string;
+  'common.name': string;
+
+  // Sidebar
+  'sidebar.dashboard': string;
+  'sidebar.reservations': string;
+  'sidebar.properties': string;
+  'sidebar.guests': string;
+  'sidebar.revenue': string;
+  'sidebar.settings': string;
+
+  // Footer
+  'footer.copyright': string;
+  'footer.privacyPolicy': string;
+  'footer.termsOfService': string;
+  'footer.security': string;
+
+  // Login page
+  'login.needHelp': string;
+  'login.title': string;
+  'login.subtitle': string;
+  'login.email': string;
+  'login.emailPlaceholder': string;
+  'login.password': string;
+  'login.passwordPlaceholder': string;
+  'login.mfaCode': string;
+  'login.mfaCodeHint': string;
+  'login.rememberMe': string;
+  'login.setupAdmin': string;
+  'login.signIn': string;
+  'login.verifySignIn': string;
+
+  // Dashboard
+  'dashboard.title': string;
+  'dashboard.subtitle': string;
+  'dashboard.period.last30': string;
+  'dashboard.period.last7': string;
+  'dashboard.period.last90': string;
+  'dashboard.period.thisYear': string;
+  'dashboard.kpi.totalReservations': string;
+  'dashboard.kpi.fromLastMonth': string;
+  'dashboard.kpi.monthlyRevenue': string;
+  'dashboard.kpi.fromLastMonthRevenue': string;
+  'dashboard.kpi.occupancyRate': string;
+  'dashboard.kpi.aboveAverage': string;
+  'dashboard.kpi.pendingConfirmations': string;
+  'dashboard.kpi.awaitingApproval': string;
+  'dashboard.kpi.needsAttention': string;
+  'dashboard.revenue.title': string;
+  'dashboard.revenue.subtitle': string;
+  'dashboard.revenue.monthly': string;
+  'dashboard.revenue.weekly': string;
+  'dashboard.revenue.daily': string;
+  'dashboard.recent.title': string;
+  'dashboard.recent.subtitle': string;
+  'dashboard.recent.viewAll': string;
+  'dashboard.table.guest': string;
+  'dashboard.table.property': string;
+  'dashboard.table.checkIn': string;
+  'dashboard.table.checkOut': string;
+  'dashboard.table.amount': string;
+  'dashboard.table.status': string;
+
+  // Reservations page
+  'reservations.title': string;
+  'reservations.subtitle': string;
+  'reservations.filter.bookingCode': string;
+  'reservations.filter.searchCode': string;
+  'reservations.filter.checkInFrom': string;
+  'reservations.filter.checkInTo': string;
+  'reservations.filter.status': string;
+  'reservations.filter.allStatus': string;
+  'reservations.filter.roomType': string;
+  'reservations.filter.roomTypePlaceholder': string;
+  'reservations.stats.total': string;
+  'reservations.stats.confirmed': string;
+  'reservations.stats.pending': string;
+  'reservations.stats.cancelledRejected': string;
+  'reservations.list.title': string;
+  'reservations.list.subtitle': string;
+  'reservations.list.loading': string;
+  'reservations.list.noFound': string;
+  'reservations.list.noFoundHint': string;
+  'reservations.table.id': string;
+  'reservations.table.guestId': string;
+  'reservations.table.property': string;
+  'reservations.table.checkIn': string;
+  'reservations.table.checkOut': string;
+  'reservations.table.nights': string;
+  'reservations.table.amount': string;
+  'reservations.table.status': string;
+  'reservations.pagination.showing': string;
+  'reservations.pagination.to': string;
+  'reservations.pagination.of': string;
+  'reservations.pagination.results': string;
+  'reservations.perPage': string;
+
+  // Rate Management (Settings) page
+  'rateManagement.title': string;
+  'rateManagement.subtitle': string;
+  'rateManagement.rateHistory': string;
+  'rateManagement.addRoomType': string;
+  'rateManagement.selectProperty': string;
+  'rateManagement.loadingHotels': string;
+  'rateManagement.noHotels': string;
+  'rateManagement.rooms': string;
+  'rateManagement.noRooms': string;
+  'rateManagement.capacity': string;
+  'rateManagement.beds': string;
+  'rateManagement.addRoom': string;
+  'rateManagement.roomNumber': string;
+  'rateManagement.ratePlans': string;
+  'rateManagement.addPlan': string;
+  'rateManagement.addRule': string;
+  'rateManagement.currencyNote': string;
+  'rateManagement.cancellationPolicy': string;
+  'rateManagement.policy.flexible': string;
+  'rateManagement.policy.flexibleDesc': string;
+  'rateManagement.policy.moderate': string;
+  'rateManagement.policy.moderateDesc': string;
+  'rateManagement.policy.strict': string;
+  'rateManagement.policy.strictDesc': string;
+  'rateManagement.noRatePlans': string;
+  'rateManagement.plan.name': string;
+  'rateManagement.plan.namePlaceholder': string;
+  'rateManagement.plan.description': string;
+  'rateManagement.plan.descPlaceholder': string;
+  'rateManagement.plan.currency': string;
+  'rateManagement.plan.addTitle': string;
+  'rateManagement.plan.saveTitle': string;
+  'rateManagement.plan.rules': string;
+  'rateManagement.plan.noRules': string;
+  'rateManagement.plan.basePrice': string;
+  'rateManagement.plan.minNights': string;
+  'rateManagement.plan.dateFrom': string;
+  'rateManagement.plan.dateTo': string;
+  'rateManagement.plan.priority': string;
+  'rateManagement.tipo.addTitle': string;
+  'rateManagement.tipo.saveTipo': string;
+  'rateManagement.tipo.capacidad': string;
+  'rateManagement.tipo.namePlaceholder': string;
+  'rateManagement.tipo.description': string;
+  'rateManagement.tipo.optionalDesc': string;
+  'rateManagement.room.addTitle': string;
+  'rateManagement.room.saveRoom': string;
+  'rateManagement.rule.addTitle': string;
+  'rateManagement.rule.saveRule': string;
+  'rateManagement.rule.basePriceLabel': string;
+  'rateManagement.rule.minNightsLabel': string;
+  'rateManagement.rule.dateFromLabel': string;
+  'rateManagement.rule.dateToLabel': string;
+  'rateManagement.rule.dateRangeLabel': string;
+  'rateManagement.rule.priorityLabel': string;
+  'rateManagement.table.roomNumber': string;
+  'rateManagement.table.capacity': string;
+  'rateManagement.table.beds': string;
+  'rateManagement.table.actions': string;
+}
+
+export const translations: Record<LanguageCode, AdminTranslation> = {
+  en: {
+    'common.language': 'Language',
+    'common.logout': 'Logout',
+    'common.save': 'Save',
+    'common.cancel': 'Cancel',
+    'common.active': 'Active',
+    'common.saving': 'Saving...',
+    'common.retry': 'Retry',
+    'common.export': 'Export',
+    'common.filter': 'Filter',
+    'common.clearFilters': 'Clear filters',
+    'common.loading': 'Loading...',
+    'common.needHelp': 'Need Help?',
+    'common.name': 'Name',
+
+    'sidebar.dashboard': 'Dashboard',
+    'sidebar.reservations': 'Reservations',
+    'sidebar.properties': 'Properties',
+    'sidebar.guests': 'Guests',
+    'sidebar.revenue': 'Revenue',
+    'sidebar.settings': 'Settings',
+
+    'footer.copyright': '© 2026 TravelHub. All rights reserved.',
+    'footer.privacyPolicy': 'Privacy Policy',
+    'footer.termsOfService': 'Terms of Service',
+    'footer.security': 'Security',
+
+    'login.needHelp': 'Need Help?',
+    'login.title': 'Admin Portal',
+    'login.subtitle': 'Sign in to manage your hotel properties',
+    'login.email': 'Email Address',
+    'login.emailPlaceholder': 'admin@hotel.com',
+    'login.password': 'Password',
+    'login.passwordPlaceholder': 'Enter your password',
+    'login.mfaCode': 'Verification Code',
+    'login.mfaCodeHint': 'Enter the 6-digit code from your authenticator app',
+    'login.rememberMe': 'Remember me',
+    'login.setupAdmin': 'Setup Admin MFA',
+    'login.signIn': 'Sign in to Admin Portal',
+    'login.verifySignIn': 'Verify & Sign In',
+
+    'dashboard.title': 'Dashboard Overview',
+    'dashboard.subtitle': 'Monitor your hotel performance and reservations',
+    'dashboard.period.last30': 'Last 30 days',
+    'dashboard.period.last7': 'Last 7 days',
+    'dashboard.period.last90': 'Last 90 days',
+    'dashboard.period.thisYear': 'This year',
+    'dashboard.kpi.totalReservations': 'Total Reservations',
+    'dashboard.kpi.fromLastMonth': '+142 from last month',
+    'dashboard.kpi.monthlyRevenue': 'Monthly Revenue',
+    'dashboard.kpi.fromLastMonthRevenue': '+$6,850 from last month',
+    'dashboard.kpi.occupancyRate': 'Occupancy Rate',
+    'dashboard.kpi.aboveAverage': 'Above industry average',
+    'dashboard.kpi.pendingConfirmations': 'Pending Confirmations',
+    'dashboard.kpi.awaitingApproval': 'Awaiting approval',
+    'dashboard.kpi.needsAttention': 'Needs attention',
+    'dashboard.revenue.title': 'Revenue Overview',
+    'dashboard.revenue.subtitle': 'Monthly revenue performance',
+    'dashboard.revenue.monthly': 'Monthly',
+    'dashboard.revenue.weekly': 'Weekly',
+    'dashboard.revenue.daily': 'Daily',
+    'dashboard.recent.title': 'Recent Reservations',
+    'dashboard.recent.subtitle': 'Latest booking activity',
+    'dashboard.recent.viewAll': 'View All',
+    'dashboard.table.guest': 'Guest',
+    'dashboard.table.property': 'Property',
+    'dashboard.table.checkIn': 'Check-in',
+    'dashboard.table.checkOut': 'Check-out',
+    'dashboard.table.amount': 'Amount',
+    'dashboard.table.status': 'Status',
+
+    'reservations.title': 'All Reservations',
+    'reservations.subtitle': 'Manage and monitor all hotel reservations',
+    'reservations.filter.bookingCode': 'Booking Code',
+    'reservations.filter.searchCode': 'Search code...',
+    'reservations.filter.checkInFrom': 'Check-in From',
+    'reservations.filter.checkInTo': 'Check-in To',
+    'reservations.filter.status': 'Status',
+    'reservations.filter.allStatus': 'All Status',
+    'reservations.filter.roomType': 'Room Type',
+    'reservations.filter.roomTypePlaceholder': 'e.g. Suite',
+    'reservations.stats.total': 'Total Reservations',
+    'reservations.stats.confirmed': 'Confirmed',
+    'reservations.stats.pending': 'Pending',
+    'reservations.stats.cancelledRejected': 'Cancelled / Rejected',
+    'reservations.list.title': 'Reservations List',
+    'reservations.list.subtitle': 'Complete list of all reservations',
+    'reservations.list.loading': 'Loading reservations…',
+    'reservations.list.noFound': 'No reservations found',
+    'reservations.list.noFoundHint': 'Try adjusting your filters or check back later.',
+    'reservations.table.id': 'ID',
+    'reservations.table.guestId': 'Guest ID',
+    'reservations.table.property': 'Property',
+    'reservations.table.checkIn': 'Check-in',
+    'reservations.table.checkOut': 'Check-out',
+    'reservations.table.nights': 'Nights',
+    'reservations.table.amount': 'Amount',
+    'reservations.table.status': 'Status',
+    'reservations.pagination.showing': 'Showing',
+    'reservations.pagination.to': 'to',
+    'reservations.pagination.of': 'of',
+    'reservations.pagination.results': 'reservations',
+    'reservations.perPage': 'per page',
+
+    'rateManagement.title': 'Room & Rate Management',
+    'rateManagement.subtitle': 'Manage rooms, rates, discounts, and cancellation policies',
+    'rateManagement.rateHistory': 'Rate History',
+    'rateManagement.addRoomType': 'Add Room Type',
+    'rateManagement.selectProperty': 'Select Property',
+    'rateManagement.loadingHotels': 'Loading hotels...',
+    'rateManagement.noHotels': 'No hotels assigned to your account. Contact a super admin.',
+    'rateManagement.rooms': 'Rooms',
+    'rateManagement.noRooms': 'No rooms yet for this type. Add one above.',
+    'rateManagement.capacity': 'Capacity',
+    'rateManagement.beds': 'Beds',
+    'rateManagement.addRoom': 'Add Room',
+    'rateManagement.roomNumber': 'Room #',
+    'rateManagement.ratePlans': 'Rate Plans',
+    'rateManagement.addPlan': 'Add Plan',
+    'rateManagement.addRule': 'Add Rule',
+    'rateManagement.currencyNote': 'All plans are stored in USD',
+    'rateManagement.cancellationPolicy': 'Cancellation Policy',
+    'rateManagement.policy.flexible': 'Flexible',
+    'rateManagement.policy.flexibleDesc': 'Free cancellation 24h before',
+    'rateManagement.policy.moderate': 'Moderate',
+    'rateManagement.policy.moderateDesc': 'Free cancellation 7 days before',
+    'rateManagement.policy.strict': 'Strict',
+    'rateManagement.policy.strictDesc': 'Non-refundable',
+    'rateManagement.noRatePlans': 'No rate plans yet. Add one above.',
+    'rateManagement.plan.name': 'Plan Name *',
+    'rateManagement.plan.namePlaceholder': 'e.g. Standard, Weekday Special',
+    'rateManagement.plan.description': 'Description',
+    'rateManagement.plan.descPlaceholder': 'Optional',
+    'rateManagement.plan.currency': 'Currency',
+    'rateManagement.plan.addTitle': 'Add Rate Plan',
+    'rateManagement.plan.saveTitle': 'Save Plan',
+    'rateManagement.plan.rules': 'Pricing Rules',
+    'rateManagement.plan.noRules': 'No pricing rules yet. Add one above.',
+    'rateManagement.plan.basePrice': 'Base Price / Night ($)',
+    'rateManagement.plan.minNights': 'Min Nights',
+    'rateManagement.plan.dateFrom': 'Date From',
+    'rateManagement.plan.dateTo': 'Date To',
+    'rateManagement.plan.priority': 'Priority',
+    'rateManagement.tipo.addTitle': 'Add Room Type',
+    'rateManagement.tipo.saveTipo': 'Save Room Type',
+    'rateManagement.tipo.capacidad': 'Capacity *',
+    'rateManagement.tipo.namePlaceholder': 'e.g. Deluxe Suite',
+    'rateManagement.tipo.description': 'Description',
+    'rateManagement.tipo.optionalDesc': 'Optional description',
+    'rateManagement.room.addTitle': 'Add Room',
+    'rateManagement.room.saveRoom': 'Save Room',
+    'rateManagement.rule.addTitle': 'Add Pricing Rule',
+    'rateManagement.rule.saveRule': 'Save Rule',
+    'rateManagement.rule.basePriceLabel': 'Base Price / Night ($) *',
+    'rateManagement.rule.minNightsLabel': 'Min Nights',
+    'rateManagement.rule.dateFromLabel': 'Date From',
+    'rateManagement.rule.dateToLabel': 'Date To',
+    'rateManagement.rule.dateRangeLabel': 'Date Range',
+    'rateManagement.rule.priorityLabel': 'Priority',
+    'rateManagement.table.roomNumber': 'Room #',
+    'rateManagement.table.capacity': 'Capacity',
+    'rateManagement.table.beds': 'Beds',
+    'rateManagement.table.actions': 'Actions',
+  },
+
+  es: {
+    'common.language': 'Idioma',
+    'common.logout': 'Cerrar sesión',
+    'common.save': 'Guardar',
+    'common.cancel': 'Cancelar',
+    'common.active': 'Activo',
+    'common.saving': 'Guardando...',
+    'common.retry': 'Reintentar',
+    'common.export': 'Exportar',
+    'common.filter': 'Filtrar',
+    'common.clearFilters': 'Limpiar filtros',
+    'common.loading': 'Cargando...',
+    'common.needHelp': '¿Necesitas ayuda?',
+    'common.name': 'Nombre',
+
+    'sidebar.dashboard': 'Panel',
+    'sidebar.reservations': 'Reservas',
+    'sidebar.properties': 'Propiedades',
+    'sidebar.guests': 'Huéspedes',
+    'sidebar.revenue': 'Ingresos',
+    'sidebar.settings': 'Configuración',
+
+    'footer.copyright': '© 2026 TravelHub. Todos los derechos reservados.',
+    'footer.privacyPolicy': 'Política de privacidad',
+    'footer.termsOfService': 'Términos de servicio',
+    'footer.security': 'Seguridad',
+
+    'login.needHelp': '¿Necesitas ayuda?',
+    'login.title': 'Portal Admin',
+    'login.subtitle': 'Inicia sesión para gestionar tus hoteles',
+    'login.email': 'Correo electrónico',
+    'login.emailPlaceholder': 'admin@hotel.com',
+    'login.password': 'Contraseña',
+    'login.passwordPlaceholder': 'Ingresa tu contraseña',
+    'login.mfaCode': 'Código de verificación',
+    'login.mfaCodeHint': 'Ingresa el código de 6 dígitos de tu app de autenticación',
+    'login.rememberMe': 'Recordarme',
+    'login.setupAdmin': 'Configurar MFA de Admin',
+    'login.signIn': 'Ingresar al Portal Admin',
+    'login.verifySignIn': 'Verificar e ingresar',
+
+    'dashboard.title': 'Resumen del Panel',
+    'dashboard.subtitle': 'Monitorea el rendimiento de tu hotel y las reservas',
+    'dashboard.period.last30': 'Últimos 30 días',
+    'dashboard.period.last7': 'Últimos 7 días',
+    'dashboard.period.last90': 'Últimos 90 días',
+    'dashboard.period.thisYear': 'Este año',
+    'dashboard.kpi.totalReservations': 'Total de reservas',
+    'dashboard.kpi.fromLastMonth': '+142 desde el mes pasado',
+    'dashboard.kpi.monthlyRevenue': 'Ingresos mensuales',
+    'dashboard.kpi.fromLastMonthRevenue': '+$6,850 desde el mes pasado',
+    'dashboard.kpi.occupancyRate': 'Tasa de ocupación',
+    'dashboard.kpi.aboveAverage': 'Por encima del promedio',
+    'dashboard.kpi.pendingConfirmations': 'Confirmaciones pendientes',
+    'dashboard.kpi.awaitingApproval': 'Esperando aprobación',
+    'dashboard.kpi.needsAttention': 'Requiere atención',
+    'dashboard.revenue.title': 'Resumen de ingresos',
+    'dashboard.revenue.subtitle': 'Rendimiento mensual de ingresos',
+    'dashboard.revenue.monthly': 'Mensual',
+    'dashboard.revenue.weekly': 'Semanal',
+    'dashboard.revenue.daily': 'Diario',
+    'dashboard.recent.title': 'Reservas recientes',
+    'dashboard.recent.subtitle': 'Última actividad de reservas',
+    'dashboard.recent.viewAll': 'Ver todas',
+    'dashboard.table.guest': 'Huésped',
+    'dashboard.table.property': 'Propiedad',
+    'dashboard.table.checkIn': 'Entrada',
+    'dashboard.table.checkOut': 'Salida',
+    'dashboard.table.amount': 'Monto',
+    'dashboard.table.status': 'Estado',
+
+    'reservations.title': 'Todas las reservas',
+    'reservations.subtitle': 'Gestiona y monitorea todas las reservas del hotel',
+    'reservations.filter.bookingCode': 'Código de reserva',
+    'reservations.filter.searchCode': 'Buscar código...',
+    'reservations.filter.checkInFrom': 'Entrada desde',
+    'reservations.filter.checkInTo': 'Entrada hasta',
+    'reservations.filter.status': 'Estado',
+    'reservations.filter.allStatus': 'Todos los estados',
+    'reservations.filter.roomType': 'Tipo de habitación',
+    'reservations.filter.roomTypePlaceholder': 'Ej. Suite',
+    'reservations.stats.total': 'Total de reservas',
+    'reservations.stats.confirmed': 'Confirmadas',
+    'reservations.stats.pending': 'Pendientes',
+    'reservations.stats.cancelledRejected': 'Canceladas / Rechazadas',
+    'reservations.list.title': 'Lista de reservas',
+    'reservations.list.subtitle': 'Lista completa de todas las reservas',
+    'reservations.list.loading': 'Cargando reservas…',
+    'reservations.list.noFound': 'No se encontraron reservas',
+    'reservations.list.noFoundHint': 'Intenta ajustar los filtros o vuelve más tarde.',
+    'reservations.table.id': 'ID',
+    'reservations.table.guestId': 'ID Huésped',
+    'reservations.table.property': 'Propiedad',
+    'reservations.table.checkIn': 'Entrada',
+    'reservations.table.checkOut': 'Salida',
+    'reservations.table.nights': 'Noches',
+    'reservations.table.amount': 'Monto',
+    'reservations.table.status': 'Estado',
+    'reservations.pagination.showing': 'Mostrando',
+    'reservations.pagination.to': 'a',
+    'reservations.pagination.of': 'de',
+    'reservations.pagination.results': 'reservas',
+    'reservations.perPage': 'por página',
+
+    'rateManagement.title': 'Gestión de habitaciones y tarifas',
+    'rateManagement.subtitle':
+      'Gestiona habitaciones, tarifas, descuentos y políticas de cancelación',
+    'rateManagement.rateHistory': 'Historial de tarifas',
+    'rateManagement.addRoomType': 'Agregar tipo de habitación',
+    'rateManagement.selectProperty': 'Seleccionar propiedad',
+    'rateManagement.loadingHotels': 'Cargando hoteles...',
+    'rateManagement.noHotels': 'No tienes hoteles asignados. Contacta a un super administrador.',
+    'rateManagement.rooms': 'Habitaciones',
+    'rateManagement.noRooms': 'Aún no hay habitaciones para este tipo. Agrega una arriba.',
+    'rateManagement.capacity': 'Capacidad',
+    'rateManagement.beds': 'Camas',
+    'rateManagement.addRoom': 'Agregar habitación',
+    'rateManagement.roomNumber': 'Hab. #',
+    'rateManagement.ratePlans': 'Planes tarifarios',
+    'rateManagement.addPlan': 'Agregar plan',
+    'rateManagement.addRule': 'Agregar regla',
+    'rateManagement.currencyNote': 'Todos los planes se almacenan en USD',
+    'rateManagement.cancellationPolicy': 'Política de cancelación',
+    'rateManagement.policy.flexible': 'Flexible',
+    'rateManagement.policy.flexibleDesc': 'Cancelación gratuita 24h antes',
+    'rateManagement.policy.moderate': 'Moderada',
+    'rateManagement.policy.moderateDesc': 'Cancelación gratuita 7 días antes',
+    'rateManagement.policy.strict': 'Estricta',
+    'rateManagement.policy.strictDesc': 'No reembolsable',
+    'rateManagement.noRatePlans': 'Aún no hay planes tarifarios. Agrega uno arriba.',
+    'rateManagement.plan.name': 'Nombre del plan *',
+    'rateManagement.plan.namePlaceholder': 'Ej. Estándar, Especial entre semana',
+    'rateManagement.plan.description': 'Descripción',
+    'rateManagement.plan.descPlaceholder': 'Opcional',
+    'rateManagement.plan.currency': 'Moneda',
+    'rateManagement.plan.addTitle': 'Agregar plan tarifario',
+    'rateManagement.plan.saveTitle': 'Guardar plan',
+    'rateManagement.plan.rules': 'Reglas de precio',
+    'rateManagement.plan.noRules': 'Aún no hay reglas de precio. Agrega una arriba.',
+    'rateManagement.plan.basePrice': 'Precio base / noche ($)',
+    'rateManagement.plan.minNights': 'Min. noches',
+    'rateManagement.plan.dateFrom': 'Fecha desde',
+    'rateManagement.plan.dateTo': 'Fecha hasta',
+    'rateManagement.plan.priority': 'Prioridad',
+    'rateManagement.tipo.addTitle': 'Agregar tipo de habitación',
+    'rateManagement.tipo.saveTipo': 'Guardar tipo',
+    'rateManagement.tipo.capacidad': 'Capacidad *',
+    'rateManagement.tipo.namePlaceholder': 'ej. Suite Deluxe',
+    'rateManagement.tipo.description': 'Descripción',
+    'rateManagement.tipo.optionalDesc': 'Descripción opcional',
+    'rateManagement.room.addTitle': 'Agregar habitación',
+    'rateManagement.room.saveRoom': 'Guardar habitación',
+    'rateManagement.rule.addTitle': 'Agregar regla de precio',
+    'rateManagement.rule.saveRule': 'Guardar regla',
+    'rateManagement.rule.basePriceLabel': 'Precio base / noche ($) *',
+    'rateManagement.rule.minNightsLabel': 'Min. noches',
+    'rateManagement.rule.dateFromLabel': 'Fecha desde',
+    'rateManagement.rule.dateToLabel': 'Fecha hasta',
+    'rateManagement.rule.dateRangeLabel': 'Rango de fechas',
+    'rateManagement.rule.priorityLabel': 'Prioridad',
+    'rateManagement.table.roomNumber': 'Hab. #',
+    'rateManagement.table.capacity': 'Capacidad',
+    'rateManagement.table.beds': 'Camas',
+    'rateManagement.table.actions': 'Acciones',
+  },
+
+  pt: {
+    'common.language': 'Idioma',
+    'common.logout': 'Sair',
+    'common.save': 'Salvar',
+    'common.cancel': 'Cancelar',
+    'common.active': 'Ativo',
+    'common.saving': 'Salvando...',
+    'common.retry': 'Tentar novamente',
+    'common.export': 'Exportar',
+    'common.filter': 'Filtrar',
+    'common.clearFilters': 'Limpar filtros',
+    'common.loading': 'Carregando...',
+    'common.needHelp': 'Precisa de ajuda?',
+    'common.name': 'Nome',
+
+    'sidebar.dashboard': 'Painel',
+    'sidebar.reservations': 'Reservas',
+    'sidebar.properties': 'Propriedades',
+    'sidebar.guests': 'Hóspedes',
+    'sidebar.revenue': 'Receita',
+    'sidebar.settings': 'Configurações',
+
+    'footer.copyright': '© 2026 TravelHub. Todos os direitos reservados.',
+    'footer.privacyPolicy': 'Política de privacidade',
+    'footer.termsOfService': 'Termos de serviço',
+    'footer.security': 'Segurança',
+
+    'login.needHelp': 'Precisa de ajuda?',
+    'login.title': 'Portal Admin',
+    'login.subtitle': 'Entre para gerenciar suas propriedades de hotel',
+    'login.email': 'Endereço de e-mail',
+    'login.emailPlaceholder': 'admin@hotel.com',
+    'login.password': 'Senha',
+    'login.passwordPlaceholder': 'Digite sua senha',
+    'login.mfaCode': 'Código de verificação',
+    'login.mfaCodeHint': 'Digite o código de 6 dígitos do seu aplicativo autenticador',
+    'login.rememberMe': 'Lembrar-me',
+    'login.setupAdmin': 'Configurar MFA Admin',
+    'login.signIn': 'Entrar no Portal Admin',
+    'login.verifySignIn': 'Verificar e entrar',
+
+    'dashboard.title': 'Visão geral do painel',
+    'dashboard.subtitle': 'Monitore o desempenho do seu hotel e as reservas',
+    'dashboard.period.last30': 'Últimos 30 dias',
+    'dashboard.period.last7': 'Últimos 7 dias',
+    'dashboard.period.last90': 'Últimos 90 dias',
+    'dashboard.period.thisYear': 'Este ano',
+    'dashboard.kpi.totalReservations': 'Total de reservas',
+    'dashboard.kpi.fromLastMonth': '+142 desde o mês passado',
+    'dashboard.kpi.monthlyRevenue': 'Receita mensal',
+    'dashboard.kpi.fromLastMonthRevenue': '+$6.850 desde o mês passado',
+    'dashboard.kpi.occupancyRate': 'Taxa de ocupação',
+    'dashboard.kpi.aboveAverage': 'Acima da média do setor',
+    'dashboard.kpi.pendingConfirmations': 'Confirmações pendentes',
+    'dashboard.kpi.awaitingApproval': 'Aguardando aprovação',
+    'dashboard.kpi.needsAttention': 'Requer atenção',
+    'dashboard.revenue.title': 'Visão geral de receita',
+    'dashboard.revenue.subtitle': 'Desempenho mensal de receita',
+    'dashboard.revenue.monthly': 'Mensal',
+    'dashboard.revenue.weekly': 'Semanal',
+    'dashboard.revenue.daily': 'Diário',
+    'dashboard.recent.title': 'Reservas recentes',
+    'dashboard.recent.subtitle': 'Última atividade de reservas',
+    'dashboard.recent.viewAll': 'Ver todas',
+    'dashboard.table.guest': 'Hóspede',
+    'dashboard.table.property': 'Propriedade',
+    'dashboard.table.checkIn': 'Check-in',
+    'dashboard.table.checkOut': 'Check-out',
+    'dashboard.table.amount': 'Valor',
+    'dashboard.table.status': 'Status',
+
+    'reservations.title': 'Todas as reservas',
+    'reservations.subtitle': 'Gerencie e monitore todas as reservas do hotel',
+    'reservations.filter.bookingCode': 'Código de reserva',
+    'reservations.filter.searchCode': 'Buscar código...',
+    'reservations.filter.checkInFrom': 'Check-in a partir de',
+    'reservations.filter.checkInTo': 'Check-in até',
+    'reservations.filter.status': 'Status',
+    'reservations.filter.allStatus': 'Todos os status',
+    'reservations.filter.roomType': 'Tipo de quarto',
+    'reservations.filter.roomTypePlaceholder': 'Ex. Suite',
+    'reservations.stats.total': 'Total de reservas',
+    'reservations.stats.confirmed': 'Confirmadas',
+    'reservations.stats.pending': 'Pendentes',
+    'reservations.stats.cancelledRejected': 'Canceladas / Rejeitadas',
+    'reservations.list.title': 'Lista de reservas',
+    'reservations.list.subtitle': 'Lista completa de todas as reservas',
+    'reservations.list.loading': 'Carregando reservas…',
+    'reservations.list.noFound': 'Nenhuma reserva encontrada',
+    'reservations.list.noFoundHint': 'Tente ajustar os filtros ou verifique mais tarde.',
+    'reservations.table.id': 'ID',
+    'reservations.table.guestId': 'ID Hóspede',
+    'reservations.table.property': 'Propriedade',
+    'reservations.table.checkIn': 'Check-in',
+    'reservations.table.checkOut': 'Check-out',
+    'reservations.table.nights': 'Noites',
+    'reservations.table.amount': 'Valor',
+    'reservations.table.status': 'Status',
+    'reservations.pagination.showing': 'Mostrando',
+    'reservations.pagination.to': 'a',
+    'reservations.pagination.of': 'de',
+    'reservations.pagination.results': 'reservas',
+    'reservations.perPage': 'por página',
+
+    'rateManagement.title': 'Gestão de quartos e tarifas',
+    'rateManagement.subtitle': 'Gerencie quartos, tarifas, descontos e políticas de cancelamento',
+    'rateManagement.rateHistory': 'Histórico de tarifas',
+    'rateManagement.addRoomType': 'Adicionar tipo de quarto',
+    'rateManagement.selectProperty': 'Selecionar propriedade',
+    'rateManagement.loadingHotels': 'Carregando hotéis...',
+    'rateManagement.noHotels': 'Nenhum hotel atribuído à sua conta. Contate um super admin.',
+    'rateManagement.rooms': 'Quartos',
+    'rateManagement.noRooms': 'Nenhum quarto ainda para este tipo. Adicione um acima.',
+    'rateManagement.capacity': 'Capacidade',
+    'rateManagement.beds': 'Camas',
+    'rateManagement.addRoom': 'Adicionar quarto',
+    'rateManagement.roomNumber': 'Quarto #',
+    'rateManagement.ratePlans': 'Planos tarifários',
+    'rateManagement.addPlan': 'Adicionar plano',
+    'rateManagement.addRule': 'Adicionar regra',
+    'rateManagement.currencyNote': 'Todos os planos são armazenados em USD',
+    'rateManagement.cancellationPolicy': 'Política de cancelamento',
+    'rateManagement.policy.flexible': 'Flexível',
+    'rateManagement.policy.flexibleDesc': 'Cancelamento grátis 24h antes',
+    'rateManagement.policy.moderate': 'Moderada',
+    'rateManagement.policy.moderateDesc': 'Cancelamento grátis 7 dias antes',
+    'rateManagement.policy.strict': 'Rígida',
+    'rateManagement.policy.strictDesc': 'Não reembolsável',
+    'rateManagement.noRatePlans': 'Nenhum plano tarifário ainda. Adicione um acima.',
+    'rateManagement.plan.name': 'Nome do plano *',
+    'rateManagement.plan.namePlaceholder': 'Ex. Padrão, Especial dias úteis',
+    'rateManagement.plan.description': 'Descrição',
+    'rateManagement.plan.descPlaceholder': 'Opcional',
+    'rateManagement.plan.currency': 'Moeda',
+    'rateManagement.plan.addTitle': 'Adicionar plano tarifário',
+    'rateManagement.plan.saveTitle': 'Salvar plano',
+    'rateManagement.plan.rules': 'Regras de preço',
+    'rateManagement.plan.noRules': 'Nenhuma regra de preço ainda. Adicione uma acima.',
+    'rateManagement.plan.basePrice': 'Preço base / noite ($)',
+    'rateManagement.plan.minNights': 'Noites mínimas',
+    'rateManagement.plan.dateFrom': 'Data de início',
+    'rateManagement.plan.dateTo': 'Data de fim',
+    'rateManagement.plan.priority': 'Prioridade',
+    'rateManagement.tipo.addTitle': 'Adicionar tipo de quarto',
+    'rateManagement.tipo.saveTipo': 'Salvar tipo',
+    'rateManagement.tipo.capacidad': 'Capacidade *',
+    'rateManagement.tipo.namePlaceholder': 'ex. Suite Deluxe',
+    'rateManagement.tipo.description': 'Descrição',
+    'rateManagement.tipo.optionalDesc': 'Descrição opcional',
+    'rateManagement.room.addTitle': 'Adicionar quarto',
+    'rateManagement.room.saveRoom': 'Salvar quarto',
+    'rateManagement.rule.addTitle': 'Adicionar regra de preço',
+    'rateManagement.rule.saveRule': 'Salvar regra',
+    'rateManagement.rule.basePriceLabel': 'Preço base / noite ($) *',
+    'rateManagement.rule.minNightsLabel': 'Noites mínimas',
+    'rateManagement.rule.dateFromLabel': 'Data de início',
+    'rateManagement.rule.dateToLabel': 'Data de fim',
+    'rateManagement.rule.dateRangeLabel': 'Intervalo de datas',
+    'rateManagement.rule.priorityLabel': 'Prioridade',
+    'rateManagement.table.roomNumber': 'Quarto #',
+    'rateManagement.table.capacity': 'Capacidade',
+    'rateManagement.table.beds': 'Camas',
+    'rateManagement.table.actions': 'Ações',
+  },
+};

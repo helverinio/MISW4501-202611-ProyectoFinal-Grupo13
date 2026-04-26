@@ -11,6 +11,8 @@ import {
   ReservationItem,
   ReservationStats,
 } from '../../../../core/models/reservations.models';
+import { I18nService } from '../../../../core/services/i18n.service';
+import { LanguageCode } from '../../../../core/i18n/translations';
 
 @Component({
   selector: 'app-reservations-page',
@@ -47,6 +49,7 @@ export class ReservationsPageComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
+    readonly i18n: I18nService,
   ) {
     this.filterForm = this.fb.group({
       codigo: [''],
@@ -68,6 +71,18 @@ export class ReservationsPageComponent implements OnInit {
 
   currentUser() {
     return this.authService.currentUser();
+  }
+
+  t(key: Parameters<I18nService['t']>[0]): string {
+    return this.i18n.t(key);
+  }
+
+  get currentLanguage() {
+    return this.i18n.currentLanguage();
+  }
+
+  setLanguage(lang: LanguageCode): void {
+    this.i18n.setLanguage(lang);
   }
 
   loadDashboard(resetPage = false): void {
