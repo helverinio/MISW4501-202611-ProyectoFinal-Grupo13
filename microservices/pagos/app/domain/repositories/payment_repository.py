@@ -34,6 +34,10 @@ class PaymentRepository(ABC):
     @abstractmethod
     def update_status_by_intent(self, payment_intent_id: str, status: str) -> Optional[Payment]:
         pass
+
+    @abstractmethod
+    def update_payment_method(self, payment_id: str, payment_method: str) -> Optional[Payment]:
+        pass
     
     @abstractmethod
     def try_lock_for_processing(self, payment_id: str) -> Optional[Payment]:

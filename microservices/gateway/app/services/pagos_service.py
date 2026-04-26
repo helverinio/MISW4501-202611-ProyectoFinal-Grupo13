@@ -34,5 +34,5 @@ class PagosService:
     def get_payment_by_reservation(self, reservation_id: str) -> Dict[str, Any]:
         return self._request('GET', f'payments/reservation/{reservation_id}')
     
-    def process_payment(self, payment_id: str) -> Dict[str, Any]:
-        return self._request('POST', f'payments/{payment_id}/process')
+    def process_payment(self, payment_id: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('POST', f'payments/{payment_id}/process', data)

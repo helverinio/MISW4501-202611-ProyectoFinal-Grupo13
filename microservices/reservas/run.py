@@ -50,6 +50,39 @@ with app.app_context():
         "CREATE INDEX IF NOT EXISTS ix_comentarios_hoteles_id_hotel_created_at "
         "ON comentarios_hoteles (id_hotel, created_at)"
     ))
+    db.session.execute(text(
+        "CREATE TABLE IF NOT EXISTS admin_hoteles ("
+        "id VARCHAR(36) PRIMARY KEY, "
+        "id_usuario VARCHAR(36) NOT NULL, "
+        "id_hotel VARCHAR(36) NOT NULL REFERENCES hoteles(id), "
+        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+        "CONSTRAINT uq_admin_hotel UNIQUE (id_usuario, id_hotel)"
+        ")"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_usuario "
+        "ON admin_hoteles (id_usuario)"
+    ))
+
+    # HU-P-22: estado 'Rechazada' + performance indexes for dashboard queries
+    db.session.execute(text(
+        "INSERT INTO estados (id, nombre, descripcion) VALUES "
+        "('f290f1ee-6c54-4b01-90e6-d701748f0857', 'Rechazada', "
+        "'La reserva fue rechazada por el administrador del hotel') "
+        "ON CONFLICT (id) DO NOTHING"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_fecha_ingreso "
+        "ON reservas (fecha_ingreso)"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_id_estado "
+        "ON reservas (id_estado)"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_hotel "
+        "ON admin_hoteles (id_hotel)"
+    ))
     db.session.commit()
 
 if __name__ == '__main__':

@@ -6,10 +6,25 @@ from app.application.use_cases import (
     GetHabitacionesByHotelUseCase, UpdateHabitacionUseCase, DeleteHabitacionUseCase
 )
 from app.infrastructure.repositories import SQLAlchemyHabitacionRepository
+from app.infrastructure.models.habitacion_model import HabitacionModel
+from app.infrastructure.models.reserva_model import ReservaModel
+from app import db
 
 
 def get_repository():
     return SQLAlchemyHabitacionRepository()
+
+
+def _hab_dict(h):
+    return {
+        'id': h.id,
+        'tipo': h.tipo,
+        'nro_habitacion': h.nro_habitacion,
+        'capacidad': h.capacidad,
+        'camas': h.camas,
+        'id_hotel': h.id_hotel,
+        'id_tipo_habitacion': h.id_tipo_habitacion,
+    }
 
 
 @api_v1_bp.route('/habitaciones', methods=['POST'])
@@ -124,10 +139,23 @@ def update_habitacion(habitacion_id, current_usuario=None):
 @api_v1_bp.route('/habitaciones/<habitacion_id>', methods=['DELETE'])
 @require_token
 def delete_habitacion(habitacion_id, current_usuario=None):
-    use_case = DeleteHabitacionUseCase(get_repository())
-    deleted = use_case.execute(habitacion_id)
-
-    if not deleted:
+    hab = HabitacionModel.query.get(habitacion_id)
+    if not hab:
         return jsonify({'error': 'Habitacion not found'}), 404
 
+    reserva_activa = ReservaModel.query.filter_by(id_habitacion=habitacion_id).first()
+    if reserva_activa:
+        return jsonify({
+            'error': 'No se puede eliminar una habitación con reservas activas.'
+        }), 409
+
+    use_case = DeleteHabitacionUseCase(get_repository())
+    use_case.execute(habitacion_id)
     return jsonify({'message': 'Habitacion deleted successfully'})
+
+
+@api_v1_bp.route('/tipos-habitacion/<tipo_id>/habitaciones', methods=['GET'])
+@require_token
+def get_habitaciones_by_tipo(tipo_id, current_usuario=None):
+    habitaciones = HabitacionModel.query.filter_by(id_tipo_habitacion=tipo_id).all()
+    return jsonify([_hab_dict(h) for h in habitaciones])

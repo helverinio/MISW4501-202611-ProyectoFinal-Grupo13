@@ -36,5 +36,6 @@ def get_payment_by_reservation(reservation_id):
 
 @api_v1_bp.route('/payments/<payment_id>/process', methods=['POST'])
 def process_payment(payment_id):
-    result = get_pagos_service().process_payment(payment_id)
+    data = request.get_json(silent=True) or {}
+    result = get_pagos_service().process_payment(payment_id, data)
     return jsonify(result['data']), result['status_code']

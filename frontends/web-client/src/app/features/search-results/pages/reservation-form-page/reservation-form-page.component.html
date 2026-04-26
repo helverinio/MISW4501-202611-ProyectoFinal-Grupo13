@@ -3,7 +3,7 @@
     <div class="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-600">
       Loading reservation data...
     </div>
-  } @else if (createdReservation()) {
+  } @else if (createdReservation() && paymentCompleted()) {
     <!-- =================== CONFIRMATION VIEW =================== -->
     <section class="mb-5">
       <div class="steps-wrap">
@@ -20,6 +20,11 @@
         <div class="step-item done">
           <span class="step-dot"><i class="fa-solid fa-check"></i></span>
           <span class="step-label">Booking</span>
+        </div>
+        <span class="step-line done"></span>
+        <div class="step-item done">
+          <span class="step-dot"><i class="fa-solid fa-check"></i></span>
+          <span class="step-label">Payment</span>
         </div>
         <span class="step-line done"></span>
         <div class="step-item done">
@@ -175,20 +180,59 @@
       </div>
 
       <!-- Confirmation email banner -->
-      <section class="bg-blue-50 border border-blue-100 rounded-xl p-4 sm:p-6 mb-6">
+      <section
+        class="rounded-xl p-4 sm:p-6 mb-6 border"
+        [class.bg-blue-50]="emailDeliveryState() !== 'failed'"
+        [class.border-blue-100]="emailDeliveryState() !== 'failed'"
+        [class.bg-red-50]="emailDeliveryState() === 'failed'"
+        [class.border-red-100]="emailDeliveryState() === 'failed'"
+      >
         <div class="flex items-start gap-3 sm:gap-4">
-          <i class="fa-solid fa-envelope text-primary text-xl sm:text-2xl flex-shrink-0 mt-0.5"></i>
+          <i
+            class="fa-solid text-xl sm:text-2xl flex-shrink-0 mt-0.5"
+            [class.fa-envelope]="emailDeliveryState() !== 'failed'"
+            [class.text-primary]="emailDeliveryState() !== 'failed'"
+            [class.fa-triangle-exclamation]="emailDeliveryState() === 'failed'"
+            [class.text-red-600]="emailDeliveryState() === 'failed'"
+          ></i>
           <div>
-            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-              {{ label('confirmationEmailSent') }}
-            </h3>
-            <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-              {{ label('confirmationEmailBody') }}
-              <span class="font-semibold text-gray-900">{{
-                reservationForm.controls.email.value
-              }}</span>
-              {{ label('confirmationEmailInbox') }}
-            </p>
+            @if (emailDeliveryState() === 'sent') {
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                {{ label('confirmationEmailSent') }}
+              </h3>
+              <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {{ label('confirmationEmailBody') }}
+                <span class="font-semibold text-gray-900">{{
+                  reservationForm.controls.email.value
+                }}</span>
+                {{ label('confirmationEmailInbox') }}
+              </p>
+            } @else if (emailDeliveryState() === 'pending') {
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                Sending confirmation email
+              </h3>
+              <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                We are sending your booking details to
+                <span class="font-semibold text-gray-900">{{
+                  reservationForm.controls.email.value
+                }}</span
+                >.
+              </p>
+            } @else {
+              <h3 class="text-base sm:text-lg font-semibold text-red-700 mb-2">
+                Could not send confirmation email
+              </h3>
+              <p class="text-sm sm:text-base text-red-700 leading-relaxed">
+                Your reservation was created, but email delivery failed for
+                <span class="font-semibold">{{ reservationForm.controls.email.value }}</span
+                >. Please verify your EmailJS template recipient and check browser console/network.
+              </p>
+              @if (emailDeliveryDetail()) {
+                <p class="text-xs text-red-600 mt-2 break-all">
+                  Error: {{ emailDeliveryDetail() }}
+                </p>
+              }
+            }
           </div>
         </div>
       </section>
@@ -279,6 +323,229 @@
         </div>
       </div>
     </div>
+  } @else if (createdReservation()) {
+    <section class="mb-5">
+      <div class="steps-wrap">
+        <div class="step-item done">
+          <span class="step-dot"><i class="fa-solid fa-check"></i></span>
+          <span class="step-label">Search</span>
+        </div>
+        <span class="step-line done"></span>
+        <div class="step-item done">
+          <span class="step-dot"><i class="fa-solid fa-check"></i></span>
+          <span class="step-label">Select</span>
+        </div>
+        <span class="step-line done"></span>
+        <div class="step-item done">
+          <span class="step-dot"><i class="fa-solid fa-check"></i></span>
+          <span class="step-label">Booking</span>
+        </div>
+        <span class="step-line"></span>
+        <div class="step-item active">
+          <span class="step-dot">4</span>
+          <span class="step-label">Payment</span>
+        </div>
+        <span class="step-line"></span>
+        <div class="step-item">
+          <span class="step-dot">5</span>
+          <span class="step-label">Confirmed</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="payment-view grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      <article
+        class="xl:col-span-8 bg-white rounded-xl border border-gray-200 p-5 sm:p-7 space-y-5"
+      >
+        <header>
+          <h2 class="text-3xl font-bold text-gray-900">Complete Your Payment</h2>
+          <p class="text-sm text-gray-500 mt-1">
+            Secure payment powered by industry-leading encryption
+          </p>
+        </header>
+
+        <div class="space-y-2">
+          <p class="text-sm font-semibold text-gray-800">Payment Method</p>
+          <div class="grid grid-cols-1 gap-3">
+            <div class="method-pill active method-pill-static">
+              <i class="fa-regular fa-credit-card"></i>
+              <span>Credit Card</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4" [formGroup]="paymentForm">
+          <label class="field-wrap">
+            <span>Card Number</span>
+            <div class="input-with-brand" [class.has-brand]="!!detectedCardBrand()">
+              <input
+                type="text"
+                formControlName="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                inputmode="numeric"
+                (input)="onCardNumberInput($event)"
+              />
+              @if (detectedCardBrand()) {
+                <span class="brand-inside-input" [attr.aria-label]="cardBrandLabel()">
+                  <i [class]="cardBrandIconClass()"></i>
+                </span>
+              }
+            </div>
+            @if (isPaymentFieldInvalid('cardNumber')) {
+              <small class="field-error">{{ paymentFieldError('cardNumber') }}</small>
+            }
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label class="field-wrap">
+              <span>Expiry Date (MM/YY)</span>
+              <input
+                type="text"
+                formControlName="expiryDate"
+                placeholder="MM/YY"
+                inputmode="numeric"
+                (input)="onExpiryDateInput($event)"
+              />
+              @if (isPaymentFieldInvalid('expiryDate')) {
+                <small class="field-error">{{ paymentFieldError('expiryDate') }}</small>
+              }
+            </label>
+            <label class="field-wrap">
+              <span>CVV</span>
+              <input
+                type="text"
+                formControlName="cvv"
+                placeholder="123"
+                inputmode="numeric"
+                maxlength="3"
+                (input)="onCvvInput($event)"
+              />
+              @if (isPaymentFieldInvalid('cvv')) {
+                <small class="field-error">{{ paymentFieldError('cvv') }}</small>
+              }
+            </label>
+          </div>
+          <label class="field-wrap">
+            <span>Cardholder Name</span>
+            <input type="text" formControlName="cardholderName" placeholder="John Doe" />
+            @if (isPaymentFieldInvalid('cardholderName')) {
+              <small class="field-error">{{ paymentFieldError('cardholderName') }}</small>
+            }
+          </label>
+          <label class="field-wrap">
+            <span>Billing Address</span>
+            <input type="text" formControlName="billingAddress" placeholder="123 Main Street" />
+            @if (isPaymentFieldInvalid('billingAddress')) {
+              <small class="field-error">{{ paymentFieldError('billingAddress') }}</small>
+            }
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label class="field-wrap">
+              <span>City</span>
+              <input type="text" formControlName="city" placeholder="Bogota" />
+              @if (isPaymentFieldInvalid('city')) {
+                <small class="field-error">{{ paymentFieldError('city') }}</small>
+              }
+            </label>
+            <label class="field-wrap">
+              <span>Postal Code</span>
+              <input type="text" formControlName="postalCode" placeholder="110111" />
+              @if (isPaymentFieldInvalid('postalCode')) {
+                <small class="field-error">{{ paymentFieldError('postalCode') }}</small>
+              }
+            </label>
+          </div>
+        </div>
+
+        <div class="payment-security-box rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <p class="text-sm font-semibold text-emerald-800 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved"></i>
+            Your payment is secure
+          </p>
+          <p class="text-sm text-emerald-700 mt-1">
+            We use advanced fraud prevention and 256-bit SSL encryption to protect your information.
+          </p>
+        </div>
+
+        @if (paymentStatusMessage()) {
+          <div class="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+            {{ paymentStatusMessage() }}
+          </div>
+        }
+
+        @if (paymentError()) {
+          <div class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {{ paymentError() }}
+          </div>
+        }
+      </article>
+
+      <aside class="xl:col-span-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Booking Summary</h3>
+
+        <div class="space-y-2 text-sm pb-4 border-b border-gray-100">
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ label('checkIn') }}</span>
+            <span class="text-gray-900 font-medium">{{
+              formatDate(createdReservation()!.fecha_ingreso)
+            }}</span>
+          </div>
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ label('checkOut') }}</span>
+            <span class="text-gray-900 font-medium">{{
+              formatDate(createdReservation()!.fecha_salida)
+            }}</span>
+          </div>
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ label('guests') }}</span>
+            <span class="text-gray-900 font-medium">{{ createdReservation()!.nro_personas }}</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-sm py-4 border-b border-gray-100">
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ nights() }} x {{ formatPrice(pricePerNight()) }}</span>
+            <span>{{ formatPrice(totalPrice()) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-emerald-600">
+            <span>{{ label('earlyBirdDiscount') }}</span>
+            <span>-{{ formatPrice(discountAmount()) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ label('taxesFees') }}</span>
+            <span>{{ formatPrice(taxesAmount()) }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between py-4">
+          <span class="text-xl font-bold text-gray-900">Total</span>
+          <span class="text-3xl font-bold text-gray-900">{{ formatPrice(grandTotal()) }}</span>
+        </div>
+
+        <div class="mb-4 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700">
+          Payment status: <strong>{{ paymentStatusLabel() }}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="w-full px-4 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          [disabled]="processingPayment() || paymentCompleted() || paymentForm.invalid"
+          (click)="confirmPayment()"
+        >
+          {{
+            processingPayment()
+              ? 'Processing payment...'
+              : canRetryPayment()
+                ? 'Retry Payment'
+                : 'Complete Payment - ' + formatPrice(grandTotal())
+          }}
+        </button>
+
+        <div class="mt-3 flex items-center justify-center gap-4 text-xs text-gray-500">
+          <span><i class="fa-solid fa-lock"></i> SSL Secured</span>
+          <span><i class="fa-solid fa-shield-halved"></i> PCI Compliant</span>
+        </div>
+      </aside>
+    </section>
   } @else {
     <section class="mb-5">
       <div class="steps-wrap">
@@ -300,6 +567,11 @@
         <div class="step-item">
           <span class="step-dot">4</span>
           <span class="step-label">Payment</span>
+        </div>
+        <span class="step-line"></span>
+        <div class="step-item">
+          <span class="step-dot">5</span>
+          <span class="step-label">Confirmed</span>
         </div>
       </div>
     </section>

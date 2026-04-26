@@ -12,3 +12,6 @@ from app.api.v1 import reservas
 from app.api.v1 import pagos
 from app.api.v1 import notificaciones
 from app.api.v1 import usuarios
+from app.api.v1 import admin_hoteles
+from app.api.v1 import tipos_habitacion
+from app.api.v1 import planes_tarifarios
