@@ -47,11 +47,7 @@ export class SearchHotelsService {
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
-  getHotelComments(
-    hotelId: string,
-    page = 1,
-    perPage = 3,
-  ): Observable<HotelCommentsResponse> {
+  getHotelComments(hotelId: string, page = 1, perPage = 3): Observable<HotelCommentsResponse> {
     return this.http
       .get<HotelCommentsResponse>(
         `${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios?page=${page}&per_page=${perPage}`,

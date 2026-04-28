@@ -521,7 +521,9 @@ export class HotelDetailsPageComponent {
     forkJoin({
       hotel: this.searchHotelsService.getHotelById(hotelId),
       rooms: this.searchHotelsService.getRoomsByHotelId(hotelId),
-      comments: this.searchHotelsService.getHotelComments(hotelId, 1, 3).pipe(catchError(() => of(null))),
+      comments: this.searchHotelsService
+        .getHotelComments(hotelId, 1, 3)
+        .pipe(catchError(() => of(null))),
     })
       .pipe(
         switchMap(({ hotel, rooms, comments }) => {

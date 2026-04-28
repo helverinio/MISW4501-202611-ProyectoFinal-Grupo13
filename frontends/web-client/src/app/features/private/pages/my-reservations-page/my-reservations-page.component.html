@@ -151,7 +151,11 @@
                   {{ label('viewDetails') }}
                 </button>
 
-                @if (reservation.status === 'completed' && reservation.hotelId && !reservation.reviewSubmitted) {
+                @if (
+                  reservation.status === 'completed' &&
+                  reservation.hotelId &&
+                  !reservation.reviewSubmitted
+                ) {
                   <button
                     type="button"
                     class="px-4 py-2 rounded-lg bg-amber-100 text-amber-800 text-sm font-medium hover:bg-amber-200 transition-colors"
@@ -231,7 +235,9 @@
 
   @if (reviewModalReservation(); as reviewReservation) {
     <div class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-      <article class="w-full max-w-xl bg-white rounded-2xl border border-gray-200 shadow-xl p-5 sm:p-6">
+      <article
+        class="w-full max-w-xl bg-white rounded-2xl border border-gray-200 shadow-xl p-5 sm:p-6"
+      >
         <div class="flex items-start justify-between gap-4 mb-4">
           <div>
             <h2 class="text-xl font-semibold text-gray-900">{{ label('reviewStayTitle') }}</h2>
@@ -264,7 +270,9 @@
         </div>
 
         <div class="mb-4">
-          <label class="text-sm font-medium text-gray-800 block mb-2">{{ label('reviewCommentLabel') }}</label>
+          <label class="text-sm font-medium text-gray-800 block mb-2">{{
+            label('reviewCommentLabel')
+          }}</label>
           <textarea
             rows="4"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"

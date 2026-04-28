@@ -276,7 +276,10 @@ export class ReservationService {
     payload: CreateHotelCommentPayload,
   ): Observable<CreateHotelCommentResponse> {
     return this.http
-      .post<CreateHotelCommentResponse>(`${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios`, payload)
+      .post<CreateHotelCommentResponse>(
+        `${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios`,
+        payload,
+      )
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 }

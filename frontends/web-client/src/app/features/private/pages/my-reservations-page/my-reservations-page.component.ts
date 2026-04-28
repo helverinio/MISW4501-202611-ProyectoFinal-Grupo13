@@ -148,17 +148,17 @@ export class MyReservationsPageComponent {
       | 'confirmed'
       | 'pending'
       | 'completed'
-        | 'cancelledStatus'
-        | 'rateStay'
-        | 'reviewStayTitle'
-        | 'reviewRatingLabel'
-        | 'reviewCommentLabel'
-        | 'reviewCommentPlaceholder'
-        | 'submitReview'
-        | 'close'
-        | 'reviewSuccess'
-        | 'reviewRequiredError'
-        | 'reviewGenericError',
+      | 'cancelledStatus'
+      | 'rateStay'
+      | 'reviewStayTitle'
+      | 'reviewRatingLabel'
+      | 'reviewCommentLabel'
+      | 'reviewCommentPlaceholder'
+      | 'submitReview'
+      | 'close'
+      | 'reviewSuccess'
+      | 'reviewRequiredError'
+      | 'reviewGenericError',
   ): string {
     const lang = this.currentLanguage();
     const dictionary = {
