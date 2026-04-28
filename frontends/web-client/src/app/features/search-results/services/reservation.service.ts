@@ -152,6 +152,29 @@ export interface NotificacionResponse {
   id_reserva: string;
 }
 
+export interface CreateHotelCommentPayload {
+  id_reserva: string;
+  rating: number;
+  comentario?: string | null;
+  id_usuario?: string;
+}
+
+export interface CreateHotelCommentResponse {
+  id: string;
+  id_hotel: string;
+  id_usuario: string;
+  id_reserva: string;
+  comentario: string | null;
+  rating: number;
+  created_at: string;
+  updated_at: string;
+  rating_hotel?: {
+    rating_promedio: number;
+    cantidad_ratings: number;
+    cantidad_comentarios: number;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
   constructor(private readonly http: HttpClient) {}
@@ -245,6 +268,15 @@ export class ReservationService {
   deleteReserva(reservaId: string): Observable<unknown> {
     return this.http
       .delete(`${environment.apiBaseUrl}/reservas/${reservaId}`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  createHotelComment(
+    hotelId: string,
+    payload: CreateHotelCommentPayload,
+  ): Observable<CreateHotelCommentResponse> {
+    return this.http
+      .post<CreateHotelCommentResponse>(`${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios`, payload)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 }
