@@ -5,6 +5,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { AdminLoginStep1Response } from '../../../../core/models/auth.models';
+import { I18nService } from '../../../../core/services/i18n.service';
+import { LanguageCode } from '../../../../core/i18n/translations';
 
 @Component({
   selector: 'app-login-page',
@@ -28,6 +30,7 @@ export class LoginPageComponent {
     private readonly route: ActivatedRoute,
     private readonly ngZone: NgZone,
     private readonly cdr: ChangeDetectorRef,
+    readonly i18n: I18nService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -104,5 +107,17 @@ export class LoginPageComponent {
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  t(key: Parameters<I18nService['t']>[0]): string {
+    return this.i18n.t(key);
+  }
+
+  get currentLanguage() {
+    return this.i18n.currentLanguage();
+  }
+
+  setLanguage(lang: LanguageCode): void {
+    this.i18n.setLanguage(lang);
   }
 }

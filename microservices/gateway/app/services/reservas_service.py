@@ -143,6 +143,9 @@ class ReservasService:
     def delete_habitacion(self, habitacion_id: str) -> Dict[str, Any]:
         return self._request('DELETE', f'habitaciones/{habitacion_id}')
 
+    def get_habitaciones_by_tipo(self, tipo_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'tipos-habitacion/{tipo_id}/habitaciones')
+
     def get_tarifas_by_habitacion(self, habitacion_id: str) -> Dict[str, Any]:
         return self._request('GET', f'habitaciones/{habitacion_id}/tarifas')
 
@@ -267,3 +270,67 @@ class ReservasService:
 
     def payment_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'payments/webhook', data)
+
+    # Admin-Hotel assignment
+    def get_mis_hoteles(self) -> Dict[str, Any]:
+        return self._request('GET', 'admin/mis-hoteles')
+
+    def asignar_hotel(self, hotel_id: str) -> Dict[str, Any]:
+        return self._request('POST', f'admin/hoteles/{hotel_id}/asignar')
+
+    def desasignar_hotel(self, hotel_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'admin/hoteles/{hotel_id}/desasignar')
+
+    def get_admin_reservas_dashboard(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/reservas/dashboard', params=params)
+
+    def update_reserva_estado(self, reserva_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('PUT', f'admin/reservas/{reserva_id}/estado', data)
+
+    # Tipos habitacion
+    def get_tipos_habitacion_by_hotel(self, hotel_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'hoteles/{hotel_id}/tipos-habitacion')
+
+    def create_tipo_habitacion(self, hotel_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'hoteles/{hotel_id}/tipos-habitacion', data)
+
+    def get_tipo_habitacion(self, tipo_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'tipos-habitacion/{tipo_id}')
+
+    def update_tipo_habitacion(self, tipo_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('PUT', f'tipos-habitacion/{tipo_id}', data)
+
+    def delete_tipo_habitacion(self, tipo_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'tipos-habitacion/{tipo_id}')
+
+    # Planes tarifarios
+    def get_planes_by_tipo(self, tipo_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'tipos-habitacion/{tipo_id}/planes-tarifarios')
+
+    def create_plan_tarifario(self, tipo_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'tipos-habitacion/{tipo_id}/planes-tarifarios', data)
+
+    def get_plan_tarifario(self, plan_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'planes-tarifarios/{plan_id}')
+
+    def update_plan_tarifario(self, plan_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('PUT', f'planes-tarifarios/{plan_id}', data)
+
+    def delete_plan_tarifario(self, plan_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'planes-tarifarios/{plan_id}')
+
+    # Reglas tarifarias
+    def get_reglas_by_plan(self, plan_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'planes-tarifarios/{plan_id}/reglas')
+
+    def create_regla_tarifaria(self, plan_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'planes-tarifarios/{plan_id}/reglas', data)
+
+    def get_regla_tarifaria(self, regla_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'reglas-tarifarias/{regla_id}')
+
+    def update_regla_tarifaria(self, regla_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('PUT', f'reglas-tarifarias/{regla_id}', data)
+
+    def delete_regla_tarifaria(self, regla_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'reglas-tarifarias/{regla_id}')

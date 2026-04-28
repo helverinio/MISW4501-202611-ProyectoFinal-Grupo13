@@ -205,6 +205,15 @@ def _execute_reservation_creation(
     if user_hold:
         release_hold_use_case = ReleaseRoomHoldUseCase(room_hold_repository)
         release_hold_use_case.execute(user_hold.id)
+        # Invalidate Redis cache so the next hold request creates a fresh DB record
+        _lock_svc = get_redis_lock_service()
+        if _lock_svc:
+            _lock_svc.invalidate_room_hold_cache(
+                id_habitacion,
+                fecha_ingreso.strftime('%Y-%m-%d'),
+                fecha_salida.strftime('%Y-%m-%d'),
+                user_hold.id,
+            )
         current_app.logger.info(f"[RESERVAS] Hold {user_hold.id} released after reservation creation")
     
     pagos_service = get_pagos_service()

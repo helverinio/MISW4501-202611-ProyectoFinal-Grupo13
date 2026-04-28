@@ -79,6 +79,12 @@ def get_hold(hold_id):
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/tipos-habitacion/<tipo_id>/habitaciones', methods=['GET'])
+def get_habitaciones_by_tipo(tipo_id):
+    result = get_service().get_habitaciones_by_tipo(tipo_id)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/holds/<hold_id>', methods=['DELETE'])
 def release_hold(hold_id):
     result = get_service().release_hold(hold_id)

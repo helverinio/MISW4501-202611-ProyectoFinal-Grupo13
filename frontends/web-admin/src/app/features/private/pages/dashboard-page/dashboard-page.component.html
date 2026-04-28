@@ -17,6 +17,42 @@
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <!-- Language selector -->
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              (click)="setLanguage('es')"
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              ES
+            </button>
+            <button
+              type="button"
+              (click)="setLanguage('en')"
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              (click)="setLanguage('pt')"
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
+              PT
+            </button>
+          </div>
           <button
             class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
             type="button"
@@ -50,42 +86,42 @@
           class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
         >
           <i class="fas fa-chart-line w-5 mr-3"></i>
-          Dashboard
+          {{ t('sidebar.dashboard') }}
         </a>
         <a
-          href="#"
+          [routerLink]="['/reservations']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-calendar-check w-5 mr-3"></i>
-          Reservations
+          {{ t('sidebar.reservations') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-hotel w-5 mr-3"></i>
-          Properties
+          {{ t('sidebar.properties') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-users w-5 mr-3"></i>
-          Guests
+          {{ t('sidebar.guests') }}
         </a>
         <a
           href="#"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
-          Revenue
+          {{ t('sidebar.revenue') }}
         </a>
         <a
-          href="#"
+          [routerLink]="['/room-rate-management']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-cog w-5 mr-3"></i>
-          Settings
+          {{ t('sidebar.settings') }}
         </a>
         <div class="pt-4 mt-4 border-t border-gray-100">
           <button
@@ -94,7 +130,7 @@
             (click)="logout()"
           >
             <i class="fas fa-sign-out-alt w-5 mr-3"></i>
-            Logout
+            {{ t('common.logout') }}
           </button>
         </div>
       </nav>
@@ -104,24 +140,26 @@
       <div id="dashboard-header" class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
-            <p class="text-gray-600 text-sm">Monitor your hotel performance and reservations</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {{ t('dashboard.title') }}
+            </h1>
+            <p class="text-gray-600 text-sm">{{ t('dashboard.subtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
             <select
               class="px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option>Last 30 days</option>
-              <option>Last 7 days</option>
-              <option>Last 90 days</option>
-              <option>This year</option>
+              <option>{{ t('dashboard.period.last30') }}</option>
+              <option>{{ t('dashboard.period.last7') }}</option>
+              <option>{{ t('dashboard.period.last90') }}</option>
+              <option>{{ t('dashboard.period.thisYear') }}</option>
             </select>
             <button
               class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
               type="button"
             >
               <i class="fas fa-download mr-2"></i>
-              Export
+              {{ t('common.export') }}
             </button>
           </div>
         </div>
@@ -143,9 +181,11 @@
               <i class="fas fa-arrow-up mr-1"></i>12%
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Total Reservations</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('dashboard.kpi.totalReservations') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">1,248</p>
-          <p class="text-xs text-gray-500">+142 from last month</p>
+          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonth') }}</p>
         </div>
 
         <div
@@ -160,9 +200,11 @@
               <i class="fas fa-arrow-up mr-1"></i>8.5%
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Monthly Revenue</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('dashboard.kpi.monthlyRevenue') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">$87,420</p>
-          <p class="text-xs text-gray-500">+$6,850 from last month</p>
+          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonthRevenue') }}</p>
         </div>
 
         <div
@@ -177,9 +219,11 @@
               <i class="fas fa-arrow-up mr-1"></i>5.2%
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Occupancy Rate</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('dashboard.kpi.occupancyRate') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">78.5%</p>
-          <p class="text-xs text-gray-500">Above industry average</p>
+          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.aboveAverage') }}</p>
         </div>
 
         <div
@@ -190,13 +234,15 @@
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-clock text-orange-600 text-xl"></i>
             </div>
-            <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full"
-              >Needs attention</span
-            >
+            <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">{{
+              t('dashboard.kpi.needsAttention')
+            }}</span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Pending Confirmations</h3>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('dashboard.kpi.pendingConfirmations') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">24</p>
-          <p class="text-xs text-gray-500">Awaiting approval</p>
+          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.awaitingApproval') }}</p>
         </div>
       </div>
 
@@ -206,27 +252,27 @@
       >
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-1">Revenue Overview</h2>
-            <p class="text-sm text-gray-600">Monthly revenue performance</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">{{ t('dashboard.revenue.title') }}</h2>
+            <p class="text-sm text-gray-600">{{ t('dashboard.revenue.subtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex space-x-2">
             <button
               class="px-3 py-1.5 text-xs font-medium text-white bg-primary-600 rounded-lg"
               type="button"
             >
-              Monthly
+              {{ t('dashboard.revenue.monthly') }}
             </button>
             <button
               class="px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               type="button"
             >
-              Weekly
+              {{ t('dashboard.revenue.weekly') }}
             </button>
             <button
               class="px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               type="button"
             >
-              Daily
+              {{ t('dashboard.revenue.daily') }}
             </button>
           </div>
         </div>
@@ -239,14 +285,14 @@
       >
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-1">Recent Reservations</h2>
-            <p class="text-sm text-gray-600">Latest booking activity</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">{{ t('dashboard.recent.title') }}</h2>
+            <p class="text-sm text-gray-600">{{ t('dashboard.recent.subtitle') }}</p>
           </div>
           <button
             class="mt-4 sm:mt-0 px-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
             type="button"
           >
-            View All
+            {{ t('dashboard.recent.viewAll') }}
             <i class="fas fa-arrow-right ml-2"></i>
           </button>
         </div>
@@ -258,32 +304,32 @@
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Guest
+                  {{ t('dashboard.table.guest') }}
                 </th>
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell"
                 >
-                  Property
+                  {{ t('dashboard.table.property') }}
                 </th>
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Check-in
+                  {{ t('dashboard.table.checkIn') }}
                 </th>
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell"
                 >
-                  Check-out
+                  {{ t('dashboard.table.checkOut') }}
                 </th>
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Amount
+                  {{ t('dashboard.table.amount') }}
                 </th>
                 <th
                   class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
-                  Status
+                  {{ t('dashboard.table.status') }}
                 </th>
               </tr>
             </thead>
@@ -339,18 +385,19 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col sm:flex-row justify-between items-center">
         <div class="flex items-center mb-4 sm:mb-0">
-          <p class="text-sm text-gray-500">© 2024 TravelHub. All rights reserved.</p>
+          <p class="text-sm text-gray-500">{{ t('footer.copyright') }}</p>
+          <p class="mt-1 text-[10px] leading-none text-gray-400">v0.2.1 · Sprint 2</p>
         </div>
         <div class="flex items-center space-x-6">
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >Privacy Policy</a
-          >
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >Terms of Service</a
-          >
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >Security</a
-          >
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
+            t('footer.privacyPolicy')
+          }}</a>
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
+            t('footer.termsOfService')
+          }}</a>
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
+            t('footer.security')
+          }}</a>
         </div>
       </div>
     </div>

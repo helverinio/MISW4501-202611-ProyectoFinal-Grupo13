@@ -1041,6 +1041,329 @@ Cobertura del sprint. Este sprint contiene 10 historias de usuario refinadas y d
 - Sin ASR directo específico en el backlog; aplican ASR globales de plataforma según implementación.
 
 
+ASR01 - Búsqueda rápida de hospedajes 
+• Descripción: Como usuario final de TravelHub, cuando realizó una busqueda de 
+hospedaje dado que el sistema esta en operación normal, quiero que las búsquedas 
+de hospedaje con filtros se procesen rápidamente, para poder comparar opciones sin 
+demoras que afecten la experiencia de uso o generen abandono del proceso de 
+reserva. 
+• Criterios de aceptación:  
+o El sistema responde dentro del tiempo máximo definido para las búsquedas. 
+o La latencia se mantiene estable bajo carga normal. 
+• Fuente: Usuario final (web o móvil) 
+• Estímulo: Realiza una búsqueda de hospedaje 
+• Artefacto: Motor de búsqueda y disponibilidad 
+• Ambiente: Operación normal 
+• Respuesta: Retornar resultados de búsqueda ordenados y disponibles 
+• Medida de la respuesta: <= 800 ms (p95) 
+ASR02 - Consulta rápida de disponibilidad 
+• Decripción: Como usuario final, cuando consulto la disponibilidad de un hotel, 
+dado que el sistema esta en operación normal, quiero consultar la disponibilidad de 
+una propiedad en tiempo casi real, para tomar decisiones de reserva sin percibir 
+demoras en la interfaz 
+• Criterios de aceptación:  
+o El servicio de disponibilidad responde en menos de 200 ms 
+• Fuente: Usuario Final 
+• Estímulo: Consulta disponibilidad de una propiedad 
+• Artefacto: App móvil, Portal web, busqueda de hoteles 
+• Ambiente: Operación normal 
+• Respuesta: Retornar disponibilidad del hotel actualizada 
+• Medida de la respuesta: <= 200 ms(p99) 
+ASR03 - Carga rápida detalle de hotel 
+• Descripción: como usuario final, cuando navego al detalle de un hotel dado que el 
+sistema opera normalmente, quiero que el sistema retorne la informacion detallada 
+del hotel para tomar desiciones acerca de mi reserva 
+• Criterios de aceptación: 
+o El servicio de busqueda de hoteles responde en tiempos muy bajos 
+o NO se bloquea la experiencia de usuario 
+• Fuente: Usuario final 
+• Estímulo: Consulta el detalle de una propiedad 
+• Artefacto: Busqueda de hoteles 
+• Ambiente: Operación normal 
+• Respuesta: Retorna el detalle de la propiedad 
+• Medida de la respuesta: <= 500 ms(p95) 
+ASR04 - Creación rápida de una reserva 
+• Descripción: como usuario final, cuando creo una reserva, dado que el sistema 
+opera normalmente, quiero crear una reserva de manera agil para garantizar mis 
+vacaciones y no tener problemas de overbooking 
+• Criterios de aceptación: 
+o El servicio de busqueda de reserva responde en tiempos muy bajos 
+o NO se bloquea la experiencia de usuario 
+• Fuente: Usuario final 
+• Estímulo: realiza una reserva 
+• Artefacto: Servicio de reserva 
+• Ambiente: Operación normal 
+• Respuesta: Realiza la reserva y notifica al usuario 
+• Medida de la respuesta: <= 1.5s (p95) 
+ASR05 - Procesamiento agil de pagos 
+• Descripción: como usuario final, cuando realizo el pago de una reserva dado que el 
+sistema se encuentra en operación normal quiero que el pago se efectue de manera 
+agil para garantizar mi reserva 
+• Criterios de aceptación: 
+o El servicio de reserva y pagos responden en tiempos muy bajos. 
+o NO se bloquea la experiencia de usuario 
+o Se notifica al usuario del estado final del pago 
+• Fuente: Usuario final 
+• Estímulo: Realiza el pago de una reserva 
+• Artefacto: Reservas y pagos 
+• Ambiente: Operación normal 
+• Respuesta: Procesa el pago y notifica al usuario 
+• Medida de la respuesta: <= 3s (p95) 
+ASR06 - Carga rapida del histórico de reservas 
+• Descripción: como usuario final, cuando consulto el historico de reservas dado que 
+el sistema se encuentra en operación normal quiero que la informacín cargue de 
+manera agil para verificar todas mis reservas realizadas 
+• Criterios de aceptación: 
+o El servicio de reservas responde en tiempos muy bajos 
+o NO se bloquea la experiencia de usuario 
+• Fuente: Usuario final 
+• Estímulo: Consulta el historico de reservas 
+• Artefacto: Reservas 
+• Ambiente: Operación normal 
+• Respuesta: Retorna todo el historico de reservas 
+• Medida de la respuesta: <= 1s(p95) 
+ASR07 - Soporte de picos de transacciones 
+• Descripción: Como plataforma de TravelHub, debo ser capaz de soportar picos 
+elevados de transacciones sin degradar el rendimiento ni afectar la experiencia de 
+los usuarios. dado que el sistema esta en un pico alto por las temporadas altas.  
+• Criterios de aceptación: 
+o El sistema escala horizontalmente de forma automática 
+o no se rechazan solicitudes por falta de capacidad 
+o La base de datos se particiona por país(sharding geografico) 
+• Fuente: Tráfico de usuarios 
+• Estímulo: Incremento repentino de transacciones 
+• Artefacto: Microservicios, Balanceador de carga. 
+• Ambiente: Pico de carga 
+• Respuesta: Escalar horizontalmente los servicios necesarios 
+• Medida de la respuesta: Soportar 800 TPM en pico.  
+ASR08 - Concurrencia multi-país 
+• Descripción: Como plataforma que opera en múltiples países, TravelHub debe 
+soportar altos niveles de concurrencia simultánea sin afectar la estabilidad del 
+sistema. 
+• Criterios de aceptación 
+o El sistema mantiene la operación bajo alta concurrencia. 
+o La carga se distribuye entre servicios y regiones. 
+• Fuente: Usuarios concurrentes multi-país 
+• Estímulo: Acceso simultáneo de usuarios 
+• Artefacto: Sistema completo 
+• Ambiente: Pico de carga (temporadas altas) 
+• Respuesta: Mantener el servicio operativo sin degradación 
+• Medida de la respuesta: 600 usuarios concurrentes por país (3,600 total) 
+ASR09 - Alta disponibilidad mensual 
+• Descripción: Como operador del sistema, necesito que TravelHub esté disponible 
+prácticamente todo el tiempo, para garantizar continuidad del negocio y 
+cumplimiento de los SLA del proyecto. 
+• Criterios de aceptación 
+o La disponibilidad se mide mensualmente. 
+o Las interrupciones se mantienen dentro del umbral permitido. 
+o la infraestructura debe tener redundancia geográfica con replicación activo
+activo en mas de dos regiones 
+o El tráfico debe enrutarse automáticamente a otra region en caso de falla 
+• Fuente: Usuarios finales / Hoteles / Agencias 
+• Estímulo: Uso continuo del sistema 
+• Artefacto: Sistema completo 
+• Ambiente: Operación 24/7 
+• Respuesta: Mantener el sistema disponible 
+• Medida de la respuesta: ≥ 99.95% de disponibilidad mensual 
+ASR10 - Despliegues sin interrupción 
+• Descripción: Como equipo de desarrollo y operaciones, necesitamos desplegar 
+nuevas versiones del sistema sin interrumpir el servicio, para reducir riesgos y 
+afectar lo menos posible a los usuarios. 
+• Criterios de aceptación 
+o Los despliegues no generan caídas del sistema. 
+o Los usuarios no perciben interrupciones. 
+o El sietam maneja despliegues blue-green o canary 
+• Fuente: Equipo DevOps 
+• Estímulo: Despliegue de una nueva versión 
+• Artefacto: Pipeline CI/CD . Componente a desplegar 
+• Ambiente: Producción 
+• Respuesta: Desplegar sin interrumpir el servicio 
+• Medida de la respuesta: Zero-downtime deployment 
+ASR11 - Recuperación ante desastre (RTO) 
+• Descripción: Como plataforma de misión crítica, TravelHub debe recuperarse 
+rápidamente ante un desastre total para minimizar el impacto en el negocio. 
+• Criterios de aceptación 
+o La restauración cumple el RTO definido. 
+o El servicio vuelve a estar operativo. 
+• Fuente: Evento de desastre 
+• Estímulo: Falla total del sistema 
+• Artefacto: Sistema completo 
+• Ambiente: Producción 
+• Respuesta: Restaurar la operación del sistema 
+• Medida de la respuesta: RTO ≤ 15 minutos 
+ASR12 - Detección rápida de fallas de instancia 
+• Descripción: Como sistema distribuido, TravelHub debe detectar rápidamente 
+instancias defectuosas para evitar impactos mayores en la operación y garantizar la 
+disponibilidad 
+• Criterios de aceptación 
+o Las instancias fallidas se retiran automáticamente. 
+o El servicio continúa funcionando. 
+• Fuente: Nodo / instancia del sistema  
+• Estímulo: Falla de una instancia 
+• Artefacto: Balanceador 
+• Ambiente: Producción 
+• Respuesta: Retirar la instancia fallida 
+• Medida de la respuesta: Health checks cada 10 segundos 
+ASR13 - Pérdida mínima de datos (RPO) 
+• Descripción: Como operador del sistema, necesito asegurar que la pérdida de datos 
+ante un desastre sea mínima. 
+• Criterios de aceptación: 
+o Los datos se replican adecuadamente. 
+o Se cumple el RPO establecido. 
+• Fuente: Evento de desastre 
+• Estímulo: Pérdida de una región o base de datos 
+• Artefacto: Bases de datos replicadas 
+• Ambiente: Producción 
+• Respuesta: Recuperar los datos 
+• Medida de la respuesta: RPO ≤ 5 minutos 
+ASR14 - Detección temprana de fallas en procesos críticos 
+• Descripción: Como operador de la plataforma TravelHub, usando el sistema en 
+ambiente de producción, necesito que las fallas asociadas a cálculos de cobros, 
+reservas o impuestos sean detectadas casi de manera inmediata, para poder 
+reaccionar rápidamente y evitar impactos financieros, inconsistencias en reservas o 
+afectación a los usuarios. 
+• Criterios de aceptación 
+o Las fallas en procesos críticos son identificadas automáticamente. 
+o La detección ocurre sin intervención manual. 
+o La detección aplica a cobros, reservas e impuestos. 
+• Fuente: Sistema de monitoreo 
+• Estímulo: Ocurre una falla en cálculos de cobros, reservas o impuestos 
+• Artefacto: Pagos, notificaciones, monitoreo 
+• Ambiente: Producción 
+• Respuesta: Detectar y registrar la falla para su análisis y gestión 
+• Medida de la respuesta: Detección de la falla en menos de 500 ms 
+ASR15 - Cumplimiento PCI-DSS en pagos 
+• Descripción: Como plataforma que procesa pagos, TravelHub debe cumplir con los 
+estándares de seguridad de la industria para tarjetas de crédito. 
+• Criterios de aceptación 
+o No se almacenan tarjetas en texto plano. 
+o Se utiliza tokenización. 
+o Todo dato en tránsito debe estar cifrado con TLS 1.2+ 
+• Fuente: Proceso de pago 
+• Estímulo: Pago con tarjeta 
+• Artefacto: Servicio de pagos 
+• Ambiente: Producción 
+• Respuesta: Tokenizar la información de pago 
+• Medida de la respuesta: Cumplimiento PCI-DSS 3.2.1 
+ASR16 -  Protección contra ataques comunes 
+• Descripción: Como plataforma expuesta a internet, TravelHub debe protegerse 
+contra ataques comunes para preservar la integridad del sistema y los datos. 
+• Criterios de aceptación 
+o Se implementan controles de seguridad estándar. 
+o Los ataques conocidos son mitigados. 
+• Fuente: Atacante 
+• Estímulo: Intento de ataque (CSRF, XSS, SQLi, fuerza bruta) 
+• Artefacto: Aplicación web y APIs 
+• Ambiente: Producción 
+• Respuesta: Bloquear o mitigar el ataque 
+• Medida de la respuesta: Detección de anomalias en menos de 2s 
+ASR17 - Cumplimiento GDPR/LGPD 
+• Descripción: Como plataforma que maneja datos personales, TravelHub debe 
+permitir el cumplimiento de regulaciones de protección de datos. 
+• Criterios de aceptación: 
+o Se soporta derecho al olvido. 
+o Se permite exportación de datos personales. 
+• Fuente: Usuario regulado 
+• Estímulo: Solicitud de eliminación, exportación o registro en la plataforma 
+• Artefacto: Servicios de datos personales 
+• Ambiente: Producción 
+• Respuesta: Ejecutar la solicitud 
+• Medida de la respuesta: 0 quejas por incumplimiento de las politicas 
+GDPR/LGPD 
+ASR18 - Auditoría de cambios 
+• Descripción: Como operador y auditor,cuando un usuario reliza un cambio de datos 
+sensibles dado que el sistema opera en producción bajo cualquier carga quiero que 
+el sistema registre el cambio para garantiozar la seguridad del mismo 
+• Criterios de aceptación 
+o Los eventos quedan registrados con información completa(timestamp, 
+usuario, IP y razón de cambio) 
+o Los registros son consultables. 
+• Fuente: Usuario 
+• Estímulo: Cambio de datop sensible 
+• Artefacto: Todo el sistema 
+• Ambiente: Producción 
+• Respuesta: Registrar evento auditado 
+• Medida de la respuesta: Timestamp, usuario, IP y razón del cambio 
+ASR19 - Cambio Política de cancelación 
+• Descripción: Como equipo de desarrollo, necesitamos modificar reglas de negocio 
+sin impactar múltiples componentes del sistema. 
+• Criterios de aceptación 
+o Los cambios se realizan en un único servicio. 
+o Se cumple el esfuerzo máximo definido. 
+o API contrascts bien definidas 
+o Documentación técnica actualizada 
+• Fuente: Negocio 
+• Estímulo: Cambio en política de cancelación 
+• Artefacto: Servicio de reservas 
+• Ambiente: Desarrollo / mantenimiento 
+• Respuesta: Ajustar la lógica de negocio 
+• Medida de la respuesta: ≤ 8 horas-hombre 
+ASR20 - Modificabilidad Nuevo Proveedor 
+• Descripción: Como equipo de desarrollo, necesitamos agregar un nuevo proveedor 
+dado que el negodio lo soolicito, sin impactar múltiples componentes del sistema. 
+• Criterios de aceptación 
+o Los cambios se realizan en un único servicio. 
+o Se cumple el esfuerzo máximo definido. 
+o API contrascts bien definidas 
+o Documentación técnica actualizada 
+• Fuente: Negocio 
+• Estímulo:Agregar un nuevo proveedor de pago 
+• Artefacto: Servicio de Pagos 
+• Ambiente: Desarrollo / mantenimiento 
+• Respuesta: Agregar un nuevo proveedor de pagos 
+• Medida de la respuesta: ≤ 40 horas-hombre 
+ASR21 - Modificabilidad nuevo canal de distribución 
+• Descripción: Como equipo de desarrollo, necesitamos agregar un nuevo canal de 
+distribución sin impactar múltiples componentes del sistema. 
+• Criterios de aceptación 
+o Los cambios se realizan en un único servicio. 
+o Se cumple el esfuerzo máximo definido. 
+o API contracts bien definidas 
+o Documentación técnica actualizada 
+• Fuente: Negocio 
+• Estímulo: Agregar un nuevo canal de distribución 
+• Artefacto: Servicio de reservas 
+• Ambiente: Desarrollo / mantenimiento 
+• Respuesta: Ajustar la lógica de negocio 
+• Medida de la respuesta: ≤ 60 horas/hombre 
+ASR22 - Encriptación de datos en reposo (AES-256) 
+• Descripción: Como responsable de seguridad de TravelHub, usando el sistema en 
+ambiente de producción, quiero que los datos almacenados por la plataforma estén 
+cifrados en reposo, para proteger la confidencialidad de la información ante accesos 
+no autorizados a los medios de almacenamiento. 
+• Criterios de aceptación 
+o Los datos almacenados en los repositorios de la plataforma se cifran en 
+reposo. 
+o El algoritmo de cifrado cumple el estándar solicitado en el enunciado. 
+o El cifrado aplica a la información persistida por la plataforma (según lo 
+indicado en el enunciado). 
+• Fuente: Política de seguridad / requisito del enunciado 
+• Estímulo: Persistencia/almacenamiento de datos en repositorios de la plataforma 
+• Artefacto: Capa de persistencia (bases de datos / almacenamiento de objetos / 
+repositorios de datos) 
+• Ambiente: Producción 
+• Respuesta: Cifrar los datos en reposo antes/de forma transparente al 
+almacenamiento 
+• Medida de la respuesta: AES-256 (cifrado en reposo) 
+ASR 23 - Autenticación multifactor (MFA) para accesos 
+• Descripción: Como operador de la plataforma TravelHub, usando el sistema en 
+ambiente de producción, quiero que el acceso a la plataforma requiera autenticación 
+multifactor (MFA), para reducir el riesgo de accesos no autorizados por robo o 
+filtración de credenciales. 
+• Criterios de aceptación 
+o El sistema exige un segundo factor de autenticación además de 
+usuario/contraseña. 
+o El MFA aplica a los accesos a la plataforma según lo requerido por el 
+enunciado. 
+o El acceso se bloquea si no se completa el segundo factor. 
+• Fuente: Usuario (o atacante con credenciales comprometidas) 
+• Estímulo: Intento de inicio de sesión 
+• Artefacto: Servicio de autenticación / gestión de identidad 
+• Ambiente: Producción 
+• Respuesta: Solicitar y validar segundo factor antes de conceder acceso 
+• Medida de la respuesta: MFA habilitado
+
+
 ## Matriz final de Sprint, HU y ASR asociados
 
 | Sprint | HU | ASR asociados |
