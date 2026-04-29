@@ -260,6 +260,14 @@ entity "comentarios_hoteles" as comentarios_hoteles {
   activo : boolean <<NOT NULL, default=true>>
 }
 
+entity "admin_hoteles" as admin_hoteles {
+  * id : varchar(36) <<PK>>
+  --
+  id_usuario : varchar(36) <<NOT NULL>>
+  id_hotel : varchar(36) <<FK, NOT NULL>>
+  created_at : datetime <<NOT NULL>>
+}
+
 entity "room_holds" as room_holds {
   * id : varchar(36) <<PK>>
   --
@@ -309,6 +317,7 @@ reservas ||--o{ notificaciones : id_reserva
 hoteles ||--o{ comentarios_hoteles : id_hotel
 reservas ||--o{ comentarios_hoteles : id_reserva
 habitaciones ||--o{ room_holds : id_habitacion
+hoteles ||--o{ admin_hoteles : id_hotel
 
 note bottom of room_holds
 Indices:
@@ -322,6 +331,12 @@ Constraints / indices:
 - uq_comentarios_hoteles_usuario_reserva (id_usuario, id_reserva)
 - ix_comentarios_hoteles_id_hotel (id_hotel)
 - ix_comentarios_hoteles_id_hotel_created_at (id_hotel, created_at)
+end note
+
+note bottom of admin_hoteles
+Constraints / indices:
+- uq_admin_hotel (id_usuario, id_hotel)
+- ix_admin_hoteles_id_usuario (id_usuario)
 end note
 
 note bottom of reservations
@@ -432,6 +447,13 @@ entity "reservas.comentarios_hoteles" as r_comentarios {
   id_reserva : varchar(36)
 }
 
+entity "reservas.admin_hoteles" as r_admin_hoteles {
+  * id : varchar(36)
+  --
+  id_usuario : varchar(36)
+  id_hotel : varchar(36)
+}
+
 entity "pagos.payments" as p_payments {
   * id : varchar(36)
   --
@@ -458,6 +480,7 @@ entity "ext-payments.payments" as ep_payments {
 u_user_accounts ..> r_cotizaciones : r_cotizaciones.id_usuario
 u_user_accounts ..> r_reservas : r_reservas.id_usuario
 u_user_accounts ..> r_comentarios : r_comentarios.id_usuario
+u_user_accounts ..> r_admin_hoteles : r_admin_hoteles.id_usuario
 r_cotizaciones ..> r_reservas : r_reservas.id_cotizacion
 r_reservas ..> r_comentarios : r_comentarios.id_reserva
 r_reservas ..> p_payments : p_payments.reservation_id
