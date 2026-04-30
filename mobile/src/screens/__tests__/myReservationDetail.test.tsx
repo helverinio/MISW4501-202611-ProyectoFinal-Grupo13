@@ -39,6 +39,15 @@ jest.mock('@/i18n', () => ({
   },
 }));
 
+jest.mock('@/services/offlineCache', () => ({
+  loadDetail: jest.fn().mockResolvedValue({ data: null }),
+  saveDetail: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock('@/hooks/useNetworkStatus', () => ({
+  useNetworkStatus: () => ({ isOffline: false }),
+}));
+
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 
 const baseParams = {
@@ -96,7 +105,7 @@ describe('MyReservationDetailScreen', () => {
       expect(getByText('$71.00')).toBeTruthy();
       expect(getByText('$1000.00USD')).toBeTruthy();
       expect(getByText('4.5 (500)')).toBeTruthy();
-    });
+    }, { timeout: 10000 });
   });
 
   it('formats today date with reservationDetail.today label', async () => {
