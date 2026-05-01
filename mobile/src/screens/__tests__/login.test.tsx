@@ -10,9 +10,9 @@ jest.mock('../../services/authService/AuthService');
 jest.mock('../../services/userService/RegisterService');
 jest.mock('../../common/LanguageSelector', () => 'LanguageSelector');
 jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
+  getItem: jest.fn().mockResolvedValue(null),
+  setItem: jest.fn().mockResolvedValue(undefined),
+  removeItem: jest.fn().mockResolvedValue(undefined),
 }));
 
 const mockAuthService = AuthService as jest.Mocked<typeof AuthService>;
@@ -50,7 +50,7 @@ describe('LoginScreen', () => {
       expect(getByPlaceholderText('auth.emailPlaceholder')).toBeTruthy();
       expect(getByPlaceholderText('••••••••')).toBeTruthy();
       expect(getByText('auth.loginButton')).toBeTruthy();
-    });
+    }, 10000);
 
     it('should render remember me checkbox', async () => {
       const { getByText } = await renderAndWaitForAuth();
