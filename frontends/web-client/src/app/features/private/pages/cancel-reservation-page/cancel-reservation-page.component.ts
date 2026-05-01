@@ -5,7 +5,10 @@ import { catchError, finalize, of } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
-import { EmailDeliveryService, CancellationEmailPayload } from '../../../../core/services/email-delivery.service';
+import {
+  EmailDeliveryService,
+  CancellationEmailPayload,
+} from '../../../../core/services/email-delivery.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { environment } from '../../../../../environments/environment';
 import { HotelByIdResponse } from '../../../search-results/models/search-results.models';
@@ -316,10 +319,12 @@ export class CancelReservationPageComponent {
                   descripcion: `Reservation ${reservaId} cancelled successfully`,
                   id_reserva: reservaId,
                 })
-                .pipe(catchError((err) => {
-                  console.warn('[CancelEmail] Step 7 ERROR saving notification log:', err);
-                  return of(null);
-                }))
+                .pipe(
+                  catchError((err) => {
+                    console.warn('[CancelEmail] Step 7 ERROR saving notification log:', err);
+                    return of(null);
+                  }),
+                )
                 .subscribe(() => {
                   console.log('[CancelEmail] Step 7 - notification log saved, navigating.');
                   void this.router.navigate(['/app/mis-reservas']);

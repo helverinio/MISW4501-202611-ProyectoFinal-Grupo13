@@ -225,6 +225,16 @@ services:
       JWT_SECRET_KEY: jwt-secret-key-change-in-production
       JWT_ACCESS_TOKEN_EXPIRES: 3600
       JWT_REFRESH_TOKEN_EXPIRES: 604800
+      EMAILJS_ENABLED: true
+      EMAILJS_ENDPOINT: https://api.emailjs.com/api/v1.0/email/send
+      EMAILJS_SERVICE_ID: service_ir1ojbq
+      EMAILJS_PUBLIC_KEY: iqjzNhxcPVbGXAAo4
+      EMAILJS_PRIVATE_KEY: YFb9tY4sc0q114bVZpf4E
+      EMAILJS_VERIFICATION_TEMPLATE_ID: template_r0guto8
+      EMAILJS_ALLOWED_ORIGIN: http://localhost:4200
+      EMAIL_VERIFICATION_LINK_BASE_URL: http://localhost:4200/verify-email
+      EMAIL_VERIFICATION_PENDING_STATUS: PENDING_EMAIL
+      EMAIL_VERIFICATION_ACTIVE_STATUS: ACTIVE
     ports:
       - "5003:5003"
     depends_on:

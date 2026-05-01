@@ -300,9 +300,9 @@ export class ReservationService {
     notificationType: string,
   ): Observable<NotificacionResponse[]> {
     return this.http
-      .get<NotificacionResponse[]>(
-        `${environment.apiBaseUrl}/reservas/${reservaId}/notificaciones?tipo=${notificationType}`,
-      )
+      .get<
+        NotificacionResponse[]
+      >(`${environment.apiBaseUrl}/reservas/${reservaId}/notificaciones?tipo=${notificationType}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 }

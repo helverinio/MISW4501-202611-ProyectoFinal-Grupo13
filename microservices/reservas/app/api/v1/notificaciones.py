@@ -4,7 +4,8 @@ from app.api.v1 import api_v1_bp
 from app.api.v1.auth import require_token
 from app.application.use_cases import (
     CreateNotificacionUseCase, GetNotificacionUseCase, GetAllNotificacionesUseCase,
-    GetNotificacionesByReservaUseCase, UpdateNotificacionUseCase, DeleteNotificacionUseCase
+    GetNotificacionesByReservaUseCase, GetNotificacionesByReservaAndTypeUseCase,
+    UpdateNotificacionUseCase, DeleteNotificacionUseCase
 )
 from app.infrastructure.repositories import SQLAlchemyNotificacionRepository
 
@@ -29,13 +30,13 @@ def create_notificacion(current_usuario=None):
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    fecha_notif = parse_datetime(data.get('fecha_notif'))
+    fecha_notif = parse_datetime(data.get('fecha_notif')) if data.get('fecha_notif') else datetime.now()
     titulo = data.get('titulo')
     id_reserva = data.get('id_reserva')
     descripcion = data.get('descripcion')
 
-    if not all([fecha_notif, titulo, id_reserva]):
-        return jsonify({'error': 'fecha_notif, titulo, and id_reserva are required'}), 400
+    if not all([titulo, id_reserva]):
+        return jsonify({'error': 'titulo and id_reserva are required'}), 400
 
     use_case = CreateNotificacionUseCase(get_repository())
     notificacion = use_case.execute(fecha_notif, titulo, id_reserva, descripcion)
@@ -85,8 +86,14 @@ def get_all_notificaciones(current_usuario=None):
 @api_v1_bp.route('/reservas/<reserva_id>/notificaciones', methods=['GET'])
 @require_token
 def get_notificaciones_by_reserva(reserva_id, current_usuario=None):
-    use_case = GetNotificacionesByReservaUseCase(get_repository())
-    notificaciones = use_case.execute(reserva_id)
+    tipo = request.args.get('tipo')
+    
+    if tipo:
+        use_case = GetNotificacionesByReservaAndTypeUseCase(get_repository())
+        notificaciones = use_case.execute(reserva_id, tipo)
+    else:
+        use_case = GetNotificacionesByReservaUseCase(get_repository())
+        notificaciones = use_case.execute(reserva_id)
 
     return jsonify([{
         'id': n.id,

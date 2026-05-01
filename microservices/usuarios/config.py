@@ -1,4 +1,14 @@
 import os
+from typing import Optional, Union
+
+
+def _as_bool(value: Optional[Union[str, bool]], default: bool = False) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return default
+    return str(value).strip().lower() in {'1', 'true', 'yes', 'on'}
+
 
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -13,6 +23,23 @@ class Config:
     ADMIN_LOCK_MINUTES = int(os.environ.get('ADMIN_LOCK_MINUTES', '15'))
     ADMIN_MFA_CHALLENGE_EXPIRES = int(os.environ.get('ADMIN_MFA_CHALLENGE_EXPIRES', '300'))
     DB_SCHEMA = os.environ.get('DB_SCHEMA')
+    EMAILJS_ENABLED = _as_bool(os.environ.get('EMAILJS_ENABLED', 'true'), default=True)
+    EMAILJS_ENDPOINT = os.environ.get('EMAILJS_ENDPOINT', 'https://api.emailjs.com/api/v1.0/email/send')
+    EMAILJS_SERVICE_ID = os.environ.get('EMAILJS_SERVICE_ID', '')
+    EMAILJS_PUBLIC_KEY = os.environ.get('EMAILJS_PUBLIC_KEY', '')
+    EMAILJS_PRIVATE_KEY = os.environ.get('EMAILJS_PRIVATE_KEY', '')
+    EMAILJS_VERIFICATION_TEMPLATE_ID = os.environ.get('EMAILJS_VERIFICATION_TEMPLATE_ID', '')
+    EMAILJS_ALLOWED_ORIGIN = os.environ.get('EMAILJS_ALLOWED_ORIGIN', 'http://localhost:4200')
+    EMAIL_VERIFICATION_LINK_BASE_URL = os.environ.get(
+        'EMAIL_VERIFICATION_LINK_BASE_URL',
+        'http://localhost:4200/verify-email',
+    )
+    EMAIL_VERIFICATION_TOKEN_EXPIRES = int(os.environ.get('EMAIL_VERIFICATION_TOKEN_EXPIRES', '86400'))
+    EMAIL_VERIFICATION_PENDING_STATUS = os.environ.get(
+        'EMAIL_VERIFICATION_PENDING_STATUS',
+        'PENDING_EMAIL',
+    )
+    EMAIL_VERIFICATION_ACTIVE_STATUS = os.environ.get('EMAIL_VERIFICATION_ACTIVE_STATUS', 'ACTIVE')
 
 class DevelopmentConfig(Config):
     DEBUG = True

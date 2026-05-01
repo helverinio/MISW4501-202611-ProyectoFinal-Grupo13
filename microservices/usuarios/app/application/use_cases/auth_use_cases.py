@@ -83,6 +83,10 @@ class AuthenticateUseCase:
         
         if not bcrypt.checkpw(contrasena.encode('utf-8'), user.contrasena.encode('utf-8')):
             return None
+
+        active_status = current_app.config.get('EMAIL_VERIFICATION_ACTIVE_STATUS', 'ACTIVE')
+        if user.status != active_status:
+            raise PermissionError('EMAIL_NOT_VERIFIED')
         
         return issue_tokens_for_user(user, self.token_repository)
 

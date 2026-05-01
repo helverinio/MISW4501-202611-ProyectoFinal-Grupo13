@@ -1,10 +1,17 @@
+import logging
+
 from flask import request, jsonify
+from flask import current_app
 from app.api.v1 import api_v1_bp
 from app.application.use_cases import (
     CreateUsuarioUseCase, GetUsuarioUseCase, GetAllUsuariosUseCase,
     UpdateUsuarioUseCase, DeleteUsuarioUseCase
 )
+from app.application.services import EmailVerificationService
 from app.infrastructure.repositories import SQLAlchemyUsuarioRepository
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_repository():
@@ -35,13 +42,33 @@ def create_usuario():
         return jsonify({'error': 'Email already exists'}), 409
 
     use_case = CreateUsuarioUseCase(repo)
+    pending_status = str(current_app.config.get('EMAIL_VERIFICATION_PENDING_STATUS', 'PENDING_EMAIL')).strip()
+    if not pending_status:
+        pending_status = 'PENDING_EMAIL'
+    if len(pending_status) > 20:
+        logger.warning('EMAIL_VERIFICATION_PENDING_STATUS exceeds 20 chars; falling back to PENDING_EMAIL')
+        pending_status = 'PENDING_EMAIL'
     usuario = use_case.execute(
         nombre=data['nombre'],
         email=data['email'],
         usuario=usuario_value,
         contrasena=data['contrasena'],
-        ciudad_id=data.get('ciudad_id')
+        ciudad_id=data.get('ciudad_id'),
+        status=pending_status,
     )
+
+    verification_email_sent = False
+    try:
+        verification_service = EmailVerificationService()
+        token = verification_service.generate_verification_token(usuario.id, usuario.email)
+        verification_link = verification_service.build_verification_link(token)
+        verification_email_sent = verification_service.send_verification_email(
+            to_email=usuario.email,
+            user_name=usuario.nombre,
+            verification_link=verification_link,
+        )
+    except Exception as error:
+        logger.exception('Could not send verification email for user %s: %s', usuario.id, error)
 
     return jsonify({
         'id': usuario.id,
@@ -52,7 +79,8 @@ def create_usuario():
         'role': usuario.role,
         'status': usuario.status,
         'mfa_enabled': usuario.mfa_enabled,
-        'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None
+        'creado_en': usuario.creado_en.isoformat() if usuario.creado_en else None,
+        'verification_email_sent': verification_email_sent,
     }), 201
 
 

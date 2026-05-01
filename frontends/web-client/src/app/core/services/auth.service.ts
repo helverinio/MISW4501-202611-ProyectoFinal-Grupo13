@@ -9,6 +9,7 @@ import {
   LoginResponse,
   RegisterUserRequest,
   RegisterUserResponse,
+  VerifyEmailResponse,
 } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
@@ -28,9 +29,9 @@ export class AuthService {
   constructor(private readonly http: HttpClient) {}
 
   register(payload: RegisterUserRequest): Observable<RegisterUserResponse> {
-    return this.http.post<RegisterUserResponse>(`${environment.apiBaseUrl}/usuarios`, payload).pipe(
-      catchError((error) => throwError(() => error)),
-    );
+    return this.http
+      .post<RegisterUserResponse>(`${environment.apiBaseUrl}/usuarios`, payload)
+      .pipe(catchError((error) => throwError(() => error)));
   }
 
   login(payload: LoginRequest): Observable<LoginResponse> {
@@ -38,6 +39,12 @@ export class AuthService {
       tap((response) => this.persistSession(response)),
       catchError((error) => throwError(() => error)),
     );
+  }
+
+  verifyEmail(token: string): Observable<VerifyEmailResponse> {
+    return this.http
+      .post<VerifyEmailResponse>(`${environment.apiBaseUrl}/auth/verify-email`, { token })
+      .pipe(catchError((error) => throwError(() => error)));
   }
 
   logout(): Observable<void> {

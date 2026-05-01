@@ -233,8 +233,9 @@ class ReservasService:
     def get_pagos_by_reserva(self, reserva_id: str) -> Dict[str, Any]:
         return self._request('GET', f'reservas/{reserva_id}/pagos')
 
-    def get_notificaciones_by_reserva(self, reserva_id: str) -> Dict[str, Any]:
-        return self._request('GET', f'reservas/{reserva_id}/notificaciones')
+    def get_notificaciones_by_reserva(self, reserva_id: str, tipo: str = None) -> Dict[str, Any]:
+        params = {'tipo': tipo} if tipo else None
+        return self._request('GET', f'reservas/{reserva_id}/notificaciones', params=params)
 
     # Pagos
     def create_pago(self, data: Dict[str, Any]) -> Dict[str, Any]:

@@ -28,6 +28,15 @@ export interface AuthUser {
   email: string;
 }
 
+export interface VerifyEmailRequest {
+  token: string;
+}
+
+export interface VerifyEmailResponse {
+  message: string;
+  status: string;
+}
+
 export interface LoginResponse {
   access_token: string;
   refresh_token: string;

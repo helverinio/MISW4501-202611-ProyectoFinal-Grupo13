@@ -54,6 +54,17 @@ def login():
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/auth/verify-email', methods=['POST'])
+def verify_email():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    if not data.get('token'):
+        return jsonify({'error': 'token is required'}), 400
+    result = get_service().verify_email(data)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/auth/refresh', methods=['POST'])
 def refresh_token():
     data = request.get_json()

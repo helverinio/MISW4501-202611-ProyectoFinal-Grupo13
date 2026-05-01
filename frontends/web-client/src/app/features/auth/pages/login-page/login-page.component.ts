@@ -54,7 +54,11 @@ export class LoginPageComponent {
     phone: ['', [Validators.required]],
     password: [
       '',
-      [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)],
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+      ],
     ],
     confirmPassword: ['', [Validators.required]],
     termsAccepted: [false, [Validators.requiredTrue]],
@@ -114,24 +118,30 @@ export class LoginPageComponent {
       .pipe(finalize(() => this.signupLoading.set(false)))
       .subscribe({
         next: () => {
-          this.signupSuccessMessage.set('Account created successfully. You can now sign in.');
-          this.signupForm.reset({
-            firstName: '',
-            lastName: '',
-            email: '',
-            phonePrefix: '+57',
-            phone: '',
-            password: '',
-            confirmPassword: '',
-            termsAccepted: false,
-            marketingAccepted: false,
-          });
-          this.signupSubmitted.set(false);
+          this.onSignupSuccess(payload.email);
         },
         error: (error: HttpErrorResponse) => {
           this.signupErrorMessage.set(this.resolveSignupErrorMessage(error));
         },
       });
+  }
+
+  private onSignupSuccess(email: string): void {
+    this.signupSuccessMessage.set(
+      `Account created! We've sent a verification link to ${email}. Please check your inbox and verify your email before signing in.`,
+    );
+    this.signupForm.reset({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phonePrefix: '+57',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      termsAccepted: false,
+      marketingAccepted: false,
+    });
+    this.signupSubmitted.set(false);
   }
 
   protected signupControlInvalid(
@@ -153,7 +163,9 @@ export class LoginPageComponent {
     const confirmPasswordControl = this.signupForm.controls.confirmPassword;
     const shouldShow = confirmPasswordControl.touched || this.signupSubmitted();
 
-    return shouldShow && !!confirmPasswordControl.value && password !== confirmPasswordControl.value;
+    return (
+      shouldShow && !!confirmPasswordControl.value && password !== confirmPasswordControl.value
+    );
   }
 
   protected t(key: string): string {
@@ -179,6 +191,10 @@ export class LoginPageComponent {
   private resolveErrorMessage(error: HttpErrorResponse): string {
     if (error.status === 401) {
       return this.i18n.t('auth.error.invalidCredentials');
+    }
+
+    if (error.status === 403 && error.error?.code === 'EMAIL_NOT_VERIFIED') {
+      return 'Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.';
     }
 
     if (error.status === 0) {

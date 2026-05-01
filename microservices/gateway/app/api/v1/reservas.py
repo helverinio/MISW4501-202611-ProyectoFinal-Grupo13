@@ -64,7 +64,7 @@ def get_pagos_by_reserva(reserva_id):
 
 @api_v1_bp.route('/reservas/<reserva_id>/notificaciones', methods=['GET'])
 def get_notificaciones_by_reserva(reserva_id):
-    result = get_service().get_notificaciones_by_reserva(reserva_id)
+    result = get_service().get_notificaciones_by_reserva(reserva_id, request.args.get('tipo'))
     return jsonify(result['data']), result['status_code']
 
 

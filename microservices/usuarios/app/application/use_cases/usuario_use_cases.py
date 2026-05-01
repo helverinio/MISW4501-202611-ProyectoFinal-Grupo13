@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List, Optional
 import bcrypt
 from app.domain.entities.usuario import Usuario
@@ -16,6 +18,7 @@ class CreateUsuarioUseCase:
         contrasena: str | None = None,
         usuario: str | None = None,
         ciudad_id: int | None = None,
+        status: str = 'ACTIVE',
     ) -> Usuario:
         if contrasena is None and contrasena_or_usuario is None:
             raise ValueError('contrasena is required')
@@ -33,7 +36,8 @@ class CreateUsuarioUseCase:
             email=email,
             usuario=resolved_usuario,
             ciudad_id=ciudad_id,
-            contrasena=hashed_password.decode('utf-8')
+            contrasena=hashed_password.decode('utf-8'),
+            status=status,
         )
         return self.repository.save(user)
 

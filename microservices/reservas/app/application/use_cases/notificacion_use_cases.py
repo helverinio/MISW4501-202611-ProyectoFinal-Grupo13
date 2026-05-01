@@ -38,6 +38,14 @@ class GetNotificacionesByReservaUseCase:
         return self.repository.find_by_reserva(reserva_id)
 
 
+class GetNotificacionesByReservaAndTypeUseCase:
+    def __init__(self, repository: NotificacionRepository):
+        self.repository = repository
+
+    def execute(self, reserva_id: str, titulo: str) -> List[Notificacion]:
+        return self.repository.find_by_reserva_and_type(reserva_id, titulo)
+
+
 class UpdateNotificacionUseCase:
     def __init__(self, repository: NotificacionRepository):
         self.repository = repository

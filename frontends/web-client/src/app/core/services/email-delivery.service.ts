@@ -33,6 +33,12 @@ export interface CancellationEmailPayload {
   cancellationReason?: string;
 }
 
+export interface VerificationEmailPayload {
+  toEmail: string;
+  userName: string;
+  verificationLink: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EmailDeliveryService {
   constructor(private readonly http: HttpClient) {}
@@ -70,7 +76,7 @@ export class EmailDeliveryService {
 
     const requestBody = {
       service_id: environment.emailJs.serviceId,
-      template_id: environment.emailJs.templateId,  // Confirmación template
+      template_id: environment.emailJs.templateId, // Confirmación template
       user_id: environment.emailJs.publicKey,
       template_params: {
         to_email: payload.toEmail,
@@ -116,6 +122,34 @@ export class EmailDeliveryService {
       headers: {
         'Content-Type': 'application/json',
       },
+      responseType: 'text',
+    });
+  }
+
+  sendVerificationEmail(payload: VerificationEmailPayload): Observable<string> {
+    if (!environment.emailJs.enabled) {
+      throw new Error('EmailJS is not configured.');
+    }
+
+    const templateId = (environment.emailJs as any).verificationTemplateId as string | undefined;
+    if (!templateId) {
+      throw new Error('Verification email template is not configured.');
+    }
+
+    const requestBody = {
+      service_id: environment.emailJs.serviceId,
+      template_id: templateId,
+      user_id: environment.emailJs.publicKey,
+      template_params: {
+        to_email: payload.toEmail,
+        email: payload.toEmail,
+        user_name: payload.userName,
+        verification_link: payload.verificationLink,
+      },
+    };
+
+    return this.http.post(environment.emailJs.endpoint, requestBody, {
+      headers: { 'Content-Type': 'application/json' },
       responseType: 'text',
     });
   }
