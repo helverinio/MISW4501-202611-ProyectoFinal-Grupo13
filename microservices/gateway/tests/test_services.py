@@ -161,10 +161,11 @@ def test_reservas_service_request_exception(monkeypatch):
 def test_reservas_wrappers_delegate_to_request(monkeypatch, method_name, args):
     captured = {}
 
-    def fake_request(method, endpoint, data=None):
+    def fake_request(method, endpoint, data=None, params=None):
         captured["method"] = method
         captured["endpoint"] = endpoint
         captured["data"] = data
+        captured["params"] = params
         return {"status_code": 200, "data": {"ok": True}}
 
     service = ReservasService("http://reservas")
