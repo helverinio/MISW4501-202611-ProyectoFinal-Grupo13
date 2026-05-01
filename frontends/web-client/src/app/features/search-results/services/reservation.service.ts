@@ -112,6 +112,12 @@ export interface ReservaResponse {
   id_estado: string;
 }
 
+export interface UsuarioResponse {
+  id: string | number;
+  nombre: string;
+  email: string;
+}
+
 export interface UpdateReservaPayload {
   fecha_ingreso?: string;
   fecha_salida?: string;
@@ -138,7 +144,7 @@ export interface RecentlyViewedHotelResponse {
 }
 
 export interface CreateNotificacionPayload {
-  fecha_notif: string;
+  fecha_notif?: string;
   titulo: string;
   id_reserva: string;
   descripcion?: string;
@@ -206,6 +212,12 @@ export class ReservationService {
   getReservasByUsuario(usuarioId: string): Observable<ReservaResponse[]> {
     return this.http
       .get<ReservaResponse[]>(`${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getUsuarioById(usuarioId: string): Observable<UsuarioResponse> {
+    return this.http
+      .get<UsuarioResponse>(`${environment.apiBaseUrl}/usuarios/${usuarioId}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
@@ -279,6 +291,17 @@ export class ReservationService {
       .post<CreateHotelCommentResponse>(
         `${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios`,
         payload,
+      )
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getNotificacionesByReservaAndType(
+    reservaId: string,
+    notificationType: string,
+  ): Observable<NotificacionResponse[]> {
+    return this.http
+      .get<NotificacionResponse[]>(
+        `${environment.apiBaseUrl}/reservas/${reservaId}/notificaciones?tipo=${notificationType}`,
       )
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }

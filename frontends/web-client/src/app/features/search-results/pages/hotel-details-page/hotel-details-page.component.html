@@ -140,16 +140,15 @@
                     <div class="md:col-span-2 md:text-right md:pr-3">
                       <button
                         type="button"
-                        class="w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                        [class.bg-gray-200]="!room.canReserve"
-                        [class.text-gray-500]="!room.canReserve"
-                        [class.cursor-not-allowed]="!room.canReserve"
-                        [class.bg-primary]="activeRoomCard()?.id !== room.id"
-                        [class.text-white]="activeRoomCard()?.id !== room.id"
-                        [class.hover:bg-primary-dark]="activeRoomCard()?.id !== room.id"
-                        [class.bg-emerald-600]="activeRoomCard()?.id === room.id"
-                        [class.text-white]="activeRoomCard()?.id === room.id"
+                        [class]="
+                          !room.canReserve
+                            ? 'w-full md:w-28 px-4 py-2 rounded-md text-sm font-medium transition-colors bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : activeRoomCard()?.id === room.id
+                              ? 'w-full md:w-28 px-4 py-2 rounded-md text-sm font-medium transition-colors bg-emerald-600 text-white'
+                              : 'w-full md:w-28 px-4 py-2 rounded-md text-sm font-medium transition-colors bg-primary-600 text-white hover:bg-primary-700'
+                        "
                         [disabled]="!room.canReserve"
+                        (mousedown)="$event.preventDefault()"
                         (click)="selectRoom(room)"
                       >
                         {{

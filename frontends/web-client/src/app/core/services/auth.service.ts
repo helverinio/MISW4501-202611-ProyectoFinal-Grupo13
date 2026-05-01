@@ -3,7 +3,13 @@ import { Injectable, computed, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { AuthUser, LoginRequest, LoginResponse } from '../models/auth.models';
+import {
+  AuthUser,
+  LoginRequest,
+  LoginResponse,
+  RegisterUserRequest,
+  RegisterUserResponse,
+} from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,6 +26,12 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.accessTokenState());
 
   constructor(private readonly http: HttpClient) {}
+
+  register(payload: RegisterUserRequest): Observable<RegisterUserResponse> {
+    return this.http.post<RegisterUserResponse>(`${environment.apiBaseUrl}/usuarios`, payload).pipe(
+      catchError((error) => throwError(() => error)),
+    );
+  }
 
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, payload).pipe(

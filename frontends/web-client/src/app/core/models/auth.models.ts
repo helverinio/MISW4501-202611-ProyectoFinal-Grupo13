@@ -3,6 +3,25 @@ export interface LoginRequest {
   contrasena: string;
 }
 
+export interface RegisterUserRequest {
+  nombre: string;
+  email: string;
+  usuario: string;
+  contrasena: string;
+}
+
+export interface RegisterUserResponse {
+  id: string | number;
+  nombre: string;
+  email: string;
+  usuario: string;
+  ciudad_id?: string | null;
+  role?: string;
+  status?: string;
+  mfa_enabled?: boolean;
+  creado_en?: string | null;
+}
+
 export interface AuthUser {
   id: number;
   nombre: string;

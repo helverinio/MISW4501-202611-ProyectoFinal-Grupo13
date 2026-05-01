@@ -82,7 +82,12 @@
             <p class="text-gray-600">Join TravelHub and start exploring</p>
           </div>
 
-          <form id="email-signup-form" class="space-y-4">
+          <form
+            id="email-signup-form"
+            class="space-y-4"
+            [formGroup]="signupForm"
+            (ngSubmit)="onSignup()"
+          >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
@@ -93,11 +98,15 @@
                 <input
                   type="text"
                   id="login-signup-firstname"
+                  formControlName="firstName"
                   class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="First name"
-                  required
                 />
-                <div id="login-firstname-error" class="hidden mt-1 text-sm text-error-500">
+                <div
+                  id="login-firstname-error"
+                  class="mt-1 text-sm text-error-500"
+                  [class.hidden]="!signupControlInvalid('firstName')"
+                >
                   <i class="fa-solid fa-exclamation-circle mr-1"></i>
                   First name is required
                 </div>
@@ -111,11 +120,15 @@
                 <input
                   type="text"
                   id="login-signup-lastname"
+                  formControlName="lastName"
                   class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Last name"
-                  required
                 />
-                <div id="login-lastname-error" class="hidden mt-1 text-sm text-error-500">
+                <div
+                  id="login-lastname-error"
+                  class="mt-1 text-sm text-error-500"
+                  [class.hidden]="!signupControlInvalid('lastName')"
+                >
                   <i class="fa-solid fa-exclamation-circle mr-1"></i>
                   Last name is required
                 </div>
@@ -129,13 +142,21 @@
               <input
                 type="email"
                 id="login-signup-email"
+                formControlName="email"
                 class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Enter your email"
-                required
               />
-              <div id="login-signup-email-error" class="hidden mt-1 text-sm text-error-500">
+              <div
+                id="login-signup-email-error"
+                class="mt-1 text-sm text-error-500"
+                [class.hidden]="!signupControlInvalid('email')"
+              >
                 <i class="fa-solid fa-exclamation-circle mr-1"></i>
-                Please enter a valid email address
+                @if (signupForm.controls.email.errors?.['required']) {
+                  Email is required
+                } @else {
+                  Please enter a valid email address
+                }
               </div>
             </div>
 
@@ -143,14 +164,33 @@
               <label for="login-signup-phone" class="block text-sm font-medium text-gray-700 mb-2"
                 >Phone number</label
               >
-              <input
-                type="tel"
-                id="login-signup-phone"
-                class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="+1 (555) 123-4567"
-              />
+              <div class="flex gap-2">
+                <select
+                  id="login-signup-phone-prefix"
+                  formControlName="phonePrefix"
+                  class="w-36 px-3 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  @for (option of countryPhoneCodes; track option.code) {
+                    <option [value]="option.code">{{ option.label }}</option>
+                  }
+                </select>
+                <input
+                  type="tel"
+                  id="login-signup-phone"
+                  formControlName="phone"
+                  class="flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
               <div class="mt-1 text-xs text-gray-500">
                 We'll send booking confirmations to this number
+              </div>
+              <div
+                class="mt-1 text-sm text-error-500"
+                [class.hidden]="!signupControlInvalid('phone')"
+              >
+                <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                Phone number is required
               </div>
             </div>
 
@@ -164,9 +204,9 @@
                 <input
                   type="password"
                   id="login-signup-password"
+                  formControlName="password"
                   class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10"
                   placeholder="Create a password"
-                  required
                 />
                 <button
                   type="button"
@@ -201,6 +241,13 @@
                   </li>
                 </ul>
               </div>
+              <div
+                class="mt-1 text-sm text-error-500"
+                [class.hidden]="!signupControlInvalid('password')"
+              >
+                <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                Password must be at least 8 characters and include a letter and a number
+              </div>
             </div>
 
             <div>
@@ -212,13 +259,21 @@
               <input
                 type="password"
                 id="login-signup-confirm-password"
+                formControlName="confirmPassword"
                 class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="Confirm your password"
-                required
               />
-              <div id="login-confirm-password-error" class="hidden mt-1 text-sm text-error-500">
+              <div
+                id="login-confirm-password-error"
+                class="mt-1 text-sm text-error-500"
+                [class.hidden]="!signupControlInvalid('confirmPassword') && !showPasswordMismatch()"
+              >
                 <i class="fa-solid fa-exclamation-circle mr-1"></i>
-                Passwords don't match
+                @if (signupControlInvalid('confirmPassword')) {
+                  Confirm password is required
+                } @else {
+                  Passwords don't match
+                }
               </div>
             </div>
 
@@ -227,8 +282,8 @@
                 <input
                   type="checkbox"
                   id="login-terms-checkbox"
+                  formControlName="termsAccepted"
                   class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-1"
-                  required
                 />
                 <span class="ml-2 text-sm text-gray-600">
                   I agree to the
@@ -241,10 +296,18 @@
                   >
                 </span>
               </label>
+              <div
+                class="mt-1 text-sm text-error-500"
+                [class.hidden]="!signupControlInvalid('termsAccepted')"
+              >
+                <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                You must accept terms to create an account
+              </div>
               <label class="flex items-start">
                 <input
                   type="checkbox"
                   id="login-marketing-checkbox"
+                  formControlName="marketingAccepted"
                   class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-1"
                 />
                 <span class="ml-2 text-sm text-gray-600">
@@ -253,13 +316,32 @@
               </label>
             </div>
 
+            @if (signupErrorMessage()) {
+              <div class="rounded-lg bg-error-50 text-error-700 border border-error-200 px-3 py-2 text-sm">
+                {{ signupErrorMessage() }}
+              </div>
+            }
+
+            @if (signupSuccessMessage()) {
+              <div
+                class="rounded-lg bg-success-50 text-success-700 border border-success-200 px-3 py-2 text-sm"
+              >
+                {{ signupSuccessMessage() }}
+              </div>
+            }
+
             <button
               type="submit"
               id="signup-btn"
               class="w-full bg-primary-500 text-white py-3 px-4 rounded-lg hover:bg-primary-600 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="signupLoading()"
             >
-              <span id="signup-text">Create Account</span>
-              <i id="signup-loading" class="fa-solid fa-spinner fa-spin hidden ml-2"></i>
+              <span id="signup-text">{{ signupLoading() ? 'Creating account...' : 'Create Account' }}</span>
+              <i
+                id="signup-loading"
+                class="fa-solid fa-spinner fa-spin ml-2"
+                [class.hidden]="!signupLoading()"
+              ></i>
             </button>
           </form>
 

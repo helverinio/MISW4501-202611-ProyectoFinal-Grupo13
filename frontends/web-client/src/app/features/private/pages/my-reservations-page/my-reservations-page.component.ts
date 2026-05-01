@@ -14,6 +14,7 @@ import {
   PaisResponse,
   ReservaResponse,
   ReservationService,
+  UsuarioResponse,
 } from '../../../search-results/services/reservation.service';
 
 type ReservationTab = 'all' | 'upcoming' | 'past' | 'cancelled';
@@ -33,6 +34,8 @@ interface ReservationItemVm {
   status: ReservationStatus;
   statusLabel: string;
   reviewSubmitted: boolean;
+  guestEmail: string;
+  guestName: string;
 }
 
 @Component({
@@ -330,6 +333,8 @@ export class MyReservationsPageComponent {
         roomRate: (reservation.total / reservation.nights).toFixed(2),
         taxes: '0',
         total: reservation.total,
+        guestEmail: reservation.guestEmail,
+        guestName: reservation.guestName,
       },
     });
   }
@@ -558,16 +563,38 @@ export class MyReservationsPageComponent {
     return this.reservationService.getHabitacionById(reserva.id_habitacion).pipe(
       switchMap((habitacion) =>
         this.searchHotelsService.getHotelById(habitacion.id_hotel).pipe(
-          switchMap((hotel) =>
-            forkJoin({
+          switchMap((hotel) => {
+            const status = this.resolveStatus(reserva, estados);
+            const commentsFetch =
+              status === 'completed'
+                ? this.searchHotelsService
+                    .getHotelComments(hotel.id, 1, 100)
+                    .pipe(catchError(() => of({ comentarios: [] as { id_reserva: string }[] })))
+                : of({ comentarios: [] as { id_reserva: string }[] });
+
+            return forkJoin({
               ciudad: this.reservationService.getCiudadById(hotel.id_ciudad),
               pais: this.reservationService.getPaisById(reserva.id_pais),
+              usuario: this.reservationService.getUsuarioById(reserva.id_usuario),
+              comments: commentsFetch,
             }).pipe(
-              map(({ ciudad, pais }) =>
-                this.toReservationVm(reserva, habitacion, hotel, ciudad.nombre, pais, estados),
-              ),
-            ),
-          ),
+              map(({ ciudad, pais, usuario, comments }) => {
+                const reviewSubmitted = comments.comentarios.some(
+                  (c) => c.id_reserva === reserva.id,
+                );
+                return this.toReservationVm(
+                  reserva,
+                  habitacion,
+                  hotel,
+                  ciudad.nombre,
+                  pais,
+                  estados,
+                  usuario,
+                  reviewSubmitted,
+                );
+              }),
+            );
+          }),
         ),
       ),
       catchError(() => of(this.toFallbackReservationVm(reserva, estados))),
@@ -581,6 +608,8 @@ export class MyReservationsPageComponent {
     ciudadNombre: string,
     pais: PaisResponse,
     estados: EstadoResponse[],
+    usuario: UsuarioResponse,
+    reviewSubmitted = false,
   ): ReservationItemVm {
     const status = this.resolveStatus(reserva, estados);
     const nights = this.getNights(reserva.fecha_ingreso, reserva.fecha_salida);
@@ -598,7 +627,9 @@ export class MyReservationsPageComponent {
       total: reserva.total,
       status,
       statusLabel: this.statusLabel(status),
-      reviewSubmitted: false,
+      reviewSubmitted,
+      guestEmail: usuario.email || '',
+      guestName: usuario.nombre || 'Guest',
     };
   }
 
@@ -623,6 +654,8 @@ export class MyReservationsPageComponent {
       status,
       statusLabel: this.statusLabel(status),
       reviewSubmitted: false,
+      guestEmail: '',
+      guestName: 'Guest',
     };
   }
 
