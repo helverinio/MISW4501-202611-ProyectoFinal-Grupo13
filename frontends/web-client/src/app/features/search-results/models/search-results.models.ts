@@ -61,6 +61,34 @@ export interface HotelRoomResponse {
   precio_total_reserva?: number;
 }
 
+export interface HotelRatingSummaryResponse {
+  rating_promedio: number;
+  cantidad_ratings: number;
+  cantidad_comentarios: number;
+}
+
+export interface HotelCommentResponse {
+  id: string;
+  id_usuario: string;
+  id_reserva: string;
+  comentario: string | null;
+  rating: number;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface HotelCommentsResponse {
+  hotel_id: string;
+  rating_hotel: HotelRatingSummaryResponse;
+  pagination: {
+    total: number;
+    page: number;
+    per_page: number;
+    total_pages: number;
+  };
+  comentarios: HotelCommentResponse[];
+}
+
 export interface PopularDestinationByCityApi {
   ciudad: string;
   pais: string;

@@ -32,6 +32,10 @@ class SQLAlchemyNotificacionRepository(NotificacionRepository):
         models = NotificacionModel.query.filter_by(id_reserva=reserva_id).all()
         return [self._to_entity(m) for m in models]
 
+    def find_by_reserva_and_type(self, reserva_id: str, titulo: str) -> List[Notificacion]:
+        models = NotificacionModel.query.filter_by(id_reserva=reserva_id, titulo=titulo).all()
+        return [self._to_entity(m) for m in models]
+
     def update(self, notificacion: Notificacion) -> Notificacion:
         model = NotificacionModel.query.get(notificacion.id)
         if model:

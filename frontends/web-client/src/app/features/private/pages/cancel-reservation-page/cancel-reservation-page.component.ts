@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
+import {
+  EmailDeliveryService,
+  CancellationEmailPayload,
+} from '../../../../core/services/email-delivery.service';
 import { I18nService } from '../../../../core/services/i18n.service';
+import { environment } from '../../../../../environments/environment';
 import { HotelByIdResponse } from '../../../search-results/models/search-results.models';
 import { SearchHotelsService } from '../../../search-results/services/search-hotels.service';
 import {
@@ -31,6 +36,8 @@ interface CancellationInfo {
   taxes: number;
   total: number;
   refundAmount: number;
+  guestEmail: string;
+  guestName: string;
 }
 
 @Component({
@@ -45,6 +52,7 @@ export class CancelReservationPageComponent {
   private readonly currencyService = inject(CurrencyService);
   private readonly reservationService = inject(ReservationService);
   private readonly searchHotelsService = inject(SearchHotelsService);
+  private readonly emailDeliveryService = inject(EmailDeliveryService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
@@ -237,7 +245,7 @@ export class CancelReservationPageComponent {
           .pipe(finalize(() => this.submitting.set(false)))
           .subscribe({
             next: () => {
-              void this.router.navigate(['/app/mis-reservas']);
+              this.sendCancellationEmailThenNavigate();
             },
             error: (error) => {
               this.errorMessage.set(
@@ -251,6 +259,90 @@ export class CancelReservationPageComponent {
         this.errorMessage.set(error?.error?.error || 'Failed to load statuses for cancellation.');
       },
     });
+  }
+
+  private sendCancellationEmailThenNavigate(): void {
+    const reservaId = this.cancellationInfo()?.id;
+    console.log('[CancelEmail] Step 1 - reservaId:', reservaId);
+    if (!reservaId) {
+      void this.router.navigate(['/app/mis-reservas']);
+      return;
+    }
+
+    // Verificar si ya existe una notificación de cancelación para esta reserva
+    console.log('[CancelEmail] Step 2 - checking existing notification...');
+    this.reservationService
+      .getNotificacionesByReservaAndType(reservaId, 'cancelacion')
+      .pipe(
+        catchError((err) => {
+          console.warn('[CancelEmail] Step 2 ERROR checking notification, proceeding anyway:', err);
+          return of([]);
+        }),
+      )
+      .subscribe({
+        next: (notificaciones) => {
+          console.log('[CancelEmail] Step 3 - existing notifications:', notificaciones);
+          if (notificaciones && notificaciones.length > 0) {
+            console.log('[CancelEmail] Already sent, navigating.');
+            void this.router.navigate(['/app/mis-reservas']);
+            return;
+          }
+
+          const guestEmail = this.cancellationInfo()?.guestEmail || '';
+          const guestName = this.cancellationInfo()?.guestName || 'Guest';
+          console.log('[CancelEmail] Step 4 - guestEmail:', guestEmail, 'guestName:', guestName);
+
+          if (!guestEmail) {
+            console.warn('[CancelEmail] No guest email available, navigating without email.');
+            void this.router.navigate(['/app/mis-reservas']);
+            return;
+          }
+
+          const emailPayload: CancellationEmailPayload = {
+            toEmail: guestEmail,
+            reservationId: reservaId,
+            guestName,
+            hotelName: this.cancellationInfo()?.hotelName || '',
+            checkIn: this.cancellationInfo()?.checkIn || '',
+            checkOut: this.cancellationInfo()?.checkOut || '',
+            totalRefunded: this.cancellationInfo()?.refundAmount.toString() || '0',
+            cancellationReason: this.selectedReason() || 'other',
+          };
+
+          console.log('[CancelEmail] Step 5 - sending email with payload:', emailPayload);
+          this.emailDeliveryService.sendCancellationEmail(emailPayload).subscribe({
+            next: (response) => {
+              console.log('[CancelEmail] Step 6 - email sent successfully:', response);
+              this.reservationService
+                .createNotificacion({
+                  titulo: 'cancelacion',
+                  descripcion: `Reservation ${reservaId} cancelled successfully`,
+                  id_reserva: reservaId,
+                })
+                .pipe(
+                  catchError((err) => {
+                    console.warn('[CancelEmail] Step 7 ERROR saving notification log:', err);
+                    return of(null);
+                  }),
+                )
+                .subscribe(() => {
+                  console.log('[CancelEmail] Step 7 - notification log saved, navigating.');
+                  void this.router.navigate(['/app/mis-reservas']);
+                });
+            },
+            error: (error) => {
+              console.error('[CancelEmail] Step 5 ERROR sending email:', error);
+              console.error('[CancelEmail] Runtime EmailJS config:', {
+                serviceId: environment.emailJs.serviceId,
+                templateId: environment.emailJs.templateId,
+                cancellationTemplateId: environment.emailJs.cancellationTemplateId,
+                endpoint: environment.emailJs.endpoint,
+              });
+              void this.router.navigate(['/app/mis-reservas']);
+            },
+          });
+        },
+      });
   }
 
   protected formatPrice(amountUsd: number): string {
@@ -345,6 +437,8 @@ export class CancelReservationPageComponent {
         taxes: parseFloat(params['taxes'] || '0'),
         total: parseFloat(params['total'] || '0'),
         refundAmount: parseFloat(params['total'] || '0'), // Full refund for confirmed reservations
+        guestEmail: params['guestEmail'] || '',
+        guestName: params['guestName'] || '',
       };
 
       this.cancellationInfo.set(info);

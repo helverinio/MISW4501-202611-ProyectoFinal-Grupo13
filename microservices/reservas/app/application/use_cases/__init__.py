@@ -39,7 +39,8 @@ from app.application.use_cases.pago_use_cases import (
 )
 from app.application.use_cases.notificacion_use_cases import (
     CreateNotificacionUseCase, GetNotificacionUseCase, GetAllNotificacionesUseCase,
-    GetNotificacionesByReservaUseCase, UpdateNotificacionUseCase, DeleteNotificacionUseCase
+    GetNotificacionesByReservaUseCase, GetNotificacionesByReservaAndTypeUseCase,
+    UpdateNotificacionUseCase, DeleteNotificacionUseCase
 )
 from app.application.use_cases.room_hold_use_cases import (
     AcquireRoomHoldUseCase, GetRoomHoldUseCase, CheckRoomHoldUseCase,

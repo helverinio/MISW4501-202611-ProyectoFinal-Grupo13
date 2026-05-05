@@ -8,6 +8,7 @@ import { CurrencyService, SupportedCurrency } from '../../../../core/services/cu
 import { I18nService } from '../../../../core/services/i18n.service';
 import {
   HotelByIdResponse,
+  HotelCommentsResponse,
   HotelRoomResponse,
   SearchAvailableHotelsRequest,
   SearchAvailableHotelsResponse,
@@ -25,6 +26,21 @@ interface RoomCardVm {
   canReserve: boolean;
   availabilityLabel: string;
   availabilityClass: string;
+}
+
+interface HotelRatingSummaryVm {
+  average: number;
+  reviewsCount: number;
+  commentsCount: number;
+}
+
+interface GuestReviewVm {
+  id: string;
+  author: string;
+  avatarUrl: string;
+  rating: number;
+  comment: string;
+  timeAgo: string;
 }
 
 @Component({
@@ -51,11 +67,32 @@ export class HotelDetailsPageComponent {
   protected readonly hotel = signal<HotelByIdResponse | null>(null);
   protected readonly rooms = signal<HotelRoomResponse[]>([]);
   protected readonly selectedRoomCard = signal<RoomCardVm | null>(null);
+  protected readonly ratingSummary = signal<HotelRatingSummaryVm | null>(null);
+  protected readonly guestReviews = signal<GuestReviewVm[]>([]);
 
   protected readonly amenities = signal<string[]>([]);
   protected readonly checkInDate = signal<string>('');
   protected readonly checkOutDate = signal<string>('');
   protected readonly guests = signal<number>(2);
+  protected readonly reviewStars = [1, 2, 3, 4, 5];
+
+  protected readonly averageGuestRating = computed(() => {
+    const average = this.ratingSummary()?.average ?? 0;
+    if (average <= 0 && !this.guestReviews().length) {
+      return 0;
+    }
+
+    return Number(average.toFixed(1));
+  });
+
+  protected readonly totalGuestReviews = computed(() => {
+    const commentsCount = this.ratingSummary()?.commentsCount;
+    if (typeof commentsCount === 'number' && commentsCount >= 0) {
+      return commentsCount;
+    }
+
+    return this.guestReviews().length;
+  });
 
   protected readonly nights = computed(() => {
     const checkIn = this.checkInDate();
@@ -302,7 +339,10 @@ export class HotelDetailsPageComponent {
       | 'holdExpiredError'
       | 'roomType'
       | 'guestsExceedCapacity'
-      | 'notAvailable',
+      | 'notAvailable'
+      | 'guestReviews'
+      | 'viewAllReviews'
+      | 'noReviewsYet',
   ): string {
     const lang = this.currentLanguage();
 
@@ -331,6 +371,9 @@ export class HotelDetailsPageComponent {
         roomType: 'Room type',
         guestsExceedCapacity: 'Exceeds the maximum guests allowed for this room.',
         notAvailable: 'N/A',
+        guestReviews: 'Guest Reviews',
+        viewAllReviews: 'View All Reviews',
+        noReviewsYet: 'No reviews available for this hotel yet.',
       },
       es: {
         searchResults: 'Resultados de busqueda',
@@ -356,6 +399,9 @@ export class HotelDetailsPageComponent {
         roomType: 'Tipo de habitacion',
         guestsExceedCapacity: 'Supera el maximo de huespedes permitido para esta habitacion.',
         notAvailable: 'N/D',
+        guestReviews: 'Resenas de huespedes',
+        viewAllReviews: 'Ver todas las resenas',
+        noReviewsYet: 'Este hotel aun no tiene resenas registradas.',
       },
       pt: {
         searchResults: 'Resultados da busca',
@@ -380,6 +426,9 @@ export class HotelDetailsPageComponent {
         roomType: 'Tipo de quarto',
         guestsExceedCapacity: 'Excede o maximo de hospedes permitido para este quarto.',
         notAvailable: 'N/D',
+        guestReviews: 'Avaliacoes de hospedes',
+        viewAllReviews: 'Ver todas as avaliacoes',
+        noReviewsYet: 'Este hotel ainda nao possui avaliacoes registradas.',
       },
     } as const;
 
@@ -464,32 +513,57 @@ export class HotelDetailsPageComponent {
   private loadHotel(hotelId: string): void {
     this.loading.set(true);
     this.errorMessage.set('');
+    this.ratingSummary.set(null);
+    this.guestReviews.set([]);
 
     const searchPayload = this.buildSearchPayload();
 
     forkJoin({
       hotel: this.searchHotelsService.getHotelById(hotelId),
       rooms: this.searchHotelsService.getRoomsByHotelId(hotelId),
+      comments: this.searchHotelsService
+        .getHotelComments(hotelId, 1, 3)
+        .pipe(catchError(() => of(null))),
     })
       .pipe(
-        switchMap(({ hotel, rooms }) => {
+        switchMap(({ hotel, rooms, comments }) => {
           if (!searchPayload) {
-            return of({ hotel, rooms });
+            return of({
+              hotel,
+              rooms,
+              ratingSummary: this.mapRatingSummaryFromComments(comments),
+              comments,
+            });
           }
 
           return this.searchHotelsService.searchAvailableHotels(searchPayload).pipe(
             map((response) => ({
               hotel,
-              rooms: this.mergeRoomPricing(rooms, hotel.id, response),
+              comments,
+              ...this.mergeRoomPricingAndRatings(
+                rooms,
+                hotel.id,
+                response,
+                this.mapRatingSummaryFromComments(comments),
+              ),
             })),
-            catchError(() => of({ hotel, rooms })),
+            catchError(() =>
+              of({
+                hotel,
+                rooms,
+                ratingSummary: this.mapRatingSummaryFromComments(comments),
+                comments,
+              }),
+            ),
           );
         }),
       )
       .subscribe({
-        next: ({ hotel, rooms }) => {
+        next: ({ hotel, rooms, ratingSummary, comments }) => {
           this.hotel.set(hotel);
           this.rooms.set(rooms);
+          this.ratingSummary.set(ratingSummary);
+          this.guestReviews.set(this.mapCommentsToVm(comments));
           this.amenities.set(this.parseAmenities(hotel.amenidades));
           this.loading.set(false);
         },
@@ -520,14 +594,19 @@ export class HotelDetailsPageComponent {
     };
   }
 
-  private mergeRoomPricing(
+  private mergeRoomPricingAndRatings(
     rooms: HotelRoomResponse[],
     hotelId: string,
     response: SearchAvailableHotelsResponse,
-  ): HotelRoomResponse[] {
+    ratingSummaryFromComments: HotelRatingSummaryVm | null,
+  ): {
+    rooms: HotelRoomResponse[];
+    ratingSummary: HotelRatingSummaryVm | null;
+    comments?: HotelCommentsResponse | null;
+  } {
     const matchingHotel = response.hoteles.find((hotel) => hotel.hotel_id === hotelId);
     if (!matchingHotel) {
-      return rooms;
+      return { rooms, ratingSummary: ratingSummaryFromComments };
     }
 
     const pricedByRoomId = new Map(
@@ -541,10 +620,109 @@ export class HotelDetailsPageComponent {
       ]),
     );
 
-    return rooms.map((room) => {
+    const mergedRooms = rooms.map((room) => {
       const priced = pricedByRoomId.get(room.id);
       return priced ? { ...room, ...priced } : room;
     });
+
+    const ratingSummaryFromSearch = {
+      average: matchingHotel.rating_promedio || 0,
+      reviewsCount: matchingHotel.cantidad_ratings || 0,
+      commentsCount: matchingHotel.cantidad_comentarios || 0,
+    };
+
+    return {
+      rooms: mergedRooms,
+      ratingSummary: ratingSummaryFromComments ?? ratingSummaryFromSearch,
+    };
+  }
+
+  private mapCommentsToVm(response: HotelCommentsResponse | null): GuestReviewVm[] {
+    if (!response?.comentarios?.length) {
+      return [];
+    }
+
+    return response.comentarios.map((item) => ({
+      id: item.id,
+      author: this.buildReviewAuthor(item.id_usuario),
+      avatarUrl: this.buildReviewAvatar(item.id_usuario),
+      rating: item.rating,
+      comment: item.comentario?.trim() || this.label('notAvailable'),
+      timeAgo: this.toRelativeDate(item.created_at),
+    }));
+  }
+
+  private mapRatingSummaryFromComments(
+    response: HotelCommentsResponse | null,
+  ): HotelRatingSummaryVm | null {
+    if (!response?.rating_hotel) {
+      return null;
+    }
+
+    return {
+      average: response.rating_hotel.rating_promedio || 0,
+      reviewsCount: response.rating_hotel.cantidad_ratings || 0,
+      commentsCount: response.rating_hotel.cantidad_comentarios || 0,
+    };
+  }
+
+  private buildReviewAuthor(userId: string): string {
+    const lang = this.currentLanguage();
+    const suffix = (userId || '').replace(/-/g, '').slice(0, 8).toUpperCase() || 'ANON';
+
+    if (lang === 'es') {
+      return `Huesped ${suffix}`;
+    }
+
+    if (lang === 'pt') {
+      return `Hospede ${suffix}`;
+    }
+
+    return `Guest ${suffix}`;
+  }
+
+  private buildReviewAvatar(userId: string): string {
+    const seed = encodeURIComponent(userId || 'guest');
+    return `https://api.dicebear.com/9.x/thumbs/svg?seed=${seed}`;
+  }
+
+  private toRelativeDate(value: string | null): string {
+    if (!value) {
+      return this.label('notAvailable');
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      return this.label('notAvailable');
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - parsed.getTime();
+    const dayMs = 1000 * 60 * 60 * 24;
+    const days = Math.max(0, Math.floor(diffMs / dayMs));
+    const lang = this.currentLanguage();
+
+    if (lang === 'es') {
+      if (days < 1) return 'hoy';
+      if (days === 1) return 'hace 1 dia';
+      if (days < 7) return `hace ${days} dias`;
+      const weeks = Math.floor(days / 7);
+      return weeks === 1 ? 'hace 1 semana' : `hace ${weeks} semanas`;
+    }
+
+    if (lang === 'pt') {
+      if (days < 1) return 'hoje';
+      if (days === 1) return 'ha 1 dia';
+      if (days < 7) return `ha ${days} dias`;
+      const weeks = Math.floor(days / 7);
+      return weeks === 1 ? 'ha 1 semana' : `ha ${weeks} semanas`;
+    }
+
+    if (days < 1) return 'today';
+    if (days === 1) return '1 day ago';
+    if (days < 7) return `${days} days ago`;
+    const weeks = Math.floor(days / 7);
+    return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
   }
 
   private getRoomNightlyPrice(room: HotelRoomResponse): number {

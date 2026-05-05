@@ -650,8 +650,9 @@
                     id="email"
                     type="email"
                     formControlName="email"
+                    readonly
                     placeholder="your.email@example.com"
-                    class="w-full rounded-md border px-3 py-2 text-sm text-gray-800"
+                    class="w-full rounded-md border px-3 py-2 text-sm text-gray-800 bg-gray-50 cursor-not-allowed"
                     [class.border-gray-300]="!isEmailInvalid()"
                     [class.border-red-400]="isEmailInvalid()"
                   />

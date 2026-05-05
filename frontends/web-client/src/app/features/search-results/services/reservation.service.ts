@@ -112,6 +112,12 @@ export interface ReservaResponse {
   id_estado: string;
 }
 
+export interface UsuarioResponse {
+  id: string | number;
+  nombre: string;
+  email: string;
+}
+
 export interface UpdateReservaPayload {
   fecha_ingreso?: string;
   fecha_salida?: string;
@@ -138,7 +144,7 @@ export interface RecentlyViewedHotelResponse {
 }
 
 export interface CreateNotificacionPayload {
-  fecha_notif: string;
+  fecha_notif?: string;
   titulo: string;
   id_reserva: string;
   descripcion?: string;
@@ -150,6 +156,29 @@ export interface NotificacionResponse {
   titulo: string;
   descripcion?: string | null;
   id_reserva: string;
+}
+
+export interface CreateHotelCommentPayload {
+  id_reserva: string;
+  rating: number;
+  comentario?: string | null;
+  id_usuario?: string;
+}
+
+export interface CreateHotelCommentResponse {
+  id: string;
+  id_hotel: string;
+  id_usuario: string;
+  id_reserva: string;
+  comentario: string | null;
+  rating: number;
+  created_at: string;
+  updated_at: string;
+  rating_hotel?: {
+    rating_promedio: number;
+    cantidad_ratings: number;
+    cantidad_comentarios: number;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -183,6 +212,12 @@ export class ReservationService {
   getReservasByUsuario(usuarioId: string): Observable<ReservaResponse[]> {
     return this.http
       .get<ReservaResponse[]>(`${environment.apiBaseUrl}/usuarios/${usuarioId}/reservas`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getUsuarioById(usuarioId: string): Observable<UsuarioResponse> {
+    return this.http
+      .get<UsuarioResponse>(`${environment.apiBaseUrl}/usuarios/${usuarioId}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
@@ -245,6 +280,29 @@ export class ReservationService {
   deleteReserva(reservaId: string): Observable<unknown> {
     return this.http
       .delete(`${environment.apiBaseUrl}/reservas/${reservaId}`)
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  createHotelComment(
+    hotelId: string,
+    payload: CreateHotelCommentPayload,
+  ): Observable<CreateHotelCommentResponse> {
+    return this.http
+      .post<CreateHotelCommentResponse>(
+        `${environment.apiBaseUrl}/hoteles/${hotelId}/comentarios`,
+        payload,
+      )
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  getNotificacionesByReservaAndType(
+    reservaId: string,
+    notificationType: string,
+  ): Observable<NotificacionResponse[]> {
+    return this.http
+      .get<
+        NotificacionResponse[]
+      >(`${environment.apiBaseUrl}/reservas/${reservaId}/notificaciones?tipo=${notificationType}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 }

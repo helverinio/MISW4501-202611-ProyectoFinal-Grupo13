@@ -151,6 +151,20 @@
                   {{ label('viewDetails') }}
                 </button>
 
+                @if (
+                  reservation.status === 'completed' &&
+                  reservation.hotelId &&
+                  !reservation.reviewSubmitted
+                ) {
+                  <button
+                    type="button"
+                    class="px-4 py-2 rounded-lg bg-amber-100 text-amber-800 text-sm font-medium hover:bg-amber-200 transition-colors"
+                    (click)="openReviewModal(reservation)"
+                  >
+                    {{ label('rateStay') }}
+                  </button>
+                }
+
                 @if (reservation.status === 'confirmed') {
                   <button
                     type="button"
@@ -217,5 +231,83 @@
         </button>
       </div>
     }
+  }
+
+  @if (reviewModalReservation(); as reviewReservation) {
+    <div class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+      <article
+        class="w-full max-w-xl bg-white rounded-2xl border border-gray-200 shadow-xl p-5 sm:p-6"
+      >
+        <div class="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">{{ label('reviewStayTitle') }}</h2>
+            <p class="text-sm text-gray-500 mt-1">{{ reviewReservation.hotelName }}</p>
+          </div>
+          <button
+            type="button"
+            class="w-8 h-8 rounded-lg text-gray-500 hover:bg-gray-100"
+            (click)="closeReviewModal()"
+            aria-label="Close review modal"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-sm font-medium text-gray-800 mb-2">{{ label('reviewRatingLabel') }}</p>
+          <div class="flex items-center gap-2 text-2xl text-amber-400">
+            @for (star of reviewStars; track star) {
+              <button
+                type="button"
+                class="leading-none"
+                [attr.aria-label]="'Rate ' + star + ' stars'"
+                (click)="setReviewRating(star)"
+              >
+                <i class="fa-solid fa-star" [class.opacity-30]="star > reviewRating()"></i>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="text-sm font-medium text-gray-800 block mb-2">{{
+            label('reviewCommentLabel')
+          }}</label>
+          <textarea
+            rows="4"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            [value]="reviewComment()"
+            [placeholder]="label('reviewCommentPlaceholder')"
+            (input)="onReviewCommentChange($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        @if (reviewErrorMessage()) {
+          <p class="text-sm text-red-600 mb-3">{{ reviewErrorMessage() }}</p>
+        }
+
+        @if (reviewSuccessMessage()) {
+          <p class="text-sm text-emerald-600 mb-3">{{ reviewSuccessMessage() }}</p>
+        }
+
+        <div class="flex flex-wrap gap-2 justify-end">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200"
+            (click)="closeReviewModal()"
+          >
+            {{ label('close') }}
+          </button>
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
+            [disabled]="reviewSubmitting() || !!reviewSuccessMessage()"
+            (click)="submitReview()"
+          >
+            {{ label('submitReview') }}
+          </button>
+        </div>
+      </article>
+    </div>
   }
 </section>
