@@ -44,6 +44,9 @@ class UsuariosService:
     def login(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'auth/login', data)
 
+    def verify_email(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'auth/verify-email', data)
+
     def refresh_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'auth/refresh', data)
 

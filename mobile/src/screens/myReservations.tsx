@@ -487,7 +487,7 @@ export default function MyReservationsScreen() {
     }
   };
 
-  const handleCancel = async (reservation: ReservationItemVm) => {
+  const handleCancel = (reservation: ReservationItemVm) => {
     if (isOffline) {
       Alert.alert(
         t('offline.actionUnavailableTitle'),
@@ -495,20 +495,21 @@ export default function MyReservationsScreen() {
       );
       return;
     }
-    try {
-      const cancelledEstado = estados.find(
-        (e) => normalize(e.nombre).includes('cancel')
-      );
-
-      if (cancelledEstado) {
-        await BookingService.updateReserva(reservation.id, {
-          id_estado: cancelledEstado.id,
-        });
-        loadReservations();
-      }
-    } catch (error) {
-      console.error('Cancel reservation error:', error);
-    }
+    router.push({
+      pathname: '/screens/cancelReservation',
+      params: {
+        reservationId: reservation.id,
+        hotelName: reservation.hotelName,
+        location: reservation.location,
+        checkIn: reservation.checkIn,
+        checkOut: reservation.checkOut,
+        nights: reservation.nights.toString(),
+        guests: reservation.guests.toString(),
+        children: reservation.children.toString(),
+        total: reservation.total.toString(),
+        roomType: reservation.roomType,
+      },
+    } as any);
   };
 
   const renderStars = (rating: number) => {

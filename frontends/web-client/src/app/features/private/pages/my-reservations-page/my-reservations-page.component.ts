@@ -14,6 +14,7 @@ import {
   PaisResponse,
   ReservaResponse,
   ReservationService,
+  UsuarioResponse,
 } from '../../../search-results/services/reservation.service';
 
 type ReservationTab = 'all' | 'upcoming' | 'past' | 'cancelled';
@@ -32,6 +33,9 @@ interface ReservationItemVm {
   total: number;
   status: ReservationStatus;
   statusLabel: string;
+  reviewSubmitted: boolean;
+  guestEmail: string;
+  guestName: string;
 }
 
 @Component({
@@ -57,6 +61,13 @@ export class MyReservationsPageComponent {
   protected readonly pageSize = 4;
   protected readonly currentLanguage = this.i18n.currentLanguage;
   protected readonly currentCurrency = this.currencyService.currentCurrency;
+  protected readonly reviewModalReservation = signal<ReservationItemVm | null>(null);
+  protected readonly reviewRating = signal<number>(5);
+  protected readonly reviewComment = signal<string>('');
+  protected readonly reviewSubmitting = signal<boolean>(false);
+  protected readonly reviewErrorMessage = signal<string>('');
+  protected readonly reviewSuccessMessage = signal<string>('');
+  protected readonly reviewStars = [1, 2, 3, 4, 5];
 
   protected readonly filteredReservations = computed(() => {
     const tab = this.activeTab();
@@ -140,7 +151,17 @@ export class MyReservationsPageComponent {
       | 'confirmed'
       | 'pending'
       | 'completed'
-      | 'cancelledStatus',
+      | 'cancelledStatus'
+      | 'rateStay'
+      | 'reviewStayTitle'
+      | 'reviewRatingLabel'
+      | 'reviewCommentLabel'
+      | 'reviewCommentPlaceholder'
+      | 'submitReview'
+      | 'close'
+      | 'reviewSuccess'
+      | 'reviewRequiredError'
+      | 'reviewGenericError',
   ): string {
     const lang = this.currentLanguage();
     const dictionary = {
@@ -170,6 +191,16 @@ export class MyReservationsPageComponent {
         pending: 'Pending',
         completed: 'Completed',
         cancelledStatus: 'Cancelled',
+        rateStay: 'Rate Stay',
+        reviewStayTitle: 'Rate and review your stay',
+        reviewRatingLabel: 'Rating',
+        reviewCommentLabel: 'Review',
+        reviewCommentPlaceholder: 'Tell us about your stay experience',
+        submitReview: 'Submit Review',
+        close: 'Close',
+        reviewSuccess: 'Thanks! Your rating and review were submitted successfully.',
+        reviewRequiredError: 'Please select a rating and write a review comment.',
+        reviewGenericError: 'Could not submit your review. Please try again.',
       },
       es: {
         breadcrumbHome: 'Home',
@@ -197,6 +228,16 @@ export class MyReservationsPageComponent {
         pending: 'Pendiente',
         completed: 'Completada',
         cancelledStatus: 'Cancelada',
+        rateStay: 'Calificar estancia',
+        reviewStayTitle: 'Califica y reseña tu estancia',
+        reviewRatingLabel: 'Calificación',
+        reviewCommentLabel: 'Reseña',
+        reviewCommentPlaceholder: 'Cuéntanos cómo fue tu experiencia en la estancia',
+        submitReview: 'Enviar reseña',
+        close: 'Cerrar',
+        reviewSuccess: 'Gracias. Tu calificación y reseña fueron enviadas correctamente.',
+        reviewRequiredError: 'Selecciona una calificación y escribe una reseña.',
+        reviewGenericError: 'No fue posible enviar tu reseña. Intenta nuevamente.',
       },
       pt: {
         breadcrumbHome: 'Home',
@@ -224,6 +265,16 @@ export class MyReservationsPageComponent {
         pending: 'Pendente',
         completed: 'Concluída',
         cancelledStatus: 'Cancelada',
+        rateStay: 'Avaliar estadia',
+        reviewStayTitle: 'Avalie e comente sua estadia',
+        reviewRatingLabel: 'Classificação',
+        reviewCommentLabel: 'Comentário',
+        reviewCommentPlaceholder: 'Conte como foi sua experiência durante a estadia',
+        submitReview: 'Enviar avaliação',
+        close: 'Fechar',
+        reviewSuccess: 'Obrigado! Sua classificação e comentário foram enviados com sucesso.',
+        reviewRequiredError: 'Selecione uma classificação e escreva um comentário.',
+        reviewGenericError: 'Não foi possível enviar sua avaliação. Tente novamente.',
       },
     } as const;
 
@@ -282,8 +333,84 @@ export class MyReservationsPageComponent {
         roomRate: (reservation.total / reservation.nights).toFixed(2),
         taxes: '0',
         total: reservation.total,
+        guestEmail: reservation.guestEmail,
+        guestName: reservation.guestName,
       },
     });
+  }
+
+  protected openReviewModal(reservation: ReservationItemVm): void {
+    if (reservation.status !== 'completed' || !reservation.hotelId || reservation.reviewSubmitted) {
+      return;
+    }
+
+    this.reviewModalReservation.set(reservation);
+    this.reviewRating.set(5);
+    this.reviewComment.set('');
+    this.reviewErrorMessage.set('');
+    this.reviewSuccessMessage.set('');
+  }
+
+  protected closeReviewModal(): void {
+    this.reviewModalReservation.set(null);
+    this.reviewSubmitting.set(false);
+    this.reviewErrorMessage.set('');
+    this.reviewSuccessMessage.set('');
+  }
+
+  protected setReviewRating(value: number): void {
+    if (value < 1 || value > 5) {
+      return;
+    }
+
+    this.reviewRating.set(value);
+  }
+
+  protected onReviewCommentChange(value: string): void {
+    this.reviewComment.set(value);
+  }
+
+  protected submitReview(): void {
+    const reservation = this.reviewModalReservation();
+    const user = this.authService.currentUser();
+
+    if (!reservation || !reservation.hotelId || !user) {
+      this.reviewErrorMessage.set(this.label('reviewGenericError'));
+      return;
+    }
+
+    const rating = this.reviewRating();
+    const comment = this.reviewComment().trim();
+    if (!rating || !comment) {
+      this.reviewErrorMessage.set(this.label('reviewRequiredError'));
+      return;
+    }
+
+    this.reviewSubmitting.set(true);
+    this.reviewErrorMessage.set('');
+    this.reviewSuccessMessage.set('');
+
+    this.reservationService
+      .createHotelComment(reservation.hotelId, {
+        id_reserva: reservation.id,
+        id_usuario: String(user.id),
+        rating,
+        comentario: comment,
+      })
+      .pipe(finalize(() => this.reviewSubmitting.set(false)))
+      .subscribe({
+        next: () => {
+          this.reviewSuccessMessage.set(this.label('reviewSuccess'));
+          this.reservations.update((items) =>
+            items.map((item) =>
+              item.id === reservation.id ? { ...item, reviewSubmitted: true } : item,
+            ),
+          );
+        },
+        error: (error) => {
+          this.reviewErrorMessage.set(error?.error?.error || this.label('reviewGenericError'));
+        },
+      });
   }
 
   protected primaryActionLabel(reservation: ReservationItemVm): string {
@@ -436,16 +563,38 @@ export class MyReservationsPageComponent {
     return this.reservationService.getHabitacionById(reserva.id_habitacion).pipe(
       switchMap((habitacion) =>
         this.searchHotelsService.getHotelById(habitacion.id_hotel).pipe(
-          switchMap((hotel) =>
-            forkJoin({
+          switchMap((hotel) => {
+            const status = this.resolveStatus(reserva, estados);
+            const commentsFetch =
+              status === 'completed'
+                ? this.searchHotelsService
+                    .getHotelComments(hotel.id, 1, 100)
+                    .pipe(catchError(() => of({ comentarios: [] as { id_reserva: string }[] })))
+                : of({ comentarios: [] as { id_reserva: string }[] });
+
+            return forkJoin({
               ciudad: this.reservationService.getCiudadById(hotel.id_ciudad),
               pais: this.reservationService.getPaisById(reserva.id_pais),
+              usuario: this.reservationService.getUsuarioById(reserva.id_usuario),
+              comments: commentsFetch,
             }).pipe(
-              map(({ ciudad, pais }) =>
-                this.toReservationVm(reserva, habitacion, hotel, ciudad.nombre, pais, estados),
-              ),
-            ),
-          ),
+              map(({ ciudad, pais, usuario, comments }) => {
+                const reviewSubmitted = comments.comentarios.some(
+                  (c) => c.id_reserva === reserva.id,
+                );
+                return this.toReservationVm(
+                  reserva,
+                  habitacion,
+                  hotel,
+                  ciudad.nombre,
+                  pais,
+                  estados,
+                  usuario,
+                  reviewSubmitted,
+                );
+              }),
+            );
+          }),
         ),
       ),
       catchError(() => of(this.toFallbackReservationVm(reserva, estados))),
@@ -459,6 +608,8 @@ export class MyReservationsPageComponent {
     ciudadNombre: string,
     pais: PaisResponse,
     estados: EstadoResponse[],
+    usuario: UsuarioResponse,
+    reviewSubmitted = false,
   ): ReservationItemVm {
     const status = this.resolveStatus(reserva, estados);
     const nights = this.getNights(reserva.fecha_ingreso, reserva.fecha_salida);
@@ -476,6 +627,9 @@ export class MyReservationsPageComponent {
       total: reserva.total,
       status,
       statusLabel: this.statusLabel(status),
+      reviewSubmitted,
+      guestEmail: usuario.email || '',
+      guestName: usuario.nombre || 'Guest',
     };
   }
 
@@ -499,6 +653,9 @@ export class MyReservationsPageComponent {
       total: reserva.total,
       status,
       statusLabel: this.statusLabel(status),
+      reviewSubmitted: false,
+      guestEmail: '',
+      guestName: 'Guest',
     };
   }
 

@@ -1,2 +1,3 @@
 from app.application.services.crypto_service import CryptoService
+from app.application.services.email_verification_service import EmailVerificationService
 from app.application.services.totp_service import TOTPService

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component';
+import { VerifyEmailPageComponent } from './features/auth/pages/verify-email-page/verify-email-page.component';
 import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
 import { HomeSearchPageComponent } from './features/home-search/pages/home-search-page/home-search-page.component';
 import { SearchResultsPageComponent } from './features/search-results/pages/search-results-page/search-results-page.component';
@@ -27,6 +28,10 @@ export const routes: Routes = [
         path: 'login',
         component: LoginPageComponent,
         canActivate: [publicOnlyGuard],
+      },
+      {
+        path: 'verify-email',
+        component: VerifyEmailPageComponent,
       },
     ],
   },

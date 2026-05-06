@@ -10,3 +10,4 @@ PyJWT==2.8.0
 bcrypt==4.1.2
 cryptography==42.0.7
 pyotp==2.9.0
+requests==2.32.3

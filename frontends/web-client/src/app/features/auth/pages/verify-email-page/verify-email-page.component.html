@@ -1,0 +1,104 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100 flex items-center justify-center px-4"
+>
+  <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+    <!-- Verifying -->
+    @if (status() === 'verifying') {
+      <div class="flex flex-col items-center gap-4">
+        <div
+          class="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p class="text-gray-600">Verifying your email address...</p>
+      </div>
+    }
+
+    <!-- Success -->
+    @if (status() === 'success') {
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800">Email Verified!</h1>
+        <p class="text-gray-600">
+          Your email <span class="font-medium text-sky-600">{{ userEmail() }}</span> has been
+          successfully verified.
+        </p>
+        <p class="text-sm text-gray-500">
+          You will be redirected to the sign in page in a few seconds...
+        </p>
+        <a
+          routerLink="/login"
+          class="mt-2 px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors"
+        >
+          Sign In Now
+        </a>
+      </div>
+    }
+
+    <!-- Expired -->
+    @if (status() === 'expired') {
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
+          <svg
+            class="w-8 h-8 text-yellow-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800">Link Expired</h1>
+        <p class="text-gray-600">
+          This verification link has expired. Please create your account again to receive a new
+          verification email.
+        </p>
+        <a
+          routerLink="/login"
+          class="mt-2 px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors"
+        >
+          Back to Sign In
+        </a>
+      </div>
+    }
+
+    <!-- Invalid -->
+    @if (status() === 'invalid') {
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800">Invalid Link</h1>
+        <p class="text-gray-600">
+          This verification link is invalid or has already been used. Please sign in or create a new
+          account.
+        </p>
+        <a
+          routerLink="/login"
+          class="mt-2 px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors"
+        >
+          Back to Sign In
+        </a>
+      </div>
+    }
+  </div>
+</div>

@@ -44,7 +44,7 @@ class FakeCreateComentarioUseCase:
 
 
 class FakeListComentariosUseCase:
-    def execute(self, hotel_id=None, page=1, per_page=10):
+    def execute(self, id_hotel=None, hotel_id=None, page=1, per_page=10, **_kwargs):
         return {
             'comentarios': [
                 SimpleNamespace(
