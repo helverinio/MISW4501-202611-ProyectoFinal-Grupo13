@@ -45,8 +45,8 @@ function calculateNights(checkInDate: string, checkOutDate: string): number {
 function mapHotelToVm(hotel: AvailableHotelApi): HotelResultVm {
   const seed = seededNumber(hotel.hotel_id);
   const imageIndex = seed % PLACEHOLDER_IMAGES.length;
-  const rating = Number((hotel.rating_promedio || 0).toFixed(1));
   const reviewsCount = hotel.cantidad_ratings || 0;
+  const rating = Number((reviewsCount > 0 ? hotel.rating_promedio || 0 : 5).toFixed(1));
   const cheapestRoom = [...hotel.habitaciones].sort(
     (a, b) => a.precio_promedio_noche - b.precio_promedio_noche,
   )[0];

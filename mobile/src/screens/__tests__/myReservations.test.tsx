@@ -588,9 +588,8 @@ describe('MyReservationsScreen', () => {
       });
     });
 
-    it('should call updateReserva on cancel press', async () => {
+    it('should navigate to cancelReservation on cancel press', async () => {
       setupMocks({ reservasResult: { success: true, data: [mockReservaPending] } });
-      mockUpdateReserva.mockResolvedValue({ success: true });
 
       const { getByText } = render(<MyReservationsScreen />);
       await waitFor(() => {
@@ -601,11 +600,15 @@ describe('MyReservationsScreen', () => {
         fireEvent.press(getByText('myReservations.cancel'));
       });
 
-      await waitFor(() => {
-        expect(mockUpdateReserva).toHaveBeenCalledWith('res-2', {
-          id_estado: 'estado-3',
-        });
-      });
+      expect(router.push).toHaveBeenCalledWith(
+        expect.objectContaining({
+          pathname: '/screens/cancelReservation',
+          params: expect.objectContaining({
+            reservationId: 'res-2',
+            hotelName: 'Hotel Sol',
+          }),
+        })
+      );
     });
   });
 

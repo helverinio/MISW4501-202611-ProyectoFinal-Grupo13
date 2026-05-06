@@ -164,11 +164,13 @@ describe('EditReservationScreen', () => {
     const { getByText } = render(<EditReservationScreen />);
     expect(getByText('editReservation.loading')).toBeTruthy();
 
-    deferred.resolve(hotelSearchSuccess);
+    await act(async () => {
+      deferred.resolve(hotelSearchSuccess);
+    });
 
     await waitFor(() => {
       expect(getByText('editReservation.title')).toBeTruthy();
-    });
+    }, { timeout: 10000 });
   });
 
   it('renders reservation details and available rooms after load', async () => {

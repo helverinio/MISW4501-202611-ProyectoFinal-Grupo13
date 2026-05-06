@@ -5,3 +5,14 @@
 .hotel-details-shell {
   min-height: calc(100vh - 72px);
 }
+
+.guest-reviews-card {
+  .guest-reviews-header {
+    border-bottom: 1px solid #eef0f3;
+    padding-bottom: 0.75rem;
+  }
+
+  .fa-star {
+    letter-spacing: 0.01em;
+  }
+}

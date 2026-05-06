@@ -270,6 +270,7 @@ export class ReservationFormPageComponent {
     this.route.queryParamMap
       .pipe(
         switchMap((params) => {
+          const authenticatedEmail = this.getAuthenticatedUserEmail();
           const hotelId = params.get('hotel_id') || '';
           const roomId = params.get('room_id') || '';
           const destination = (params.get('busqueda') || '').trim();
@@ -286,7 +287,7 @@ export class ReservationFormPageComponent {
             paymentMethod: 'card',
             firstName: '',
             lastName: '',
-            email: '',
+            email: authenticatedEmail,
             phonePrefix: '+57',
             phone: '',
             specialRequests: '',
@@ -385,6 +386,10 @@ export class ReservationFormPageComponent {
 
   protected isEmailInvalid(): boolean {
     const control = this.reservationForm.controls.email;
+    if (control.disabled) {
+      return false;
+    }
+
     const value = (control.value || '').trim();
 
     if (!value) {
@@ -1296,7 +1301,7 @@ export class ReservationFormPageComponent {
     this.reservationForm.patchValue({
       firstName: '',
       lastName: '',
-      email: '',
+      email: this.getAuthenticatedUserEmail(),
       phonePrefix: '+57',
       phone: '',
       specialRequests: '',
@@ -1347,5 +1352,9 @@ export class ReservationFormPageComponent {
     const hasTimezone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value);
     const normalized = hasTimezone ? value : `${value}Z`;
     return new Date(normalized);
+  }
+
+  private getAuthenticatedUserEmail(): string {
+    return (this.authService.currentUser()?.email || '').trim().toLowerCase();
   }
 }

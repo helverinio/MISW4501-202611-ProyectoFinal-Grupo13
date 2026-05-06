@@ -109,6 +109,24 @@ class ReservasService:
             params={'limit': limit},
         )
 
+    def get_hotel_comments(
+        self,
+        hotel_id: str,
+        page: int = 1,
+        per_page: int = 10,
+    ) -> Dict[str, Any]:
+        return self._request(
+            'GET',
+            f'hoteles/{hotel_id}/comentarios',
+            params={'page': page, 'per_page': per_page},
+        )
+
+    def create_hotel_comment(self, hotel_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', f'hoteles/{hotel_id}/comentarios', data)
+
+    def get_hotel_rating(self, hotel_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'hoteles/{hotel_id}/rating')
+
     # Habitaciones
     def create_habitacion(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'habitaciones', data)
@@ -215,8 +233,9 @@ class ReservasService:
     def get_pagos_by_reserva(self, reserva_id: str) -> Dict[str, Any]:
         return self._request('GET', f'reservas/{reserva_id}/pagos')
 
-    def get_notificaciones_by_reserva(self, reserva_id: str) -> Dict[str, Any]:
-        return self._request('GET', f'reservas/{reserva_id}/notificaciones')
+    def get_notificaciones_by_reserva(self, reserva_id: str, tipo: str = None) -> Dict[str, Any]:
+        params = {'tipo': tipo} if tipo else None
+        return self._request('GET', f'reservas/{reserva_id}/notificaciones', params=params)
 
     # Pagos
     def create_pago(self, data: Dict[str, Any]) -> Dict[str, Any]:

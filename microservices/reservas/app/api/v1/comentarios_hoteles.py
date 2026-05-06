@@ -92,8 +92,7 @@ def create_comentario_hotel(hotel_id, current_usuario=None):
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>/comentarios', methods=['GET'])
-@require_token
-def list_comentarios_hotel(hotel_id, current_usuario=None):
+def list_comentarios_hotel(hotel_id):
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
 
@@ -103,7 +102,7 @@ def list_comentarios_hotel(hotel_id, current_usuario=None):
         return jsonify({'error': 'Hotel not found'}), 404
 
     try:
-        result = list_use_case.execute(hotel_id=hotel_id, page=page, per_page=per_page)
+        result = list_use_case.execute(id_hotel=hotel_id, page=page, per_page=per_page)
     except ValueError as ex:
         return jsonify({'error': str(ex)}), 400
 
@@ -132,8 +131,7 @@ def list_comentarios_hotel(hotel_id, current_usuario=None):
 
 
 @api_v1_bp.route('/hoteles/<hotel_id>/rating', methods=['GET'])
-@require_token
-def get_hotel_rating(hotel_id, current_usuario=None):
+def get_hotel_rating(hotel_id):
     _, _, get_rating_use_case, hotel_repository = _build_services()
     hotel = hotel_repository.find_by_id(hotel_id)
     if not hotel:
