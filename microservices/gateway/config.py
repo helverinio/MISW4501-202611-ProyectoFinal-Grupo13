@@ -8,6 +8,12 @@ class Config:
         'http://127.0.0.1:4200',
         'http://localhost:4201',
         'http://127.0.0.1:4201',
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
+        'http://localhost:8081',
+        'http://127.0.0.1:8081',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
     ]
 
     _raw_cors_origins = os.environ.get('CORS_ORIGINS', '')

@@ -419,7 +419,11 @@
               <tr *ngFor="let r of reservations" class="hover:bg-gray-50 transition-colors">
                 <!-- ID -->
                 <td class="py-4 px-6">
-                  <span class="text-sm font-medium text-primary-600">#{{ r.id_corto }}</span>
+                  <a
+                    [routerLink]="['/reservations', r.id]"
+                    class="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline"
+                    >#{{ r.id_corto }}</a
+                  >
                 </td>
 
                 <!-- Guest ID (cross-service limitation: only id_usuario available) -->

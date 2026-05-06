@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, date
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from app.api.v1 import api_v1_bp
 from app.api.v1.auth import require_token
 from app import db
@@ -9,12 +9,109 @@ from app.infrastructure.models.hotel_model import HotelModel
 from app.infrastructure.models.habitacion_model import HabitacionModel
 from app.infrastructure.models.reserva_model import ReservaModel
 from app.infrastructure.models.estado_model import EstadoModel
+from app.infrastructure.models.pago_model import PagoModel
+from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetalleTarifaModel
+from app.infrastructure.messaging import MessagePublisher, ReservationStateChangedEvent
 
 
 def _require_admin(current_usuario):
     if not current_usuario or current_usuario.get('role') != 'ADMIN':
         return jsonify({'error': 'Admin role required'}), 403
     return None
+
+
+def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, detalle_tarifa):
+    subtotal_noches = sum((d.subtotal_noche or 0.0) for d in detalle_tarifa)
+    impuestos_estimados = max((reserva.total or 0.0) - subtotal_noches, 0.0)
+    total_pagado = sum((p.total or 0.0) for p in pagos if (p.estado or '').lower() in ['completado', 'pagado', 'paid'])
+
+    timeline = [{
+        'type': 'created',
+        'title': 'Reservation Created',
+        'at': reserva.created_at.isoformat() if reserva.created_at else None,
+        'description': 'Booking initiated by guest',
+    }]
+
+    for pago in pagos:
+        timeline.append({
+            'type': 'payment',
+            'title': 'Payment Registered',
+            'at': pago.fecha_pago.isoformat() if pago.fecha_pago else None,
+            'description': f"Payment status: {pago.estado}",
+            'amount': pago.total,
+            'status': pago.estado,
+        })
+
+    if reserva.updated_at and reserva.updated_at != reserva.created_at:
+        timeline.append({
+            'type': 'status_change',
+            'title': 'Reservation Status Updated',
+            'at': reserva.updated_at.isoformat(),
+            'description': f"Current status: {estado.nombre}",
+            'updated_by_user_id': reserva.updated_by_user_id,
+            'version': reserva.version,
+        })
+
+    return {
+        'id': reserva.id,
+        'id_corto': reserva.id[:8].upper(),
+        'fecha_ingreso': reserva.fecha_ingreso.isoformat() if reserva.fecha_ingreso else None,
+        'fecha_salida': reserva.fecha_salida.isoformat() if reserva.fecha_salida else None,
+        'nro_noches': (
+            (reserva.fecha_salida.date() - reserva.fecha_ingreso.date()).days
+            if reserva.fecha_salida and reserva.fecha_ingreso else None
+        ),
+        'nro_personas': reserva.nro_personas,
+        'total': reserva.total,
+        'id_usuario': reserva.id_usuario,
+        'created_at': reserva.created_at.isoformat() if reserva.created_at else None,
+        'updated_at': reserva.updated_at.isoformat() if reserva.updated_at else None,
+        'updated_by_user_id': reserva.updated_by_user_id,
+        'version': reserva.version,
+        'habitacion': {
+            'id': habitacion.id,
+            'tipo': habitacion.tipo,
+            'nro_habitacion': habitacion.nro_habitacion,
+            'capacidad': habitacion.capacidad,
+            'camas': habitacion.camas,
+        },
+        'hotel': {
+            'id': hotel.id,
+            'nombre': hotel.nombre,
+        },
+        'estado': {
+            'id': estado.id,
+            'nombre': estado.nombre,
+        },
+        'payments': [
+            {
+                'id': p.id,
+                'fecha_pago': p.fecha_pago.isoformat() if p.fecha_pago else None,
+                'total': p.total,
+                'estado': p.estado,
+            }
+            for p in pagos
+        ],
+        'price_breakdown': {
+            'subtotal_noches': subtotal_noches,
+            'impuestos_estimados': impuestos_estimados,
+            'total_pagado': total_pagado,
+            'balance_pendiente': max((reserva.total or 0.0) - total_pagado, 0.0),
+            'detalle_noches': [
+                {
+                    'fecha_noche': d.fecha_noche.isoformat() if d.fecha_noche else None,
+                    'precio_noche': d.precio_noche,
+                    'subtotal_noche': d.subtotal_noche,
+                }
+                for d in detalle_tarifa
+            ],
+        },
+        'timeline': sorted(
+            timeline,
+            key=lambda item: item.get('at') or '',
+            reverse=False,
+        ),
+    }
 
 
 @api_v1_bp.route('/admin/mis-hoteles', methods=['GET'])
@@ -271,10 +368,12 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
         return err
 
     data = request.get_json()
-    if not data or 'id_estado' not in data:
-        return jsonify({'error': 'id_estado is required'}), 400
+    if not data or 'id_estado' not in data or 'version' not in data:
+        return jsonify({'error': 'id_estado and version are required'}), 400
 
     id_usuario = current_usuario['id']
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    reason = (data.get('reason') or '').strip()
 
     # Verify the reservation belongs to a hotel managed by this admin
     reserva = (
@@ -291,15 +390,133 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
     if not reserva:
         return jsonify({'error': 'Reservation not found or not authorized'}), 404
 
+    estado_actual = EstadoModel.query.get(reserva.id_estado)
+    if not estado_actual:
+        return jsonify({'error': 'Current estado not found'}), 409
+
+    if reserva.version != data['version']:
+        return jsonify({
+            'error': 'Reservation state is stale. Please refresh before retrying.',
+            'code': 'STALE_VERSION',
+            'current_version': reserva.version,
+            'current_estado': estado_actual.nombre,
+        }), 409
+
     nuevo_estado = EstadoModel.query.get(data['id_estado'])
     if not nuevo_estado:
         return jsonify({'error': 'Estado not found'}), 404
 
+    estado_actual_nombre = (estado_actual.nombre or '').strip().lower()
+    nuevo_estado_nombre = (nuevo_estado.nombre or '').strip().lower()
+
+    if estado_actual_nombre != 'pendiente':
+        return jsonify({
+            'error': 'Only pending reservations can be confirmed or rejected',
+            'code': 'INVALID_SOURCE_STATE',
+            'current_estado': estado_actual.nombre,
+        }), 409
+
+    if nuevo_estado_nombre not in ['confirmada', 'rechazada']:
+        return jsonify({
+            'error': 'Target estado must be Confirmada or Rechazada',
+            'code': 'INVALID_TARGET_STATE',
+        }), 400
+
+    if nuevo_estado_nombre == 'rechazada' and not reason:
+        return jsonify({
+            'error': 'reason is required for Rechazada transition',
+            'code': 'REASON_REQUIRED',
+        }), 400
+
+    previous_estado = estado_actual
     reserva.id_estado = nuevo_estado.id
+    reserva.updated_by_user_id = id_usuario
+    reserva.updated_at = datetime.utcnow()
+    reserva.version = (reserva.version or 0) + 1
     db.session.commit()
+
+    current_app.logger.info(
+        '[RESERVAS_AUDIT] estado_changed '
+        f'reserva_id={reserva.id} '
+        f'admin_id={id_usuario} '
+        f'ip={client_ip} '
+        f'from={previous_estado.nombre} '
+        f'to={nuevo_estado.nombre} '
+        f'reason={reason or "n/a"} '
+        f'version={reserva.version}'
+    )
+
+    try:
+        event = ReservationStateChangedEvent.create(
+            reservation_id=reserva.id,
+            previous_state_id=previous_estado.id,
+            previous_state_name=previous_estado.nombre,
+            new_state_id=nuevo_estado.id,
+            new_state_name=nuevo_estado.nombre,
+            changed_by_user_id=id_usuario,
+            reason=reason,
+            version=reserva.version,
+        )
+        publisher = MessagePublisher.from_config()
+        publisher.publish_reservation_state_changed(event.to_dict())
+    except Exception as exc:
+        current_app.logger.error(
+            f"[RESERVAS_AUDIT] failed_to_publish_reservation_state_changed reserva_id={reserva.id} error={str(exc)}"
+        )
 
     return jsonify({
         'id': reserva.id,
         'id_estado': reserva.id_estado,
         'estado_nombre': nuevo_estado.nombre,
+        'version': reserva.version,
     }), 200
+
+
+@api_v1_bp.route('/admin/reservas/<reserva_id>', methods=['GET'])
+@require_token
+def get_admin_reserva_detail(reserva_id, current_usuario=None):
+    err = _require_admin(current_usuario)
+    if err:
+        return err
+
+    id_usuario = current_usuario['id']
+
+    row = (
+        db.session.query(ReservaModel, HabitacionModel, HotelModel, EstadoModel)
+        .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
+        .join(HotelModel, HabitacionModel.id_hotel == HotelModel.id)
+        .join(EstadoModel, ReservaModel.id_estado == EstadoModel.id)
+        .join(AdminHotelModel, HotelModel.id == AdminHotelModel.id_hotel)
+        .filter(
+            ReservaModel.id == reserva_id,
+            AdminHotelModel.id_usuario == id_usuario,
+        )
+        .first()
+    )
+
+    if not row:
+        return jsonify({'error': 'Reservation not found or not authorized'}), 404
+
+    reserva, habitacion, hotel, estado = row
+
+    pagos = (
+        PagoModel.query
+        .filter(PagoModel.id_reserva == reserva.id)
+        .order_by(PagoModel.fecha_pago.desc())
+        .all()
+    )
+    detalle_tarifa = (
+        ReservaDetalleTarifaModel.query
+        .filter(ReservaDetalleTarifaModel.id_reserva == reserva.id)
+        .order_by(ReservaDetalleTarifaModel.fecha_noche.asc())
+        .all()
+    )
+
+    return jsonify(_serialize_admin_reserva_detail(
+        reserva,
+        habitacion,
+        hotel,
+        estado,
+        pagos,
+        detalle_tarifa,
+    )), 200
