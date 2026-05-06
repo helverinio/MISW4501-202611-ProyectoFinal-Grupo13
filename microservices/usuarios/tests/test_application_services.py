@@ -185,7 +185,7 @@ def test_send_verification_email_posts_payload_and_private_key(monkeypatch, app_
 def test_send_verification_email_uses_allowed_origin_and_raises_on_error(monkeypatch, app_context):
     app_context.config['EMAILJS_ALLOWED_ORIGIN'] = 'http://localhost:4200'
 
-    def fake_post(_url, _json, headers, _timeout):
+    def fake_post(_url, json=None, headers=None, timeout=None, **_kwargs):
         assert headers['Origin'] == 'http://localhost:4200'
         assert headers['Referer'] == 'http://localhost:4200'
         return DummyResponse(403, text='forbidden', reason='Forbidden')
