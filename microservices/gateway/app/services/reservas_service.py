@@ -272,6 +272,9 @@ class ReservasService:
     def get_admin_reservas_dashboard(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
         return self._request('GET', 'admin/reservas/dashboard', params=params)
 
+    def get_admin_revenue_report(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/revenue-report', params=params)
+
     def get_admin_reserva_detail(self, reserva_id: str) -> Dict[str, Any]:
         return self._request('GET', f'admin/reservas/{reserva_id}')
 

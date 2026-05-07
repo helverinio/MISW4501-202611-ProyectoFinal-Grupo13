@@ -170,6 +170,48 @@ export interface AdminTranslation {
   'rateManagement.table.capacity': string;
   'rateManagement.table.beds': string;
   'rateManagement.table.actions': string;
+
+  // Revenue Reports page
+  'revenue.title': string;
+  'revenue.subtitle': string;
+  'revenue.exportPdf': string;
+  'revenue.exportExcel': string;
+  'revenue.filters': string;
+  'revenue.filter.month': string;
+  'revenue.filter.year': string;
+  'revenue.filter.property': string;
+  'revenue.filter.allProperties': string;
+  'revenue.filter.scope': string;
+  'revenue.filter.loadingProperties': string;
+  'revenue.filter.consolidatedView': string;
+  'revenue.filter.singleProperty': string;
+  'revenue.filter.applyFilters': string;
+  'revenue.filter.reset': string;
+  'revenue.kpi.grossRevenue': string;
+  'revenue.kpi.netRevenue': string;
+  'revenue.kpi.totalBookings': string;
+  'revenue.kpi.commission': string;
+  'revenue.kpi.currentScope': string;
+  'revenue.kpi.selectedMonthTotal': string;
+  'revenue.kpi.afterCommission': string;
+  'revenue.kpi.reservationsIncluded': string;
+  'revenue.kpi.fixedCommission': string;
+  'revenue.loading': string;
+  'revenue.chart.dailyTrend': string;
+  'revenue.chart.dailyTrendSubtitle': string;
+  'revenue.chart.scopeBreakdown': string;
+  'revenue.chart.grossVsCommission': string;
+  'revenue.table.title': string;
+  'revenue.table.date': string;
+  'revenue.table.bookings': string;
+  'revenue.table.grossRevenue': string;
+  'revenue.table.commission': string;
+  'revenue.table.netRevenue': string;
+  'revenue.table.noData': string;
+  'revenue.chart.btnMonth': string;
+  'revenue.chart.btnGross': string;
+  'revenue.chart.btnNet': string;
+  'revenue.chart.btnSort': string;
 }
 
 export const translations: Record<LanguageCode, AdminTranslation> = {
@@ -336,6 +378,47 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'rateManagement.table.capacity': 'Capacity',
     'rateManagement.table.beds': 'Beds',
     'rateManagement.table.actions': 'Actions',
+
+    'revenue.title': 'Revenue Reports',
+    'revenue.subtitle': 'Monthly financial report by chart and daily table',
+    'revenue.exportPdf': 'Export PDF',
+    'revenue.exportExcel': 'Export Excel',
+    'revenue.filters': 'Filters',
+    'revenue.filter.month': 'Month',
+    'revenue.filter.year': 'Year',
+    'revenue.filter.property': 'Property',
+    'revenue.filter.allProperties': 'All Authorized Properties',
+    'revenue.filter.scope': 'Scope',
+    'revenue.filter.loadingProperties': 'Loading properties...',
+    'revenue.filter.consolidatedView': 'Consolidated view',
+    'revenue.filter.singleProperty': 'Single property',
+    'revenue.filter.applyFilters': 'Apply Filters',
+    'revenue.filter.reset': 'Reset',
+    'revenue.kpi.grossRevenue': 'Gross Revenue',
+    'revenue.kpi.netRevenue': 'Net Revenue',
+    'revenue.kpi.totalBookings': 'Total Bookings',
+    'revenue.kpi.commission': 'TravelHub Commission',
+    'revenue.kpi.currentScope': 'Current scope',
+    'revenue.kpi.selectedMonthTotal': 'Selected month total',
+    'revenue.kpi.afterCommission': 'After TravelHub commission',
+    'revenue.kpi.reservationsIncluded': 'Reservations included in report',
+    'revenue.kpi.fixedCommission': '% fixed commission',
+    'revenue.loading': 'Loading revenue report for the selected month...',
+    'revenue.chart.dailyTrend': 'Daily Revenue Trend',
+    'revenue.chart.dailyTrendSubtitle': 'Daily revenue for the selected month',
+    'revenue.chart.scopeBreakdown': 'Selected Scope Breakdown',
+    'revenue.chart.grossVsCommission': 'Gross vs Commission vs Net',
+    'revenue.table.title': 'Detailed Revenue Report',
+    'revenue.table.date': 'Date',
+    'revenue.table.bookings': 'Bookings',
+    'revenue.table.grossRevenue': 'Gross Revenue',
+    'revenue.table.commission': 'TravelHub Commission',
+    'revenue.table.netRevenue': 'Net Revenue',
+    'revenue.table.noData': 'No data available',
+    'revenue.chart.btnMonth': 'Month',
+    'revenue.chart.btnGross': 'Gross',
+    'revenue.chart.btnNet': 'Net',
+    'revenue.chart.btnSort': 'Sort',
   },
 
   es: {
@@ -502,6 +585,47 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'rateManagement.table.capacity': 'Capacidad',
     'rateManagement.table.beds': 'Camas',
     'rateManagement.table.actions': 'Acciones',
+
+    'revenue.title': 'Reportes de Ingresos',
+    'revenue.subtitle': 'Reporte financiero mensual por gráfico y tabla diaria',
+    'revenue.exportPdf': 'Exportar PDF',
+    'revenue.exportExcel': 'Exportar Excel',
+    'revenue.filters': 'Filtros',
+    'revenue.filter.month': 'Mes',
+    'revenue.filter.year': 'Año',
+    'revenue.filter.property': 'Propiedad',
+    'revenue.filter.allProperties': 'Todas las propiedades autorizadas',
+    'revenue.filter.scope': 'Alcance',
+    'revenue.filter.loadingProperties': 'Cargando propiedades...',
+    'revenue.filter.consolidatedView': 'Vista consolidada',
+    'revenue.filter.singleProperty': 'Propiedad individual',
+    'revenue.filter.applyFilters': 'Aplicar filtros',
+    'revenue.filter.reset': 'Restablecer',
+    'revenue.kpi.grossRevenue': 'Ingreso Bruto',
+    'revenue.kpi.netRevenue': 'Ingreso Neto',
+    'revenue.kpi.totalBookings': 'Total de Reservas',
+    'revenue.kpi.commission': 'Comisión TravelHub',
+    'revenue.kpi.currentScope': 'Alcance actual',
+    'revenue.kpi.selectedMonthTotal': 'Total del mes seleccionado',
+    'revenue.kpi.afterCommission': 'Después de la comisión TravelHub',
+    'revenue.kpi.reservationsIncluded': 'Reservas incluidas en el reporte',
+    'revenue.kpi.fixedCommission': '% de comisión fija',
+    'revenue.loading': 'Cargando reporte de ingresos del mes seleccionado...',
+    'revenue.chart.dailyTrend': 'Tendencia de Ingresos Diarios',
+    'revenue.chart.dailyTrendSubtitle': 'Ingresos diarios del mes seleccionado',
+    'revenue.chart.scopeBreakdown': 'Desglose del Alcance Seleccionado',
+    'revenue.chart.grossVsCommission': 'Bruto vs Comisión vs Neto',
+    'revenue.table.title': 'Reporte Detallado de Ingresos',
+    'revenue.table.date': 'Fecha',
+    'revenue.table.bookings': 'Reservas',
+    'revenue.table.grossRevenue': 'Ingreso Bruto',
+    'revenue.table.commission': 'Comisión TravelHub',
+    'revenue.table.netRevenue': 'Ingreso Neto',
+    'revenue.table.noData': 'Sin datos disponibles',
+    'revenue.chart.btnMonth': 'Mes',
+    'revenue.chart.btnGross': 'Bruto',
+    'revenue.chart.btnNet': 'Neto',
+    'revenue.chart.btnSort': 'Ordenar',
   },
 
   pt: {
@@ -667,5 +791,46 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'rateManagement.table.capacity': 'Capacidade',
     'rateManagement.table.beds': 'Camas',
     'rateManagement.table.actions': 'Ações',
+
+    'revenue.title': 'Relatórios de Receita',
+    'revenue.subtitle': 'Relatório financeiro mensal por gráfico e tabela diária',
+    'revenue.exportPdf': 'Exportar PDF',
+    'revenue.exportExcel': 'Exportar Excel',
+    'revenue.filters': 'Filtros',
+    'revenue.filter.month': 'Mês',
+    'revenue.filter.year': 'Ano',
+    'revenue.filter.property': 'Propriedade',
+    'revenue.filter.allProperties': 'Todas as propriedades autorizadas',
+    'revenue.filter.scope': 'Escopo',
+    'revenue.filter.loadingProperties': 'Carregando propriedades...',
+    'revenue.filter.consolidatedView': 'Visão consolidada',
+    'revenue.filter.singleProperty': 'Propriedade individual',
+    'revenue.filter.applyFilters': 'Aplicar filtros',
+    'revenue.filter.reset': 'Redefinir',
+    'revenue.kpi.grossRevenue': 'Receita Bruta',
+    'revenue.kpi.netRevenue': 'Receita Líquida',
+    'revenue.kpi.totalBookings': 'Total de Reservas',
+    'revenue.kpi.commission': 'Comissão TravelHub',
+    'revenue.kpi.currentScope': 'Escopo atual',
+    'revenue.kpi.selectedMonthTotal': 'Total do mês selecionado',
+    'revenue.kpi.afterCommission': 'Após comissão TravelHub',
+    'revenue.kpi.reservationsIncluded': 'Reservas incluídas no relatório',
+    'revenue.kpi.fixedCommission': '% de comissão fixa',
+    'revenue.loading': 'Carregando relatório de receita do mês selecionado...',
+    'revenue.chart.dailyTrend': 'Tendência de Receita Diária',
+    'revenue.chart.dailyTrendSubtitle': 'Receita diária do mês selecionado',
+    'revenue.chart.scopeBreakdown': 'Detalhamento do Escopo Selecionado',
+    'revenue.chart.grossVsCommission': 'Bruto vs Comissão vs Líquido',
+    'revenue.table.title': 'Relatório Detalhado de Receita',
+    'revenue.table.date': 'Data',
+    'revenue.table.bookings': 'Reservas',
+    'revenue.table.grossRevenue': 'Receita Bruta',
+    'revenue.table.commission': 'Comissão TravelHub',
+    'revenue.table.netRevenue': 'Receita Líquida',
+    'revenue.table.noData': 'Nenhum dado disponível',
+    'revenue.chart.btnMonth': 'Mês',
+    'revenue.chart.btnGross': 'Bruto',
+    'revenue.chart.btnNet': 'Líquido',
+    'revenue.chart.btnSort': 'Ordenar',
   },
 };

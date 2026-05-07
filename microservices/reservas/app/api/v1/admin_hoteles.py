@@ -1,3 +1,4 @@
+import calendar
 import uuid
 from datetime import datetime, date
 from flask import request, jsonify, current_app
@@ -112,6 +113,170 @@ def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, d
             reverse=False,
         ),
     }
+
+
+def _parse_revenue_period():
+    today = date.today()
+
+    try:
+        month = int(request.args.get('month', today.month))
+    except (TypeError, ValueError):
+        month = today.month
+
+    try:
+        year = int(request.args.get('year', today.year))
+    except (TypeError, ValueError):
+        year = today.year
+
+    if month < 1 or month > 12:
+        month = today.month
+    if year < 2000 or year > 2100:
+        year = today.year
+
+    return year, month
+
+
+def _build_daily_rows(year, month):
+    total_days = calendar.monthrange(year, month)[1]
+    rows = []
+    for day in range(1, total_days + 1):
+        iso_date = date(year, month, day).isoformat()
+        rows.append({
+            'date': iso_date,
+            'bookings_count': 0,
+            'gross_revenue': 0.0,
+            'travelhub_commission': 0.0,
+            'net_revenue': 0.0,
+        })
+    return rows
+
+
+@api_v1_bp.route('/admin/revenue-report', methods=['GET'])
+@require_token
+def get_admin_revenue_report(current_usuario=None):
+    err = _require_admin(current_usuario)
+    if err:
+        return err
+
+    id_usuario = current_usuario['id']
+    year, month = _parse_revenue_period()
+    hotel_id = request.args.get('hotel_id', '').strip() or None
+
+    hotel_rows = (
+        db.session.query(AdminHotelModel, HotelModel)
+        .join(HotelModel, AdminHotelModel.id_hotel == HotelModel.id)
+        .filter(AdminHotelModel.id_usuario == id_usuario)
+        .all()
+    )
+
+    authorized_hotels = [
+        {
+            'id': hotel.id,
+            'nombre': hotel.nombre,
+        }
+        for _, hotel in hotel_rows
+    ]
+    hotel_ids = [hotel['id'] for hotel in authorized_hotels]
+
+    if not hotel_ids:
+        return jsonify({
+            'period': {
+                'year': year,
+                'month': month,
+                'month_label': date(year, month, 1).strftime('%B %Y'),
+            },
+            'scope': {
+                'hotel_id': hotel_id,
+                'is_consolidated': True,
+            },
+            'commission_percentage': current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0),
+            'authorized_hotels': [],
+            'daily_rows': _build_daily_rows(year, month),
+            'summary': {
+                'total_bookings': 0,
+                'gross_revenue': 0.0,
+                'travelhub_commission': 0.0,
+                'net_revenue': 0.0,
+            },
+        }), 200
+
+    if hotel_id and hotel_id not in hotel_ids:
+        return jsonify({'error': 'Hotel not authorized for current admin'}), 403
+
+    scoped_hotel_ids = [hotel_id] if hotel_id else hotel_ids
+    commission_percentage = float(
+        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
+    )
+
+    month_start = datetime(year, month, 1)
+    if month == 12:
+        month_end = datetime(year + 1, 1, 1)
+    else:
+        month_end = datetime(year, month + 1, 1)
+
+    included_statuses = ['pendiente', 'confirmada', 'completada']
+
+    rows = (
+        db.session.query(
+            db.func.date(ReservaModel.created_at).label('report_date'),
+            db.func.count(ReservaModel.id).label('bookings_count'),
+            db.func.coalesce(db.func.sum(ReservaModel.total), 0.0).label('gross_revenue'),
+        )
+        .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
+        .join(EstadoModel, ReservaModel.id_estado == EstadoModel.id)
+        .filter(HabitacionModel.id_hotel.in_(scoped_hotel_ids))
+        .filter(ReservaModel.created_at.isnot(None))
+        .filter(ReservaModel.created_at >= month_start)
+        .filter(ReservaModel.created_at < month_end)
+        .filter(db.func.lower(EstadoModel.nombre).in_(included_statuses))
+        .group_by(db.func.date(ReservaModel.created_at))
+        .order_by(db.func.date(ReservaModel.created_at))
+        .all()
+    )
+
+    daily_rows = _build_daily_rows(year, month)
+    daily_rows_by_date = {row['date']: row for row in daily_rows}
+
+    for row in rows:
+        report_date = row.report_date.isoformat() if hasattr(row.report_date, 'isoformat') else str(row.report_date)
+        gross_revenue = float(row.gross_revenue or 0.0)
+        commission_amount = round(gross_revenue * (commission_percentage / 100.0), 2)
+        net_revenue = round(gross_revenue - commission_amount, 2)
+        if report_date in daily_rows_by_date:
+            daily_rows_by_date[report_date]['bookings_count'] = int(row.bookings_count or 0)
+            daily_rows_by_date[report_date]['gross_revenue'] = round(gross_revenue, 2)
+            daily_rows_by_date[report_date]['travelhub_commission'] = commission_amount
+            daily_rows_by_date[report_date]['net_revenue'] = net_revenue
+
+    total_bookings = sum(row['bookings_count'] for row in daily_rows)
+    total_gross = round(sum(row['gross_revenue'] for row in daily_rows), 2)
+    total_commission = round(sum(row['travelhub_commission'] for row in daily_rows), 2)
+    total_net = round(sum(row['net_revenue'] for row in daily_rows), 2)
+
+    selected_hotel = next((hotel for hotel in authorized_hotels if hotel['id'] == hotel_id), None)
+
+    return jsonify({
+        'period': {
+            'year': year,
+            'month': month,
+            'month_label': date(year, month, 1).strftime('%B %Y'),
+        },
+        'scope': {
+            'hotel_id': hotel_id,
+            'hotel_name': selected_hotel['nombre'] if selected_hotel else None,
+            'is_consolidated': hotel_id is None,
+            'included_statuses': included_statuses,
+        },
+        'commission_percentage': commission_percentage,
+        'authorized_hotels': authorized_hotels,
+        'daily_rows': daily_rows,
+        'summary': {
+            'total_bookings': total_bookings,
+            'gross_revenue': total_gross,
+            'travelhub_commission': total_commission,
+            'net_revenue': total_net,
+        },
+    }), 200
 
 
 @api_v1_bp.route('/admin/mis-hoteles', methods=['GET'])
