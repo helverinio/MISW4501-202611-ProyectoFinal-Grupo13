@@ -25,6 +25,18 @@ with app.app_context():
         "ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     ))
     db.session.execute(text(
+        "ALTER TABLE IF EXISTS reservas "
+        "ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    ))
+    db.session.execute(text(
+        "ALTER TABLE IF EXISTS reservas "
+        "ADD COLUMN IF NOT EXISTS updated_by_user_id VARCHAR(36)"
+    ))
+    db.session.execute(text(
+        "ALTER TABLE IF EXISTS reservas "
+        "ADD COLUMN IF NOT EXISTS version INTEGER NOT NULL DEFAULT 0"
+    ))
+    db.session.execute(text(
         "CREATE INDEX IF NOT EXISTS ix_reservas_id_usuario_created_at "
         "ON reservas (id_usuario, created_at DESC)"
     ))
@@ -78,6 +90,10 @@ with app.app_context():
     db.session.execute(text(
         "CREATE INDEX IF NOT EXISTS ix_reservas_id_estado "
         "ON reservas (id_estado)"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_reservas_version "
+        "ON reservas (version)"
     ))
     db.session.execute(text(
         "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_hotel "

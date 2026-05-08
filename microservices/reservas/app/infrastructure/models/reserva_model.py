@@ -15,6 +15,9 @@ class ReservaModel(db.Model):
     id_estado = db.Column(db.String(36), db.ForeignKey('estados.id'), nullable=False)
     id_cotizacion = db.Column(db.String(36), db.ForeignKey('cotizaciones.id'), nullable=True)
     created_at = db.Column(db.DateTime, nullable=True, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, nullable=True, server_default=db.func.now(), onupdate=db.func.now())
+    updated_by_user_id = db.Column(db.String(36), nullable=True)
+    version = db.Column(db.Integer, nullable=False, server_default='0')
 
     pagos = db.relationship('PagoModel', backref='reserva', lazy=True)
     notificaciones = db.relationship('NotificacionModel', backref='reserva', lazy=True)
@@ -34,4 +37,7 @@ class ReservaModel(db.Model):
             'id_estado': self.id_estado,
             'id_cotizacion': self.id_cotizacion,
             'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'updated_by_user_id': self.updated_by_user_id,
+            'version': self.version,
         }

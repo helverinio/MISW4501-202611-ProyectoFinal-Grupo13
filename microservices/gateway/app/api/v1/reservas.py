@@ -68,6 +68,18 @@ def get_notificaciones_by_reserva(reserva_id):
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/reservas/<reserva_id>/checkin-qr', methods=['GET'])
+def generate_checkin_qr(reserva_id):
+    result = get_service().generate_checkin_qr(reserva_id)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/reservas/<reserva_id>/checkin', methods=['POST'])
+def checkin_reserva(reserva_id):
+    result = get_service().checkin_reserva(reserva_id)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/reservas/webhook/pms', methods=['POST'])
 def create_reserva_pms_webhook():
     data = request.get_json()

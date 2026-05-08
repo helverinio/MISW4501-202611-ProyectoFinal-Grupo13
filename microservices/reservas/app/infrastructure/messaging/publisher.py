@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class MessagePublisher:
     QUEUE_PAYMENT_STATUS_UPDATED = '/queue/PaymentStatusUpdated'
+    TOPIC_RESERVATION_STATE_CHANGED = '/topic/ReservationStateChanged'
     
     def __init__(
         self,
@@ -73,6 +74,9 @@ class MessagePublisher:
     
     def publish_payment_status_updated(self, event_data: dict) -> bool:
         return self.publish(self.QUEUE_PAYMENT_STATUS_UPDATED, event_data)
+
+    def publish_reservation_state_changed(self, event_data: dict) -> bool:
+        return self.publish(self.TOPIC_RESERVATION_STATE_CHANGED, event_data)
     
     def disconnect(self):
         if self._connection and self._connection.is_connected():
