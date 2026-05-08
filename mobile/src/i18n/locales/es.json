@@ -316,7 +316,8 @@
     "capacity": "Capacidad",
     "cityView": "Vista a la ciudad",
     "afterTime": "Después de las 3:00 PM",
-    "beforeTime": "Antes de las 12:00 PM"
+    "beforeTime": "Antes de las 12:00 PM",
+    "checkedInStatus": "Checked-in"
   },
   "offline": {
     "banner": "Sin conexión - mostrando datos guardados",

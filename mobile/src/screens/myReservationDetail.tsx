@@ -62,7 +62,7 @@ interface ReservationDetailVm {
   serviceFee: number;
   taxes: number;
   total: number;
-  status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
+  status: 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in';
   isCheckInAvailable: boolean;
   rating: number;
   reviewCount: number;
@@ -303,22 +303,31 @@ export default function MyReservationDetailScreen() {
             <Text style={styles.bookingIdLabel}>{t('reservationDetail.bookingId')}</Text>
             <Text style={styles.bookingIdValue}>#{reservation.bookingId}</Text>
           </View>
-          <View style={styles.checkInStatusRow}>
-            <View style={styles.checkIcon}>
-              <Ionicons name="checkmark" size={20} color="#16A34A" />
-            </View>
-            <View style={styles.checkInStatusContent}>
-              <View style={styles.checkInBadge}>
-                <View style={styles.statusDot} />
-                <Text style={styles.checkInBadgeText}>
-                  {t('reservationDetail.checkInAvailable')}
-                </Text>
-              </View>
-              <Text style={styles.checkInMessage}>
-                {t('reservationDetail.roomReady')}
+          {reservation.status === 'checked_in' ? (
+            <View style={styles.checkedInBanner}>
+              <Ionicons name="checkmark-circle" size={18} color="#2563EB" />
+              <Text style={styles.checkedInBannerText}>
+                {t('reservationDetail.checkedInStatus')}
               </Text>
             </View>
-          </View>
+          ) : (
+            <View style={styles.checkInStatusRow}>
+              <View style={styles.checkIcon}>
+                <Ionicons name="checkmark" size={20} color="#16A34A" />
+              </View>
+              <View style={styles.checkInStatusContent}>
+                <View style={styles.checkInBadge}>
+                  <View style={styles.statusDot} />
+                  <Text style={styles.checkInBadgeText}>
+                    {t('reservationDetail.checkInAvailable')}
+                  </Text>
+                </View>
+                <Text style={styles.checkInMessage}>
+                  {t('reservationDetail.roomReady')}
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Hotel Card */}
@@ -465,12 +474,21 @@ export default function MyReservationDetailScreen() {
           <Text style={styles.supportButtonText}>{t('reservationDetail.support')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.qrCheckInButton} onPress={handleQRCheckIn}>
-          <Ionicons name="qr-code" size={20} color="#fff" />
-          <Text style={styles.qrCheckInButtonText}>
-            {t('reservationDetail.startQRCheckIn')}
-          </Text>
-        </TouchableOpacity>
+        {reservation.status === 'checked_in' ? (
+          <View style={styles.checkedInBanner}>
+            <Ionicons name="checkmark-circle" size={20} color="#2563EB" />
+            <Text style={styles.checkedInBannerText}>
+              {t('reservationDetail.checkedInStatus')}
+            </Text>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.qrCheckInButton} onPress={handleQRCheckIn}>
+            <Ionicons name="qr-code" size={20} color="#fff" />
+            <Text style={styles.qrCheckInButtonText}>
+              {t('reservationDetail.startQRCheckIn')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -792,6 +810,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#64748B',
+  },
+  checkedInBanner: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: '#DBEAFE',
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  checkedInBannerText: {
+    color: '#2563EB',
+    fontSize: 14,
+    fontWeight: '600',
   },
   qrCheckInButton: {
     flex: 1,
