@@ -261,7 +261,8 @@
     "checkInTime": "3:00 PM",
     "checkOutTime": "11:00 AM",
     "currency": "USD",
-    "qrCheckin": "Check-in con QR"
+    "qrCheckin": "Check-in con QR",
+    "checkedInStatus": "Checked-in"
   },
   "qrCheckin": {
     "title": "Check-in con QR",

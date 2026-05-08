@@ -29,7 +29,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import OfflineBanner from '@/common/OfflineBanner';
 
 type ReservationTab = 'upcoming' | 'past' | 'cancelled';
-type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled';
+type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in';
 
 interface ReservationItemVm {
   id: string;
@@ -315,6 +315,10 @@ export default function MyReservationsScreen() {
       return 'pending';
     }
 
+    if (normalized.includes('checked') || normalized.includes('check-in') || normalized.includes('checkin')) {
+      return 'checked_in';
+    }
+
     return 'confirmed';
   };
 
@@ -353,7 +357,7 @@ export default function MyReservationsScreen() {
     return reservations.filter((reservation) => {
       if (activeTab === 'upcoming') {
         return (
-          reservation.status === 'confirmed' || reservation.status === 'pending'
+          reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'checked_in'
         );
       }
       if (activeTab === 'past') {
@@ -497,7 +501,7 @@ export default function MyReservationsScreen() {
     );
   };
 
-  const handleQrCheckin = (reservation: ReservationItemVm) => {
+  const handleQrCheckin = async (reservation: ReservationItemVm) => {
     if (isOffline) {
       Alert.alert(
         t('offline.actionUnavailableTitle'),
@@ -505,6 +509,10 @@ export default function MyReservationsScreen() {
       );
       return;
     }
+    // Invalidate and refresh estados cache before navigating to QR checkin
+    useStaticDataStore.setState({ lastFetchedAt: null });
+    await useStaticDataStore.getState().fetchAndCacheStaticData();
+
     router.push({
       pathname: '/screens/qrCheckin',
       params: {
@@ -572,6 +580,8 @@ export default function MyReservationsScreen() {
     switch (status) {
       case 'confirmed':
         return { backgroundColor: '#DCFCE7', color: '#16A34A' };
+      case 'checked_in':
+        return { backgroundColor: '#DBEAFE', color: '#2563EB' };
       case 'pending':
         return { backgroundColor: '#FEF3C7', color: '#D97706' };
       case 'cancelled':
@@ -585,6 +595,8 @@ export default function MyReservationsScreen() {
     switch (status) {
       case 'confirmed':
         return t('myReservations.confirmed');
+      case 'checked_in':
+        return t('myReservations.checkedInStatus');
       case 'pending':
         return t('myReservations.pending');
       case 'cancelled':
@@ -693,6 +705,23 @@ export default function MyReservationsScreen() {
                   ]}
                 >
                   {t('myReservations.cancel')}
+                </Text>
+              </TouchableOpacity>
+            </>
+          ) : reservation.status === 'checked_in' ? (
+            <>
+              <View style={styles.checkedInBanner}>
+                <Ionicons name="checkmark-circle" size={18} color="#2563EB" />
+                <Text style={styles.checkedInBannerText}>
+                  {t('myReservations.checkedInStatus')}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                onPress={() => handleViewDetails(reservation)}
+              >
+                <Text style={styles.primaryButtonText}>
+                  {t('myReservations.viewDetails')}
                 </Text>
               </TouchableOpacity>
             </>
@@ -1047,6 +1076,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+  },
+  checkedInBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    width: '100%',
+    backgroundColor: '#DBEAFE',
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  checkedInBannerText: {
+    color: '#2563EB',
+    fontSize: 14,
+    fontWeight: '600',
   },
   qrCheckinButton: {
     flexDirection: 'row',
