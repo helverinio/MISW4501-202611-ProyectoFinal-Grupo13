@@ -486,7 +486,7 @@ def generate_checkin_qr(reserva_id, current_usuario=None):
     estado_nombre = estado.nombre if estado else ''
     normalized = estado_nombre.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
 
-    if 'confirm' not in normalized:
+    if 'confirm' not in normalized and 'pago recibido' not in normalized:
         return jsonify({
             'error': 'Check-in QR is only available for confirmed reservations',
             'estado_actual': estado_nombre,
