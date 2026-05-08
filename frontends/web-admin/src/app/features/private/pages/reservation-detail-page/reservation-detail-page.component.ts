@@ -209,14 +209,14 @@ export class ReservationDetailPageComponent implements OnInit {
       .getEstados()
       .pipe(timeout(8000))
       .subscribe({
-      next: (estados) => {
-        this.estadoMap = new Map(estados.map((estado) => [estado.id, estado]));
-      },
-      error: () => {
-        // Detail can be rendered without catalog; only confirm/reject action needs estados map.
-        this.estadoMap = new Map();
-      },
-    });
+        next: (estados) => {
+          this.estadoMap = new Map(estados.map((estado) => [estado.id, estado]));
+        },
+        error: () => {
+          // Detail can be rendered without catalog; only confirm/reject action needs estados map.
+          this.estadoMap = new Map();
+        },
+      });
   }
 
   private loadDetail(): void {

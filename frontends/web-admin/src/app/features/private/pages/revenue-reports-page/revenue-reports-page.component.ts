@@ -3,7 +3,10 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
-import { RevenueDailyRow, RevenueReportResponse } from '../../../../core/models/revenue-reports.models';
+import {
+  RevenueDailyRow,
+  RevenueReportResponse,
+} from '../../../../core/models/revenue-reports.models';
 import { Hotel } from '../../../../core/models/rate-management.models';
 import { LanguageCode } from '../../../../core/i18n/translations';
 import { AuthService } from '../../../../core/services/auth.service';

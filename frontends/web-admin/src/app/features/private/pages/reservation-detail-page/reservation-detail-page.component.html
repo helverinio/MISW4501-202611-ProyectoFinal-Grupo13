@@ -49,7 +49,10 @@
               PT
             </button>
           </div>
-          <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors" type="button">
+          <button
+            class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
+            type="button"
+          >
             <i class="fas fa-bell text-lg"></i>
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
@@ -60,7 +63,9 @@
               class="w-8 h-8 rounded-full"
             />
             <div class="hidden md:block">
-              <p class="text-sm font-medium text-gray-900">{{ currentUser()?.nombre || 'Admin User' }}</p>
+              <p class="text-sm font-medium text-gray-900">
+                {{ currentUser()?.nombre || 'Admin User' }}
+              </p>
               <p class="text-xs text-gray-500">{{ currentUser()?.role || 'Hotel Manager' }}</p>
             </div>
           </div>
@@ -165,7 +170,9 @@
         *ngIf="!loading && !error && !detail"
         class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center"
       >
-        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500">
+        <div
+          class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500"
+        >
           <i class="fas fa-file-circle-question text-xl"></i>
         </div>
         <h2 class="text-lg font-semibold text-gray-900 mb-2">Reservation detail unavailable</h2>
@@ -206,7 +213,9 @@
                   <i class="fas fa-clock mr-1.5"></i>
                   {{ detail.estado.nombre }}
                 </span>
-                <span class="text-sm text-gray-600">Created {{ formatDateTime(detail.created_at) }}</span>
+                <span class="text-sm text-gray-600"
+                  >Created {{ formatDateTime(detail.created_at) }}</span
+                >
               </div>
             </div>
             <div class="mt-4 sm:mt-0 flex items-center space-x-3" *ngIf="isPending">
@@ -234,7 +243,10 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="lg:col-span-2 space-y-6">
-            <div id="guest-information-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="guest-information-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-user-circle text-primary-600 mr-2"></i>
                 Guest Information
@@ -248,8 +260,12 @@
                 <div class="flex-1">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label class="text-xs font-medium text-gray-500 uppercase">Guest Identifier</label>
-                      <p class="text-sm font-semibold text-gray-900 mt-1">{{ detail.id_usuario }}</p>
+                      <label class="text-xs font-medium text-gray-500 uppercase"
+                        >Guest Identifier</label
+                      >
+                      <p class="text-sm font-semibold text-gray-900 mt-1">
+                        {{ detail.id_usuario }}
+                      </p>
                     </div>
                     <div>
                       <label class="text-xs font-medium text-gray-500 uppercase">Email</label>
@@ -268,7 +284,10 @@
               </div>
             </div>
 
-            <div id="reservation-details-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="reservation-details-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-info-circle text-primary-600 mr-2"></i>
                 Reservation Details
@@ -280,17 +299,25 @@
                 </div>
                 <div>
                   <label class="text-xs font-medium text-gray-500 uppercase">Room Type</label>
-                  <p class="text-sm font-semibold text-gray-900 mt-1">{{ detail.habitacion.tipo }}</p>
-                  <p class="text-xs text-gray-600 mt-0.5">Room #{{ detail.habitacion.nro_habitacion }}</p>
+                  <p class="text-sm font-semibold text-gray-900 mt-1">
+                    {{ detail.habitacion.tipo }}
+                  </p>
+                  <p class="text-xs text-gray-600 mt-0.5">
+                    Room #{{ detail.habitacion.nro_habitacion }}
+                  </p>
                 </div>
                 <div>
                   <label class="text-xs font-medium text-gray-500 uppercase">Check-in</label>
-                  <p class="text-sm font-semibold text-gray-900 mt-1">{{ formatDate(detail.fecha_ingreso) }}</p>
+                  <p class="text-sm font-semibold text-gray-900 mt-1">
+                    {{ formatDate(detail.fecha_ingreso) }}
+                  </p>
                   <p class="text-xs text-gray-600 mt-0.5">3:00 PM</p>
                 </div>
                 <div>
                   <label class="text-xs font-medium text-gray-500 uppercase">Check-out</label>
-                  <p class="text-sm font-semibold text-gray-900 mt-1">{{ formatDate(detail.fecha_salida) }}</p>
+                  <p class="text-sm font-semibold text-gray-900 mt-1">
+                    {{ formatDate(detail.fecha_salida) }}
+                  </p>
                   <p class="text-xs text-gray-600 mt-0.5">11:00 AM</p>
                 </div>
                 <div>
@@ -304,7 +331,10 @@
               </div>
             </div>
 
-            <div id="booking-timeline-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="booking-timeline-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-history text-primary-600 mr-2"></i>
                 Booking Timeline
@@ -312,7 +342,10 @@
               <div class="relative">
                 <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
                 <div class="space-y-6">
-                  <div class="relative flex items-start space-x-4" *ngFor="let event of detail.timeline">
+                  <div
+                    class="relative flex items-start space-x-4"
+                    *ngFor="let event of detail.timeline"
+                  >
                     <div
                       class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center z-10"
                       [ngClass]="timelineBadgeClass(event)"
@@ -331,13 +364,19 @@
           </div>
 
           <div class="space-y-6">
-            <div id="payment-status-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="payment-status-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-credit-card text-primary-600 mr-2"></i>
                 Payment Status
               </h3>
               <div class="space-y-4" *ngIf="detail.payments.length > 0; else noPaymentsTpl">
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl" *ngFor="let p of detail.payments">
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+                  *ngFor="let p of detail.payments"
+                >
                   <div>
                     <p class="text-sm font-medium text-gray-900">{{ p.estado }}</p>
                     <p class="text-xs text-gray-600 mt-1">{{ formatDateTime(p.fecha_pago) }}</p>
@@ -354,7 +393,10 @@
               </ng-template>
             </div>
 
-            <div id="price-breakdown-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="price-breakdown-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-receipt text-primary-600 mr-2"></i>
                 Price Breakdown
@@ -375,7 +417,9 @@
                 <div class="pt-3 border-t-2 border-gray-300">
                   <div class="flex items-center justify-between">
                     <p class="text-base font-bold text-gray-900">Total Amount</p>
-                    <p class="text-xl font-bold text-primary-600">{{ formatCurrency(detail.total) }}</p>
+                    <p class="text-xl font-bold text-primary-600">
+                      {{ formatCurrency(detail.total) }}
+                    </p>
                   </div>
                 </div>
                 <div class="pt-2 border-t border-gray-200">
@@ -395,7 +439,10 @@
               </div>
             </div>
 
-            <div id="quick-actions-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div
+              id="quick-actions-section"
+              class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+            >
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <i class="fas fa-bolt text-primary-600 mr-2"></i>
                 Quick Actions
@@ -406,7 +453,10 @@
                   class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm font-medium text-gray-700 transition-colors"
                   [routerLink]="['/reservations']"
                 >
-                  <span><i class="fas fa-chevron-left mr-2 text-gray-600"></i>Back to Reservations</span>
+                  <span
+                    ><i class="fas fa-chevron-left mr-2 text-gray-600"></i>Back to
+                    Reservations</span
+                  >
                   <i class="fas fa-chevron-right text-gray-400"></i>
                 </button>
               </div>
@@ -417,14 +467,17 @@
     </main>
   </div>
 
-  <div *ngIf="confirmModalOpen" class="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4">
+  <div
+    *ngIf="confirmModalOpen"
+    class="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4"
+  >
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-lg p-6">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">
         {{ pendingAction === 'confirmada' ? 'Confirm reservation' : 'Reject reservation' }}
       </h3>
       <p class="text-sm text-gray-600 mb-4">
-        You are about to {{ pendingAction === 'confirmada' ? 'confirm' : 'reject' }} this reservation.
-        Please validate this action before continuing.
+        You are about to {{ pendingAction === 'confirmada' ? 'confirm' : 'reject' }} this
+        reservation. Please validate this action before continuing.
       </p>
 
       <div *ngIf="requiresReason" class="mb-4">
@@ -454,12 +507,18 @@
         <button
           type="button"
           class="px-4 py-2 rounded-lg text-white"
-          [ngClass]="pendingAction === 'confirmada' ? 'bg-success-600 hover:bg-success-700' : 'bg-red-600 hover:bg-red-700'"
+          [ngClass]="
+            pendingAction === 'confirmada'
+              ? 'bg-success-600 hover:bg-success-700'
+              : 'bg-red-600 hover:bg-red-700'
+          "
           (click)="executeStateChange()"
           [disabled]="actionLoading"
         >
           <span *ngIf="!actionLoading">Confirm Action</span>
-          <span *ngIf="actionLoading"><i class="fas fa-spinner fa-spin mr-1"></i>Processing...</span>
+          <span *ngIf="actionLoading"
+            ><i class="fas fa-spinner fa-spin mr-1"></i>Processing...</span
+          >
         </button>
       </div>
     </div>

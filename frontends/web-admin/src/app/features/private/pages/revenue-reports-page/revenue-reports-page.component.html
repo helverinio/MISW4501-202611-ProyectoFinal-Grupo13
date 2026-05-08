@@ -9,7 +9,10 @@
                 <i class="fas fa-hotel text-white text-sm"></i>
               </div>
               <span class="text-xl font-bold text-gray-900">TravelHub</span>
-              <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+              <span
+                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
+                >Admin</span
+              >
             </div>
           </div>
         </div>
@@ -18,33 +21,54 @@
             <button
               type="button"
               (click)="setLanguage('es')"
-              [class]="currentLanguage === 'es' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
             >
               ES
             </button>
             <button
               type="button"
               (click)="setLanguage('en')"
-              [class]="currentLanguage === 'en' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
             >
               EN
             </button>
             <button
               type="button"
               (click)="setLanguage('pt')"
-              [class]="currentLanguage === 'pt' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'"
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
             >
               PT
             </button>
           </div>
-          <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors" type="button">
+          <button
+            class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
+            type="button"
+          >
             <i class="fas fa-bell text-lg"></i>
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full">
+            <img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
+              alt="Admin"
+              class="w-8 h-8 rounded-full"
+            />
             <div class="hidden md:block">
-              <p class="text-sm font-medium text-gray-900">{{ currentUser()?.nombre || 'Admin User' }}</p>
+              <p class="text-sm font-medium text-gray-900">
+                {{ currentUser()?.nombre || 'Admin User' }}
+              </p>
               <p class="text-xs text-gray-500">{{ currentUser()?.role || 'Hotel Manager' }}</p>
             </div>
           </div>
@@ -56,32 +80,54 @@
   <div class="flex">
     <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
       <nav class="p-4 space-y-1">
-        <a [routerLink]="['/dashboard']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/dashboard']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-chart-line w-5 mr-3"></i>
           {{ t('sidebar.dashboard') }}
         </a>
-        <a [routerLink]="['/reservations']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/reservations']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-calendar-check w-5 mr-3"></i>
           {{ t('sidebar.reservations') }}
         </a>
-        <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-hotel w-5 mr-3"></i>
           {{ t('sidebar.properties') }}
         </a>
-        <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-users w-5 mr-3"></i>
           {{ t('sidebar.guests') }}
         </a>
-        <a [routerLink]="['/revenue-reports']" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/revenue-reports']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
+        >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
           {{ t('sidebar.revenue') }}
         </a>
-        <a [routerLink]="['/room-rate-management']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/room-rate-management']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-cog w-5 mr-3"></i>
           {{ t('sidebar.settings') }}
         </a>
         <div class="pt-4 mt-4 border-t border-gray-100">
-          <button class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors" type="button" (click)="logout()">
+          <button
+            class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+            type="button"
+            (click)="logout()"
+          >
             <i class="fas fa-sign-out-alt w-5 mr-3"></i>
             {{ t('common.logout') }}
           </button>
@@ -93,15 +139,23 @@
       <div id="revenue-header" class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{{ t('revenue.title') }}</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {{ t('revenue.title') }}
+            </h1>
             <p class="text-gray-600 text-sm">{{ t('revenue.subtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
-            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors" type="button">
+            <button
+              class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+              type="button"
+            >
               <i class="fas fa-file-pdf mr-2 text-red-600"></i>
               {{ t('revenue.exportPdf') }}
             </button>
-            <button class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors" type="button">
+            <button
+              class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
+              type="button"
+            >
               <i class="fas fa-file-excel mr-2"></i>
               {{ t('revenue.exportExcel') }}
             </button>
@@ -109,44 +163,82 @@
         </div>
       </div>
 
-      <div id="filters-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div
+        id="filters-section"
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6"
+      >
         <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <i class="fas fa-filter text-primary-600 mr-2"></i>
           {{ t('revenue.filters') }}
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div id="month-filter">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('revenue.filter.month') }}</label>
-            <select [(ngModel)]="selectedMonth" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-              <option *ngFor="let month of months" [ngValue]="month.value">{{ month.label }}</option>
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{
+              t('revenue.filter.month')
+            }}</label>
+            <select
+              [(ngModel)]="selectedMonth"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option *ngFor="let month of months" [ngValue]="month.value">
+                {{ month.label }}
+              </option>
             </select>
           </div>
           <div id="year-filter">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('revenue.filter.year') }}</label>
-            <select [(ngModel)]="selectedYear" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{
+              t('revenue.filter.year')
+            }}</label>
+            <select
+              [(ngModel)]="selectedYear"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
               <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
             </select>
           </div>
           <div id="property-filter">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('revenue.filter.property') }}</label>
-            <select [(ngModel)]="selectedHotelId" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{
+              t('revenue.filter.property')
+            }}</label>
+            <select
+              [(ngModel)]="selectedHotelId"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
               <option value="all">{{ t('revenue.filter.allProperties') }}</option>
               <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.nombre }}</option>
             </select>
           </div>
           <div id="scope-filter">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('revenue.filter.scope') }}</label>
-            <div class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm bg-gray-50 text-gray-600">
-              {{ loadingHotels ? t('revenue.filter.loadingProperties') : (selectedHotelId === 'all' ? t('revenue.filter.consolidatedView') : t('revenue.filter.singleProperty')) }}
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{
+              t('revenue.filter.scope')
+            }}</label>
+            <div
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm bg-gray-50 text-gray-600"
+            >
+              {{
+                loadingHotels
+                  ? t('revenue.filter.loadingProperties')
+                  : selectedHotelId === 'all'
+                    ? t('revenue.filter.consolidatedView')
+                    : t('revenue.filter.singleProperty')
+              }}
             </div>
           </div>
         </div>
         <div class="mt-4 flex flex-wrap gap-2">
-          <button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors" type="button" (click)="applyFilters()">
+          <button
+            class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+            type="button"
+            (click)="applyFilters()"
+          >
             <i class="fas fa-sync mr-2"></i>
             {{ t('revenue.filter.applyFilters') }}
           </button>
-          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" type="button" (click)="resetFilters()">
+          <button
+            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
+            type="button"
+            (click)="resetFilters()"
+          >
             <i class="fas fa-redo mr-2"></i>
             {{ t('revenue.filter.reset') }}
           </button>
@@ -154,38 +246,62 @@
       </div>
 
       <div id="summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div id="total-revenue-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div
+          id="total-revenue-card"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-dollar-sign text-primary-600 text-xl"></i>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ t('revenue.kpi.currentScope') }}</span>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+              >{{ t('revenue.kpi.currentScope') }}</span
+            >
           </div>
-          <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.grossRevenue') }}</h3>
-          <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(summary.gross_revenue) }}</p>
+          <h3 class="text-sm font-medium text-gray-600 mb-1">
+            {{ t('revenue.kpi.grossRevenue') }}
+          </h3>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ formatCurrency(summary.gross_revenue) }}
+          </p>
           <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.selectedMonthTotal') }}</p>
         </div>
 
-        <div id="avg-booking-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div
+          id="avg-booking-card"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-success-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-chart-line text-success-600 text-xl"></i>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ t('revenue.kpi.currentScope') }}</span>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+              >{{ t('revenue.kpi.currentScope') }}</span
+            >
           </div>
           <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.netRevenue') }}</h3>
           <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(summary.net_revenue) }}</p>
           <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.afterCommission') }}</p>
         </div>
 
-        <div id="bookings-count-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div
+          id="bookings-count-card"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-calendar-check text-orange-600 text-xl"></i>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ t('revenue.kpi.currentScope') }}</span>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+              >{{ t('revenue.kpi.currentScope') }}</span
+            >
           </div>
-          <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.totalBookings') }}</h3>
+          <h3 class="text-sm font-medium text-gray-600 mb-1">
+            {{ t('revenue.kpi.totalBookings') }}
+          </h3>
           <p class="text-3xl font-bold text-gray-900">{{ summary.total_bookings }}</p>
           <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.reservationsIncluded') }}</p>
         </div>
@@ -195,54 +311,103 @@
             <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-percent text-purple-600 text-xl"></i>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ t('revenue.kpi.currentScope') }}</span>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+              >{{ t('revenue.kpi.currentScope') }}</span
+            >
           </div>
           <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.commission') }}</h3>
-          <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(summary.travelhub_commission) }}</p>
-          <p class="text-xs text-gray-500 mt-2">{{ commissionPercentage }}{{ t('revenue.kpi.fixedCommission') }}</p>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ formatCurrency(summary.travelhub_commission) }}
+          </p>
+          <p class="text-xs text-gray-500 mt-2">
+            {{ commissionPercentage }}{{ t('revenue.kpi.fixedCommission') }}
+          </p>
         </div>
       </div>
 
-      <div *ngIf="loadingReport" class="bg-blue-50 border border-blue-100 text-blue-700 rounded-2xl p-4 mb-6">
+      <div
+        *ngIf="loadingReport"
+        class="bg-blue-50 border border-blue-100 text-blue-700 rounded-2xl p-4 mb-6"
+      >
         {{ t('revenue.loading') }}
       </div>
 
-      <div *ngIf="reportError" class="bg-red-50 border border-red-100 text-red-700 rounded-2xl p-4 mb-6">
+      <div
+        *ngIf="reportError"
+        class="bg-red-50 border border-red-100 text-red-700 rounded-2xl p-4 mb-6"
+      >
         {{ reportError }}
       </div>
 
-      <div id="monthly-chart-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div
+        id="monthly-chart-section"
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6"
+      >
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ t('revenue.chart.dailyTrend') }}</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">
+              {{ t('revenue.chart.dailyTrend') }}
+            </h3>
             <p class="text-sm text-gray-600">{{ t('revenue.chart.dailyTrendSubtitle') }}</p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-2">
-            <button class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-xs font-medium" type="button">{{ t('revenue.chart.btnMonth') }}</button>
-            <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200" type="button">{{ t('revenue.chart.btnGross') }}</button>
-            <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200" type="button">{{ t('revenue.chart.btnNet') }}</button>
+            <button
+              class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-xs font-medium"
+              type="button"
+            >
+              {{ t('revenue.chart.btnMonth') }}
+            </button>
+            <button
+              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
+              type="button"
+            >
+              {{ t('revenue.chart.btnGross') }}
+            </button>
+            <button
+              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
+              type="button"
+            >
+              {{ t('revenue.chart.btnNet') }}
+            </button>
           </div>
         </div>
         <div id="monthly-revenue-chart" style="height: 400px"></div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div id="property-breakdown-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('revenue.chart.scopeBreakdown') }}</h3>
+        <div
+          id="property-breakdown-section"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            {{ t('revenue.chart.scopeBreakdown') }}
+          </h3>
           <div id="property-revenue-chart" style="height: 350px"></div>
         </div>
 
-        <div id="payment-status-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('revenue.chart.grossVsCommission') }}</h3>
+        <div
+          id="payment-status-section"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            {{ t('revenue.chart.grossVsCommission') }}
+          </h3>
           <div id="payment-status-chart" style="height: 350px"></div>
         </div>
       </div>
 
-      <div id="revenue-table-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div
+        id="revenue-table-section"
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+      >
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <h3 class="text-lg font-semibold text-gray-900">{{ t('revenue.table.title') }}</h3>
           <div class="mt-4 sm:mt-0 flex items-center space-x-2">
-            <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200" type="button">
+            <button
+              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
+              type="button"
+            >
               <i class="fas fa-sort mr-1"></i>
               {{ t('revenue.chart.btnSort') }}
             </button>
@@ -252,25 +417,47 @@
           <table class="w-full">
             <thead>
               <tr class="border-b border-gray-200">
-                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">{{ t('revenue.table.date') }}</th>
-                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">{{ t('revenue.table.bookings') }}</th>
-                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">{{ t('revenue.table.grossRevenue') }}</th>
-                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">{{ t('revenue.table.commission') }}</th>
-                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">{{ t('revenue.table.netRevenue') }}</th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.date') }}
+                </th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.bookings') }}
+                </th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.grossRevenue') }}
+                </th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.commission') }}
+                </th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.netRevenue') }}
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
               <tr *ngFor="let row of dailyRows" class="hover:bg-gray-50 transition-colors">
-                <td class="py-4 px-4 text-sm font-medium text-gray-900">{{ formatDate(row.date) }}</td>
+                <td class="py-4 px-4 text-sm font-medium text-gray-900">
+                  {{ formatDate(row.date) }}
+                </td>
                 <td class="py-4 px-4 text-sm text-gray-700">{{ row.bookings_count }}</td>
-                <td class="py-4 px-4 text-sm font-semibold text-gray-900">{{ formatCurrency(row.gross_revenue) }}</td>
-                <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(row.travelhub_commission) }}</td>
-                <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(row.net_revenue) }}</td>
+                <td class="py-4 px-4 text-sm font-semibold text-gray-900">
+                  {{ formatCurrency(row.gross_revenue) }}
+                </td>
+                <td class="py-4 px-4 text-sm text-gray-700">
+                  {{ formatCurrency(row.travelhub_commission) }}
+                </td>
+                <td class="py-4 px-4 text-sm text-gray-700">
+                  {{ formatCurrency(row.net_revenue) }}
+                </td>
               </tr>
               <tr *ngIf="!dailyRows.length" class="hover:bg-gray-50 transition-colors">
-                <td class="py-4 px-4 text-sm font-medium text-gray-900">{{ t('revenue.table.noData') }}</td>
+                <td class="py-4 px-4 text-sm font-medium text-gray-900">
+                  {{ t('revenue.table.noData') }}
+                </td>
                 <td class="py-4 px-4 text-sm text-gray-700">0</td>
-                <td class="py-4 px-4 text-sm font-semibold text-gray-900">{{ formatCurrency(0) }}</td>
+                <td class="py-4 px-4 text-sm font-semibold text-gray-900">
+                  {{ formatCurrency(0) }}
+                </td>
                 <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(0) }}</td>
                 <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(0) }}</td>
               </tr>
