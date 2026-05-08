@@ -8,17 +8,17 @@ let backendUrl = '';
 const callerId = Constants.expoConfig?.extra?.REACT_APP_CALLER_ID || '';
 const extPaymentsBaseUrl =
   Constants.expoConfig?.extra?.REACT_APP_EXT_PAYMENTS_URL ||
-  'https://d1r8df79ch2otn.cloudfront.net/ext-payments';
+  'http://10.0.2.2:5001';
 console.log('ext-payments configured with URL:', extPaymentsBaseUrl);
 
 // Check environment - React Native uses different env variables than React web
 if (__DEV__) {
-  backendUrl = 'https://d1r8df79ch2otn.cloudfront.net'//'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
+  backendUrl = 'http://10.0.2.2:8081'//'http://10.0.2.2:8081'; // For Android emulator (nginx gateway)
 } else {
   // Production environment
   backendUrl =
     Constants.expoConfig?.extra?.REACT_APP_BACKEND_URL ||
-    'https://d1r8df79ch2otn.cloudfront.net';
+    'http://10.0.2.2:8081';
 }
 
 console.log('API configured with backend URL:', backendUrl);

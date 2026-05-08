@@ -226,6 +226,8 @@
     "defaultLocation": "Colombia",
     "checkInTime": "3:00 PM",
     "checkOutTime": "11:00 AM",
-    "currency": "USD"
+    "currency": "USD",
+    "qrCheckin": "QR Check-in",
+    "checkedInStatus": "Checked-in"
   }
 }
