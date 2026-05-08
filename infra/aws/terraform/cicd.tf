@@ -189,6 +189,27 @@ resource "aws_codebuild_project" "main" {
       name  = "DEPLOY_ORDER"
       value = join(",", var.deployment_order)
     }
+
+    environment_variable {
+      name  = "EMAILJS_SERVICE_ID"
+      value = var.emailjs_service_id
+    }
+
+    environment_variable {
+      name  = "EMAILJS_PUBLIC_KEY"
+      value = var.emailjs_public_key
+    }
+
+    environment_variable {
+      name  = "EMAILJS_PRIVATE_KEY"
+      value = var.emailjs_private_key
+      type  = "PLAINTEXT"
+    }
+
+    environment_variable {
+      name  = "EMAILJS_VERIFICATION_TEMPLATE_ID"
+      value = var.emailjs_verification_template_id
+    }
   }
 
   logs_config {
