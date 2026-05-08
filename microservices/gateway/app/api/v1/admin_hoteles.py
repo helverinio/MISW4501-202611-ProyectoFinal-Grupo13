@@ -33,6 +33,19 @@ def get_admin_reservas_dashboard():
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/admin/revenue-report', methods=['GET'])
+def get_admin_revenue_report():
+    params = request.args.to_dict()
+    result = get_service().get_admin_revenue_report(params=params or None)
+    return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/reservas/<reserva_id>', methods=['GET'])
+def get_admin_reserva_detail(reserva_id):
+    result = get_service().get_admin_reserva_detail(reserva_id)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/admin/reservas/<reserva_id>/estado', methods=['PUT'])
 def update_reserva_estado(reserva_id):
     data = request.get_json() or {}

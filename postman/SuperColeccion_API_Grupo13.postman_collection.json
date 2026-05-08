@@ -1,0 +1,300 @@
+{
+  "info": {
+    "_postman_id": "b5c52c90-8b16-44a2-8f6e-3b496a72c7d1",
+    "name": "SuperColeccion API Grupo13",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleccion unificada para Local/Produccion. Mantiene cobertura funcional y administrativa (tarifas/hoteles/dashboard)."
+  },
+  "variable": [
+    { "key": "access_token", "value": "" },
+    { "key": "refresh_token", "value": "" },
+    { "key": "challenge_token", "value": "" },
+    { "key": "user_id", "value": "" },
+    { "key": "hotel_id", "value": "" },
+    { "key": "tipo_habitacion_id", "value": "" },
+    { "key": "plan_tarifario_id", "value": "" },
+    { "key": "regla_tarifaria_id", "value": "" },
+    { "key": "habitacion_id", "value": "" },
+    { "key": "tarifa_id", "value": "" },
+    { "key": "estado_id", "value": "" },
+    { "key": "reserva_id", "value": "" },
+    { "key": "payment_id", "value": "" },
+    { "key": "hold_id", "value": "" },
+    { "key": "pais_id", "value": "" },
+    { "key": "ciudad_id", "value": "" },
+    { "key": "notificacion_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "00 Health",
+      "item": [
+        { "name": "Gateway Health", "request": { "method": "GET", "url": "{{base_url}}/health" } },
+        { "name": "Reservas Health", "request": { "method": "GET", "url": "{{reservas_base_url}}/health" } },
+        { "name": "Pagos Health", "request": { "method": "GET", "url": "{{pagos_base_url}}/health" } },
+        { "name": "Ext Payments Health", "request": { "method": "GET", "url": "{{ext_payments_base_url}}/health" } }
+      ]
+    },
+    {
+      "name": "01 Auth Usuarios",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.access_token) pm.collectionVariables.set('access_token', j.access_token);",
+                  "if (j.refresh_token) pm.collectionVariables.set('refresh_token', j.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"contrasena\": \"{{user_password}}\"\n}" },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}" },
+            "url": "{{base_url}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/auth/me"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Admin Auth MFA",
+      "item": [
+        {
+          "name": "Admin Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"contrasena\": \"{{admin_password}}\"\n}" },
+            "url": "{{base_url}}/admin/auth/register"
+          }
+        },
+        {
+          "name": "Admin Verify Setup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"{{challenge_token}}\",\n  \"mfa_code\": \"{{mfa_code}}\"\n}" },
+            "url": "{{base_url}}/admin/auth/verify-setup"
+          }
+        },
+        {
+          "name": "Admin Login Step1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.challenge_token) pm.collectionVariables.set('challenge_token', j.challenge_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"contrasena\": \"{{admin_password}}\"\n}" },
+            "url": "{{base_url}}/admin/auth/login/step1"
+          }
+        },
+        {
+          "name": "Admin Login Step2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j.access_token) pm.collectionVariables.set('access_token', j.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"challenge_token\": \"{{challenge_token}}\",\n  \"mfa_code\": \"{{mfa_code}}\"\n}" },
+            "url": "{{base_url}}/admin/auth/login/step2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Usuarios",
+      "item": [
+        { "name": "Create Usuario", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"nuevo.usuario@example.com\",\n  \"nombre\": \"Nuevo\",\n  \"contrasena\": \"Pass1234*\"\n}" }, "url": "{{base_url}}/usuarios" } },
+        { "name": "Get Usuario", "request": { "method": "GET", "url": "{{base_url}}/usuarios/{{user_id}}" } },
+        { "name": "List Usuarios", "request": { "method": "GET", "url": "{{base_url}}/usuarios" } },
+        { "name": "Update Usuario", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Usuario Actualizado\"\n}" }, "url": "{{base_url}}/usuarios/{{user_id}}" } },
+        { "name": "Delete Usuario", "request": { "method": "DELETE", "url": "{{base_url}}/usuarios/{{user_id}}" } },
+        { "name": "Reservas Recently Viewed", "request": { "method": "GET", "url": "{{base_url}}/usuarios/{{user_id}}/reservas/recently-viewed?limit=3" } }
+      ]
+    },
+    {
+      "name": "04 Catalogo",
+      "item": [
+        { "name": "Create Pais", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Colombia\"\n}" }, "url": "{{base_url}}/paises" } },
+        { "name": "List Paises", "request": { "method": "GET", "url": "{{base_url}}/paises" } },
+        { "name": "Get Pais", "request": { "method": "GET", "url": "{{base_url}}/paises/{{pais_id}}" } },
+        { "name": "Update Pais", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Colombia Actualizado\"\n}" }, "url": "{{base_url}}/paises/{{pais_id}}" } },
+        { "name": "Delete Pais", "request": { "method": "DELETE", "url": "{{base_url}}/paises/{{pais_id}}" } },
+        { "name": "List Ciudades by Pais", "request": { "method": "GET", "url": "{{base_url}}/paises/{{pais_id}}/ciudades" } },
+
+        { "name": "Create Ciudad", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Bogota\",\n  \"id_pais\": \"{{pais_id}}\"\n}" }, "url": "{{base_url}}/ciudades" } },
+        { "name": "List Ciudades", "request": { "method": "GET", "url": "{{base_url}}/ciudades" } },
+        { "name": "Get Ciudad", "request": { "method": "GET", "url": "{{base_url}}/ciudades/{{ciudad_id}}" } },
+        { "name": "Update Ciudad", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Bogota DC\"\n}" }, "url": "{{base_url}}/ciudades/{{ciudad_id}}" } },
+        { "name": "Delete Ciudad", "request": { "method": "DELETE", "url": "{{base_url}}/ciudades/{{ciudad_id}}" } },
+        { "name": "List Hoteles by Ciudad", "request": { "method": "GET", "url": "{{base_url}}/ciudades/{{ciudad_id}}/hoteles" } },
+
+        { "name": "Create Hotel", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Hotel Demo\",\n  \"email\": \"hotel@example.com\",\n  \"id_ciudad\": \"{{ciudad_id}}\"\n}" }, "url": "{{base_url}}/hoteles" } },
+        { "name": "List Hoteles", "request": { "method": "GET", "url": "{{base_url}}/hoteles" } },
+        { "name": "Get Hotel", "request": { "method": "GET", "url": "{{base_url}}/hoteles/{{hotel_id}}" } },
+        { "name": "Update Hotel", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Descripcion actualizada\"\n}" }, "url": "{{base_url}}/hoteles/{{hotel_id}}" } },
+        { "name": "Delete Hotel", "request": { "method": "DELETE", "url": "{{base_url}}/hoteles/{{hotel_id}}" } },
+        { "name": "Get Habitaciones by Hotel", "request": { "method": "GET", "url": "{{base_url}}/hoteles/{{hotel_id}}/habitaciones" } },
+        { "name": "Search Hoteles Disponibles", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"busqueda\": \"Bogota\",\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\",\n  \"nro_personas\": 2\n}" }, "url": "{{base_url}}/hoteles/buscar-disponibles" } },
+        { "name": "Hoteles Populares por Ciudad", "request": { "method": "GET", "url": "{{base_url}}/hoteles/populares-por-ciudad?limit=4" } },
+        { "name": "Comentarios Hotel", "request": { "method": "GET", "url": "{{base_url}}/hoteles/{{hotel_id}}/comentarios" } },
+        { "name": "Rating Hotel", "request": { "method": "GET", "url": "{{base_url}}/hoteles/{{hotel_id}}/rating" } },
+
+        { "name": "Create Habitacion", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"suite\",\n  \"nro_habitacion\": \"101\",\n  \"capacidad\": 2,\n  \"camas\": 1,\n  \"id_hotel\": \"{{hotel_id}}\"\n}" }, "url": "{{base_url}}/habitaciones" } },
+        { "name": "List Habitaciones", "request": { "method": "GET", "url": "{{base_url}}/habitaciones" } },
+        { "name": "Get Habitacion", "request": { "method": "GET", "url": "{{base_url}}/habitaciones/{{habitacion_id}}" } },
+        { "name": "Update Habitacion", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"junior\"\n}" }, "url": "{{base_url}}/habitaciones/{{habitacion_id}}" } },
+        { "name": "Delete Habitacion", "request": { "method": "DELETE", "url": "{{base_url}}/habitaciones/{{habitacion_id}}" } },
+        { "name": "Get Tarifas by Habitacion", "request": { "method": "GET", "url": "{{base_url}}/habitaciones/{{habitacion_id}}/tarifas" } },
+        { "name": "Get Reservas by Habitacion", "request": { "method": "GET", "url": "{{base_url}}/habitaciones/{{habitacion_id}}/reservas" } },
+
+        { "name": "Create Tarifa", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Tarifa Estandar\",\n  \"valor\": 150.0,\n  \"descuento\": 0,\n  \"id_habitacion\": \"{{habitacion_id}}\"\n}" }, "url": "{{base_url}}/tarifas" } },
+        { "name": "List Tarifas", "request": { "method": "GET", "url": "{{base_url}}/tarifas" } },
+        { "name": "Get Tarifa", "request": { "method": "GET", "url": "{{base_url}}/tarifas/{{tarifa_id}}" } },
+        { "name": "Update Tarifa", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"valor\": 165.0\n}" }, "url": "{{base_url}}/tarifas/{{tarifa_id}}" } },
+        { "name": "Delete Tarifa", "request": { "method": "DELETE", "url": "{{base_url}}/tarifas/{{tarifa_id}}" } },
+
+        { "name": "Create Estado", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"confirmada\"\n}" }, "url": "{{base_url}}/estados" } },
+        { "name": "List Estados", "request": { "method": "GET", "url": "{{base_url}}/estados" } },
+        { "name": "Get Estado", "request": { "method": "GET", "url": "{{base_url}}/estados/{{estado_id}}" } },
+        { "name": "Update Estado", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"pagada\"\n}" }, "url": "{{base_url}}/estados/{{estado_id}}" } },
+        { "name": "Delete Estado", "request": { "method": "DELETE", "url": "{{base_url}}/estados/{{estado_id}}" } }
+      ]
+    },
+    {
+      "name": "05 Holds",
+      "item": [
+        { "name": "Acquire Hold", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id_usuario\": \"{{user_id}}\",\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\"\n}" }, "url": "{{base_url}}/habitaciones/{{habitacion_id}}/hold" } },
+        { "name": "Check Hold", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\"\n}" }, "url": "{{base_url}}/habitaciones/{{habitacion_id}}/hold/check" } },
+        { "name": "Get Hold", "request": { "method": "GET", "url": "{{base_url}}/holds/{{hold_id}}" } },
+        { "name": "Delete Hold", "request": { "method": "DELETE", "url": "{{base_url}}/holds/{{hold_id}}" } },
+        { "name": "Cleanup Holds", "request": { "method": "POST", "url": "{{base_url}}/holds/cleanup" } }
+      ]
+    },
+    {
+      "name": "06 Reservas",
+      "item": [
+        { "name": "Create Reserva", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\",\n  \"total\": 500000,\n  \"nro_personas\": 2,\n  \"id_usuario\": \"{{user_id}}\",\n  \"id_pais\": \"{{pais_id}}\",\n  \"id_habitacion\": \"{{habitacion_id}}\",\n  \"id_estado\": \"{{estado_id}}\"\n}" }, "url": "{{base_url}}/reservas" } },
+        { "name": "List Reservas", "request": { "method": "GET", "url": "{{base_url}}/reservas" } },
+        { "name": "Get Reserva", "request": { "method": "GET", "url": "{{base_url}}/reservas/{{reserva_id}}" } },
+        { "name": "Update Reserva", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id_estado\": \"{{estado_id}}\"\n}" }, "url": "{{base_url}}/reservas/{{reserva_id}}" } },
+        { "name": "Delete Reserva", "request": { "method": "DELETE", "url": "{{base_url}}/reservas/{{reserva_id}}" } },
+        { "name": "Reservas by Usuario", "request": { "method": "GET", "url": "{{base_url}}/usuarios/{{user_id}}/reservas" } },
+        { "name": "Pagos by Reserva", "request": { "method": "GET", "url": "{{base_url}}/reservas/{{reserva_id}}/pagos" } },
+        { "name": "Notificaciones by Reserva", "request": { "method": "GET", "url": "{{base_url}}/reservas/{{reserva_id}}/notificaciones" } },
+        { "name": "Webhook PMS", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\",\n  \"total\": 500000,\n  \"nro_personas\": 2,\n  \"id_usuario\": \"{{user_id}}\",\n  \"id_pais\": \"{{pais_id}}\",\n  \"id_habitacion\": \"{{habitacion_id}}\"\n}" }, "url": "{{base_url}}/reservas/webhook/pms" } },
+        { "name": "Cotizaciones", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id_habitacion\": \"{{habitacion_id}}\",\n  \"fecha_ingreso\": \"2026-05-01\",\n  \"fecha_salida\": \"2026-05-05\",\n  \"nro_personas\": 2\n}" }, "url": "{{base_url}}/cotizaciones" } },
+        { "name": "Get Cotizacion", "request": { "method": "GET", "url": "{{base_url}}/cotizaciones/{{reserva_id}}" } }
+      ]
+    },
+    {
+      "name": "07 Pagos",
+      "item": [
+        { "name": "Create Payment", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"reservation_id\": \"{{reserva_id}}\",\n  \"amount\": 500000,\n  \"payment_method\": \"card\"\n}" }, "url": "{{base_url}}/payments" } },
+        { "name": "List Payments", "request": { "method": "GET", "url": "{{base_url}}/payments" } },
+        { "name": "Get Payment", "request": { "method": "GET", "url": "{{base_url}}/payments/{{payment_id}}" } },
+        { "name": "Payment by Reservation", "request": { "method": "GET", "url": "{{base_url}}/payments/reservation/{{reserva_id}}" } },
+        { "name": "Process Payment", "request": { "method": "POST", "url": "{{base_url}}/payments/{{payment_id}}/process" } },
+        { "name": "Payment Webhook", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"payment_intent_id\": \"pi_test_123\",\n  \"status\": \"succeeded\"\n}" }, "url": "{{base_url}}/payments/webhook" } },
+
+        { "name": "Create Pago (shadow)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_pago\": \"2026-05-01\",\n  \"total\": 500000,\n  \"estado\": \"pendiente\",\n  \"id_pais\": \"{{pais_id}}\",\n  \"id_reserva\": \"{{reserva_id}}\"\n}" }, "url": "{{base_url}}/pagos" } },
+        { "name": "List Pagos (shadow)", "request": { "method": "GET", "url": "{{base_url}}/pagos" } },
+        { "name": "Get Pago (shadow)", "request": { "method": "GET", "url": "{{base_url}}/pagos/{{payment_id}}" } },
+        { "name": "Update Pago (shadow)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"estado\": \"pagado\"\n}" }, "url": "{{base_url}}/pagos/{{payment_id}}" } },
+        { "name": "Delete Pago (shadow)", "request": { "method": "DELETE", "url": "{{base_url}}/pagos/{{payment_id}}" } }
+      ]
+    },
+    {
+      "name": "08 Notificaciones",
+      "item": [
+        { "name": "Create Notificacion", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id_reserva\": \"{{reserva_id}}\",\n  \"canal\": \"email\"\n}" }, "url": "{{base_url}}/notificaciones" } },
+        { "name": "List Notificaciones", "request": { "method": "GET", "url": "{{base_url}}/notificaciones" } },
+        { "name": "Get Notificacion", "request": { "method": "GET", "url": "{{base_url}}/notificaciones/{{notificacion_id}}" } },
+        { "name": "Update Notificacion", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"estado\": \"enviado\"\n}" }, "url": "{{base_url}}/notificaciones/{{notificacion_id}}" } },
+        { "name": "Delete Notificacion", "request": { "method": "DELETE", "url": "{{base_url}}/notificaciones/{{notificacion_id}}" } }
+      ]
+    },
+    {
+      "name": "09 Admin Hoteles y Reservas",
+      "item": [
+        { "name": "Admin Mis Hoteles", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/admin/mis-hoteles" } },
+        { "name": "Admin Asignar Hotel", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/admin/hoteles/{{hotel_id}}/asignar" } },
+        { "name": "Admin Desasignar Hotel", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/admin/hoteles/{{hotel_id}}/desasignar" } },
+        { "name": "Admin Dashboard Reservas", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/admin/reservas/dashboard" } },
+        { "name": "Admin Update Estado Reserva", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id_estado\": \"{{estado_id}}\"\n}" }, "url": "{{base_url}}/admin/reservas/{{reserva_id}}/estado" } }
+      ]
+    },
+    {
+      "name": "10 Admin Tarifas",
+      "item": [
+        { "name": "Get Tipos Habitacion", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/hoteles/{{hotel_id}}/tipos-habitacion" } },
+        { "name": "Create Tipo Habitacion", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Suite\",\n  \"capacidad\": 2\n}" }, "url": "{{base_url}}/hoteles/{{hotel_id}}/tipos-habitacion" } },
+        { "name": "Get Tipo Habitacion", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/tipos-habitacion/{{tipo_habitacion_id}}" } },
+        { "name": "Update Tipo Habitacion", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Junior Suite\"\n}" }, "url": "{{base_url}}/tipos-habitacion/{{tipo_habitacion_id}}" } },
+        { "name": "Delete Tipo Habitacion", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/tipos-habitacion/{{tipo_habitacion_id}}" } },
+
+        { "name": "Get Planes Tarifarios", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/tipos-habitacion/{{tipo_habitacion_id}}/planes-tarifarios" } },
+        { "name": "Create Plan Tarifario", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Plan Flexible\",\n  \"activo\": true\n}" }, "url": "{{base_url}}/tipos-habitacion/{{tipo_habitacion_id}}/planes-tarifarios" } },
+        { "name": "Get Plan Tarifario", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/planes-tarifarios/{{plan_tarifario_id}}" } },
+        { "name": "Update Plan Tarifario", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Plan No Reembolsable\"\n}" }, "url": "{{base_url}}/planes-tarifarios/{{plan_tarifario_id}}" } },
+        { "name": "Delete Plan Tarifario", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/planes-tarifarios/{{plan_tarifario_id}}" } },
+
+        { "name": "Get Reglas Tarifarias", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/planes-tarifarios/{{plan_tarifario_id}}/reglas" } },
+        { "name": "Create Regla Tarifaria", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"condicion\": \"weekend\",\n  \"ajuste_porcentaje\": 10\n}" }, "url": "{{base_url}}/planes-tarifarios/{{plan_tarifario_id}}/reglas" } },
+        { "name": "Get Regla Tarifaria", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/reglas-tarifarias/{{regla_tarifaria_id}}" } },
+        { "name": "Update Regla Tarifaria", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"condicion\": \"weekday\"\n}" }, "url": "{{base_url}}/reglas-tarifarias/{{regla_tarifaria_id}}" } },
+        { "name": "Delete Regla Tarifaria", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }], "url": "{{base_url}}/reglas-tarifarias/{{regla_tarifaria_id}}" } }
+      ]
+    }
+  ]
+}

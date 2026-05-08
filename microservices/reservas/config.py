@@ -31,6 +31,11 @@ class Config:
     REDIS_LOCK_RETRY_TIMES = int(os.environ.get('REDIS_LOCK_RETRY_TIMES', '1'))
     REDIS_LOCK_RETRY_DELAY_MS = int(os.environ.get('REDIS_LOCK_RETRY_DELAY_MS', '50'))
 
+    # Revenue report configuration
+    TRAVELHUB_COMMISSION_PERCENTAGE = float(
+        os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '12.0')
+    )
+
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@reservas-db:5432/reservas')

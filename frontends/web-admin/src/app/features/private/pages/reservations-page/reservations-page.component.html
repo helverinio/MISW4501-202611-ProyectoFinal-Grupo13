@@ -109,7 +109,7 @@
           {{ t('sidebar.guests') }}
         </a>
         <a
-          href="#"
+          [routerLink]="['/revenue-reports']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
@@ -419,7 +419,11 @@
               <tr *ngFor="let r of reservations" class="hover:bg-gray-50 transition-colors">
                 <!-- ID -->
                 <td class="py-4 px-6">
-                  <span class="text-sm font-medium text-primary-600">#{{ r.id_corto }}</span>
+                  <a
+                    [routerLink]="['/reservations', r.id]"
+                    class="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline"
+                    >#{{ r.id_corto }}</a
+                  >
                 </td>
 
                 <!-- Guest ID (cross-service limitation: only id_usuario available) -->
