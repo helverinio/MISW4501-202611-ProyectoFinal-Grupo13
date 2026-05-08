@@ -13,6 +13,12 @@ class ReservasService:
             authorization = request.headers.get('Authorization')
             if authorization:
                 headers['Authorization'] = authorization
+            forwarded_for = request.headers.get('X-Forwarded-For') or request.remote_addr
+            if forwarded_for:
+                headers['X-Forwarded-For'] = forwarded_for
+            request_id = request.headers.get('X-Request-Id')
+            if request_id:
+                headers['X-Request-Id'] = request_id
         return headers
 
     def _request(
@@ -290,6 +296,12 @@ class ReservasService:
 
     def get_admin_reservas_dashboard(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
         return self._request('GET', 'admin/reservas/dashboard', params=params)
+
+    def get_admin_revenue_report(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/revenue-report', params=params)
+
+    def get_admin_reserva_detail(self, reserva_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'admin/reservas/{reserva_id}')
 
     def update_reserva_estado(self, reserva_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('PUT', f'admin/reservas/{reserva_id}/estado', data)
