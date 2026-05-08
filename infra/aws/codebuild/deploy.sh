@@ -96,14 +96,15 @@ render_taskdef() {
     return 1
   fi
 
-  python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT" "$FRONTEND_CORS_ORIGINS"
+  python - <<'PY' "$template" "$output_file" "$family" "$EXEC_ROLE_ARN" "$TASK_ROLE_ARN" "$image_uri" "$SECRET_ARN" "$log_group" "$AWS_REGION" "$INTERNAL_ALB_DNS" "$PUBLIC_ALB_DNS" "$REDIS_HOST" "$MQ_HOST" "$MQ_PORT" "$FRONTEND_CORS_ORIGINS" "${WEBCLIENT_URL:-}" "${EMAILJS_SERVICE_ID:-}" "${EMAILJS_PUBLIC_KEY:-}" "${EMAILJS_PRIVATE_KEY:-}" "${EMAILJS_VERIFICATION_TEMPLATE_ID:-}"
 import pathlib
 import re
 import sys
 
 (template_path, output_path, family, exec_role, task_role, image_uri, secret_arn,
  log_group, aws_region, internal_alb_dns, public_alb_dns, redis_host, mq_host,
- mq_port, frontend_cors_origins) = sys.argv[1:]
+ mq_port, frontend_cors_origins, webclient_url,
+ emailjs_service_id, emailjs_public_key, emailjs_private_key, emailjs_template_id) = sys.argv[1:]
 
 content = pathlib.Path(template_path).read_text()
 replacements = {
@@ -120,6 +121,11 @@ replacements = {
   "__MQ_HOST__": mq_host,
   "__MQ_PORT__": mq_port,
   "__CORS_ORIGINS__": frontend_cors_origins,
+  "__WEBCLIENT_URL__": webclient_url,
+  "__EMAILJS_SERVICE_ID__": emailjs_service_id,
+  "__EMAILJS_PUBLIC_KEY__": emailjs_public_key,
+  "__EMAILJS_PRIVATE_KEY__": emailjs_private_key,
+  "__EMAILJS_TEMPLATE_ID__": emailjs_template_id,
 }
 for key, value in replacements.items():
   content = content.replace(key, value)
@@ -205,8 +211,9 @@ deploy_backends() {
   MQ_HOST=$(jq -r '.mq_host.value' "$TF_OUTPUTS")
   MQ_PORT=$(jq -r '.mq_port.value' "$TF_OUTPUTS")
   FRONTEND_CORS_ORIGINS=$(jq -r '.frontend_urls.value | to_entries | map(.value) | join(",")' "$TF_OUTPUTS")
+  WEBCLIENT_URL=$(jq -r '.frontend_urls.value["web-client"]' "$TF_OUTPUTS")
 
-  export AWS_REGION EXEC_ROLE_ARN TASK_ROLE_ARN SECRET_ARN INTERNAL_ALB_DNS PUBLIC_ALB_DNS REDIS_HOST MQ_HOST MQ_PORT FRONTEND_CORS_ORIGINS
+  export AWS_REGION EXEC_ROLE_ARN TASK_ROLE_ARN SECRET_ARN INTERNAL_ALB_DNS PUBLIC_ALB_DNS REDIS_HOST MQ_HOST MQ_PORT FRONTEND_CORS_ORIGINS WEBCLIENT_URL
 
   reconcile_listener() {
     local service="$1"

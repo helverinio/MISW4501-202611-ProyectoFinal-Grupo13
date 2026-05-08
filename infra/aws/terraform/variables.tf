@@ -154,3 +154,28 @@ variable "deployment_order" {
   type        = list(string)
   default     = ["ext-payments", "pagos", "reservas"]
 }
+
+variable "emailjs_service_id" {
+  description = "EmailJS service ID used by the usuarios microservice."
+  type        = string
+  default     = ""
+}
+
+variable "emailjs_public_key" {
+  description = "EmailJS public (user) key."
+  type        = string
+  default     = ""
+}
+
+variable "emailjs_private_key" {
+  description = "EmailJS private key (accessToken)."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "emailjs_verification_template_id" {
+  description = "EmailJS template ID for the email-verification flow."
+  type        = string
+  default     = ""
+}
