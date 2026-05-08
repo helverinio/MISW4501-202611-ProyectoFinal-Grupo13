@@ -9,7 +9,10 @@ def create_app(config_name='default'):
         app,
         resources={r'/api/*': {'origins': app.config['CORS_ORIGINS']}},
         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allow_headers=['Content-Type', 'Authorization'],
+        allow_headers=['Content-Type', 'Authorization', 'X-Request-Id'],
+        expose_headers=['Content-Type', 'X-Request-Id'],
+        supports_credentials=True,
+        max_age=600,
     )
     
     from app.api.v1 import api_v1_bp

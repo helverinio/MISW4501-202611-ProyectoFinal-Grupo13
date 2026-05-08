@@ -584,6 +584,39 @@ export const BookingService = {
     }
   },
 
+  checkinReserva: async (
+    reservaId: string
+  ): Promise<BookingServiceResult<ReservaResponse & { estado_nombre?: string }>> => {
+    try {
+      const url = `/api/v1/reservas/${reservaId}/checkin`;
+      const response = await customAxios.post(url);
+
+      if (response.status === 200 || response.status === 201) {
+        return {
+          success: true,
+          data: response.data,
+        };
+      }
+
+      return {
+        success: false,
+        error: {
+          message: 'Failed to check in',
+          status: response.status,
+        },
+      };
+    } catch (error: any) {
+      console.error('Checkin error:', error);
+      return {
+        success: false,
+        error: {
+          message: error.response?.data?.error || error.message || 'Failed to check in',
+          status: error.response?.status,
+        },
+      };
+    }
+  },
+
   updateReserva: async (
     reservaId: string,
     payload: Partial<ReservaResponse>

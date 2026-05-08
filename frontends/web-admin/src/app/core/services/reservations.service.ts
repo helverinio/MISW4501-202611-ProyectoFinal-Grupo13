@@ -5,8 +5,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   Estado,
+  ReservationDetailResponse,
   ReservationDashboardParams,
   ReservationDashboardResponse,
+  UpdateReservationStateRequest,
+  UpdateReservationStateResponse,
 } from '../models/reservations.models';
 
 @Injectable({ providedIn: 'root' })
@@ -35,9 +38,17 @@ export class ReservationsService {
     return this.http.get<Estado[]>(`${this.base}/estados`);
   }
 
-  updateReservaEstado(reservaId: string, idEstado: string): Observable<unknown> {
-    return this.http.put(`${this.base}/admin/reservas/${reservaId}/estado`, {
-      id_estado: idEstado,
-    });
+  getAdminReservaDetail(reservaId: string): Observable<ReservationDetailResponse> {
+    return this.http.get<ReservationDetailResponse>(`${this.base}/admin/reservas/${reservaId}`);
+  }
+
+  updateReservaEstado(
+    reservaId: string,
+    payload: UpdateReservationStateRequest,
+  ): Observable<UpdateReservationStateResponse> {
+    return this.http.put<UpdateReservationStateResponse>(
+      `${this.base}/admin/reservas/${reservaId}/estado`,
+      payload,
+    );
   }
 }
