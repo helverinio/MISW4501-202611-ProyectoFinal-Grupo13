@@ -24,7 +24,15 @@
       ],
       "environment": [
         { "name": "FLASK_ENV", "value": "production" },
-        { "name": "DB_SCHEMA", "value": "usuarios" }
+        { "name": "DB_SCHEMA", "value": "usuarios" },
+        { "name": "EMAILJS_ENABLED", "value": "true" },
+        { "name": "EMAILJS_ENDPOINT", "value": "https://api.emailjs.com/api/v1.0/email/send" },
+        { "name": "EMAILJS_SERVICE_ID", "value": "__EMAILJS_SERVICE_ID__" },
+        { "name": "EMAILJS_PUBLIC_KEY", "value": "__EMAILJS_PUBLIC_KEY__" },
+        { "name": "EMAILJS_PRIVATE_KEY", "value": "__EMAILJS_PRIVATE_KEY__" },
+        { "name": "EMAILJS_VERIFICATION_TEMPLATE_ID", "value": "__EMAILJS_TEMPLATE_ID__" },
+        { "name": "EMAILJS_ALLOWED_ORIGIN", "value": "__WEBCLIENT_URL__" },
+        { "name": "EMAIL_VERIFICATION_LINK_BASE_URL", "value": "__WEBCLIENT_URL__/verify-email" }
       ],
       "secrets": [
         { "name": "DATABASE_URL", "valueFrom": "__SECRET_ARN__:usuarios_database_url::" },
