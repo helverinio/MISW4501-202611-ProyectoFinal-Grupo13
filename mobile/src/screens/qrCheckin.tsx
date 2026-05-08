@@ -41,25 +41,35 @@ export default function QrCheckinScreen() {
     if (scannedRef.current) return;
     scannedRef.current = true;
 
+    console.log('[QR-Checkin] Raw scanned data:', data);
+    console.log('[QR-Checkin] Expected reservationId (from params):', reservationId);
+
     setState('processing');
 
     try {
       let qrPayload: { reserva_id?: string } | null = null;
       try {
         qrPayload = JSON.parse(data);
+        console.log('[QR-Checkin] Parsed JSON payload:', JSON.stringify(qrPayload));
       } catch {
+        console.log('[QR-Checkin] Data is NOT valid JSON, using raw string');
         qrPayload = null;
       }
 
       const qrReservaId = qrPayload?.reserva_id ?? data.trim();
+      console.log('[QR-Checkin] Extracted qrReservaId:', qrReservaId);
+      console.log('[QR-Checkin] Comparison: qrReservaId === reservationId →', qrReservaId === reservationId);
 
       if (qrReservaId !== reservationId) {
+        console.warn('[QR-Checkin] MISMATCH — qrReservaId:', qrReservaId, '| reservationId:', reservationId);
         setState('error');
         setErrorMessage(t('qrCheckin.errorInvalidQR'));
         return;
       }
 
+      console.log('[QR-Checkin] IDs match, calling BookingService.checkinReserva...');
       const result = await BookingService.checkinReserva(reservationId);
+      console.log('[QR-Checkin] checkinReserva result:', JSON.stringify(result));
 
       if (result.success) {
         setState('success');
@@ -70,7 +80,7 @@ export default function QrCheckinScreen() {
         );
       }
     } catch (error) {
-      console.error('QR checkin error:', error);
+      console.error('[QR-Checkin] Exception during checkin:', error);
       setState('error');
       setErrorMessage(t('qrCheckin.errorGeneric'));
     }

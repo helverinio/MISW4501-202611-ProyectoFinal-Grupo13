@@ -489,11 +489,11 @@ export default function MyReservationsScreen() {
 
   const isCheckinWindowOpen = (reservation: ReservationItemVm): boolean => {
     const today = new Date();
-    const checkinDate = new Date(reservation.checkIn + 'T00:00:00');
+    const checkinDate = new Date(reservation.checkIn + 'T00:00:00Z');
     return (
-      today.getFullYear() === checkinDate.getFullYear() &&
-      today.getMonth() === checkinDate.getMonth() &&
-      today.getDate() === checkinDate.getDate()
+      today.getUTCFullYear() === checkinDate.getUTCFullYear() &&
+      today.getUTCMonth() === checkinDate.getUTCMonth() &&
+      today.getUTCDate() === checkinDate.getUTCDate()
     );
   };
 
