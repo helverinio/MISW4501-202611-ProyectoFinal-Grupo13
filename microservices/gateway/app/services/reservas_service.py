@@ -227,6 +227,9 @@ class ReservasService:
             params={'limit': limit},
         )
 
+    def generate_checkin_qr(self, reserva_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'reservas/{reserva_id}/checkin-qr')
+
     def checkin_reserva(self, reserva_id: str) -> Dict[str, Any]:
         return self._request('POST', f'reservas/{reserva_id}/checkin')
 

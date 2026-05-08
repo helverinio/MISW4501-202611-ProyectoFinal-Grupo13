@@ -487,6 +487,33 @@ export default function MyReservationsScreen() {
     }
   };
 
+  const isCheckinWindowOpen = (reservation: ReservationItemVm): boolean => {
+    const today = new Date();
+    const checkinDate = new Date(reservation.checkIn + 'T00:00:00');
+    return (
+      today.getFullYear() === checkinDate.getFullYear() &&
+      today.getMonth() === checkinDate.getMonth() &&
+      today.getDate() === checkinDate.getDate()
+    );
+  };
+
+  const handleQrCheckin = (reservation: ReservationItemVm) => {
+    if (isOffline) {
+      Alert.alert(
+        t('offline.actionUnavailableTitle'),
+        t('offline.actionUnavailableMessage')
+      );
+      return;
+    }
+    router.push({
+      pathname: '/screens/qrCheckin',
+      params: {
+        reservationId: reservation.id,
+        hotelName: reservation.hotelName,
+      },
+    } as any);
+  };
+
   const handleCancel = (reservation: ReservationItemVm) => {
     if (isOffline) {
       Alert.alert(
@@ -671,6 +698,23 @@ export default function MyReservationsScreen() {
             </>
           ) : reservation.status === 'confirmed' ? (
             <>
+              {isCheckinWindowOpen(reservation) ? (
+                <TouchableOpacity
+                  style={[styles.qrCheckinButton, isOffline && styles.disabledButton]}
+                  onPress={() => handleQrCheckin(reservation)}
+                  disabled={isOffline}
+                >
+                  <Ionicons name="qr-code-outline" size={18} color="#fff" />
+                  <Text
+                    style={[
+                      styles.qrCheckinButtonText,
+                      isOffline && styles.disabledButtonText,
+                    ]}
+                  >
+                    {t('myReservations.qrCheckin')}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
               <TouchableOpacity
                 style={styles.primaryButton}
                 onPress={() => handleViewDetails(reservation)}
@@ -1001,7 +1045,23 @@ const styles = StyleSheet.create({
   },
   actionsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
+  },
+  qrCheckinButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    width: '100%',
+    backgroundColor: '#16A34A',
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  qrCheckinButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   primaryButton: {
     flex: 1,

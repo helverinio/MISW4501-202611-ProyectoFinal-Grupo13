@@ -1,5 +1,7 @@
 from flask import request, jsonify, current_app
-from datetime import datetime
+from datetime import datetime, date
+import io, base64, json
+import qrcode
 from app.api.v1 import api_v1_bp
 from app.api.v1.auth import require_token
 from app.application.use_cases import (
@@ -467,6 +469,58 @@ def create_reserva_pms_webhook():
         'estado_nombre': estado_nombre,
         'source': 'PMS'
     }), 201
+
+
+@api_v1_bp.route('/reservas/<reserva_id>/checkin-qr', methods=['GET'])
+@require_token
+def generate_checkin_qr(reserva_id, current_usuario=None):
+    repository = get_repository()
+    reserva = repository.find_by_id(reserva_id)
+
+    if not reserva:
+        return jsonify({'error': 'Reserva not found'}), 404
+
+    # Validate the reservation is confirmed
+    estado_repo = SQLAlchemyEstadoRepository()
+    estado = estado_repo.find_by_id(reserva.id_estado)
+    estado_nombre = estado.nombre if estado else ''
+    normalized = estado_nombre.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
+
+    if 'confirm' not in normalized:
+        return jsonify({
+            'error': 'Check-in QR is only available for confirmed reservations',
+            'estado_actual': estado_nombre,
+        }), 409
+
+    # Validate check-in window: fecha_ingreso must be today
+    today = date.today()
+    checkin_date = reserva.fecha_ingreso
+    if hasattr(checkin_date, 'date'):
+        checkin_date = checkin_date.date()
+
+    if checkin_date != today:
+        return jsonify({
+            'error': 'Check-in QR is only available on the check-in date',
+            'fecha_ingreso': reserva.fecha_ingreso.isoformat(),
+            'today': today.isoformat(),
+        }), 409
+
+    # Generate QR code
+    qr_payload = json.dumps({'reserva_id': reserva.id})
+    img = qrcode.make(qr_payload)
+    buffer = io.BytesIO()
+    img.save(buffer, format='PNG')
+    buffer.seek(0)
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    current_app.logger.info(f"[RESERVAS] Check-in QR generated for reserva {reserva_id}")
+
+    return jsonify({
+        'reserva_id': reserva.id,
+        'qr_code': qr_base64,
+        'content_type': 'image/png',
+        'qr_payload': qr_payload,
+    }), 200
 
 
 @api_v1_bp.route('/reservas/<reserva_id>/checkin', methods=['POST'])
