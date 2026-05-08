@@ -142,6 +142,7 @@ def test_reservas_service_request_exception(monkeypatch):
         ("update_reserva", ("7", {"estado": "confirmada"})),
         ("delete_reserva", ("7",)),
         ("get_reservas_by_usuario", ("u1",)),
+        ("checkin_reserva", ("7",)),
         ("create_reserva_pms_webhook", ({"id": "w1"},)),
         ("get_pagos_by_reserva", ("7",)),
         ("get_notificaciones_by_reserva", ("7",)),

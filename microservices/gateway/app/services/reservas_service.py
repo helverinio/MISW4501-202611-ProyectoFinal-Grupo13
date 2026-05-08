@@ -227,6 +227,9 @@ class ReservasService:
             params={'limit': limit},
         )
 
+    def checkin_reserva(self, reserva_id: str) -> Dict[str, Any]:
+        return self._request('POST', f'reservas/{reserva_id}/checkin')
+
     def create_reserva_pms_webhook(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'reservas/webhook/pms', data)
 

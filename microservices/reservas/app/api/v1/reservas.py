@@ -469,6 +469,36 @@ def create_reserva_pms_webhook():
     }), 201
 
 
+@api_v1_bp.route('/reservas/<reserva_id>/checkin', methods=['POST'])
+@require_token
+def checkin_reserva(reserva_id, current_usuario=None):
+    repository = get_repository()
+    reserva = repository.find_by_id(reserva_id)
+
+    if not reserva:
+        return jsonify({'error': 'Reserva not found'}), 404
+
+    estado_repo = SQLAlchemyEstadoRepository()
+    estado_nombre = 'Checked-in'
+    estado = estado_repo.find_by_nombre(estado_nombre)
+
+    if not estado:
+        current_app.logger.info(f"[RESERVAS] Estado '{estado_nombre}' not found, creating it")
+        estado = Estado.create(nombre=estado_nombre, descripcion='El huésped ha realizado el check-in')
+        estado = estado_repo.save(estado)
+        current_app.logger.info(f"[RESERVAS] Created estado '{estado_nombre}' with id {estado.id}")
+
+    reserva.id_estado = estado.id
+    repository.update(reserva)
+
+    current_app.logger.info(f"[RESERVAS] Check-in completed for reserva {reserva_id}")
+
+    return jsonify({
+        **_serialize_reserva(reserva),
+        'estado_nombre': estado_nombre,
+    }), 200
+
+
 def _serialize_reserva(reserva):
     return {
         'id': reserva.id,
