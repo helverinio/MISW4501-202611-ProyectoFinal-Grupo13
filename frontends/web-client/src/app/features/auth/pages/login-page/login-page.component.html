@@ -202,7 +202,7 @@
               >
               <div class="relative">
                 <input
-                  type="password"
+                  [type]="showSignupPassword() ? 'text' : 'password'"
                   id="login-signup-password"
                   formControlName="password"
                   class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10"
@@ -212,31 +212,89 @@
                   type="button"
                   id="login-toggle-password"
                   class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  (click)="toggleSignupPassword()"
                 >
-                  <i class="fa-solid fa-eye text-gray-400 hover:text-gray-600"></i>
+                  @if (showSignupPassword()) {
+                    <i class="fa-solid fa-eye-slash text-gray-400 hover:text-gray-600"></i>
+                  } @else {
+                    <i class="fa-solid fa-eye text-gray-400 hover:text-gray-600"></i>
+                  }
                 </button>
               </div>
               <div id="login-password-strength" class="mt-2 space-y-1">
                 <div class="flex items-center text-xs">
                   <div class="flex space-x-1 mr-2">
-                    <div id="login-strength-1" class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                    <div id="login-strength-2" class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                    <div id="login-strength-3" class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                    <div id="login-strength-4" class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                    <div
+                      id="login-strength-1"
+                      class="w-2 h-2 rounded-full transition-colors duration-200"
+                      [class.bg-green-500]="pwStrength() >= 1"
+                      [class.bg-gray-300]="pwStrength() < 1"
+                    ></div>
+                    <div
+                      id="login-strength-2"
+                      class="w-2 h-2 rounded-full transition-colors duration-200"
+                      [class.bg-green-500]="pwStrength() >= 2"
+                      [class.bg-gray-300]="pwStrength() < 2"
+                    ></div>
+                    <div
+                      id="login-strength-3"
+                      class="w-2 h-2 rounded-full transition-colors duration-200"
+                      [class.bg-green-500]="pwStrength() >= 3"
+                      [class.bg-gray-300]="pwStrength() < 3"
+                    ></div>
+                    <div
+                      id="login-strength-4"
+                      class="w-2 h-2 rounded-full transition-colors duration-200"
+                      [class.bg-green-500]="pwStrength() >= 3"
+                      [class.bg-gray-300]="pwStrength() < 3"
+                    ></div>
                   </div>
-                  <span id="login-strength-text" class="text-gray-500">Password strength</span>
+                  <span
+                    id="login-strength-text"
+                    class="transition-colors duration-200"
+                    [class.text-gray-500]="pwStrength() === 0"
+                    [class.text-yellow-500]="pwStrength() === 1"
+                    [class.text-orange-500]="pwStrength() === 2"
+                    [class.text-green-500]="pwStrength() === 3"
+                  >
+                    @if (pwStrength() === 0) { Password strength }
+                    @else if (pwStrength() === 1) { Weak }
+                    @else if (pwStrength() === 2) { Fair }
+                    @else { Strong }
+                  </span>
                 </div>
-                <ul class="text-xs text-gray-500 space-y-1">
-                  <li id="login-req-length" class="flex items-center">
-                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                <ul class="text-xs space-y-1 mt-1">
+                  <li id="login-req-length" class="flex items-center transition-colors duration-200"
+                    [class.text-green-600]="pwHasLength()"
+                    [class.text-gray-500]="!pwHasLength()"
+                  >
+                    @if (pwHasLength()) {
+                      <i class="fa-solid fa-circle-check text-green-500 mr-2 text-[8px]"></i>
+                    } @else {
+                      <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    }
                     At least 8 characters
                   </li>
-                  <li id="login-req-number" class="flex items-center">
-                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                  <li id="login-req-number" class="flex items-center transition-colors duration-200"
+                    [class.text-green-600]="pwHasNumber()"
+                    [class.text-gray-500]="!pwHasNumber()"
+                  >
+                    @if (pwHasNumber()) {
+                      <i class="fa-solid fa-circle-check text-green-500 mr-2 text-[8px]"></i>
+                    } @else {
+                      <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    }
                     One number
                   </li>
-                  <li id="login-req-letter" class="flex items-center">
-                    <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                  <li id="login-req-letter" class="flex items-center transition-colors duration-200"
+                    [class.text-green-600]="pwHasLetter()"
+                    [class.text-gray-500]="!pwHasLetter()"
+                  >
+                    @if (pwHasLetter()) {
+                      <i class="fa-solid fa-circle-check text-green-500 mr-2 text-[8px]"></i>
+                    } @else {
+                      <i class="fa-solid fa-circle text-gray-300 mr-2 text-[8px]"></i>
+                    }
                     One letter
                   </li>
                 </ul>
@@ -256,13 +314,27 @@
                 class="block text-sm font-medium text-gray-700 mb-2"
                 >Confirm password</label
               >
-              <input
-                type="password"
-                id="login-signup-confirm-password"
-                formControlName="confirmPassword"
-                class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="Confirm your password"
-              />
+              <div class="relative">
+                <input
+                  [type]="showConfirmPassword() ? 'text' : 'password'"
+                  id="login-signup-confirm-password"
+                  formControlName="confirmPassword"
+                  class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10"
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  id="login-toggle-confirm-password"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  (click)="toggleConfirmPassword()"
+                >
+                  @if (showConfirmPassword()) {
+                    <i class="fa-solid fa-eye-slash text-gray-400 hover:text-gray-600"></i>
+                  } @else {
+                    <i class="fa-solid fa-eye text-gray-400 hover:text-gray-600"></i>
+                  }
+                </button>
+              </div>
               <div
                 id="login-confirm-password-error"
                 class="mt-1 text-sm text-error-500"
