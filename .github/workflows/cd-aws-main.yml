@@ -24,9 +24,17 @@ jobs:
       TF_IN_AUTOMATION: true
       TF_VAR_aws_region: us-east-2
       TF_VAR_github_repository: ${{ github.repository }}
+      TF_VAR_emailjs_service_id: ${{ vars.EMAILJS_SERVICE_ID }}
+      TF_VAR_emailjs_public_key: ${{ vars.EMAILJS_PUBLIC_KEY }}
+      TF_VAR_emailjs_private_key: ${{ secrets.EMAILJS_PRIVATE_KEY }}
+      TF_VAR_emailjs_verification_template_id: ${{ vars.EMAILJS_VERIFICATION_TEMPLATE_ID }}
       TF_BACKEND_BUCKET: ${{ vars.TF_BACKEND_BUCKET }}
       TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY }}
       TF_BACKEND_DYNAMODB_TABLE: ${{ vars.TF_BACKEND_DYNAMODB_TABLE }}
+      EMAILJS_SERVICE_ID: ${{ vars.EMAILJS_SERVICE_ID }}
+      EMAILJS_PUBLIC_KEY: ${{ vars.EMAILJS_PUBLIC_KEY }}
+      EMAILJS_PRIVATE_KEY: ${{ secrets.EMAILJS_PRIVATE_KEY }}
+      EMAILJS_VERIFICATION_TEMPLATE_ID: ${{ vars.EMAILJS_VERIFICATION_TEMPLATE_ID }}
 
     steps:
       - name: Checkout merged commit
@@ -186,6 +194,8 @@ jobs:
           REDIS_HOST=$(jq -r '.redis_primary_endpoint.value' "$TF_OUTPUTS")
           MQ_HOST=$(jq -r '.mq_host.value' "$TF_OUTPUTS")
           MQ_PORT=$(jq -r '.mq_port.value' "$TF_OUTPUTS")
+          FRONTEND_CORS_ORIGINS=$(jq -r '.frontend_urls.value | to_entries | map(.value) | join(",")' "$TF_OUTPUTS")
+          WEBCLIENT_URL=$(jq -r '.frontend_urls.value["web-client"]' "$TF_OUTPUTS")
 
           reconcile_listener() {
             local service="$1"
@@ -262,6 +272,18 @@ jobs:
             replace_placeholder "__REDIS_HOST__" "$REDIS_HOST"
             replace_placeholder "__MQ_HOST__" "$MQ_HOST"
             replace_placeholder "__MQ_PORT__" "$MQ_PORT"
+            replace_placeholder "__CORS_ORIGINS__" "$FRONTEND_CORS_ORIGINS"
+            replace_placeholder "__WEBCLIENT_URL__" "$WEBCLIENT_URL"
+            replace_placeholder "__EMAILJS_SERVICE_ID__" "${EMAILJS_SERVICE_ID:-}"
+            replace_placeholder "__EMAILJS_PUBLIC_KEY__" "${EMAILJS_PUBLIC_KEY:-}"
+            replace_placeholder "__EMAILJS_PRIVATE_KEY__" "${EMAILJS_PRIVATE_KEY:-}"
+            replace_placeholder "__EMAILJS_TEMPLATE_ID__" "${EMAILJS_VERIFICATION_TEMPLATE_ID:-}"
+
+            if grep -Eq '__[A-Z0-9_]+__' "$output_file"; then
+              echo "Unresolved placeholders detected in ${output_file}"
+              grep -Eo '__[A-Z0-9_]+__' "$output_file" | sort -u
+              exit 1
+            fi
 
             echo "$output_file"
           }
