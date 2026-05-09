@@ -20,6 +20,7 @@ on:
       - main
       - feature/srpint1
       - feature/sprint2
+      - feature/sprint3
     types:
       - opened
       - reopened
