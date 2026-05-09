@@ -76,10 +76,9 @@ export class LoginPageComponent {
     marketingAccepted: [false],
   });
 
-  private readonly passwordValue = toSignal(
-    this.signupForm.controls.password.valueChanges,
-    { initialValue: '' },
-  );
+  private readonly passwordValue = toSignal(this.signupForm.controls.password.valueChanges, {
+    initialValue: '',
+  });
 
   protected readonly pwHasLength = computed(() => this.passwordValue().length >= 8);
   protected readonly pwHasNumber = computed(() => /\d/.test(this.passwordValue()));

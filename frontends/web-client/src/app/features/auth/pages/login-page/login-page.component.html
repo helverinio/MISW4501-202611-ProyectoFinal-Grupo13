@@ -257,14 +257,21 @@
                     [class.text-orange-500]="pwStrength() === 2"
                     [class.text-green-500]="pwStrength() === 3"
                   >
-                    @if (pwStrength() === 0) { Password strength }
-                    @else if (pwStrength() === 1) { Weak }
-                    @else if (pwStrength() === 2) { Fair }
-                    @else { Strong }
+                    @if (pwStrength() === 0) {
+                      Password strength
+                    } @else if (pwStrength() === 1) {
+                      Weak
+                    } @else if (pwStrength() === 2) {
+                      Fair
+                    } @else {
+                      Strong
+                    }
                   </span>
                 </div>
                 <ul class="text-xs space-y-1 mt-1">
-                  <li id="login-req-length" class="flex items-center transition-colors duration-200"
+                  <li
+                    id="login-req-length"
+                    class="flex items-center transition-colors duration-200"
                     [class.text-green-600]="pwHasLength()"
                     [class.text-gray-500]="!pwHasLength()"
                   >
@@ -275,7 +282,9 @@
                     }
                     At least 8 characters
                   </li>
-                  <li id="login-req-number" class="flex items-center transition-colors duration-200"
+                  <li
+                    id="login-req-number"
+                    class="flex items-center transition-colors duration-200"
                     [class.text-green-600]="pwHasNumber()"
                     [class.text-gray-500]="!pwHasNumber()"
                   >
@@ -286,7 +295,9 @@
                     }
                     One number
                   </li>
-                  <li id="login-req-letter" class="flex items-center transition-colors duration-200"
+                  <li
+                    id="login-req-letter"
+                    class="flex items-center transition-colors duration-200"
                     [class.text-green-600]="pwHasLetter()"
                     [class.text-gray-500]="!pwHasLetter()"
                   >
