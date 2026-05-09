@@ -9,6 +9,7 @@ import {
   Estado,
   ReservationDetailResponse,
   ReservationTimelineItem,
+  ReservationPaymentItem,
 } from '../../../../core/models/reservations.models';
 import { UsuarioDetail } from '../../../../core/models/usuarios.models';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -35,9 +36,30 @@ export class ReservationDetailPageComponent implements OnInit {
   actionError: string | null = null;
   successMessage: string | null = null;
 
+
   confirmModalOpen = false;
   pendingAction: ReservationAction | null = null;
   reason = '';
+
+  /**
+   * Devuelve los pagos reales, o un pago virtual si el estado es 'pago recibido' o 'completada' y no hay pagos.
+   */
+  get paymentsToShow(): ReservationPaymentItem[] {
+    if (!this.detail) return [];
+    const pagos = this.detail.payments || [];
+    const estado = (this.detail.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    if (pagos.length > 0) return pagos;
+    if (isPaid) {
+      return [{
+        id: 'virtual',
+        fecha_pago: this.detail.created_at,
+        total: this.getCalculatedTotal(),
+        estado: 'completado',
+      }];
+    }
+    return [];
+  }
 
   private readonly localeByLanguage: Record<LanguageCode, string> = {
     en: 'en-US',
@@ -187,6 +209,41 @@ export class ReservationDetailPageComponent implements OnInit {
     const estado = (this.detail?.estado?.nombre || '').toLowerCase();
     const isPaid = estado === 'pago recibido' || estado === 'completada';
     return isPaid ? 0 : this.getCalculatedTotal();
+  }
+
+  getPaymentBackgroundClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-50';
+    if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-50';
+    return 'bg-gray-50';
+  }
+
+  getPaymentAmountClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'text-success-600';
+    if (estado === 'pendiente' || estado === 'pending') return 'text-yellow-600';
+    return 'text-gray-600';
+  }
+
+  getPaymentBadgeClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-100 text-success-800';
+    if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-100 text-yellow-800';
+    return 'bg-gray-100 text-gray-800';
+  }
+
+  getPaymentBadgeIcon(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'fas fa-check-circle';
+    if (estado === 'pendiente' || estado === 'pending') return 'fas fa-clock';
+    return 'fas fa-info-circle';
+  }
+
+  getPaymentBadgeText(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'Paid';
+    if (estado === 'pendiente' || estado === 'pending') return 'Pending';
+    return estado;
   }
 
   goBack(): void {
