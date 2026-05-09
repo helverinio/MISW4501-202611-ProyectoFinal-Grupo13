@@ -227,11 +227,12 @@ export interface AdminTranslation {
   'reservationDetail.reject': string;
   'reservationDetail.confirm': string;
   'reservationDetail.guestInformation': string;
-  'reservationDetail.guestIdentifier': string;
+  'reservationDetail.fullName': string;
   'reservationDetail.email': string;
   'reservationDetail.phone': string;
   'reservationDetail.notAvailableReservas': string;
-  'reservationDetail.guests': string;
+  'reservationDetail.notAvailable': string;
+  'reservationDetail.country': string;
   'reservationDetail.sectionDetails': string;
   'reservationDetail.property': string;
   'reservationDetail.roomType': string;
@@ -491,11 +492,12 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.reject': 'Reject',
     'reservationDetail.confirm': 'Confirm',
     'reservationDetail.guestInformation': 'Guest Information',
-    'reservationDetail.guestIdentifier': 'Guest Identifier',
+    'reservationDetail.fullName': 'Full Name',
     'reservationDetail.email': 'Email',
     'reservationDetail.phone': 'Phone',
     'reservationDetail.notAvailableReservas': 'Not available in reservas service',
-    'reservationDetail.guests': 'Guests',
+    'reservationDetail.notAvailable': 'Not available',
+    'reservationDetail.country': 'Country',
     'reservationDetail.sectionDetails': 'Reservation Details',
     'reservationDetail.property': 'Property',
     'reservationDetail.roomType': 'Room Type',
@@ -759,11 +761,12 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.reject': 'Rechazar',
     'reservationDetail.confirm': 'Confirmar',
     'reservationDetail.guestInformation': 'Información del huésped',
-    'reservationDetail.guestIdentifier': 'Identificador del huésped',
+    'reservationDetail.fullName': 'Nombre Completo',
     'reservationDetail.email': 'Correo electrónico',
     'reservationDetail.phone': 'Teléfono',
     'reservationDetail.notAvailableReservas': 'No disponible en el servicio de reservas',
-    'reservationDetail.guests': 'Huéspedes',
+    'reservationDetail.notAvailable': 'No disponible',
+    'reservationDetail.country': 'País',
     'reservationDetail.sectionDetails': 'Detalles de la reserva',
     'reservationDetail.property': 'Propiedad',
     'reservationDetail.roomType': 'Tipo de habitación',
@@ -1027,11 +1030,12 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.reject': 'Rejeitar',
     'reservationDetail.confirm': 'Confirmar',
     'reservationDetail.guestInformation': 'Informações do hóspede',
-    'reservationDetail.guestIdentifier': 'Identificador do hóspede',
+    'reservationDetail.fullName': 'Nome Completo',
     'reservationDetail.email': 'E-mail',
     'reservationDetail.phone': 'Telefone',
     'reservationDetail.notAvailableReservas': 'Não disponível no serviço de reservas',
-    'reservationDetail.guests': 'Hóspedes',
+    'reservationDetail.notAvailable': 'Não disponível',
+    'reservationDetail.country': 'País',
     'reservationDetail.sectionDetails': 'Detalhes da reserva',
     'reservationDetail.property': 'Propriedade',
     'reservationDetail.roomType': 'Tipo de quarto',

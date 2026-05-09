@@ -10,9 +10,11 @@ import {
   ReservationDetailResponse,
   ReservationTimelineItem,
 } from '../../../../core/models/reservations.models';
+import { UsuarioDetail } from '../../../../core/models/usuarios.models';
 import { AuthService } from '../../../../core/services/auth.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { ReservationsService } from '../../../../core/services/reservations.service';
+import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { LanguageCode } from '../../../../core/i18n/translations';
 
 type ReservationAction = 'confirmada' | 'rechazada';
@@ -26,6 +28,7 @@ type ReservationAction = 'confirmada' | 'rechazada';
 export class ReservationDetailPageComponent implements OnInit {
   reservationId = '';
   detail: ReservationDetailResponse | null = null;
+  guestInfo: UsuarioDetail | null = null;
   loading = false;
   actionLoading = false;
   error: string | null = null;
@@ -49,6 +52,7 @@ export class ReservationDetailPageComponent implements OnInit {
     private readonly router: Router,
     private readonly authService: AuthService,
     private readonly reservationsService: ReservationsService,
+    private readonly usuariosService: UsuariosService,
     private readonly cdr: ChangeDetectorRef,
     readonly i18n: I18nService,
   ) {}
@@ -63,6 +67,24 @@ export class ReservationDetailPageComponent implements OnInit {
     this.loading = false;
     this.loadDetail();
     this.loadEstados();
+  }
+
+  private loadGuestInfo(): void {
+    if (!this.detail?.id_usuario) return;
+
+    this.usuariosService
+      .getUsuario(this.detail.id_usuario)
+      .pipe(timeout(8000))
+      .subscribe({
+        next: (usuario) => {
+          this.guestInfo = usuario;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          // Silently fail - use fallbacks in template
+          this.guestInfo = null;
+        },
+      });
   }
 
   currentUser() {
@@ -142,6 +164,10 @@ export class ReservationDetailPageComponent implements OnInit {
     return new Intl.NumberFormat(this.activeLocale, { style: 'currency', currency: 'USD' }).format(
       amount,
     );
+  }
+
+  getPlaceholderPhone(): string {
+    return '+57 (XXX) 123-4567';
   }
 
   goBack(): void {
@@ -257,6 +283,7 @@ export class ReservationDetailPageComponent implements OnInit {
           if (!detail) return;
           this.detail = this.normalizeDetail(detail);
           this.cdr.detectChanges();
+          this.loadGuestInfo();
         },
       });
   }

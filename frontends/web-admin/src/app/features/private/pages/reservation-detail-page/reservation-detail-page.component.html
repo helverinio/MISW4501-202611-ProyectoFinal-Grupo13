@@ -267,10 +267,10 @@
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label class="text-xs font-medium text-gray-500 uppercase"
-                        >{{ t('reservationDetail.guestIdentifier') }}</label
+                        >{{ t('reservationDetail.fullName') }}</label
                       >
                       <p class="text-sm font-semibold text-gray-900 mt-1">
-                        {{ detail.id_usuario }}
+                        {{ guestInfo?.nombre || t('reservationDetail.notAvailable') }}
                       </p>
                     </div>
                     <div>
@@ -278,22 +278,22 @@
                         {{ t('reservationDetail.email') }}
                       </label>
                       <p class="text-sm text-gray-700 mt-1">
-                        {{ t('reservationDetail.notAvailableReservas') }}
+                        {{ guestInfo?.email || t('reservationDetail.notAvailable') }}
                       </p>
                     </div>
                     <div>
                       <label class="text-xs font-medium text-gray-500 uppercase">
                         {{ t('reservationDetail.phone') }}
                       </label>
-                      <p class="text-sm text-gray-700 mt-1">
-                        {{ t('reservationDetail.notAvailableReservas') }}
-                      </p>
+                      <p class="text-sm text-gray-700 mt-1">{{ getPlaceholderPhone() }}</p>
                     </div>
                     <div>
                       <label class="text-xs font-medium text-gray-500 uppercase">
-                        {{ t('reservationDetail.guests') }}
+                        {{ t('reservationDetail.country') }}
                       </label>
-                      <p class="text-sm text-gray-700 mt-1">{{ detail.nro_personas }}</p>
+                      <p class="text-sm text-gray-700 mt-1">
+                        {{ guestInfo?.country || t('reservationDetail.notAvailable') }}
+                      </p>
                     </div>
                   </div>
                 </div>
