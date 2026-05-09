@@ -36,6 +36,12 @@ export class ReservationDetailPageComponent implements OnInit {
   pendingAction: ReservationAction | null = null;
   reason = '';
 
+  private readonly localeByLanguage: Record<LanguageCode, string> = {
+    en: 'en-US',
+    es: 'es-ES',
+    pt: 'pt-BR',
+  };
+
   private estadoMap = new Map<string, Estado>();
 
   constructor(
@@ -50,7 +56,7 @@ export class ReservationDetailPageComponent implements OnInit {
   ngOnInit(): void {
     this.reservationId = this.route.snapshot.paramMap.get('id') ?? '';
     if (!this.reservationId) {
-      this.error = 'Reservation id is required.';
+      this.error = this.t('reservationDetail.error.reservationIdRequired');
       return;
     }
 
@@ -73,6 +79,10 @@ export class ReservationDetailPageComponent implements OnInit {
 
   setLanguage(lang: LanguageCode): void {
     this.i18n.setLanguage(lang);
+  }
+
+  private get activeLocale(): string {
+    return this.localeByLanguage[this.currentLanguage] ?? 'es-ES';
   }
 
   get isPending(): boolean {
@@ -107,26 +117,31 @@ export class ReservationDetailPageComponent implements OnInit {
   }
 
   formatDate(iso: string | null): string {
-    if (!iso) return '—';
+    if (!iso) return '-';
     const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-
-  formatDateTime(iso: string | null): string {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleString('en-US', {
+    return d.toLocaleDateString(this.activeLocale, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
-      hour: 'numeric',
+    });
+  }
+
+  formatDateTime(iso: string | null): string {
+    if (!iso) return '-';
+    const d = new Date(iso);
+    return d.toLocaleString(this.activeLocale, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
       minute: '2-digit',
     });
   }
 
   formatCurrency(amount: number | null | undefined): string {
     if (amount == null) return '—';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat(this.activeLocale, { style: 'currency', currency: 'USD' }).format(
+      amount,
+    );
   }
 
   goBack(): void {
@@ -161,12 +176,12 @@ export class ReservationDetailPageComponent implements OnInit {
     );
 
     if (!targetEstado) {
-      this.actionError = `Target estado '${action}' is not configured.`;
+      this.actionError = this.t('reservationDetail.error.targetEstadoNotConfigured');
       return;
     }
 
     if (action === 'rechazada' && !this.reason.trim()) {
-      this.actionError = 'Reason is required when rejecting a reservation.';
+      this.actionError = this.t('reservationDetail.error.reasonRequired');
       return;
     }
 
@@ -183,8 +198,8 @@ export class ReservationDetailPageComponent implements OnInit {
         next: () => {
           this.successMessage =
             action === 'confirmada'
-              ? 'Reservation confirmed successfully.'
-              : 'Reservation rejected successfully.';
+              ? this.t('reservationDetail.success.confirmed')
+              : this.t('reservationDetail.success.rejected');
           this.actionLoading = false;
           this.closeModal();
           this.loadDetail();
@@ -193,11 +208,10 @@ export class ReservationDetailPageComponent implements OnInit {
           const apiError = (err.error?.error as string | undefined) || null;
           const apiCode = (err.error?.code as string | undefined) || null;
           if (apiCode === 'STALE_VERSION') {
-            this.actionError =
-              'Reservation was already updated by another channel. Refreshing latest state...';
+            this.actionError = this.t('reservationDetail.error.staleVersion');
             this.loadDetail();
           } else {
-            this.actionError = apiError || 'Could not update reservation state.';
+            this.actionError = apiError || this.t('reservationDetail.error.couldNotUpdate');
           }
           this.actionLoading = false;
         },
@@ -231,7 +245,7 @@ export class ReservationDetailPageComponent implements OnInit {
         catchError((err: unknown) => {
           const httpErr = err as HttpErrorResponse;
           const apiError = (httpErr.error?.error as string | undefined) || null;
-          this.error = apiError || 'Could not load reservation detail.';
+          this.error = apiError || this.t('reservationDetail.error.couldNotLoad');
           return of(null);
         }),
         finalize(() => {
