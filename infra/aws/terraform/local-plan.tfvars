@@ -2,7 +2,10 @@
 aws_region        = "us-east-2"
 
 # EmailJS — producción
-emailjs_service_id                 = "service_ir1ojbq"
-emailjs_public_key                 = "iqjzNhxcPVbGXAAo4"
-emailjs_private_key                = "YFb9tY4sc0q114bVZpf4E"
-emailjs_verification_template_id   = "template_r0guto8"
+# IMPORTANTE: Valores reales están en GitHub Actions Secrets/Variables, NO aquí.
+# Este archivo está en .gitignore para evitar exponer secretos.
+# Para despliegues locales de Terraform, usa: terraform apply -var-file=local-plan.tfvars
+# emailjs_service_id                 = "REPLACE_WITH_GITHUB_VAR"
+# emailjs_public_key                 = "REPLACE_WITH_GITHUB_VAR"
+# emailjs_private_key                = "REPLACE_WITH_GITHUB_SECRET"
+# emailjs_verification_template_id   = "REPLACE_WITH_GITHUB_VAR"
