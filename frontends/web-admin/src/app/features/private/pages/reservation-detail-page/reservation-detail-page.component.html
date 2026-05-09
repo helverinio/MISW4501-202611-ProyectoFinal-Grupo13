@@ -354,9 +354,11 @@
                 </div>
                 <div>
                   <label class="text-xs font-medium text-gray-500 uppercase">
-                    {{ t('reservationDetail.version') }}
+                    {{ t('reservationDetail.guests') }}
                   </label>
-                  <p class="text-sm text-gray-700 mt-1">{{ detail.version }}</p>
+                  <p class="text-sm text-gray-700 mt-1">
+                    {{ detail.nro_personas }} {{ t('reservationDetail.guests') }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -439,7 +441,13 @@
                   </p>
                 </div>
                 <div class="flex items-center justify-between">
-                  <p class="text-sm text-gray-700">{{ t('reservationDetail.estimatedTaxesFees') }}</p>
+                  <p class="text-sm text-gray-700">{{ t('reservationDetail.discountEarlyReservation') }}</p>
+                  <p class="text-sm font-medium text-red-600">
+                    -{{ formatCurrency(detail.price_breakdown.discount) }}
+                  </p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <p class="text-sm text-gray-700">{{ t('reservationDetail.taxesAndCharges') }}</p>
                   <p class="text-sm font-medium text-gray-900">
                     {{ formatCurrency(detail.price_breakdown.impuestos_estimados) }}
                   </p>
@@ -448,7 +456,7 @@
                   <div class="flex items-center justify-between">
                     <p class="text-base font-bold text-gray-900">{{ t('reservationDetail.totalAmount') }}</p>
                     <p class="text-xl font-bold text-primary-600">
-                      {{ formatCurrency(detail.total) }}
+                      {{ formatCurrency(getCalculatedTotal()) }}
                     </p>
                   </div>
                 </div>
@@ -456,13 +464,13 @@
                   <div class="flex items-center justify-between text-xs">
                     <p class="text-gray-600">{{ t('reservationDetail.totalPaid') }}</p>
                     <p class="text-success-600 font-medium">
-                      {{ formatCurrency(detail.price_breakdown.total_pagado) }}
+                      {{ formatCurrency(getTotalPaid()) }}
                     </p>
                   </div>
                   <div class="flex items-center justify-between text-xs mt-1">
                     <p class="text-gray-600">{{ t('reservationDetail.remainingBalance') }}</p>
                     <p class="text-yellow-600 font-medium">
-                      {{ formatCurrency(detail.price_breakdown.balance_pendiente) }}
+                      {{ formatCurrency(getRemainingBalance()) }}
                     </p>
                   </div>
                 </div>

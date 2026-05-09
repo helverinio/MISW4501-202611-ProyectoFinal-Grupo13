@@ -170,6 +170,25 @@ export class ReservationDetailPageComponent implements OnInit {
     return '+57 (XXX) 123-4567';
   }
 
+  getCalculatedTotal(): number {
+    const subtotal = this.detail?.price_breakdown?.subtotal_noches ?? 0;
+    const discount = this.detail?.price_breakdown?.discount ?? 0;
+    const taxes = this.detail?.price_breakdown?.impuestos_estimados ?? 0;
+    return subtotal - discount + taxes;
+  }
+
+  getTotalPaid(): number {
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    return isPaid ? this.getCalculatedTotal() : 0;
+  }
+
+  getRemainingBalance(): number {
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    return isPaid ? 0 : this.getCalculatedTotal();
+  }
+
   goBack(): void {
     void this.router.navigate(['/reservations']);
   }
@@ -314,7 +333,8 @@ export class ReservationDetailPageComponent implements OnInit {
       timeline: Array.isArray(detail.timeline) ? detail.timeline : [],
       price_breakdown: {
         subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
-        impuestos_estimados: detail.price_breakdown?.impuestos_estimados ?? 0,
+        discount: 0,
+        impuestos_estimados: ((detail.price_breakdown?.subtotal_noches ?? 0) * 0.1),
         total_pagado: detail.price_breakdown?.total_pagado ?? 0,
         balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
         detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)

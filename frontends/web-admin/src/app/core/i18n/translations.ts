@@ -233,6 +233,7 @@ export interface AdminTranslation {
   'reservationDetail.notAvailableReservas': string;
   'reservationDetail.notAvailable': string;
   'reservationDetail.country': string;
+  'reservationDetail.guests': string;
   'reservationDetail.sectionDetails': string;
   'reservationDetail.property': string;
   'reservationDetail.roomType': string;
@@ -247,6 +248,9 @@ export interface AdminTranslation {
   'reservationDetail.noPaymentRecords': string;
   'reservationDetail.priceBreakdown': string;
   'reservationDetail.roomRate': string;
+  'reservationDetail.discount': string;
+  'reservationDetail.discountEarlyReservation': string;
+  'reservationDetail.taxesAndCharges': string;
   'reservationDetail.estimatedTaxesFees': string;
   'reservationDetail.totalAmount': string;
   'reservationDetail.totalPaid': string;
@@ -498,6 +502,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.notAvailableReservas': 'Not available in reservas service',
     'reservationDetail.notAvailable': 'Not available',
     'reservationDetail.country': 'Country',
+    'reservationDetail.guests': 'Guests',
     'reservationDetail.sectionDetails': 'Reservation Details',
     'reservationDetail.property': 'Property',
     'reservationDetail.roomType': 'Room Type',
@@ -512,6 +517,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.noPaymentRecords': 'No payment records found for this reservation.',
     'reservationDetail.priceBreakdown': 'Price Breakdown',
     'reservationDetail.roomRate': 'Room Rate',
+    'reservationDetail.discount': 'Discount',
+    'reservationDetail.discountEarlyReservation': 'Early booking discount',
+    'reservationDetail.taxesAndCharges': 'Taxes and charges',
     'reservationDetail.estimatedTaxesFees': 'Estimated Taxes and Fees',
     'reservationDetail.totalAmount': 'Total Amount',
     'reservationDetail.totalPaid': 'Total Paid',
@@ -767,6 +775,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.notAvailableReservas': 'No disponible en el servicio de reservas',
     'reservationDetail.notAvailable': 'No disponible',
     'reservationDetail.country': 'País',
+    'reservationDetail.guests': 'Huéspedes',
     'reservationDetail.sectionDetails': 'Detalles de la reserva',
     'reservationDetail.property': 'Propiedad',
     'reservationDetail.roomType': 'Tipo de habitación',
@@ -781,6 +790,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.noPaymentRecords': 'No hay registros de pago para esta reserva.',
     'reservationDetail.priceBreakdown': 'Desglose de precio',
     'reservationDetail.roomRate': 'Tarifa de habitación',
+    'reservationDetail.discount': 'Descuento',
+    'reservationDetail.discountEarlyReservation': 'Descuento por reserva anticipada',
+    'reservationDetail.taxesAndCharges': 'Impuestos y cargos',
     'reservationDetail.estimatedTaxesFees': 'Impuestos y cargos estimados',
     'reservationDetail.totalAmount': 'Monto total',
     'reservationDetail.totalPaid': 'Total pagado',
@@ -1036,6 +1048,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.notAvailableReservas': 'Não disponível no serviço de reservas',
     'reservationDetail.notAvailable': 'Não disponível',
     'reservationDetail.country': 'País',
+    'reservationDetail.guests': 'Hóspedes',
     'reservationDetail.sectionDetails': 'Detalhes da reserva',
     'reservationDetail.property': 'Propriedade',
     'reservationDetail.roomType': 'Tipo de quarto',
@@ -1050,6 +1063,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.noPaymentRecords': 'Nenhum registro de pagamento encontrado para esta reserva.',
     'reservationDetail.priceBreakdown': 'Resumo de preços',
     'reservationDetail.roomRate': 'Tarifa do quarto',
+    'reservationDetail.discount': 'Desconto',
+    'reservationDetail.discountEarlyReservation': 'Desconto por reserva antecipada',
+    'reservationDetail.taxesAndCharges': 'Impostos e taxas',
     'reservationDetail.estimatedTaxesFees': 'Impostos e taxas estimados',
     'reservationDetail.totalAmount': 'Valor total',
     'reservationDetail.totalPaid': 'Total pago',
