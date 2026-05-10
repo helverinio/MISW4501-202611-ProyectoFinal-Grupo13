@@ -168,7 +168,7 @@ export default function MyReservationDetailScreen() {
 
   const formatDate = (dateStr: string): string => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr + 'T00:00:00');
+    const date = new Date(dateStr);
     const today = new Date();
     const isToday = date.toDateString() === today.toDateString();
     const locale = i18n.language === 'en' ? 'en-US' : i18n.language === 'pt' ? 'pt-BR' : 'es-ES';
