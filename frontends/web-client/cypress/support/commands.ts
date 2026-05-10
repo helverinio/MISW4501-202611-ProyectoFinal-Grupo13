@@ -177,6 +177,10 @@ Cypress.Commands.add('interceptReservationCycle', (options = {}) => {
 // ── fillReservationForm ────────────────────────────────────
 // Rellena los campos del formulario de huesped (paso 1). El submit
 // dispara POST /reservas y la pagina cambia a la vista de pago.
+//
+// SPRINT3 NOTA: el campo #email se auto-completa con el email del
+// usuario autenticado y aparece como `readonly`. El helper detecta
+// este caso y skipea el clear/type para no fallar.
 Cypress.Commands.add('fillReservationForm', (overrides = {}) => {
   const data = {
     firstName: 'Diego',
@@ -188,7 +192,12 @@ Cypress.Commands.add('fillReservationForm', (overrides = {}) => {
 
   cy.get('#firstName').clear().type(data.firstName);
   cy.get('#lastName').clear().type(data.lastName);
-  cy.get('#email').clear().type(data.email);
+  cy.get('#email').then(($el) => {
+    // Si el input no es readonly (compat con sprints anteriores), lo escribimos.
+    if (!$el.prop('readOnly')) {
+      cy.wrap($el).clear().type(data.email);
+    }
+  });
   cy.get('#phone').clear().type(data.phone);
 });
 
@@ -220,3 +229,143 @@ Cypress.Commands.add('fillPaymentForm', (overrides = {}) => {
   cy.get('input[formcontrolname="city"]').clear().type(data.city);
   cy.get('input[formcontrolname="postalCode"]').clear().type(data.postalCode);
 });
+
+// ============================================================
+// SPRINT3 HELPERS
+// ============================================================
+
+// ── fillRegistrationForm ───────────────────────────────────
+// Rellena el formulario de "Sign Up" en /login. Activa el tab signup
+// si no esta visible. Acepta overrides para casos negativos.
+Cypress.Commands.add('fillRegistrationForm', (overrides = {}) => {
+  const data = {
+    firstName: 'Diego',
+    lastName: 'Acosta',
+    email: 'diego.acosta@test.com',
+    phone: '3001234567',
+    password: 'Password1',
+    confirmPassword: 'Password1',
+    acceptTerms: true,
+    ...overrides,
+  };
+
+  // Si el tab signup no esta activo, activamos.
+  cy.get('#signup-tab').click();
+
+  cy.get('#login-signup-firstname').clear().type(data.firstName);
+  cy.get('#login-signup-lastname').clear().type(data.lastName);
+  cy.get('#login-signup-email').clear().type(data.email);
+  cy.get('#login-signup-phone').clear().type(data.phone);
+  cy.get('#login-signup-password').clear().type(data.password);
+  cy.get('#login-signup-confirm-password').clear().type(data.confirmPassword);
+
+  if (data.acceptTerms) {
+    cy.get('#login-terms-checkbox').check();
+  }
+});
+
+// ── interceptRegistrationCycle ─────────────────────────────
+// Mockea POST /usuarios (registro), POST /auth/verify-email y
+// POST a EmailJS (en caso de que el frontend dispare el correo).
+Cypress.Commands.add('interceptRegistrationCycle', () => {
+  cy.intercept('POST', '**/api/v1/usuarios', { fixture: 'usuario-creado.json' }).as('registerUser');
+  cy.intercept('POST', '**/api/v1/auth/verify-email', {
+    fixture: 'verify-email-success.json',
+  }).as('verifyEmail');
+  cy.intercept('POST', 'https://api.emailjs.com/api/v1.0/email/send', {
+    statusCode: 200,
+    body: 'OK',
+  }).as('sendEmailJs');
+});
+
+// ── interceptMyReservationsCycle ───────────────────────────
+// Mockea todos los endpoints que el componente de Mis Reservas
+// consulta para hidratar las cards (reservas + lookups + comentarios).
+// Por defecto devuelve mis-reservas.json (6 reservas en distintos estados)
+// y comentarios-with-review.json (res-005 ya calificada).
+Cypress.Commands.add(
+  'interceptMyReservationsCycle',
+  (
+    options: {
+      reservasFixture?: string;
+      commentsFixture?: string;
+    } = {},
+  ) => {
+    const reservas = options.reservasFixture ?? 'mis-reservas.json';
+    const comments = options.commentsFixture ?? 'comentarios-with-review.json';
+
+    cy.intercept('GET', '**/api/v1/usuarios/*/reservas', { fixture: reservas }).as('getMyReservas');
+    cy.intercept('GET', '**/api/v1/estados', { fixture: 'estados.json' }).as('getEstados');
+    cy.intercept('GET', '**/api/v1/habitaciones/*', { fixture: 'habitacion-by-id.json' }).as(
+      'getHabitacion',
+    );
+    // El componente llama getHotelById (singular) y getHotelComments — ambos
+    // matchean **/hoteles/h*. El intercept mas especifico va PRIMERO.
+    cy.intercept('GET', '**/api/v1/hoteles/*/comentarios*', { fixture: comments }).as(
+      'getHotelComments',
+    );
+    cy.intercept('GET', '**/api/v1/hoteles/h*', { fixture: 'hotel-by-id.json' }).as('getHotelById');
+    cy.intercept('GET', '**/api/v1/ciudades/*', { fixture: 'ciudad-by-id.json' }).as('getCiudad');
+    cy.intercept('GET', '**/api/v1/paises/*', { fixture: 'pais-by-id.json' }).as('getPais');
+    // Importante: el GET /usuarios/:id es ambiguo con /usuarios/:id/reservas.
+    // Cypress no soporta [^/]+ en glob, asi que usamos un RegExp para
+    // matchear SOLO `/api/v1/usuarios/<digitos>` (sin segmento adicional).
+    cy.intercept('GET', /\/api\/v1\/usuarios\/\d+$/, { fixture: 'usuario-by-id.json' }).as(
+      'getUsuario',
+    );
+    // Para POST /hoteles/:id/comentarios (calificar)
+    cy.intercept('POST', '**/api/v1/hoteles/*/comentarios*', {
+      statusCode: 201,
+      fixture: 'comentario-creado.json',
+    }).as('createHotelComment');
+  },
+);
+
+// ── interceptCancellationCycle ─────────────────────────────
+// Mockea la cadena que dispara confirmar cancelacion:
+//   GET /estados → PUT /reservas/:id → GET /reservas/:id/notificaciones
+//   → POST EmailJS → POST /notificaciones (auditoria).
+Cypress.Commands.add('interceptCancellationCycle', () => {
+  cy.intercept('GET', '**/api/v1/estados', { fixture: 'estados.json' }).as('getEstados');
+  cy.intercept('PUT', '**/api/v1/reservas/*', {
+    statusCode: 200,
+    body: { id: 'res-001', id_estado: 'e004' },
+  }).as('updateReserva');
+  cy.intercept('GET', '**/api/v1/reservas/*/notificaciones*', {
+    statusCode: 200,
+    body: [],
+  }).as('getNotificaciones');
+  cy.intercept('POST', 'https://api.emailjs.com/api/v1.0/email/send', {
+    statusCode: 200,
+    body: 'OK',
+  }).as('sendEmailJs');
+  cy.intercept('POST', '**/api/v1/notificaciones', {
+    statusCode: 201,
+    body: { id: 'notif-cancel-001', titulo: 'cancelacion' },
+  }).as('createNotificacion');
+});
+
+// ── fillCancellationForm ───────────────────────────────────
+// Selecciona la razon (radio) + comentarios opcionales en la pagina
+// /app/cancelar-reserva.
+Cypress.Commands.add(
+  'fillCancellationForm',
+  (
+    overrides: {
+      reason?: 'travel_plans' | 'emergency' | 'work' | 'health' | 'other';
+      comments?: string;
+    } = {},
+  ) => {
+    const data = {
+      reason: 'travel_plans' as const,
+      comments: '',
+      ...overrides,
+    };
+
+    cy.get(`input[type="radio"][value="${data.reason}"]`).check();
+
+    if (data.comments) {
+      cy.get('textarea').clear().type(data.comments);
+    }
+  },
+);

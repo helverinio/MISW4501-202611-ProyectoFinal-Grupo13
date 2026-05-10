@@ -233,14 +233,18 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.get('#arrivalTime').should('be.visible');
     });
 
-    it('C.2 un email con formato invalido muestra el mensaje de error', () => {
+    it('C.2 el campo de email es readonly y se autocompleta con el usuario logueado', () => {
+      // Sprint3 cambio el #email a readonly: el componente toma el email
+      // del usuario autenticado para evitar discrepancia entre cuenta y
+      // destinatario del email de confirmacion. Por eso ya no aplica el
+      // test antiguo de "formato invalido". Documentamos el nuevo
+      // comportamiento.
       cy.visit(reservationUrl);
       cy.wait(['@getHotelById', '@getHotelRooms', '@acquireHold']);
 
-      cy.get('#email').clear().type('not-an-email').blur();
-      cy.contains(/valid email address|correo electronico valido|e-?mail valido/i).should(
-        'be.visible',
-      );
+      cy.get('#email').should('have.attr', 'readonly');
+      // El valor debe ser el del user.json (cypress@test.com)
+      cy.get('#email').should('have.value', 'cypress@test.com');
     });
 
     it('C.3 el boton submit queda habilitado al completar los campos obligatorios', () => {
@@ -441,9 +445,12 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       // ya ocurrio antes de cada test (evita race condition donde el
       // componente cambia a vista de confirmacion antes de despachar el
       // email asincrono).
+      // Sprint3 hizo el campo #email readonly (auto-completa con el usuario
+      // autenticado). Ya no podemos pasar un email custom; usamos el del
+      // user.json que es 'cypress@test.com'.
       cy.visit(reservationUrl);
       cy.wait(['@getHotelById', '@getHotelRooms', '@acquireHold']);
-      cy.fillReservationForm({ email: 'buyer@test.com' });
+      cy.fillReservationForm();
       cy.get('button[type="submit"]').click();
       cy.wait('@createReserva');
 
@@ -469,7 +476,7 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.contains(/confirmation email sent|correo de confirmacion|e-mail de confirmacao/i).should(
         'be.visible',
       );
-      cy.contains('buyer@test.com').should('be.visible');
+      cy.contains('cypress@test.com').should('be.visible');
     });
 
     it('D.4 el envio del email a EmailJS incluye los datos del huesped y la reserva', () => {
@@ -481,7 +488,7 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
         const params = body.template_params;
         expect(params.booking_id).to.equal('res-abc-123');
         expect(params.hotel_name).to.equal('Hotel Tequendama');
-        expect(params.to_email).to.equal('buyer@test.com');
+        expect(params.to_email).to.equal('cypress@test.com');
         expect(params.guest_name).to.match(/Diego/);
       });
     });
