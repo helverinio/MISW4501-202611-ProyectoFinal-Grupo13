@@ -55,5 +55,49 @@ declare namespace Cypress {
       city?: string;
       postalCode?: string;
     }): Chainable<void>;
+
+    /**
+     * Activa el tab "Sign Up" en /login y rellena los 7 campos del
+     * formulario de registro + checkbox de terminos. Defaults validos.
+     */
+    fillRegistrationForm(overrides?: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      phone?: string;
+      password?: string;
+      confirmPassword?: string;
+      acceptTerms?: boolean;
+    }): Chainable<void>;
+
+    /**
+     * Mockea POST /usuarios, POST /auth/verify-email y POST EmailJS.
+     */
+    interceptRegistrationCycle(): Chainable<void>;
+
+    /**
+     * Mockea los GET necesarios para que /app/mis-reservas pinte la
+     * lista de reservas con todos sus lookups (hotel, ciudad, pais,
+     * usuario, comentarios). Tambien mockea POST /comentarios.
+     */
+    interceptMyReservationsCycle(options?: {
+      reservasFixture?: string;
+      commentsFixture?: string;
+    }): Chainable<void>;
+
+    /**
+     * Mockea la cadena de cancelacion (PUT /reservas, GET /notificaciones,
+     * EmailJS, POST /notificaciones).
+     */
+    interceptCancellationCycle(): Chainable<void>;
+
+    /**
+     * Selecciona la razon de cancelacion + comentarios opcionales en
+     * la pagina /app/cancelar-reserva.
+     */
+    fillCancellationForm(overrides?: {
+      reason?: 'travel_plans' | 'emergency' | 'work' | 'health' | 'other';
+      comments?: string;
+    }): Chainable<void>;
   }
 }
