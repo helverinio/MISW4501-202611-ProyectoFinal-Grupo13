@@ -212,6 +212,68 @@ export interface AdminTranslation {
   'revenue.chart.btnGross': string;
   'revenue.chart.btnNet': string;
   'revenue.chart.btnSort': string;
+
+  // Reservation Detail page
+  'reservationDetail.title': string;
+  'reservationDetail.subtitle': string;
+  'reservationDetail.backToReservations': string;
+  'reservationDetail.back': string;
+  'reservationDetail.loading': string;
+  'reservationDetail.unavailableTitle': string;
+  'reservationDetail.unavailableHint': string;
+  'reservationDetail.returnToReservations': string;
+  'reservationDetail.reservationNumber': string;
+  'reservationDetail.createdAt': string;
+  'reservationDetail.reject': string;
+  'reservationDetail.confirm': string;
+  'reservationDetail.guestInformation': string;
+  'reservationDetail.fullName': string;
+  'reservationDetail.email': string;
+  'reservationDetail.phone': string;
+  'reservationDetail.notAvailableReservas': string;
+  'reservationDetail.notAvailable': string;
+  'reservationDetail.country': string;
+  'reservationDetail.guests': string;
+  'reservationDetail.sectionDetails': string;
+  'reservationDetail.property': string;
+  'reservationDetail.roomType': string;
+  'reservationDetail.roomNumber': string;
+  'reservationDetail.checkIn': string;
+  'reservationDetail.checkOut': string;
+  'reservationDetail.duration': string;
+  'reservationDetail.nights': string;
+  'reservationDetail.version': string;
+  'reservationDetail.bookingTimeline': string;
+  'reservationDetail.paymentStatus': string;
+  'reservationDetail.noPaymentRecords': string;
+  'reservationDetail.priceBreakdown': string;
+  'reservationDetail.roomRate': string;
+  'reservationDetail.discount': string;
+  'reservationDetail.discountEarlyReservation': string;
+  'reservationDetail.taxesAndCharges': string;
+  'reservationDetail.estimatedTaxesFees': string;
+  'reservationDetail.totalAmount': string;
+  'reservationDetail.totalPaid': string;
+  'reservationDetail.remainingBalance': string;
+  'reservationDetail.quickActions': string;
+  'reservationDetail.confirmReservationTitle': string;
+  'reservationDetail.rejectReservationTitle': string;
+  'reservationDetail.modalConfirmMessage': string;
+  'reservationDetail.modalRejectMessage': string;
+  'reservationDetail.reason': string;
+  'reservationDetail.reasonPlaceholder': string;
+  'reservationDetail.confirmAction': string;
+  'reservationDetail.processing': string;
+  'reservationDetail.error.reservationIdRequired': string;
+  'reservationDetail.error.targetEstadoNotConfigured': string;
+  'reservationDetail.error.reasonRequired': string;
+  'reservationDetail.error.staleVersion': string;
+  'reservationDetail.error.couldNotUpdate': string;
+  'reservationDetail.error.couldNotLoad': string;
+  'reservationDetail.success.confirmed': string;
+  'reservationDetail.success.rejected': string;
+  'reservationDetail.fallback.adminUser': string;
+  'reservationDetail.fallback.hotelManager': string;
 }
 
 export const translations: Record<LanguageCode, AdminTranslation> = {
@@ -419,6 +481,72 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnGross': 'Gross',
     'revenue.chart.btnNet': 'Net',
     'revenue.chart.btnSort': 'Sort',
+
+    'reservationDetail.title': 'Reservation Detail',
+    'reservationDetail.subtitle': 'Review booking information and manage its status.',
+    'reservationDetail.backToReservations': 'Back to reservations',
+    'reservationDetail.back': 'Back',
+    'reservationDetail.loading': 'Loading reservation detail...',
+    'reservationDetail.unavailableTitle': 'Reservation detail unavailable',
+    'reservationDetail.unavailableHint':
+      'The page loaded, but the reservation payload did not include usable detail data.',
+    'reservationDetail.returnToReservations': 'Return to reservations',
+    'reservationDetail.reservationNumber': 'Reservation',
+    'reservationDetail.createdAt': 'Created',
+    'reservationDetail.reject': 'Reject',
+    'reservationDetail.confirm': 'Confirm',
+    'reservationDetail.guestInformation': 'Guest Information',
+    'reservationDetail.fullName': 'Full Name',
+    'reservationDetail.email': 'Email',
+    'reservationDetail.phone': 'Phone',
+    'reservationDetail.notAvailableReservas': 'Not available in reservas service',
+    'reservationDetail.notAvailable': 'Not available',
+    'reservationDetail.country': 'Country',
+    'reservationDetail.guests': 'Guests',
+    'reservationDetail.sectionDetails': 'Reservation Details',
+    'reservationDetail.property': 'Property',
+    'reservationDetail.roomType': 'Room Type',
+    'reservationDetail.roomNumber': 'Room',
+    'reservationDetail.checkIn': 'Check-in',
+    'reservationDetail.checkOut': 'Check-out',
+    'reservationDetail.duration': 'Duration',
+    'reservationDetail.nights': 'nights',
+    'reservationDetail.version': 'Version',
+    'reservationDetail.bookingTimeline': 'Booking Timeline',
+    'reservationDetail.paymentStatus': 'Payment Status',
+    'reservationDetail.noPaymentRecords': 'No payment records found for this reservation.',
+    'reservationDetail.priceBreakdown': 'Price Breakdown',
+    'reservationDetail.roomRate': 'Room Rate',
+    'reservationDetail.discount': 'Discount',
+    'reservationDetail.discountEarlyReservation': 'Early booking discount',
+    'reservationDetail.taxesAndCharges': 'Taxes and charges',
+    'reservationDetail.estimatedTaxesFees': 'Estimated Taxes and Fees',
+    'reservationDetail.totalAmount': 'Total Amount',
+    'reservationDetail.totalPaid': 'Total Paid',
+    'reservationDetail.remainingBalance': 'Remaining Balance',
+    'reservationDetail.quickActions': 'Quick Actions',
+    'reservationDetail.confirmReservationTitle': 'Confirm reservation',
+    'reservationDetail.rejectReservationTitle': 'Reject reservation',
+    'reservationDetail.modalConfirmMessage':
+      'You are about to confirm this reservation. Please validate this action before continuing.',
+    'reservationDetail.modalRejectMessage':
+      'You are about to reject this reservation. Please validate this action before continuing.',
+    'reservationDetail.reason': 'Reason',
+    'reservationDetail.reasonPlaceholder': 'Provide reason for rejection',
+    'reservationDetail.confirmAction': 'Confirm Action',
+    'reservationDetail.processing': 'Processing...',
+    'reservationDetail.error.reservationIdRequired': 'Reservation id is required.',
+    'reservationDetail.error.targetEstadoNotConfigured':
+      'Target reservation status is not configured.',
+    'reservationDetail.error.reasonRequired': 'Reason is required when rejecting a reservation.',
+    'reservationDetail.error.staleVersion':
+      'Reservation was already updated by another channel. Refreshing latest state...',
+    'reservationDetail.error.couldNotUpdate': 'Could not update reservation state.',
+    'reservationDetail.error.couldNotLoad': 'Could not load reservation detail.',
+    'reservationDetail.success.confirmed': 'Reservation confirmed successfully.',
+    'reservationDetail.success.rejected': 'Reservation rejected successfully.',
+    'reservationDetail.fallback.adminUser': 'Admin User',
+    'reservationDetail.fallback.hotelManager': 'Hotel Manager',
   },
 
   es: {
@@ -626,6 +754,73 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnGross': 'Bruto',
     'revenue.chart.btnNet': 'Neto',
     'revenue.chart.btnSort': 'Ordenar',
+
+    'reservationDetail.title': 'Detalle de reserva',
+    'reservationDetail.subtitle': 'Revisa la información de la reserva y gestiona su estado.',
+    'reservationDetail.backToReservations': 'Volver a reservas',
+    'reservationDetail.back': 'Volver',
+    'reservationDetail.loading': 'Cargando detalle de la reserva...',
+    'reservationDetail.unavailableTitle': 'Detalle de reserva no disponible',
+    'reservationDetail.unavailableHint':
+      'La página cargó, pero la respuesta no incluyó datos de detalle utilizables.',
+    'reservationDetail.returnToReservations': 'Regresar a reservas',
+    'reservationDetail.reservationNumber': 'Reserva',
+    'reservationDetail.createdAt': 'Creada',
+    'reservationDetail.reject': 'Rechazar',
+    'reservationDetail.confirm': 'Confirmar',
+    'reservationDetail.guestInformation': 'Información del huésped',
+    'reservationDetail.fullName': 'Nombre Completo',
+    'reservationDetail.email': 'Correo electrónico',
+    'reservationDetail.phone': 'Teléfono',
+    'reservationDetail.notAvailableReservas': 'No disponible en el servicio de reservas',
+    'reservationDetail.notAvailable': 'No disponible',
+    'reservationDetail.country': 'País',
+    'reservationDetail.guests': 'Huéspedes',
+    'reservationDetail.sectionDetails': 'Detalles de la reserva',
+    'reservationDetail.property': 'Propiedad',
+    'reservationDetail.roomType': 'Tipo de habitación',
+    'reservationDetail.roomNumber': 'Habitación',
+    'reservationDetail.checkIn': 'Entrada',
+    'reservationDetail.checkOut': 'Salida',
+    'reservationDetail.duration': 'Duración',
+    'reservationDetail.nights': 'noches',
+    'reservationDetail.version': 'Versión',
+    'reservationDetail.bookingTimeline': 'Historial de la reserva',
+    'reservationDetail.paymentStatus': 'Estado de pagos',
+    'reservationDetail.noPaymentRecords': 'No hay registros de pago para esta reserva.',
+    'reservationDetail.priceBreakdown': 'Desglose de precio',
+    'reservationDetail.roomRate': 'Tarifa de habitación',
+    'reservationDetail.discount': 'Descuento',
+    'reservationDetail.discountEarlyReservation': 'Descuento por reserva anticipada',
+    'reservationDetail.taxesAndCharges': 'Impuestos y cargos',
+    'reservationDetail.estimatedTaxesFees': 'Impuestos y cargos estimados',
+    'reservationDetail.totalAmount': 'Monto total',
+    'reservationDetail.totalPaid': 'Total pagado',
+    'reservationDetail.remainingBalance': 'Saldo pendiente',
+    'reservationDetail.quickActions': 'Acciones rápidas',
+    'reservationDetail.confirmReservationTitle': 'Confirmar reserva',
+    'reservationDetail.rejectReservationTitle': 'Rechazar reserva',
+    'reservationDetail.modalConfirmMessage':
+      'Estás a punto de confirmar esta reserva. Valida esta acción antes de continuar.',
+    'reservationDetail.modalRejectMessage':
+      'Estás a punto de rechazar esta reserva. Valida esta acción antes de continuar.',
+    'reservationDetail.reason': 'Motivo',
+    'reservationDetail.reasonPlaceholder': 'Escribe el motivo del rechazo',
+    'reservationDetail.confirmAction': 'Confirmar acción',
+    'reservationDetail.processing': 'Procesando...',
+    'reservationDetail.error.reservationIdRequired': 'El id de la reserva es obligatorio.',
+    'reservationDetail.error.targetEstadoNotConfigured':
+      'El estado objetivo de la reserva no está configurado.',
+    'reservationDetail.error.reasonRequired':
+      'El motivo es obligatorio cuando se rechaza una reserva.',
+    'reservationDetail.error.staleVersion':
+      'La reserva ya fue actualizada por otro canal. Refrescando el estado más reciente...',
+    'reservationDetail.error.couldNotUpdate': 'No se pudo actualizar el estado de la reserva.',
+    'reservationDetail.error.couldNotLoad': 'No se pudo cargar el detalle de la reserva.',
+    'reservationDetail.success.confirmed': 'Reserva confirmada con éxito.',
+    'reservationDetail.success.rejected': 'Reserva rechazada con éxito.',
+    'reservationDetail.fallback.adminUser': 'Usuario administrador',
+    'reservationDetail.fallback.hotelManager': 'Administrador del hotel',
   },
 
   pt: {
@@ -832,5 +1027,72 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnGross': 'Bruto',
     'revenue.chart.btnNet': 'Líquido',
     'revenue.chart.btnSort': 'Ordenar',
+
+    'reservationDetail.title': 'Detalhe da reserva',
+    'reservationDetail.subtitle': 'Revise as informações da reserva e gerencie seu status.',
+    'reservationDetail.backToReservations': 'Voltar para reservas',
+    'reservationDetail.back': 'Voltar',
+    'reservationDetail.loading': 'Carregando detalhe da reserva...',
+    'reservationDetail.unavailableTitle': 'Detalhe da reserva indisponível',
+    'reservationDetail.unavailableHint':
+      'A página foi carregada, mas o retorno não incluiu dados de detalhe utilizáveis.',
+    'reservationDetail.returnToReservations': 'Retornar para reservas',
+    'reservationDetail.reservationNumber': 'Reserva',
+    'reservationDetail.createdAt': 'Criada em',
+    'reservationDetail.reject': 'Rejeitar',
+    'reservationDetail.confirm': 'Confirmar',
+    'reservationDetail.guestInformation': 'Informações do hóspede',
+    'reservationDetail.fullName': 'Nome Completo',
+    'reservationDetail.email': 'E-mail',
+    'reservationDetail.phone': 'Telefone',
+    'reservationDetail.notAvailableReservas': 'Não disponível no serviço de reservas',
+    'reservationDetail.notAvailable': 'Não disponível',
+    'reservationDetail.country': 'País',
+    'reservationDetail.guests': 'Hóspedes',
+    'reservationDetail.sectionDetails': 'Detalhes da reserva',
+    'reservationDetail.property': 'Propriedade',
+    'reservationDetail.roomType': 'Tipo de quarto',
+    'reservationDetail.roomNumber': 'Quarto',
+    'reservationDetail.checkIn': 'Check-in',
+    'reservationDetail.checkOut': 'Check-out',
+    'reservationDetail.duration': 'Duração',
+    'reservationDetail.nights': 'noites',
+    'reservationDetail.version': 'Versão',
+    'reservationDetail.bookingTimeline': 'Linha do tempo da reserva',
+    'reservationDetail.paymentStatus': 'Status de pagamento',
+    'reservationDetail.noPaymentRecords': 'Nenhum registro de pagamento encontrado para esta reserva.',
+    'reservationDetail.priceBreakdown': 'Resumo de preços',
+    'reservationDetail.roomRate': 'Tarifa do quarto',
+    'reservationDetail.discount': 'Desconto',
+    'reservationDetail.discountEarlyReservation': 'Desconto por reserva antecipada',
+    'reservationDetail.taxesAndCharges': 'Impostos e taxas',
+    'reservationDetail.estimatedTaxesFees': 'Impostos e taxas estimados',
+    'reservationDetail.totalAmount': 'Valor total',
+    'reservationDetail.totalPaid': 'Total pago',
+    'reservationDetail.remainingBalance': 'Saldo restante',
+    'reservationDetail.quickActions': 'Ações rápidas',
+    'reservationDetail.confirmReservationTitle': 'Confirmar reserva',
+    'reservationDetail.rejectReservationTitle': 'Rejeitar reserva',
+    'reservationDetail.modalConfirmMessage':
+      'Você está prestes a confirmar esta reserva. Valide esta ação antes de continuar.',
+    'reservationDetail.modalRejectMessage':
+      'Você está prestes a rejeitar esta reserva. Valide esta ação antes de continuar.',
+    'reservationDetail.reason': 'Motivo',
+    'reservationDetail.reasonPlaceholder': 'Informe o motivo da rejeição',
+    'reservationDetail.confirmAction': 'Confirmar ação',
+    'reservationDetail.processing': 'Processando...',
+    'reservationDetail.error.reservationIdRequired': 'O id da reserva é obrigatório.',
+    'reservationDetail.error.targetEstadoNotConfigured':
+      'O status de destino da reserva não está configurado.',
+    'reservationDetail.error.reasonRequired':
+      'O motivo é obrigatório ao rejeitar uma reserva.',
+    'reservationDetail.error.staleVersion':
+      'A reserva já foi atualizada por outro canal. Atualizando o estado mais recente...',
+    'reservationDetail.error.couldNotUpdate': 'Não foi possível atualizar o status da reserva.',
+    'reservationDetail.error.couldNotLoad': 'Não foi possível carregar o detalhe da reserva.',
+    'reservationDetail.success.confirmed': 'Reserva confirmada com sucesso.',
+    'reservationDetail.success.rejected': 'Reserva rejeitada com sucesso.',
+    'reservationDetail.fallback.adminUser': 'Usuário administrador',
+    'reservationDetail.fallback.hotelManager': 'Gerente do hotel',
   },
 };

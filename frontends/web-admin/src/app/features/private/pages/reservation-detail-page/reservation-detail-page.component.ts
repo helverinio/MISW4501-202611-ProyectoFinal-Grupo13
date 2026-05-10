@@ -9,10 +9,13 @@ import {
   Estado,
   ReservationDetailResponse,
   ReservationTimelineItem,
+  ReservationPaymentItem,
 } from '../../../../core/models/reservations.models';
+import { UsuarioDetail } from '../../../../core/models/usuarios.models';
 import { AuthService } from '../../../../core/services/auth.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { ReservationsService } from '../../../../core/services/reservations.service';
+import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { LanguageCode } from '../../../../core/i18n/translations';
 
 type ReservationAction = 'confirmada' | 'rechazada';
@@ -26,15 +29,43 @@ type ReservationAction = 'confirmada' | 'rechazada';
 export class ReservationDetailPageComponent implements OnInit {
   reservationId = '';
   detail: ReservationDetailResponse | null = null;
+  guestInfo: UsuarioDetail | null = null;
   loading = false;
   actionLoading = false;
   error: string | null = null;
   actionError: string | null = null;
   successMessage: string | null = null;
 
+
   confirmModalOpen = false;
   pendingAction: ReservationAction | null = null;
   reason = '';
+
+  /**
+   * Devuelve los pagos reales, o un pago virtual si el estado es 'pago recibido' o 'completada' y no hay pagos.
+   */
+  get paymentsToShow(): ReservationPaymentItem[] {
+    if (!this.detail) return [];
+    const pagos = this.detail.payments || [];
+    const estado = (this.detail.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    if (pagos.length > 0) return pagos;
+    if (isPaid) {
+      return [{
+        id: 'virtual',
+        fecha_pago: this.detail.created_at,
+        total: this.getCalculatedTotal(),
+        estado: 'completado',
+      }];
+    }
+    return [];
+  }
+
+  private readonly localeByLanguage: Record<LanguageCode, string> = {
+    en: 'en-US',
+    es: 'es-ES',
+    pt: 'pt-BR',
+  };
 
   private estadoMap = new Map<string, Estado>();
 
@@ -43,6 +74,7 @@ export class ReservationDetailPageComponent implements OnInit {
     private readonly router: Router,
     private readonly authService: AuthService,
     private readonly reservationsService: ReservationsService,
+    private readonly usuariosService: UsuariosService,
     private readonly cdr: ChangeDetectorRef,
     readonly i18n: I18nService,
   ) {}
@@ -50,13 +82,31 @@ export class ReservationDetailPageComponent implements OnInit {
   ngOnInit(): void {
     this.reservationId = this.route.snapshot.paramMap.get('id') ?? '';
     if (!this.reservationId) {
-      this.error = 'Reservation id is required.';
+      this.error = this.t('reservationDetail.error.reservationIdRequired');
       return;
     }
 
     this.loading = false;
     this.loadDetail();
     this.loadEstados();
+  }
+
+  private loadGuestInfo(): void {
+    if (!this.detail?.id_usuario) return;
+
+    this.usuariosService
+      .getUsuario(this.detail.id_usuario)
+      .pipe(timeout(8000))
+      .subscribe({
+        next: (usuario) => {
+          this.guestInfo = usuario;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          // Silently fail - use fallbacks in template
+          this.guestInfo = null;
+        },
+      });
   }
 
   currentUser() {
@@ -73,6 +123,10 @@ export class ReservationDetailPageComponent implements OnInit {
 
   setLanguage(lang: LanguageCode): void {
     this.i18n.setLanguage(lang);
+  }
+
+  private get activeLocale(): string {
+    return this.localeByLanguage[this.currentLanguage] ?? 'es-ES';
   }
 
   get isPending(): boolean {
@@ -107,26 +161,89 @@ export class ReservationDetailPageComponent implements OnInit {
   }
 
   formatDate(iso: string | null): string {
-    if (!iso) return '—';
+    if (!iso) return '-';
     const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-
-  formatDateTime(iso: string | null): string {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleString('en-US', {
+    return d.toLocaleDateString(this.activeLocale, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
-      hour: 'numeric',
+    });
+  }
+
+  formatDateTime(iso: string | null): string {
+    if (!iso) return '-';
+    const d = new Date(iso);
+    return d.toLocaleString(this.activeLocale, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
       minute: '2-digit',
     });
   }
 
   formatCurrency(amount: number | null | undefined): string {
     if (amount == null) return '—';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat(this.activeLocale, { style: 'currency', currency: 'USD' }).format(
+      amount,
+    );
+  }
+
+  getPlaceholderPhone(): string {
+    return '+57 (XXX) 123-4567';
+  }
+
+  getCalculatedTotal(): number {
+    const subtotal = this.detail?.price_breakdown?.subtotal_noches ?? 0;
+    const discount = this.detail?.price_breakdown?.discount ?? 0;
+    const taxes = this.detail?.price_breakdown?.impuestos_estimados ?? 0;
+    return subtotal - discount + taxes;
+  }
+
+  getTotalPaid(): number {
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    return isPaid ? this.getCalculatedTotal() : 0;
+  }
+
+  getRemainingBalance(): number {
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
+    const isPaid = estado === 'pago recibido' || estado === 'completada';
+    return isPaid ? 0 : this.getCalculatedTotal();
+  }
+
+  getPaymentBackgroundClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-50';
+    if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-50';
+    return 'bg-gray-50';
+  }
+
+  getPaymentAmountClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'text-success-600';
+    if (estado === 'pendiente' || estado === 'pending') return 'text-yellow-600';
+    return 'text-gray-600';
+  }
+
+  getPaymentBadgeClass(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-100 text-success-800';
+    if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-100 text-yellow-800';
+    return 'bg-gray-100 text-gray-800';
+  }
+
+  getPaymentBadgeIcon(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'fas fa-check-circle';
+    if (estado === 'pendiente' || estado === 'pending') return 'fas fa-clock';
+    return 'fas fa-info-circle';
+  }
+
+  getPaymentBadgeText(paymentEstado: string): string {
+    const estado = (paymentEstado || '').toLowerCase();
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'Paid';
+    if (estado === 'pendiente' || estado === 'pending') return 'Pending';
+    return estado;
   }
 
   goBack(): void {
@@ -161,12 +278,12 @@ export class ReservationDetailPageComponent implements OnInit {
     );
 
     if (!targetEstado) {
-      this.actionError = `Target estado '${action}' is not configured.`;
+      this.actionError = this.t('reservationDetail.error.targetEstadoNotConfigured');
       return;
     }
 
     if (action === 'rechazada' && !this.reason.trim()) {
-      this.actionError = 'Reason is required when rejecting a reservation.';
+      this.actionError = this.t('reservationDetail.error.reasonRequired');
       return;
     }
 
@@ -183,8 +300,8 @@ export class ReservationDetailPageComponent implements OnInit {
         next: () => {
           this.successMessage =
             action === 'confirmada'
-              ? 'Reservation confirmed successfully.'
-              : 'Reservation rejected successfully.';
+              ? this.t('reservationDetail.success.confirmed')
+              : this.t('reservationDetail.success.rejected');
           this.actionLoading = false;
           this.closeModal();
           this.loadDetail();
@@ -193,11 +310,10 @@ export class ReservationDetailPageComponent implements OnInit {
           const apiError = (err.error?.error as string | undefined) || null;
           const apiCode = (err.error?.code as string | undefined) || null;
           if (apiCode === 'STALE_VERSION') {
-            this.actionError =
-              'Reservation was already updated by another channel. Refreshing latest state...';
+            this.actionError = this.t('reservationDetail.error.staleVersion');
             this.loadDetail();
           } else {
-            this.actionError = apiError || 'Could not update reservation state.';
+            this.actionError = apiError || this.t('reservationDetail.error.couldNotUpdate');
           }
           this.actionLoading = false;
         },
@@ -231,7 +347,7 @@ export class ReservationDetailPageComponent implements OnInit {
         catchError((err: unknown) => {
           const httpErr = err as HttpErrorResponse;
           const apiError = (httpErr.error?.error as string | undefined) || null;
-          this.error = apiError || 'Could not load reservation detail.';
+          this.error = apiError || this.t('reservationDetail.error.couldNotLoad');
           return of(null);
         }),
         finalize(() => {
@@ -243,6 +359,7 @@ export class ReservationDetailPageComponent implements OnInit {
           if (!detail) return;
           this.detail = this.normalizeDetail(detail);
           this.cdr.detectChanges();
+          this.loadGuestInfo();
         },
       });
   }
@@ -273,7 +390,8 @@ export class ReservationDetailPageComponent implements OnInit {
       timeline: Array.isArray(detail.timeline) ? detail.timeline : [],
       price_breakdown: {
         subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
-        impuestos_estimados: detail.price_breakdown?.impuestos_estimados ?? 0,
+        discount: 0,
+        impuestos_estimados: ((detail.price_breakdown?.subtotal_noches ?? 0) * 0.1),
         total_pagado: detail.price_breakdown?.total_pagado ?? 0,
         balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
         detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
