@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subject, catchError, filter, finalize, forkJoin, of, takeUntil } from 'rxjs';
@@ -52,6 +52,7 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
     travelhub_commission: 0,
     net_revenue: 0,
   };
+  totalReservations = 0;
   commissionPercentage = 0;
   occupancyRate = 0;
   confirmedRate = 0;
@@ -82,20 +83,11 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
     private readonly reservationsService: ReservationsService,
     private readonly revenueReportsService: RevenueReportsService,
     readonly i18n: I18nService,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntil(this.destroy$),
-      )
-      .subscribe((event) => {
-        if (event.urlAfterRedirects.startsWith('/dashboard')) {
-          this.loadDashboardData();
-        }
-      });
-
     this.loadDashboardData();
   }
 
@@ -122,15 +114,6 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
 
   onPeriodChange(): void {
     this.loadDashboardData();
-  }
-
-  logSelectedDateRange(): void {
-    const { fechaDesde, fechaHasta } = this.getDateRange(this.selectedPeriod);
-    console.log('[Dashboard] Date range selected:', {
-      period: this.selectedPeriod,
-      fechaDesde,
-      fechaHasta,
-    });
   }
 
   ngAfterViewInit(): void {
@@ -173,7 +156,10 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
       .pipe(
         finalize(() => {
           if (currentRequest === this.requestSequence) {
-            this.loading = false;
+            this.ngZone.run(() => {
+              this.loading = false;
+              this.cdr.detectChanges();
+            });
           }
         }),
       )
@@ -182,72 +168,79 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
           if (currentRequest !== this.requestSequence) {
             return;
           }
+          this.ngZone.run(() => {
+            const hadDashboardData =
+              this.lastSuccessfulDashboardPeriod === requestedPeriod &&
+              (this.stats.total > 0 || this.recentReservations.length > 0);
+            const hadRevenueData =
+              this.lastSuccessfulRevenuePeriod === requestedPeriod &&
+              (this.revenueSummary.gross_revenue > 0 || this.revenueRows.length > 0);
 
-          const hadDashboardData =
-            this.lastSuccessfulDashboardPeriod === requestedPeriod &&
-            (this.stats.total > 0 || this.recentReservations.length > 0);
-          const hadRevenueData =
-            this.lastSuccessfulRevenuePeriod === requestedPeriod &&
-            (this.revenueSummary.gross_revenue > 0 || this.revenueRows.length > 0);
+            if (dashboard) {
+              this.bindDashboardResponse(dashboard);
+              this.lastSuccessfulDashboardPeriod = requestedPeriod;
+            } else if (!hadDashboardData) {
+              this.stats = {
+                total: 0,
+                confirmadas: 0,
+                pendientes: 0,
+                canceladas: 0,
+                rechazadas: 0,
+                completadas: 0,
+              };
+              this.totalReservations = 0;
+              this.occupancyRate = 0;
+              this.confirmedRate = 0;
+              this.completedRate = 0;
+              this.recentReservations = [];
+            }
 
-          if (dashboard) {
-            this.bindDashboardResponse(dashboard);
-            this.lastSuccessfulDashboardPeriod = requestedPeriod;
-          } else if (!hadDashboardData) {
-            this.stats = {
-              total: 0,
-              confirmadas: 0,
-              pendientes: 0,
-              canceladas: 0,
-              rechazadas: 0,
-              completadas: 0,
-            };
-            this.occupancyRate = 0;
-            this.confirmedRate = 0;
-            this.completedRate = 0;
-            this.recentReservations = [];
-          }
+            if (revenue) {
+              this.revenueSummary = revenue.summary;
+              this.commissionPercentage = revenue.commission_percentage;
+              this.revenueRows = revenue.daily_rows;
+              this.lastSuccessfulRevenuePeriod = requestedPeriod;
+            } else if (!hadRevenueData) {
+              this.revenueSummary = {
+                total_bookings: 0,
+                gross_revenue: 0,
+                travelhub_commission: 0,
+                net_revenue: 0,
+              };
+              this.commissionPercentage = 0;
+              this.revenueRows = [];
+            }
 
-          if (revenue) {
-            this.revenueSummary = revenue.summary;
-            this.commissionPercentage = revenue.commission_percentage;
-            this.revenueRows = revenue.daily_rows;
-            this.lastSuccessfulRevenuePeriod = requestedPeriod;
-          } else if (!hadRevenueData) {
-            this.revenueSummary = {
-              total_bookings: 0,
-              gross_revenue: 0,
-              travelhub_commission: 0,
-              net_revenue: 0,
-            };
-            this.commissionPercentage = 0;
-            this.revenueRows = [];
-          }
+            if (!dashboard && !revenue) {
+              this.errorMessage = 'Unable to load dashboard data right now.';
+            } else if (!dashboard) {
+              this.errorMessage = 'Reservations data is temporarily unavailable.';
+            } else if (!revenue) {
+              this.errorMessage = 'Revenue data is temporarily unavailable.';
+            } else {
+              this.errorMessage = null;
+            }
 
-          if (!dashboard && !revenue) {
-            this.errorMessage = 'Unable to load dashboard data right now.';
-          } else if (!dashboard) {
-            this.errorMessage = 'Reservations data is temporarily unavailable.';
-          } else if (!revenue) {
-            this.errorMessage = 'Revenue data is temporarily unavailable.';
-          } else {
-            this.errorMessage = null;
-          }
-
-          this.renderRevenueChart();
+            this.renderRevenueChart();
+            this.cdr.detectChanges();
+          });
         },
         error: () => {
           if (currentRequest !== this.requestSequence) {
             return;
           }
-          this.errorMessage = 'Unable to load dashboard data right now.';
-          this.renderRevenueChart();
+          this.ngZone.run(() => {
+            this.errorMessage = 'Unable to load dashboard data right now.';
+            this.renderRevenueChart();
+            this.cdr.detectChanges();
+          });
         },
       });
   }
 
   private bindDashboardResponse(response: ReservationDashboardResponse): void {
     this.stats = response.stats;
+    this.totalReservations = response.total;
     this.occupancyRate = this.calculateRate(response.stats.confirmadas + response.stats.completadas, response.stats.total);
     this.confirmedRate = this.calculateRate(response.stats.confirmadas, response.stats.total);
     this.completedRate = this.calculateRate(response.stats.completadas, response.stats.total);

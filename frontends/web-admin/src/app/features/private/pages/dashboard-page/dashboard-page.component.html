@@ -141,7 +141,7 @@
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
             <select
               [(ngModel)]="selectedPeriod"
-              (change)="logSelectedDateRange()"
+              (ngModelChange)="onPeriodChange()"
               class="px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="last30">{{ t('dashboard.period.last30') }}</option>
@@ -172,8 +172,7 @@
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.totalReservations') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">{{ stats.total }}</p>
-          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonth') }}</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ totalReservations }}</p>        
         </div>
 
         <div
