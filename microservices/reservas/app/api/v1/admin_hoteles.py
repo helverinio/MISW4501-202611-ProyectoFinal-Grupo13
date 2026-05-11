@@ -15,16 +15,65 @@ from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetall
 from app.infrastructure.messaging import MessagePublisher, ReservationStateChangedEvent
 
 
+PAID_PAYMENT_STATUSES = {'completado', 'pagado', 'paid'}
+REFUND_PAYMENT_STATUSES = {'reembolsado', 'refund', 'refunded', 'devuelto'}
+REVIEWABLE_ADMIN_STATES = {'pendiente', 'pago recibido'}
+
+
 def _require_admin(current_usuario):
     if not current_usuario or current_usuario.get('role') != 'ADMIN':
         return jsonify({'error': 'Admin role required'}), 403
     return None
 
 
+def _normalize_name(value):
+    return (value or '').strip().lower()
+
+
+def _is_paid_payment_status(status):
+    return _normalize_name(status) in PAID_PAYMENT_STATUSES
+
+
+def _is_refund_payment_status(status):
+    return _normalize_name(status) in REFUND_PAYMENT_STATUSES
+
+
+def _calculate_payment_net(pagos):
+    return round(
+        sum(
+            (p.total or 0.0)
+            for p in pagos
+            if _is_paid_payment_status(p.estado) or _is_refund_payment_status(p.estado)
+        ),
+        2,
+    )
+
+
+def _has_effective_payment(pagos):
+    return _calculate_payment_net(pagos) > 0
+
+
+def _create_virtual_refund_if_needed(reserva, pagos):
+    net_paid = _calculate_payment_net(pagos)
+    if net_paid <= 0:
+        return None
+
+    refund = PagoModel(
+        id=str(uuid.uuid4()),
+        fecha_pago=datetime.utcnow(),
+        total=-net_paid,
+        estado='reembolsado',
+        id_pais=reserva.id_pais,
+        id_reserva=reserva.id,
+    )
+    db.session.add(refund)
+    return refund
+
+
 def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, detalle_tarifa):
     subtotal_noches = sum((d.subtotal_noche or 0.0) for d in detalle_tarifa)
     impuestos_estimados = max((reserva.total or 0.0) - subtotal_noches, 0.0)
-    total_pagado = sum((p.total or 0.0) for p in pagos if (p.estado or '').lower() in ['completado', 'pagado', 'paid'])
+    total_pagado = max(_calculate_payment_net(pagos), 0.0)
 
     timeline = [{
         'type': 'created',
@@ -36,7 +85,7 @@ def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, d
     for pago in pagos:
         timeline.append({
             'type': 'payment',
-            'title': 'Payment Registered',
+            'title': 'Refund Registered' if _is_refund_payment_status(pago.estado) or (pago.total or 0.0) < 0 else 'Payment Registered',
             'at': pago.fecha_pago.isoformat() if pago.fecha_pago else None,
             'description': f"Payment status: {pago.estado}",
             'amount': pago.total,
@@ -97,7 +146,7 @@ def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, d
             'subtotal_noches': subtotal_noches,
             'impuestos_estimados': impuestos_estimados,
             'total_pagado': total_pagado,
-            'balance_pendiente': max((reserva.total or 0.0) - total_pagado, 0.0),
+            'balance_pendiente': 0.0 if _normalize_name(estado.nombre) == 'rechazada' else max((reserva.total or 0.0) - total_pagado, 0.0),
             'detalle_noches': [
                 {
                     'fecha_noche': d.fecha_noche.isoformat() if d.fecha_noche else None,
@@ -571,12 +620,20 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
     if not nuevo_estado:
         return jsonify({'error': 'Estado not found'}), 404
 
-    estado_actual_nombre = (estado_actual.nombre or '').strip().lower()
-    nuevo_estado_nombre = (nuevo_estado.nombre or '').strip().lower()
+    pagos = (
+        PagoModel.query
+        .filter(PagoModel.id_reserva == reserva.id)
+        .order_by(PagoModel.fecha_pago.desc())
+        .all()
+    )
 
-    if estado_actual_nombre != 'pendiente':
+    estado_actual_nombre = _normalize_name(estado_actual.nombre)
+    nuevo_estado_nombre = _normalize_name(nuevo_estado.nombre)
+    has_effective_payment = _has_effective_payment(pagos)
+
+    if estado_actual_nombre not in REVIEWABLE_ADMIN_STATES:
         return jsonify({
-            'error': 'Only pending reservations can be confirmed or rejected',
+            'error': 'Only reservations pending admin review can be confirmed or rejected',
             'code': 'INVALID_SOURCE_STATE',
             'current_estado': estado_actual.nombre,
         }), 409
@@ -586,6 +643,12 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
             'error': 'Target estado must be Confirmada or Rechazada',
             'code': 'INVALID_TARGET_STATE',
         }), 400
+
+    if nuevo_estado_nombre == 'confirmada' and not has_effective_payment:
+        return jsonify({
+            'error': 'Reservation must have a completed payment before confirmation',
+            'code': 'PAYMENT_REQUIRED',
+        }), 409
 
     if nuevo_estado_nombre == 'rechazada' and not reason:
         return jsonify({
@@ -598,6 +661,11 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
     reserva.updated_by_user_id = id_usuario
     reserva.updated_at = datetime.utcnow()
     reserva.version = (reserva.version or 0) + 1
+
+    refund = None
+    if nuevo_estado_nombre == 'rechazada':
+        refund = _create_virtual_refund_if_needed(reserva, pagos)
+
     db.session.commit()
 
     current_app.logger.info(
@@ -608,6 +676,7 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
         f'from={previous_estado.nombre} '
         f'to={nuevo_estado.nombre} '
         f'reason={reason or "n/a"} '
+        f'refund_total={refund.total if refund else 0} '
         f'version={reserva.version}'
     )
 

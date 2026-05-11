@@ -224,10 +224,11 @@
                 >
               </div>
             </div>
-            <div class="mt-4 sm:mt-0 flex items-center space-x-3" *ngIf="isPending">
+            <div class="mt-4 sm:mt-0 flex items-center space-x-3" *ngIf="canReject || canConfirm">
               <button
                 type="button"
                 class="px-5 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-60"
+                *ngIf="canReject"
                 [disabled]="actionLoading"
                 (click)="openConfirmAction('rechazada')"
               >
@@ -237,6 +238,7 @@
               <button
                 type="button"
                 class="px-5 py-2.5 bg-success-600 text-white rounded-xl text-sm font-medium hover:bg-success-700 transition-colors disabled:opacity-60"
+                *ngIf="canConfirm"
                 [disabled]="actionLoading"
                 (click)="openConfirmAction('confirmada')"
               >
