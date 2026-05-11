@@ -22,13 +22,14 @@ import { I18nService } from '../../../../core/services/i18n.service';
 import { ReservationsService } from '../../../../core/services/reservations.service';
 import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { LanguageCode } from '../../../../core/i18n/translations';
+import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 type ReservationAction = 'confirmada' | 'rechazada';
 
 @Component({
   selector: 'app-reservation-detail-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AdminFooterComponent],
   templateUrl: './reservation-detail-page.component.html',
 })
 export class ReservationDetailPageComponent implements OnInit {

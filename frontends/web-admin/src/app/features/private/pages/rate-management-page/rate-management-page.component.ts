@@ -18,11 +18,12 @@ import {
   ReglaTarifaria,
   TipoHabitacion,
 } from '../../../../core/models/rate-management.models';
+  import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 @Component({
   selector: 'app-rate-management-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AdminFooterComponent],
   templateUrl: './rate-management-page.component.html',
 })
 export class RateManagementPageComponent implements OnInit {

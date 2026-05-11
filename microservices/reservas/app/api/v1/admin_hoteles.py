@@ -13,6 +13,8 @@ from app.infrastructure.models.estado_model import EstadoModel
 from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetalleTarifaModel
 from app.infrastructure.messaging import MessagePublisher, ReservationStateChangedEvent
+from app.infrastructure.repositories.sqlalchemy_comentario_hotel_repository import SQLAlchemyComentarioHotelRepository
+from app.application.use_cases.admin_review_use_cases import ListAdminReviewsUseCase
 
 
 PAID_PAYMENT_STATUSES = {'completado', 'pagado', 'paid'}
@@ -492,15 +494,12 @@ def get_dashboard_reservas(current_usuario=None):
             ReservaModel.id.ilike(f'{codigo_filter}%')
         )
 
-    # ── Aggregate stats (without date/estado filters to show all-time totals)
+    # ── Aggregate stats from the same filtered dataset shown in dashboard
     stats_q = (
-        db.session.query(
+        base_q.with_entities(
             EstadoModel.nombre,
             db.func.count(ReservaModel.id).label('count'),
         )
-        .join(ReservaModel, ReservaModel.id_estado == EstadoModel.id)
-        .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
-        .filter(HabitacionModel.id_hotel.in_(hotel_ids))
         .group_by(EstadoModel.nombre)
         .all()
     )
@@ -754,3 +753,104 @@ def get_admin_reserva_detail(reserva_id, current_usuario=None):
         pagos,
         detalle_tarifa,
     )), 200
+
+
+@api_v1_bp.route('/admin/reviews', methods=['GET'])
+@require_token
+def get_admin_reviews(current_usuario=None):
+    """
+    Get admin reviews with filtering, sorting, and pagination.
+    
+    Query Parameters:
+    - hotel_id: Optional specific hotel ID (must be authorized)
+    - rating: Optional rating filter (1-5)
+    - date_from: Optional date filter (ISO format)
+    - date_to: Optional date filter (ISO format)
+    - sentiment: Optional sentiment filter (positive, neutral, negative)
+    - search: Optional free-text search in comments
+    - page: Page number (default 1)
+    - per_page: Items per page (default 10, max 100)
+    - sort_by: Sort key (created_at_desc, created_at_asc, rating_desc, rating_asc)
+    
+    Returns:
+    {
+        "reviews": [...],
+        "total": int,
+        "page": int,
+        "per_page": int,
+        "total_pages": int,
+        "kpis": {...}
+    }
+    """
+    err = _require_admin(current_usuario)
+    if err:
+        return err
+
+    id_usuario = current_usuario['id']
+
+    # Get authorized hotels
+    authorized_hotels = (
+        AdminHotelModel.query
+        .filter(AdminHotelModel.id_usuario == id_usuario)
+        .all()
+    )
+
+    if not authorized_hotels:
+        return jsonify({'error': 'No authorized hotels'}), 403
+
+    authorized_hotel_ids = [hotel.id_hotel for hotel in authorized_hotels]
+
+    # Parse query parameters
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        rating_filter = None
+        rating_param = request.args.get('rating')
+        if rating_param:
+            rating_filter = int(rating_param)
+        
+        date_from = None
+        date_from_param = request.args.get('date_from')
+        if date_from_param:
+            date_from = datetime.fromisoformat(date_from_param)
+        
+        date_to = None
+        date_to_param = request.args.get('date_to')
+        if date_to_param:
+            date_to = datetime.fromisoformat(date_to_param)
+        
+        sentiment_filter = request.args.get('sentiment')
+        search_text = request.args.get('search')
+        sort_by = request.args.get('sort_by', 'created_at_desc')
+        
+        hotel_id = request.args.get('hotel_id')
+        if hotel_id:
+            # Verify authorization for specific hotel
+            if hotel_id not in authorized_hotel_ids:
+                return jsonify({'error': 'Hotel not authorized for current admin'}), 403
+            authorized_hotel_ids = [hotel_id]
+        
+    except (ValueError, TypeError) as e:
+        return jsonify({'error': f'Invalid query parameter: {str(e)}'}), 400
+
+    # Use case execution
+    try:
+        repository = SQLAlchemyComentarioHotelRepository()
+        use_case = ListAdminReviewsUseCase(repository)
+        result = use_case.execute(
+            authorized_hotel_ids=authorized_hotel_ids,
+            rating_filter=rating_filter,
+            date_from=date_from,
+            date_to=date_to,
+            sentiment_filter=sentiment_filter,
+            search_text=search_text,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+        )
+        return jsonify(result), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        current_app.logger.error(f'Error fetching admin reviews: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500

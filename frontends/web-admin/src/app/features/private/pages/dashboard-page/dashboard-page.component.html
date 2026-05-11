@@ -96,25 +96,18 @@
           {{ t('sidebar.reservations') }}
         </a>
         <a
-          href="#"
-          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-        >
-          <i class="fas fa-hotel w-5 mr-3"></i>
-          {{ t('sidebar.properties') }}
-        </a>
-        <a
-          href="#"
-          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-        >
-          <i class="fas fa-users w-5 mr-3"></i>
-          {{ t('sidebar.guests') }}
-        </a>
-        <a
           [routerLink]="['/revenue-reports']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
           {{ t('sidebar.revenue') }}
+        </a>
+        <a
+          [routerLink]="['/reviews']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-star w-5 mr-3"></i>
+          {{ t('sidebar.reviews') }}
         </a>
         <a
           [routerLink]="['/room-rate-management']"
@@ -147,20 +140,15 @@
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
             <select
+              [(ngModel)]="selectedPeriod"
+              (change)="logSelectedDateRange()"
               class="px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option>{{ t('dashboard.period.last30') }}</option>
-              <option>{{ t('dashboard.period.last7') }}</option>
-              <option>{{ t('dashboard.period.last90') }}</option>
-              <option>{{ t('dashboard.period.thisYear') }}</option>
+              <option value="last30">{{ t('dashboard.period.last30') }}</option>
+              <option value="last7">{{ t('dashboard.period.last7') }}</option>
+              <option value="last90">{{ t('dashboard.period.last90') }}</option>
+              <option value="thisYear">{{ t('dashboard.period.thisYear') }}</option>
             </select>
-            <button
-              class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
-              type="button"
-            >
-              <i class="fas fa-download mr-2"></i>
-              {{ t('common.export') }}
-            </button>
           </div>
         </div>
       </div>
@@ -178,13 +166,13 @@
               <i class="fas fa-calendar-check text-primary-600 text-xl"></i>
             </div>
             <span class="text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
-              <i class="fas fa-arrow-up mr-1"></i>12%
+              {{ confirmedRate | number: '1.0-0' }}%
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.totalReservations') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">1,248</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ stats.total }}</p>
           <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonth') }}</p>
         </div>
 
@@ -197,13 +185,13 @@
               <i class="fas fa-dollar-sign text-success-600 text-xl"></i>
             </div>
             <span class="text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
-              <i class="fas fa-arrow-up mr-1"></i>8.5%
+              {{ commissionPercentage | number: '1.0-0' }}%
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.monthlyRevenue') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">$87,420</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ formatCurrency(revenueSummary.gross_revenue) }}</p>
           <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonthRevenue') }}</p>
         </div>
 
@@ -216,13 +204,13 @@
               <i class="fas fa-bed text-purple-600 text-xl"></i>
             </div>
             <span class="text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
-              <i class="fas fa-arrow-up mr-1"></i>5.2%
+              {{ completedRate | number: '1.0-0' }}%
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.occupancyRate') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">78.5%</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ occupancyRate | number: '1.0-1' }}%</p>
           <p class="text-xs text-gray-500">{{ t('dashboard.kpi.aboveAverage') }}</p>
         </div>
 
@@ -241,9 +229,13 @@
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.pendingConfirmations') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">24</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ stats.pendientes }}</p>
           <p class="text-xs text-gray-500">{{ t('dashboard.kpi.awaitingApproval') }}</p>
         </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="mb-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {{ errorMessage }}
       </div>
 
       <div
@@ -276,6 +268,7 @@
             </button>
           </div>
         </div>
+        <div *ngIf="loading" class="mb-4 text-sm text-gray-500">Loading data...</div>
         <div id="revenue-chart" style="height: 400px"></div>
       </div>
 
@@ -289,6 +282,7 @@
             <p class="text-sm text-gray-600">{{ t('dashboard.recent.subtitle') }}</p>
           </div>
           <button
+            (click)="viewAllReservations()"
             class="mt-4 sm:mt-0 px-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
             type="button"
           >
@@ -335,7 +329,7 @@
             </thead>
             <tbody id="reservations-table-body" class="divide-y divide-gray-100">
               <tr
-                *ngFor="let reservation of reservations"
+                *ngFor="let reservation of recentReservations"
                 class="hover:bg-gray-50 transition-colors"
               >
                 <td class="py-4 px-4">
@@ -374,6 +368,11 @@
                   </span>
                 </td>
               </tr>
+              <tr *ngIf="!loading && recentReservations.length === 0">
+                <td colspan="6" class="px-4 py-8 text-center text-sm text-gray-500">
+                  No reservations available for this period.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -381,25 +380,5 @@
     </main>
   </div>
 
-  <footer id="footer" class="bg-white border-t border-gray-100 mt-12">
-    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col sm:flex-row justify-between items-center">
-        <div class="flex items-center mb-4 sm:mb-0">
-          <p class="text-sm text-gray-500">{{ t('footer.copyright') }}</p>
-          <p class="mt-1 text-[10px] leading-none text-gray-400">v0.2.1 · Sprint 2</p>
-        </div>
-        <div class="flex items-center space-x-6">
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
-            t('footer.privacyPolicy')
-          }}</a>
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
-            t('footer.termsOfService')
-          }}</a>
-          <a href="#" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">{{
-            t('footer.security')
-          }}</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+    <app-admin-footer></app-admin-footer>
 </div>
