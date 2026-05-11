@@ -36,6 +36,9 @@ class Config:
         os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '12.0')
     )
 
+    # Firebase Configuration for Push Notifications
+    FIREBASE_CREDENTIALS_PATH = os.environ.get('FIREBASE_CREDENTIALS_PATH')
+
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@reservas-db:5432/reservas')
