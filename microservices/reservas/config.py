@@ -38,6 +38,7 @@ class Config:
 
     # Firebase Configuration for Push Notifications
     FIREBASE_CREDENTIALS_PATH = os.environ.get('FIREBASE_CREDENTIALS_PATH')
+    FIREBASE_CREDENTIALS_JSON = os.environ.get('FIREBASE_CREDENTIALS_JSON')
 
 class DevelopmentConfig(Config):
     DEBUG = True

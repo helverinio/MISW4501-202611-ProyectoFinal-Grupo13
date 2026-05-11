@@ -1,4 +1,5 @@
 import logging
+import json
 from typing import List, Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
@@ -6,8 +7,13 @@ logger = logging.getLogger(__name__)
 _firebase_app = None
 
 
-def init_firebase(credentials_path: Optional[str] = None):
-    """Initialize Firebase Admin SDK. Call once at app startup."""
+def init_firebase(credentials_path: Optional[str] = None, credentials_json: Optional[str] = None):
+    """Initialize Firebase Admin SDK. Call once at app startup.
+    
+    Args:
+        credentials_path: Path to the service account JSON file
+        credentials_json: Service account credentials as a JSON string
+    """
     global _firebase_app
     if _firebase_app is not None:
         return _firebase_app
@@ -16,7 +22,12 @@ def init_firebase(credentials_path: Optional[str] = None):
         import firebase_admin
         from firebase_admin import credentials as fb_credentials
 
-        if credentials_path:
+        if credentials_json:
+            # Parse JSON string and initialize with dict
+            cred_dict = json.loads(credentials_json)
+            cred = fb_credentials.Certificate(cred_dict)
+            _firebase_app = firebase_admin.initialize_app(cred)
+        elif credentials_path:
             cred = fb_credentials.Certificate(credentials_path)
             _firebase_app = firebase_admin.initialize_app(cred)
         else:
