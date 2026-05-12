@@ -18,7 +18,7 @@ import {
   ReglaTarifaria,
   TipoHabitacion,
 } from '../../../../core/models/rate-management.models';
-  import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
+import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 @Component({
   selector: 'app-rate-management-page',

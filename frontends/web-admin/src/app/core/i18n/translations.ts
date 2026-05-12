@@ -836,7 +836,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     // Reseñas y Calificaciones
     'sidebar.reviews': 'Reseñas y Calificaciones',
     'reviews.title': 'Reseñas y Calificaciones de Huéspedes',
-    'reviews.subtitle': 'Monitorea y analiza las opiniones de los clientes en todas las propiedades',
+    'reviews.subtitle':
+      'Monitorea y analiza las opiniones de los clientes en todas las propiedades',
     'reviews.buttons.export': 'Exportar Reseñas',
     'reviews.buttons.analytics': 'Análisis',
     'reviews.buttons.filter': 'Filtro',
@@ -1216,7 +1217,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.version': 'Versão',
     'reservationDetail.bookingTimeline': 'Linha do tempo da reserva',
     'reservationDetail.paymentStatus': 'Status de pagamento',
-    'reservationDetail.noPaymentRecords': 'Nenhum registro de pagamento encontrado para esta reserva.',
+    'reservationDetail.noPaymentRecords':
+      'Nenhum registro de pagamento encontrado para esta reserva.',
     'reservationDetail.priceBreakdown': 'Resumo de preços',
     'reservationDetail.roomRate': 'Tarifa do quarto',
     'reservationDetail.discount': 'Desconto',
@@ -1240,8 +1242,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.error.reservationIdRequired': 'O id da reserva é obrigatório.',
     'reservationDetail.error.targetEstadoNotConfigured':
       'O status de destino da reserva não está configurado.',
-    'reservationDetail.error.reasonRequired':
-      'O motivo é obrigatório ao rejeitar uma reserva.',
+    'reservationDetail.error.reasonRequired': 'O motivo é obrigatório ao rejeitar uma reserva.',
     'reservationDetail.error.staleVersion':
       'A reserva já foi atualizada por outro canal. Atualizando o estado mais recente...',
     'reservationDetail.error.couldNotUpdate': 'Não foi possível atualizar o status da reserva.',

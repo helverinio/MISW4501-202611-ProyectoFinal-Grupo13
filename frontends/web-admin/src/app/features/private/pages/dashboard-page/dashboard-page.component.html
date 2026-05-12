@@ -165,7 +165,7 @@
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.totalReservations') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">{{ totalReservations }}</p>        
+          <p class="text-3xl font-bold text-gray-900 mb-1">{{ totalReservations }}</p>
         </div>
 
         <div
@@ -183,7 +183,9 @@
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.monthlyRevenue') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">{{ formatCurrency(revenueSummary.gross_revenue) }}</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">
+            {{ formatCurrency(revenueSummary.gross_revenue) }}
+          </p>
         </div>
 
         <div
@@ -201,7 +203,9 @@
           <h3 class="text-gray-600 text-sm font-medium mb-1">
             {{ t('dashboard.kpi.occupancyRate') }}
           </h3>
-          <p class="text-3xl font-bold text-gray-900 mb-1">{{ occupancyRate | number: '1.0-1' }}%</p>
+          <p class="text-3xl font-bold text-gray-900 mb-1">
+            {{ occupancyRate | number: '1.0-1' }}%
+          </p>
         </div>
 
         <div
@@ -224,7 +228,10 @@
         </div>
       </div>
 
-      <div *ngIf="errorMessage" class="mb-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+      <div
+        *ngIf="errorMessage"
+        class="mb-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700"
+      >
         {{ errorMessage }}
       </div>
 
@@ -370,5 +377,5 @@
     </main>
   </div>
 
-    <app-admin-footer></app-admin-footer>
+  <app-admin-footer></app-admin-footer>
 </div>

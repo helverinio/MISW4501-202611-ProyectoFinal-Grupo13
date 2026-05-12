@@ -9,28 +9,62 @@
                 <i class="fas fa-hotel text-white text-sm"></i>
               </div>
               <span class="text-xl font-bold text-gray-900">TravelHub</span>
-              <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Admin</span>
+              <span
+                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full"
+                >Admin</span
+              >
             </div>
           </div>
         </div>
         <div class="flex items-center space-x-4">
           <div class="flex items-center gap-1">
-            <button type="button" (click)="setLanguage('es')" [class]="currentLanguage === 'es' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'">
+            <button
+              type="button"
+              (click)="setLanguage('es')"
+              [class]="
+                currentLanguage === 'es'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
               ES
             </button>
-            <button type="button" (click)="setLanguage('en')" [class]="currentLanguage === 'en' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'">
+            <button
+              type="button"
+              (click)="setLanguage('en')"
+              [class]="
+                currentLanguage === 'en'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
               EN
             </button>
-            <button type="button" (click)="setLanguage('pt')" [class]="currentLanguage === 'pt' ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300' : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'">
+            <button
+              type="button"
+              (click)="setLanguage('pt')"
+              [class]="
+                currentLanguage === 'pt'
+                  ? 'px-2 py-1 text-xs font-semibold bg-primary-100 text-primary-700 rounded-md border border-primary-300'
+                  : 'px-2 py-1 text-xs font-medium text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100'
+              "
+            >
               PT
             </button>
           </div>
-          <button class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors" type="button">
+          <button
+            class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
+            type="button"
+          >
             <i class="fas fa-bell text-lg"></i>
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Admin" class="w-8 h-8 rounded-full" />
+            <img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
+              alt="Admin"
+              class="w-8 h-8 rounded-full"
+            />
             <div class="hidden md:block">
               <p class="text-sm font-medium text-gray-900">
                 {{ currentUser()?.nombre || 'Admin User' }}
@@ -46,24 +80,40 @@
   <div class="flex">
     <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
       <nav class="p-4 space-y-1">
-        <a [routerLink]="['/reservations']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/reservations']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-calendar-check w-5 mr-3"></i>
           {{ t('sidebar.reservations') }}
         </a>
-        <a [routerLink]="['/revenue-reports']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/revenue-reports']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
           {{ t('sidebar.revenue') }}
         </a>
-        <a [routerLink]="['/reviews']" class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/reviews']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
+        >
           <i class="fas fa-star w-5 mr-3"></i>
           {{ t('sidebar.reviews') }}
         </a>
-        <a [routerLink]="['/room-rate-management']" class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+        <a
+          [routerLink]="['/room-rate-management']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
           <i class="fas fa-cog w-5 mr-3"></i>
           {{ t('sidebar.settings') }}
         </a>
         <div class="pt-4 mt-4 border-t border-gray-100">
-          <button class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors" type="button" (click)="logout()">
+          <button
+            class="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+            type="button"
+            (click)="logout()"
+          >
             <i class="fas fa-sign-out-alt w-5 mr-3"></i>
             {{ t('common.logout') }}
           </button>
@@ -73,419 +123,399 @@
 
     <main id="main-content" class="flex-1 p-4 sm:p-6 lg:p-8">
       <div class="mb-8">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            {{ t('reviews.title') }}
-          </h1>
-          <p class="text-gray-600 text-sm">
-            {{ t('reviews.subtitle') }}
-          </p>
-        </div>
-        <div class="mt-4 sm:mt-0 flex items-center space-x-3">
-          <button
-            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-          >
-            <i class="fas fa-download mr-2"></i>
-            {{ t('reviews.buttons.export') }}
-          </button>
-          <button
-            class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
-          >
-            <i class="fas fa-chart-bar mr-2"></i>
-            {{ t('reviews.buttons.analytics') }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- KPI Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-      <!-- Average Rating -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-            <i class="fas fa-star text-yellow-600 text-xl"></i>
-          </div>
-        </div>
-        <h3 class="text-gray-600 text-sm font-medium mb-1">
-          {{ t('reviews.kpi.average_rating') }}
-        </h3>
-        <p class="text-3xl font-bold text-gray-900">
-          {{ kpis?.average_rating?.toFixed(1) || '-' }}
-        </p>
-        <p class="text-xs text-gray-500 mt-1">{{ t('reviews.kpi.out_of_5') }}</p>
-      </div>
-
-      <!-- Total Reviews -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-            <i class="fas fa-comment text-primary-600 text-xl"></i>
-          </div>
-        </div>
-        <h3 class="text-gray-600 text-sm font-medium mb-1">
-          {{ t('reviews.kpi.total_reviews') }}
-        </h3>
-        <p class="text-3xl font-bold text-gray-900">
-          {{ kpis?.total_reviews || 0 }}
-        </p>
-      </div>
-
-      <!-- Positive Reviews -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-            <i class="fas fa-thumbs-up text-green-600 text-xl"></i>
-          </div>
-        </div>
-        <h3 class="text-gray-600 text-sm font-medium mb-1">
-          {{ t('reviews.kpi.positive') }}
-        </h3>
-        <p class="text-3xl font-bold text-gray-900">
-          {{ kpis?.positive_percentage?.toFixed(0) || 0 }}%
-        </p>
-      </div>
-
-      <!-- Response Rate -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-            <i class="fas fa-reply text-blue-600 text-xl"></i>
-          </div>
-        </div>
-        <h3 class="text-gray-600 text-sm font-medium mb-1">
-          {{ t('reviews.kpi.response_rate') }}
-        </h3>
-        <p class="text-3xl font-bold text-gray-900">
-          {{ kpis?.response_rate?.toFixed(0) || 0 }}%
-        </p>
-      </div>
-    </div>
-
-    <!-- Filters Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        <!-- Property Filter -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('reviews.filters.property') }}
-          </label>
-          <select
-            [(ngModel)]="selectedHotelId"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">{{ t('reviews.filters.all_properties') }}</option>
-            <option *ngFor="let hotel of hotels" [value]="hotel.id">
-              {{ hotel.nombre }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Rating Filter -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('reviews.filters.rating') }}
-          </label>
-          <select
-            [(ngModel)]="selectedRating"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option *ngFor="let opt of ratingOptions" [value]="opt.value">
-              {{ opt.label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- From Date -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('reviews.filters.from_date') }}
-          </label>
-          <input
-            type="date"
-            [(ngModel)]="dateFrom"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
-
-        <!-- To Date -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('reviews.filters.to_date') }}
-          </label>
-          <input
-            type="date"
-            [(ngModel)]="dateTo"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
-
-        <!-- Sentiment Filter -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('reviews.filters.sentiment') }}
-          </label>
-          <select
-            [(ngModel)]="selectedSentiment"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option *ngFor="let opt of sentimentOptions" [value]="opt.value">
-              {{ opt.label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Filter Actions -->
-        <div class="flex items-end space-x-2">
-          <button
-            (click)="loadReviews()"
-            class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
-          >
-            <i class="fas fa-filter mr-2"></i>
-            {{ t('reviews.buttons.filter') }}
-          </button>
-          <button
-            (click)="clearFilters()"
-            class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors"
-            title="Clear filters"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="mb-6">
-      <input
-        type="text"
-        [(ngModel)]="searchText"
-        (keyup.enter)="loadReviews()"
-        placeholder="{{ t('reviews.search_placeholder') }}"
-        class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-      />
-    </div>
-
-    <!-- Reviews List Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
-      <!-- Header -->
-      <div class="p-6 border-b border-gray-100">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-1">
-              {{ t('reviews.list.title') }}
-            </h2>
-            <p class="text-sm text-gray-600">
-              {{ t('reviews.list.subtitle') }}
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {{ t('reviews.title') }}
+            </h1>
+            <p class="text-gray-600 text-sm">
+              {{ t('reviews.subtitle') }}
             </p>
           </div>
           <div class="mt-4 sm:mt-0 flex items-center space-x-3">
-            <select
-              [(ngModel)]="sortBy"
-              class="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            <button
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
             >
-              <option *ngFor="let opt of sortOptions" [value]="opt.value">
+              <i class="fas fa-download mr-2"></i>
+              {{ t('reviews.buttons.export') }}
+            </button>
+            <button
+              class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
+            >
+              <i class="fas fa-chart-bar mr-2"></i>
+              {{ t('reviews.buttons.analytics') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <!-- Average Rating -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-star text-yellow-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reviews.kpi.average_rating') }}
+          </h3>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ kpis?.average_rating?.toFixed(1) || '-' }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">{{ t('reviews.kpi.out_of_5') }}</p>
+        </div>
+
+        <!-- Total Reviews -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-comment text-primary-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reviews.kpi.total_reviews') }}
+          </h3>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ kpis?.total_reviews || 0 }}
+          </p>
+        </div>
+
+        <!-- Positive Reviews -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-thumbs-up text-green-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reviews.kpi.positive') }}
+          </h3>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ kpis?.positive_percentage?.toFixed(0) || 0 }}%
+          </p>
+        </div>
+
+        <!-- Response Rate -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-reply text-blue-600 text-xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-600 text-sm font-medium mb-1">
+            {{ t('reviews.kpi.response_rate') }}
+          </h3>
+          <p class="text-3xl font-bold text-gray-900">
+            {{ kpis?.response_rate?.toFixed(0) || 0 }}%
+          </p>
+        </div>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <!-- Property Filter -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('reviews.filters.property') }}
+            </label>
+            <select
+              [(ngModel)]="selectedHotelId"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">{{ t('reviews.filters.all_properties') }}</option>
+              <option *ngFor="let hotel of hotels" [value]="hotel.id">
+                {{ hotel.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Rating Filter -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('reviews.filters.rating') }}
+            </label>
+            <select
+              [(ngModel)]="selectedRating"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option *ngFor="let opt of ratingOptions" [value]="opt.value">
                 {{ opt.label }}
               </option>
             </select>
           </div>
+
+          <!-- From Date -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('reviews.filters.from_date') }}
+            </label>
+            <input
+              type="date"
+              [(ngModel)]="dateFrom"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <!-- To Date -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('reviews.filters.to_date') }}
+            </label>
+            <input
+              type="date"
+              [(ngModel)]="dateTo"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <!-- Sentiment Filter -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('reviews.filters.sentiment') }}
+            </label>
+            <select
+              [(ngModel)]="selectedSentiment"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option *ngFor="let opt of sentimentOptions" [value]="opt.value">
+                {{ opt.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Filter Actions -->
+          <div class="flex items-end space-x-2">
+            <button
+              (click)="loadReviews()"
+              class="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
+            >
+              <i class="fas fa-filter mr-2"></i>
+              {{ t('reviews.buttons.filter') }}
+            </button>
+            <button
+              (click)="clearFilters()"
+              class="px-3 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+              title="Clear filters"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Loading State -->
-      <div
-        *ngIf="loading"
-        class="p-12 text-center"
-      >
-        <div class="inline-block">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p class="mt-3 text-sm text-gray-600">
-            {{ t('reviews.loading') }}
-          </p>
-        </div>
+      <!-- Search Bar -->
+      <div class="mb-6">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="loadReviews()"
+          placeholder="{{ t('reviews.search_placeholder') }}"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+        />
       </div>
 
-      <!-- Error State -->
-      <div
-        *ngIf="error && !loading"
-        class="p-12 text-center"
-      >
-        <div class="inline-block">
-          <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
-          <p class="text-sm text-gray-600">{{ error }}</p>
-          <button
-            (click)="loadReviews()"
-            class="mt-3 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700"
-          >
-            {{ t('reviews.buttons.retry') }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Empty State -->
-      <div
-        *ngIf="isEmpty && !loading && !error"
-        class="p-12 text-center"
-      >
-        <div class="inline-block">
-          <i class="fas fa-inbox text-gray-400 text-3xl mb-3"></i>
-          <p class="text-sm text-gray-600">
-            {{ t('reviews.empty_state') }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Reviews List -->
-      <div
-        *ngIf="!loading && !error && !isEmpty"
-        class="divide-y divide-gray-100"
-      >
-        <div
-          *ngFor="let review of reviews"
-          class="p-6 hover:bg-gray-50 transition-colors"
-        >
-          <div class="flex items-start space-x-4">
-            <!-- Avatar Placeholder -->
-            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-              <i class="fas fa-user text-primary-600"></i>
+      <!-- Reviews List Section -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-100">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900 mb-1">
+                {{ t('reviews.list.title') }}
+              </h2>
+              <p class="text-sm text-gray-600">
+                {{ t('reviews.list.subtitle') }}
+              </p>
             </div>
+            <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+              <select
+                [(ngModel)]="sortBy"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              >
+                <option *ngFor="let opt of sortOptions" [value]="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-            <!-- Review Content -->
-            <div class="flex-1 min-w-0">
-              <!-- Header: Guest Name, Rating, Date -->
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center space-x-3">
-                  <h3 class="text-sm font-semibold text-gray-900">
-                    {{ review.nombre_usuario }}
-                  </h3>
-                  <div class="flex items-center">
-                    <div class="flex text-yellow-400">
-                      <i
-                        *ngFor="let star of getRatingStars(review.rating)"
-                        [ngClass]="{
-                          'fa-star': isStarFilled(star, review.rating),
-                          'fa-star-o': !isStarFilled(star, review.rating)
-                        }"
-                        class="fas text-xs"
-                      ></i>
+        <!-- Loading State -->
+        <div *ngIf="loading" class="p-12 text-center">
+          <div class="inline-block">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            <p class="mt-3 text-sm text-gray-600">
+              {{ t('reviews.loading') }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="p-12 text-center">
+          <div class="inline-block">
+            <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+            <p class="text-sm text-gray-600">{{ error }}</p>
+            <button
+              (click)="loadReviews()"
+              class="mt-3 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700"
+            >
+              {{ t('reviews.buttons.retry') }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="isEmpty && !loading && !error" class="p-12 text-center">
+          <div class="inline-block">
+            <i class="fas fa-inbox text-gray-400 text-3xl mb-3"></i>
+            <p class="text-sm text-gray-600">
+              {{ t('reviews.empty_state') }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div *ngIf="!loading && !error && !isEmpty" class="divide-y divide-gray-100">
+          <div *ngFor="let review of reviews" class="p-6 hover:bg-gray-50 transition-colors">
+            <div class="flex items-start space-x-4">
+              <!-- Avatar Placeholder -->
+              <div
+                class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0"
+              >
+                <i class="fas fa-user text-primary-600"></i>
+              </div>
+
+              <!-- Review Content -->
+              <div class="flex-1 min-w-0">
+                <!-- Header: Guest Name, Rating, Date -->
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center space-x-3">
+                    <h3 class="text-sm font-semibold text-gray-900">
+                      {{ review.nombre_usuario }}
+                    </h3>
+                    <div class="flex items-center">
+                      <div class="flex text-yellow-400">
+                        <i
+                          *ngFor="let star of getRatingStars(review.rating)"
+                          [ngClass]="{
+                            'fa-star': isStarFilled(star, review.rating),
+                            'fa-star-o': !isStarFilled(star, review.rating),
+                          }"
+                          class="fas text-xs"
+                        ></i>
+                      </div>
+                      <span class="ml-2 text-sm font-medium text-gray-900">
+                        {{ review.rating }}.0
+                      </span>
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-900">
-                      {{ review.rating }}.0
+                  </div>
+                  <span class="text-xs text-gray-500">
+                    {{ review.created_at | date: 'short' }}
+                  </span>
+                </div>
+
+                <!-- Hotel, Room, Duration info -->
+                <div class="flex items-center space-x-4 mb-3 text-sm">
+                  <span class="text-primary-600 font-medium">
+                    {{ review.nombre_hotel }}
+                  </span>
+                  <span class="text-gray-500">•</span>
+                  <span class="text-gray-500">
+                    {{ t('reviews.room_label') }} #{{ review.nro_habitacion }}
+                  </span>
+                  <span class="text-gray-500">•</span>
+                  <span class="text-gray-500">
+                    {{ review.duracion_noches }}
+                    {{ review.duracion_noches === 1 ? t('reviews.night') : t('reviews.nights') }}
+                  </span>
+                </div>
+
+                <!-- Comment -->
+                <p *ngIf="review.comentario" class="text-sm text-gray-700 leading-relaxed mb-4">
+                  "{{ review.comentario }}"
+                </p>
+
+                <!-- Footer: Sentiment Badge & Verified Stay -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <span class="text-xs text-gray-500">
+                      {{ t('reviews.verified_stay') }}
+                    </span>
+                    <span
+                      [ngClass]="getSentimentBadgeClass(review.sentimiento)"
+                      class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full"
+                    >
+                      <i
+                        class="fas mr-1"
+                        [ngClass]="{
+                          'fa-check-circle': review.sentimiento === 'positive',
+                          'fa-minus-circle': review.sentimiento === 'neutral',
+                          'fa-exclamation-circle': review.sentimiento === 'negative',
+                        }"
+                      ></i>
+                      {{ getSentimentLabel(review.sentimiento) }}
                     </span>
                   </div>
-                </div>
-                <span class="text-xs text-gray-500">
-                  {{ review.created_at | date : 'short' }}
-                </span>
-              </div>
-
-              <!-- Hotel, Room, Duration info -->
-              <div class="flex items-center space-x-4 mb-3 text-sm">
-                <span class="text-primary-600 font-medium">
-                  {{ review.nombre_hotel }}
-                </span>
-                <span class="text-gray-500">•</span>
-                <span class="text-gray-500">
-                  {{ t('reviews.room_label') }} #{{ review.nro_habitacion }}
-                </span>
-                <span class="text-gray-500">•</span>
-                <span class="text-gray-500">
-                  {{ review.duracion_noches }}
-                  {{ review.duracion_noches === 1
-                    ? t('reviews.night')
-                    : t('reviews.nights')
-                  }}
-                </span>
-              </div>
-
-              <!-- Comment -->
-              <p
-                *ngIf="review.comentario"
-                class="text-sm text-gray-700 leading-relaxed mb-4"
-              >
-                "{{ review.comentario }}"
-              </p>
-
-              <!-- Footer: Sentiment Badge & Verified Stay -->
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                  <span class="text-xs text-gray-500">
-                    {{ t('reviews.verified_stay') }}
-                  </span>
-                  <span
-                    [ngClass]="getSentimentBadgeClass(review.sentimiento)"
-                    class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full"
-                  >
-                    <i
-                      class="fas mr-1"
-                      [ngClass]="{
-                        'fa-check-circle': review.sentimiento === 'positive',
-                        'fa-minus-circle': review.sentimiento === 'neutral',
-                        'fa-exclamation-circle':
-                          review.sentimiento === 'negative'
-                      }"
-                    ></i>
-                    {{ getSentimentLabel(review.sentimiento) }}
-                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Pagination -->
-    <div
-      *ngIf="!loading && !error && !isEmpty && totalPages > 1"
-      class="mt-6 flex items-center justify-between"
-    >
-      <div class="text-sm text-gray-600">
-        {{ t('reviews.pagination.showing') }}
-        <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
-        {{ t('reviews.pagination.to') }}
-        <span class="font-medium">
-          {{ Math.min(currentPage * itemsPerPage, totalReviews) }}
-        </span>
-        {{ t('reviews.pagination.of') }}
-        <span class="font-medium">{{ totalReviews }}</span>
-      </div>
-
-      <div class="flex items-center space-x-2">
-        <button
-          (click)="onPageChange(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ t('reviews.pagination.previous') }}
-        </button>
-
-        <div class="flex items-center space-x-1">
-          <button
-            *ngFor="let page of [].constructor(totalPages); let i = index"
-            (click)="onPageChange(i + 1)"
-            [class.bg-primary-600]="i + 1 === currentPage"
-            [class.text-white]="i + 1 === currentPage"
-            [class.text-gray-700]="i + 1 !== currentPage"
-            class="w-8 h-8 rounded-lg border text-sm font-medium transition-colors"
-            [class.border-primary-600]="i + 1 === currentPage"
-            [class.border-gray-300]="i + 1 !== currentPage"
-          >
-            {{ i + 1 }}
-          </button>
+      <!-- Pagination -->
+      <div
+        *ngIf="!loading && !error && !isEmpty && totalPages > 1"
+        class="mt-6 flex items-center justify-between"
+      >
+        <div class="text-sm text-gray-600">
+          {{ t('reviews.pagination.showing') }}
+          <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+          {{ t('reviews.pagination.to') }}
+          <span class="font-medium">
+            {{ Math.min(currentPage * itemsPerPage, totalReviews) }}
+          </span>
+          {{ t('reviews.pagination.of') }}
+          <span class="font-medium">{{ totalReviews }}</span>
         </div>
 
-        <button
-          (click)="onPageChange(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ t('reviews.pagination.next') }}
-        </button>
-      </div>
+        <div class="flex items-center space-x-2">
+          <button
+            (click)="onPageChange(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ t('reviews.pagination.previous') }}
+          </button>
+
+          <div class="flex items-center space-x-1">
+            <button
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              (click)="onPageChange(i + 1)"
+              [class.bg-primary-600]="i + 1 === currentPage"
+              [class.text-white]="i + 1 === currentPage"
+              [class.text-gray-700]="i + 1 !== currentPage"
+              class="w-8 h-8 rounded-lg border text-sm font-medium transition-colors"
+              [class.border-primary-600]="i + 1 === currentPage"
+              [class.border-gray-300]="i + 1 !== currentPage"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+
+          <button
+            (click)="onPageChange(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ t('reviews.pagination.next') }}
+          </button>
+        </div>
       </div>
     </main>
   </div>
-    <app-admin-footer></app-admin-footer>
+  <app-admin-footer></app-admin-footer>
 </div>

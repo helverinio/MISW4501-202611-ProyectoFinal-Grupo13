@@ -91,7 +91,8 @@ export class LoginPageComponent {
       .subscribe({
         next: () => {
           this.ngZone.run(() => {
-            const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || '/revenue-reports';
+            const redirectTo =
+              this.route.snapshot.queryParamMap.get('redirectTo') || '/revenue-reports';
             void this.router.navigateByUrl(redirectTo);
           });
         },

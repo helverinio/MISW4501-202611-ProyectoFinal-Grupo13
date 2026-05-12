@@ -72,7 +72,7 @@
             </div>
           </div>
         </div>
-          <app-admin-footer></app-admin-footer>
+        <app-admin-footer></app-admin-footer>
       </div>
     </div>
   </header>
@@ -207,7 +207,8 @@
                   {{ detail.estado.nombre }}
                 </span>
                 <span class="text-sm text-gray-600"
-                  >{{ t('reservationDetail.createdAt') }} {{ formatDateTime(detail.created_at) }}</span
+                  >{{ t('reservationDetail.createdAt') }}
+                  {{ formatDateTime(detail.created_at) }}</span
                 >
               </div>
             </div>
@@ -255,9 +256,9 @@
                 <div class="flex-1">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label class="text-xs font-medium text-gray-500 uppercase"
-                        >{{ t('reservationDetail.fullName') }}</label
-                      >
+                      <label class="text-xs font-medium text-gray-500 uppercase">{{
+                        t('reservationDetail.fullName')
+                      }}</label>
                       <p class="text-sm font-semibold text-gray-900 mt-1">
                         {{ guestInfo?.nombre || t('reservationDetail.notAvailable') }}
                       </p>
@@ -407,7 +408,10 @@
                     <p class="text-lg font-bold mt-1" [ngClass]="getPaymentAmountClass(p.estado)">
                       {{ formatCurrency(p.total) }}
                     </p>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1" [ngClass]="getPaymentBadgeClass(p.estado)">
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1"
+                      [ngClass]="getPaymentBadgeClass(p.estado)"
+                    >
                       <i class="mr-1" [ngClass]="getPaymentBadgeIcon(p.estado)"></i>
                       {{ getPaymentBadgeText(p.estado) }}
                     </span>
@@ -437,7 +441,9 @@
                   </p>
                 </div>
                 <div class="flex items-center justify-between">
-                  <p class="text-sm text-gray-700">{{ t('reservationDetail.discountEarlyReservation') }}</p>
+                  <p class="text-sm text-gray-700">
+                    {{ t('reservationDetail.discountEarlyReservation') }}
+                  </p>
                   <p class="text-sm font-medium text-red-600">
                     -{{ formatCurrency(detail.price_breakdown.discount) }}
                   </p>
@@ -450,7 +456,9 @@
                 </div>
                 <div class="pt-3 border-t-2 border-gray-300">
                   <div class="flex items-center justify-between">
-                    <p class="text-base font-bold text-gray-900">{{ t('reservationDetail.totalAmount') }}</p>
+                    <p class="text-base font-bold text-gray-900">
+                      {{ t('reservationDetail.totalAmount') }}
+                    </p>
                     <p class="text-xl font-bold text-primary-600">
                       {{ formatCurrency(getCalculatedTotal()) }}
                     </p>
@@ -560,7 +568,8 @@
         >
           <span *ngIf="!actionLoading">{{ t('reservationDetail.confirmAction') }}</span>
           <span *ngIf="actionLoading"
-            ><i class="fas fa-spinner fa-spin mr-1"></i>{{ t('reservationDetail.processing') }}</span
+            ><i class="fas fa-spinner fa-spin mr-1"></i
+            >{{ t('reservationDetail.processing') }}</span
           >
         </button>
       </div>

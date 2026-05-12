@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  NgZone,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subject, catchError, filter, finalize, forkJoin, of, takeUntil } from 'rxjs';
@@ -9,7 +16,10 @@ import {
   ReservationItem,
   ReservationStats,
 } from '../../../../core/models/reservations.models';
-import { RevenueDailyRow, RevenueReportSummary } from '../../../../core/models/revenue-reports.models';
+import {
+  RevenueDailyRow,
+  RevenueReportSummary,
+} from '../../../../core/models/revenue-reports.models';
 import { AuthService } from '../../../../core/services/auth.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { ReservationsService } from '../../../../core/services/reservations.service';
@@ -240,7 +250,10 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
   private bindDashboardResponse(response: ReservationDashboardResponse): void {
     this.stats = response.stats;
     this.totalReservations = response.total;
-    this.occupancyRate = this.calculateRate(response.stats.confirmadas + response.stats.completadas, response.stats.total);
+    this.occupancyRate = this.calculateRate(
+      response.stats.confirmadas + response.stats.completadas,
+      response.stats.total,
+    );
     this.confirmedRate = this.calculateRate(response.stats.confirmadas, response.stats.total);
     this.completedRate = this.calculateRate(response.stats.completadas, response.stats.total);
     this.recentReservations = response.reservations.map((reservation, index) =>

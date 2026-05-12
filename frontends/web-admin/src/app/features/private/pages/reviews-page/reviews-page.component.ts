@@ -77,8 +77,8 @@ export class ReviewsPageComponent implements OnInit {
 
   private loadHotels(): void {
     this.loadingHotels = true;
-     this.rateManagementService.getMisHoteles().subscribe({
-       next: (hotels: Hotel[]) => {
+    this.rateManagementService.getMisHoteles().subscribe({
+      next: (hotels: Hotel[]) => {
         this.hotels = hotels;
         this.loadingHotels = false;
         this.cdr.markForCheck();

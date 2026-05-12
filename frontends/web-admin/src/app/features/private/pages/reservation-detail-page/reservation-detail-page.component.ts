@@ -42,7 +42,6 @@ export class ReservationDetailPageComponent implements OnInit {
   actionError: string | null = null;
   successMessage: string | null = null;
 
-
   confirmModalOpen = false;
   pendingAction: ReservationAction | null = null;
   reason = '';
@@ -57,12 +56,14 @@ export class ReservationDetailPageComponent implements OnInit {
     const isPaid = estado === 'pago recibido' || estado === 'completada';
     if (pagos.length > 0) return pagos;
     if (isPaid) {
-      return [{
-        id: 'virtual',
-        fecha_pago: this.detail.created_at,
-        total: this.getCalculatedTotal(),
-        estado: 'completado',
-      }];
+      return [
+        {
+          id: 'virtual',
+          fecha_pago: this.detail.created_at,
+          total: this.getCalculatedTotal(),
+          estado: 'completado',
+        },
+      ];
     }
     return [];
   }
@@ -263,7 +264,10 @@ export class ReservationDetailPageComponent implements OnInit {
       return 0;
     }
 
-    const remainingByDisplayedPayments = Math.max(this.getCalculatedTotal() - this.getTotalPaid(), 0);
+    const remainingByDisplayedPayments = Math.max(
+      this.getCalculatedTotal() - this.getTotalPaid(),
+      0,
+    );
     const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
 
     if ((this.detail?.price_breakdown?.total_pagado ?? 0) > 0) {
@@ -276,31 +280,58 @@ export class ReservationDetailPageComponent implements OnInit {
   getPaymentBackgroundClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
     if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-50';
-    if (estado === 'reembolsado' || estado === 'refund' || estado === 'refunded' || estado === 'devuelto') return 'bg-red-50';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'bg-red-50';
     if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-50';
     return 'bg-gray-50';
   }
 
   getPaymentAmountClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'text-success-600';
-    if (estado === 'reembolsado' || estado === 'refund' || estado === 'refunded' || estado === 'devuelto') return 'text-red-600';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'text-success-600';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'text-red-600';
     if (estado === 'pendiente' || estado === 'pending') return 'text-yellow-600';
     return 'text-gray-600';
   }
 
   getPaymentBadgeClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-100 text-success-800';
-    if (estado === 'reembolsado' || estado === 'refund' || estado === 'refunded' || estado === 'devuelto') return 'bg-red-100 text-red-800';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'bg-success-100 text-success-800';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'bg-red-100 text-red-800';
     if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-100 text-yellow-800';
     return 'bg-gray-100 text-gray-800';
   }
 
   getPaymentBadgeIcon(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'fas fa-check-circle';
-    if (estado === 'reembolsado' || estado === 'refund' || estado === 'refunded' || estado === 'devuelto') return 'fas fa-rotate-left';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'fas fa-check-circle';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'fas fa-rotate-left';
     if (estado === 'pendiente' || estado === 'pending') return 'fas fa-clock';
     return 'fas fa-info-circle';
   }
@@ -308,7 +339,13 @@ export class ReservationDetailPageComponent implements OnInit {
   getPaymentBadgeText(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
     if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'Paid';
-    if (estado === 'reembolsado' || estado === 'refund' || estado === 'refunded' || estado === 'devuelto') return 'Refunded';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'Refunded';
     if (estado === 'pendiente' || estado === 'pending') return 'Pending';
     return estado;
   }
@@ -539,7 +576,7 @@ export class ReservationDetailPageComponent implements OnInit {
       price_breakdown: {
         subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
         discount: 0,
-        impuestos_estimados: ((detail.price_breakdown?.subtotal_noches ?? 0) * 0.1),
+        impuestos_estimados: (detail.price_breakdown?.subtotal_noches ?? 0) * 0.1,
         total_pagado: detail.price_breakdown?.total_pagado ?? 0,
         balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
         detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
