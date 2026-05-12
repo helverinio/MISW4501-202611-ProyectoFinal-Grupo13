@@ -303,22 +303,34 @@ export default function MyReservationsScreen() {
     const today = new Date();
     const checkout = new Date(reserva.fecha_salida);
 
+    console.log('[resolveStatus] Reserva ID:', reserva.id);
+    console.log('[resolveStatus] Estado ID:', reserva.id_estado);
+    console.log('[resolveStatus] Estado nombre:', estado);
+    console.log('[resolveStatus] Normalized:', normalized);
+    console.log('[resolveStatus] Checkout date:', reserva.fecha_salida);
+    console.log('[resolveStatus] Today:', today.toDateString());
+
     if (normalized.includes('cancel')) {
+      console.log('[resolveStatus] Matched: cancelled');
       return 'cancelled';
     }
 
     if (checkout.getTime() < new Date(today.toDateString()).getTime()) {
+      console.log('[resolveStatus] Matched: completed (checkout in past)');
       return 'completed';
     }
 
     if (normalized.includes('pend')) {
+      console.log('[resolveStatus] Matched: pending');
       return 'pending';
     }
 
-    if (normalized.includes('checked') || normalized.includes('check-in') || normalized.includes('checkin')) {
+    if (normalized === 'checked-in' || normalized.includes('checked-in')) {
+      console.log('[resolveStatus] Matched: checked_in');
       return 'checked_in';
     }
 
+    console.log('[resolveStatus] Default: confirmed');
     return 'confirmed';
   };
 
@@ -624,6 +636,7 @@ export default function MyReservationsScreen() {
   };
 
   const renderReservationCard = (reservation: ReservationItemVm) => {
+    console.log('[renderReservationCard] Rendering reservation:', JSON.stringify(reservation, null, 2));
     const statusStyle = getStatusBadgeStyle(reservation.status);
 
     return (
