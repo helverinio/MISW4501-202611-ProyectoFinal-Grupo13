@@ -12,6 +12,21 @@ import {
   UpdateReservationStateResponse,
 } from '../models/reservations.models';
 
+export interface CreateNotificacionPayload {
+  fecha_notif?: string;
+  titulo: string;
+  id_reserva: string;
+  descripcion?: string;
+}
+
+export interface NotificacionResponse {
+  id: string;
+  fecha_notif: string;
+  titulo: string;
+  descripcion?: string | null;
+  id_reserva: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReservationsService {
   private readonly base = environment.apiBaseUrl;
@@ -49,6 +64,19 @@ export class ReservationsService {
     return this.http.put<UpdateReservationStateResponse>(
       `${this.base}/admin/reservas/${reservaId}/estado`,
       payload,
+    );
+  }
+
+  createNotificacion(payload: CreateNotificacionPayload): Observable<NotificacionResponse> {
+    return this.http.post<NotificacionResponse>(`${this.base}/notificaciones`, payload);
+  }
+
+  getNotificacionesByReservaAndType(
+    reservaId: string,
+    notificationType: string,
+  ): Observable<NotificacionResponse[]> {
+    return this.http.get<NotificacionResponse[]>(
+      `${this.base}/reservas/${reservaId}/notificaciones?tipo=${notificationType}`,
     );
   }
 }

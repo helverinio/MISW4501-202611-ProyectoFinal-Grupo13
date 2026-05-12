@@ -28,6 +28,7 @@ const customAxios = axios.create({
 });
 
 export const extPaymentsAxios = axios.create({
+  
   baseURL: extPaymentsBaseUrl,
 });
 

@@ -51,3 +51,10 @@ def update_reserva_estado(reserva_id):
     data = request.get_json() or {}
     result = get_service().update_reserva_estado(reserva_id, data)
     return jsonify(result['data']), result['status_code']
+
+
+@api_v1_bp.route('/admin/reviews', methods=['GET'])
+def get_admin_reviews():
+    params = request.args.to_dict()
+    result = get_service().get_admin_reviews(params=params or None)
+    return jsonify(result['data']), result['status_code']

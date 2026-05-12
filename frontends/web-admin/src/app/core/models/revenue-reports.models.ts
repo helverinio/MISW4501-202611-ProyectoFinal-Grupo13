@@ -44,4 +44,6 @@ export interface RevenueReportParams {
   month?: number;
   year?: number;
   hotel_id?: string;
+  fecha_desde?: string;
+  fecha_hasta?: string;
 }

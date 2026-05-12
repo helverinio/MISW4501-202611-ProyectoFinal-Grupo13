@@ -219,6 +219,11 @@ crash.log
 # Terraform lock: keep versioned for reproducible provider resolution
 .terraform.lock.hcl
 
+# Firebase service account keys
+firebase-service-account.json
+google-services.json
+GoogleService-Info.plist
+
 # Mobile App (Expo/React Native)
 node_modules/
 .expo/

@@ -12,6 +12,10 @@ from app.infrastructure.services.auth_service import (
     init_usuarios_auth_service,
     get_usuarios_auth_service
 )
+from app.infrastructure.services.push_notification_service import (
+    PushNotificationService,
+    init_firebase
+)
 
 __all__ = [
     'PagosService',
@@ -23,5 +27,7 @@ __all__ = [
     'with_room_lock',
     'UsuariosAuthService',
     'init_usuarios_auth_service',
-    'get_usuarios_auth_service'
+    'get_usuarios_auth_service',
+    'PushNotificationService',
+    'init_firebase'
 ]
