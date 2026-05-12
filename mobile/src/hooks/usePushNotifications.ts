@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUserStore } from '@/store/userStore';
@@ -23,7 +24,9 @@ export function usePushNotifications() {
 
   useEffect(() => {
     // Register for push notifications when user is available
+    console.log('[PUSH] usePushNotifications useEffect fired, user?.id:', user?.id);
     if (user?.id) {
+      Alert.alert('[PUSH] Hook', `User logged in: ${user.id.substring(0, 8)}... Initializing push...`);
       initializePushNotifications(user.id);
     }
 

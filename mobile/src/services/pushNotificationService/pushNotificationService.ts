@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import customAxios from '@/utils/api';
 
 // Configure how notifications are presented when the app is in foreground
@@ -18,23 +18,28 @@ Notifications.setNotificationHandler({
  * On Android, also creates a default notification channel.
  */
 export async function registerForPushNotificationsAsync(): Promise<string | null> {
+  console.log('[PUSH] Starting registration... isDevice:', Device.isDevice);
+
   if (!Device.isDevice) {
-    console.warn('[PUSH] Push notifications require a physical device');
+    Alert.alert('[PUSH] Debug', 'Push notifications require a physical device');
     return null;
   }
 
   // Check existing permissions
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
+  console.log('[PUSH] Existing permission status:', existingStatus);
 
   // Request permissions if not already granted
   if (existingStatus !== 'granted') {
+    console.log('[PUSH] Requesting permissions...');
     const { status } = await Notifications.requestPermissionsAsync();
     finalStatus = status;
+    console.log('[PUSH] Permission result:', status);
   }
 
   if (finalStatus !== 'granted') {
-    console.warn('[PUSH] Permission not granted for push notifications');
+    Alert.alert('[PUSH] Debug', `Permission not granted. Status: ${finalStatus}`);
     return null;
   }
 
@@ -51,12 +56,15 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   // Get the FCM token via Expo's push notification token
   try {
     const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    console.log('[PUSH] Getting token with projectId:', projectId);
     const tokenData = await Notifications.getExpoPushTokenAsync({
       projectId,
     });
     console.log('[PUSH] Expo push token:', tokenData.data);
+    Alert.alert('[PUSH] Debug', `Token: ${tokenData.data.substring(0, 30)}...`);
     return tokenData.data;
-  } catch (error) {
+  } catch (error: any) {
+    Alert.alert('[PUSH] Debug Error', `Failed to get token: ${error.message}`);
     console.error('[PUSH] Error getting push token:', error);
     return null;
   }
