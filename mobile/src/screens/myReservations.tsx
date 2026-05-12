@@ -380,7 +380,7 @@ export default function MyReservationsScreen() {
     return reservations.filter((reservation) => {
       if (activeTab === 'upcoming') {
         return (
-          reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'checked_in'
+          reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'checked_in' || reservation.status === 'paid'
         );
       }
       if (activeTab === 'past') {
