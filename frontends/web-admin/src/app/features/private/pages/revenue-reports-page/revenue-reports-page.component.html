@@ -130,22 +130,7 @@
             </h1>
             <p class="text-gray-600 text-sm">{{ t('revenue.subtitle') }}</p>
           </div>
-          <div class="mt-4 sm:mt-0 flex items-center space-x-3">
-            <button
-              class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-              type="button"
-            >
-              <i class="fas fa-file-pdf mr-2 text-red-600"></i>
-              {{ t('revenue.exportPdf') }}
-            </button>
-            <button
-              class="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors"
-              type="button"
-            >
-              <i class="fas fa-file-excel mr-2"></i>
-              {{ t('revenue.exportExcel') }}
-            </button>
-          </div>
+
         </div>
       </div>
 
@@ -337,26 +322,7 @@
             </h3>
             <p class="text-sm text-gray-600">{{ t('revenue.chart.dailyTrendSubtitle') }}</p>
           </div>
-          <div class="mt-4 sm:mt-0 flex items-center space-x-2">
-            <button
-              class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-xs font-medium"
-              type="button"
-            >
-              {{ t('revenue.chart.btnMonth') }}
-            </button>
-            <button
-              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
-              type="button"
-            >
-              {{ t('revenue.chart.btnGross') }}
-            </button>
-            <button
-              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
-              type="button"
-            >
-              {{ t('revenue.chart.btnNet') }}
-            </button>
-          </div>
+
         </div>
         <div id="monthly-revenue-chart" style="height: 400px"></div>
       </div>
