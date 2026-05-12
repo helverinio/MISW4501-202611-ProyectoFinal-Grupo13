@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -45,6 +46,16 @@ export class LoginPageComponent {
   protected readonly signupSubmitted = signal(false);
   protected readonly signupErrorMessage = signal('');
   protected readonly signupSuccessMessage = signal('');
+  protected readonly showSignupPassword = signal(false);
+  protected readonly showConfirmPassword = signal(false);
+
+  protected toggleSignupPassword(): void {
+    this.showSignupPassword.update((v) => !v);
+  }
+
+  protected toggleConfirmPassword(): void {
+    this.showConfirmPassword.update((v) => !v);
+  }
 
   protected readonly signupForm = this.fb.nonNullable.group({
     firstName: ['', [Validators.required]],
@@ -64,6 +75,17 @@ export class LoginPageComponent {
     termsAccepted: [false, [Validators.requiredTrue]],
     marketingAccepted: [false],
   });
+
+  private readonly passwordValue = toSignal(this.signupForm.controls.password.valueChanges, {
+    initialValue: '',
+  });
+
+  protected readonly pwHasLength = computed(() => this.passwordValue().length >= 8);
+  protected readonly pwHasNumber = computed(() => /\d/.test(this.passwordValue()));
+  protected readonly pwHasLetter = computed(() => /[A-Za-z]/.test(this.passwordValue()));
+  protected readonly pwStrength = computed(
+    () => [this.pwHasLength(), this.pwHasNumber(), this.pwHasLetter()].filter(Boolean).length,
+  );
 
   protected setTab(tab: 'signin' | 'signup'): void {
     this.activeTab.set(tab);
