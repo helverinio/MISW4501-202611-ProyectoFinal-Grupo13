@@ -1,9 +1,10 @@
 from flask import request, jsonify, current_app
 from datetime import datetime, date
-import io, base64, json
+import io, base64, json, uuid
 import qrcode
 from app.api.v1 import api_v1_bp
 from app.api.v1.auth import require_token
+from app import db
 from app.application.use_cases import (
     CreateReservaUseCase, GetReservaUseCase, GetAllReservasUseCase,
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
@@ -19,6 +20,7 @@ from app.infrastructure.repositories import (
     SQLAlchemyPricingRepository,
 )
 from app.infrastructure.services import PagosService, get_redis_lock_service, RedisLockAcquisitionError
+from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 from app.domain.entities.estado import Estado
 
@@ -53,6 +55,32 @@ def parse_datetime(date_str):
         return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
     except ValueError:
         return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+
+
+def _ensure_completed_payment_record(reserva, amount):
+    existing_payment = (
+        PagoModel.query
+        .filter(
+            PagoModel.id_reserva == reserva.id,
+            db.func.lower(PagoModel.estado).in_(['completado', 'pagado', 'paid']),
+        )
+        .order_by(PagoModel.fecha_pago.desc())
+        .first()
+    )
+
+    if existing_payment:
+        return existing_payment
+
+    payment = PagoModel(
+        id=str(uuid.uuid4()),
+        fecha_pago=datetime.utcnow(),
+        total=amount,
+        estado='completado',
+        id_pais=reserva.id_pais,
+        id_reserva=reserva.id,
+    )
+    db.session.add(payment)
+    return payment
 
 
 @api_v1_bp.route('/reservas', methods=['POST'])
@@ -622,6 +650,8 @@ def payment_webhook():
     if not reserva:
         current_app.logger.error(f"[RESERVAS] Reservation {reservation_id} not found")
         return jsonify({'error': 'Reservation not found'}), 404
+
+    _ensure_completed_payment_record(reserva, amount or reserva.total)
     
     reserva.id_estado = estado.id
     reserva_repo.update(reserva)

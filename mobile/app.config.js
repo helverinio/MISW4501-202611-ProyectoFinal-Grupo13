@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "travel-hub",
     slug: "travel-hub",
-    version: "0.2.1",
+    version: "0.3.1",
     orientation: "portrait",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
@@ -16,7 +16,8 @@ export default {
       supportsTablet: true
     },
     android: {
-      package: "com.travelhub.app"
+      package: "com.travelhub.app",
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || "./google-services.json"
     },
     web: {
       bundler: "metro",
