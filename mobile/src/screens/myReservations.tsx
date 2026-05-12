@@ -609,6 +609,8 @@ export default function MyReservationsScreen() {
         return { backgroundColor: '#FEF3C7', color: '#D97706' };
       case 'cancelled':
         return { backgroundColor: '#FEE2E2', color: '#DC2626' };
+      case 'paid':
+        return { backgroundColor: '#FEF3C7', color: '#D97706' };
       default:
         return { backgroundColor: '#F1F5F9', color: '#64748B' };
     }
