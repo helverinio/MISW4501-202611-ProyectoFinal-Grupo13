@@ -22,8 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    canActivate: [authGuard],
-    component: DashboardPageComponent,
+    redirectTo: 'revenue-reports',
   },
   {
     path: 'room-rate-management',

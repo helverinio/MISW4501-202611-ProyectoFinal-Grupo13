@@ -132,7 +132,6 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
   private loadDashboardData(): void {
     const requestedPeriod = this.selectedPeriod;
     const { fechaDesde, fechaHasta } = this.getDateRange(this.selectedPeriod);
-    const today = new Date();
     const currentRequest = ++this.requestSequence;
     this.loading = true;
     this.errorMessage = null;
@@ -148,8 +147,8 @@ export class DashboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
         .pipe(catchError(() => of<ReservationDashboardResponse | null>(null))),
       revenue: this.revenueReportsService
         .getRevenueReport({
-          month: today.getMonth() + 1,
-          year: today.getFullYear(),
+          fecha_desde: fechaDesde,
+          fecha_hasta: fechaHasta,
         })
         .pipe(catchError(() => of(null))),
     })

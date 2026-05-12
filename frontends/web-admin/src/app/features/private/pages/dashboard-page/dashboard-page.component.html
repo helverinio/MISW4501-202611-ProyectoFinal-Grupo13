@@ -82,13 +82,6 @@
     <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
       <nav class="p-4 space-y-1">
         <a
-          href="#"
-          class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
-        >
-          <i class="fas fa-chart-line w-5 mr-3"></i>
-          {{ t('sidebar.dashboard') }}
-        </a>
-        <a
           [routerLink]="['/reservations']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
@@ -191,7 +184,6 @@
             {{ t('dashboard.kpi.monthlyRevenue') }}
           </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">{{ formatCurrency(revenueSummary.gross_revenue) }}</p>
-          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.fromLastMonthRevenue') }}</p>
         </div>
 
         <div
@@ -210,7 +202,6 @@
             {{ t('dashboard.kpi.occupancyRate') }}
           </h3>
           <p class="text-3xl font-bold text-gray-900 mb-1">{{ occupancyRate | number: '1.0-1' }}%</p>
-          <p class="text-xs text-gray-500">{{ t('dashboard.kpi.aboveAverage') }}</p>
         </div>
 
         <div

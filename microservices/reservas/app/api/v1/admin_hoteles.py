@@ -202,6 +202,24 @@ def _build_daily_rows(year, month):
     return rows
 
 
+def _build_range_daily_rows(start: date, end: date) -> list:
+    """Build a zero-filled list of daily rows for a date range [start, end] inclusive."""
+    rows = []
+    current = start
+    while current <= end:
+        rows.append({
+            'date': current.isoformat(),
+            'bookings_count': 0,
+            'gross_revenue': 0.0,
+            'travelhub_commission': 0.0,
+            'net_revenue': 0.0,
+        })
+        current = date(current.year, current.month, current.day + 1) if current.day < calendar.monthrange(current.year, current.month)[1] else (
+            date(current.year, current.month + 1, 1) if current.month < 12 else date(current.year + 1, 1, 1)
+        )
+    return rows
+
+
 @api_v1_bp.route('/admin/revenue-report', methods=['GET'])
 @require_token
 def get_admin_revenue_report(current_usuario=None):
@@ -210,8 +228,29 @@ def get_admin_revenue_report(current_usuario=None):
         return err
 
     id_usuario = current_usuario['id']
-    year, month = _parse_revenue_period()
     hotel_id = request.args.get('hotel_id', '').strip() or None
+
+    # ── Parse optional date-range params (take priority over month/year) ─────
+    def _parse_date_param(name):
+        val = request.args.get(name, '').strip()
+        if not val:
+            return None
+        try:
+            return date.fromisoformat(val)
+        except ValueError:
+            return None
+
+    fecha_desde = _parse_date_param('fecha_desde')
+    fecha_hasta = _parse_date_param('fecha_hasta')
+
+    # Fall back to month/year when no explicit range is given
+    if fecha_desde and fecha_hasta:
+        use_range = True
+        range_start = fecha_desde
+        range_end = fecha_hasta
+    else:
+        use_range = False
+        year, month = _parse_revenue_period()
 
     hotel_rows = (
         db.session.query(AdminHotelModel, HotelModel)
@@ -221,71 +260,63 @@ def get_admin_revenue_report(current_usuario=None):
     )
 
     authorized_hotels = [
-        {
-            'id': hotel.id,
-            'nombre': hotel.nombre,
-        }
+        {'id': hotel.id, 'nombre': hotel.nombre}
         for _, hotel in hotel_rows
     ]
     hotel_ids = [hotel['id'] for hotel in authorized_hotels]
 
+    commission_percentage = float(
+        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
+    )
+
     if not hotel_ids:
+        empty_rows = _build_range_daily_rows(range_start, range_end) if use_range else _build_daily_rows(year, month)
         return jsonify({
-            'period': {
-                'year': year,
-                'month': month,
-                'month_label': date(year, month, 1).strftime('%B %Y'),
-            },
-            'scope': {
-                'hotel_id': hotel_id,
-                'is_consolidated': True,
-            },
-            'commission_percentage': current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0),
+            'commission_percentage': commission_percentage,
             'authorized_hotels': [],
-            'daily_rows': _build_daily_rows(year, month),
-            'summary': {
-                'total_bookings': 0,
-                'gross_revenue': 0.0,
-                'travelhub_commission': 0.0,
-                'net_revenue': 0.0,
-            },
+            'daily_rows': empty_rows,
+            'summary': {'total_bookings': 0, 'gross_revenue': 0.0, 'travelhub_commission': 0.0, 'net_revenue': 0.0},
         }), 200
 
     if hotel_id and hotel_id not in hotel_ids:
         return jsonify({'error': 'Hotel not authorized for current admin'}), 403
 
     scoped_hotel_ids = [hotel_id] if hotel_id else hotel_ids
-    commission_percentage = float(
-        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
-    )
-
-    month_start = datetime(year, month, 1)
-    if month == 12:
-        month_end = datetime(year + 1, 1, 1)
-    else:
-        month_end = datetime(year, month + 1, 1)
-
     included_statuses = ['pendiente', 'confirmada', 'completada']
+
+    # ── Build date filter ─────────────────────────────────────────────────────
+    if use_range:
+        range_start_dt = datetime(range_start.year, range_start.month, range_start.day)
+        range_end_dt = datetime(range_end.year, range_end.month, range_end.day, 23, 59, 59)
+        date_filter_start = range_start_dt
+        date_filter_end = range_end_dt
+    else:
+        date_filter_start = datetime(year, month, 1)
+        date_filter_end = datetime(year + 1, 1, 1) if month == 12 else datetime(year, month + 1, 1)
+
+    # Only count reservations that have a confirmed payment (money actually received)
+    paid_statuses = [s.lower() for s in PAID_PAYMENT_STATUSES]
 
     rows = (
         db.session.query(
             db.func.date(ReservaModel.created_at).label('report_date'),
             db.func.count(ReservaModel.id).label('bookings_count'),
-            db.func.coalesce(db.func.sum(ReservaModel.total), 0.0).label('gross_revenue'),
+            db.func.coalesce(db.func.sum(PagoModel.total), 0.0).label('gross_revenue'),
         )
         .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
         .join(EstadoModel, ReservaModel.id_estado == EstadoModel.id)
+        .join(PagoModel, PagoModel.id_reserva == ReservaModel.id)
         .filter(HabitacionModel.id_hotel.in_(scoped_hotel_ids))
         .filter(ReservaModel.created_at.isnot(None))
-        .filter(ReservaModel.created_at >= month_start)
-        .filter(ReservaModel.created_at < month_end)
-        .filter(db.func.lower(EstadoModel.nombre).in_(included_statuses))
+        .filter(ReservaModel.created_at >= date_filter_start)
+        .filter(ReservaModel.created_at <= date_filter_end)
+        .filter(db.func.lower(PagoModel.estado).in_(paid_statuses))
         .group_by(db.func.date(ReservaModel.created_at))
         .order_by(db.func.date(ReservaModel.created_at))
         .all()
     )
 
-    daily_rows = _build_daily_rows(year, month)
+    daily_rows = _build_range_daily_rows(range_start, range_end) if use_range else _build_daily_rows(year, month)
     daily_rows_by_date = {row['date']: row for row in daily_rows}
 
     for row in rows:
@@ -306,11 +337,17 @@ def get_admin_revenue_report(current_usuario=None):
 
     selected_hotel = next((hotel for hotel in authorized_hotels if hotel['id'] == hotel_id), None)
 
+    period_label = (
+        f"{range_start.isoformat()} – {range_end.isoformat()}"
+        if use_range
+        else date(year, month, 1).strftime('%B %Y')
+    )
+
     return jsonify({
         'period': {
-            'year': year,
-            'month': month,
-            'month_label': date(year, month, 1).strftime('%B %Y'),
+            'year': range_start.year if use_range else year,
+            'month': range_start.month if use_range else month,
+            'month_label': period_label,
         },
         'scope': {
             'hotel_id': hotel_id,
@@ -495,12 +532,18 @@ def get_dashboard_reservas(current_usuario=None):
         )
 
     # ── Aggregate stats from the same filtered dataset shown in dashboard
+    # Use a subquery to guarantee the same WHERE/JOIN conditions are preserved.
+    filtered_subq = base_q.with_entities(
+        ReservaModel.id.label('id'),
+        EstadoModel.nombre.label('nombre'),
+    ).subquery()
+
     stats_q = (
-        base_q.with_entities(
-            EstadoModel.nombre,
-            db.func.count(ReservaModel.id).label('count'),
+        db.session.query(
+            filtered_subq.c.nombre,
+            db.func.count(filtered_subq.c.id).label('count'),
         )
-        .group_by(EstadoModel.nombre)
+        .group_by(filtered_subq.c.nombre)
         .all()
     )
 
