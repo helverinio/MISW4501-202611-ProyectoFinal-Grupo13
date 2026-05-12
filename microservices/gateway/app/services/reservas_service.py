@@ -306,6 +306,9 @@ class ReservasService:
     def update_reserva_estado(self, reserva_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('PUT', f'admin/reservas/{reserva_id}/estado', data)
 
+    def get_admin_reviews(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/reviews', params=params)
+
     # Tipos habitacion
     def get_tipos_habitacion_by_hotel(self, hotel_id: str) -> Dict[str, Any]:
         return self._request('GET', f'hoteles/{hotel_id}/tipos-habitacion')
