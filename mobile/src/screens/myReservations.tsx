@@ -29,7 +29,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import OfflineBanner from '@/common/OfflineBanner';
 
 type ReservationTab = 'upcoming' | 'past' | 'cancelled';
-type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in';
+type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in' | 'paid';
 
 interface ReservationItemVm {
   id: string;
@@ -325,10 +325,21 @@ export default function MyReservationsScreen() {
       return 'pending';
     }
 
+    if (normalized === 'pago recibido' || normalized.includes('pago')) {
+      console.log('[resolveStatus] Matched: paid');
+      return 'paid';
+    }
+
+    if (normalized === 'confirmada' || normalized.includes('confirmada')) {
+      console.log('[resolveStatus] Matched: confirmed');
+      return 'confirmed';
+    }
+
     if (normalized === 'checked-in' || normalized.includes('checked-in')) {
       console.log('[resolveStatus] Matched: checked_in');
       return 'checked_in';
     }
+    
 
     console.log('[resolveStatus] Default: confirmed');
     return 'confirmed';
