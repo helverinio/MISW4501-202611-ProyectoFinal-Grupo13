@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { I18nextProvider } from 'react-i18next';
 import i18n, { loadSavedLanguage } from './i18n';
-import { usePushNotifications } from './hooks/usePushNotifications';
+// import { usePushNotifications } from './hooks/usePushNotifications';
 import { useUserStore } from './store/userStore';
 
 export default function RootLayout() {
@@ -21,8 +21,8 @@ export default function RootLayout() {
     }
   }, [user?.id]);
 
-  // Initialize push notifications (registers token when user is logged in)
-  usePushNotifications();
+  // Push notifications temporarily disabled for debugging
+  // usePushNotifications();
 
   return (
     <I18nextProvider i18n={i18n}>

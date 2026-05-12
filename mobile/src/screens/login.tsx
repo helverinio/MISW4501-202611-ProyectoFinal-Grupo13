@@ -163,6 +163,9 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container} testID="login-screen">
+      <Text style={{ backgroundColor: 'red', color: 'white', padding: 8, textAlign: 'center', fontWeight: 'bold' }}>
+        DEBUG BUILD v2 - Push Test
+      </Text>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
