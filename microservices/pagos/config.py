@@ -22,7 +22,7 @@ class Config:
     MQ_DLQ_TOPIC = os.environ.get('MQ_DLQ_TOPIC', '/topic/PaymentStatusUpdated.DLQ')
 
     # Reservas service URL for push notifications
-    RESERVAS_SERVICE_URL = os.environ.get('RESERVAS_SERVICE_URL', 'http://reservas:5004')
+    RESERVAS_SERVICE_URL = os.environ.get('RESERVAS_SERVICE_URL', 'http://reservas:5000')
 
 class DevelopmentConfig(Config):
     DEBUG = True
