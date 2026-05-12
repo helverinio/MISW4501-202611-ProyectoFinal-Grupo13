@@ -142,6 +142,7 @@ class PaymentStatusSubscriber:
 
     def _handle_payment_status_updated(self, message: dict):
         from app.infrastructure.repositories.sqlalchemy_payment_repository import SQLAlchemyPaymentRepository
+        import requests
         
         payment_intent_id = message.get('payment_intent_id')
         payment_status = message.get('status')
@@ -159,6 +160,58 @@ class PaymentStatusSubscriber:
             raise ValueError(f"Payment not found for intent: {payment_intent_id}")
         
         logger.info(f"[PAGOS] Updated payment {payment.id} to status '{payment_status}'")
+        
+        # Send push notification for the payment status change
+        self._send_payment_push_notification(payment, payment_status)
+
+    def _send_payment_push_notification(self, payment, status: str):
+        import requests
+        
+        status_titles = {
+            'completado': 'Pago Exitoso',
+            'fallido': 'Pago Fallido',
+            'reembolsado': 'Pago Reembolsado',
+        }
+        status_bodies = {
+            'completado': f'Tu pago de {payment.amount} {payment.currency} ha sido procesado exitosamente.',
+            'fallido': f'Tu pago de {payment.amount} {payment.currency} no pudo ser procesado.',
+            'reembolsado': f'Se ha reembolsado tu pago de {payment.amount} {payment.currency}.',
+        }
+        
+        title = status_titles.get(status, f'Actualización de Pago')
+        body = status_bodies.get(status, f'Tu pago ha cambiado a estado: {status}')
+        
+        try:
+            from flask import current_app
+            reservas_url = current_app.config.get('RESERVAS_SERVICE_URL', 'http://reservas:5004')
+            
+            payload = {
+                'reservation_id': payment.reservation_id,
+                'title': title,
+                'body': body,
+                'data': {
+                    'type': 'payment_status_updated',
+                    'payment_id': payment.id,
+                    'reservation_id': payment.reservation_id,
+                    'status': status,
+                    'amount': str(payment.amount),
+                    'currency': payment.currency,
+                }
+            }
+            
+            response = requests.post(
+                f'{reservas_url}/api/v1/push-notifications/send-to-reservation',
+                json=payload,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                logger.info(f"[PAGOS] Push notification sent for payment {payment.id}")
+            else:
+                logger.warning(f"[PAGOS] Push notification failed ({response.status_code}): {response.text}")
+                
+        except Exception as e:
+            logger.error(f"[PAGOS] Failed to send push notification: {str(e)}")
 
     def start(self):
         def run_subscriber():

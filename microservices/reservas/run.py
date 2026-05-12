@@ -99,6 +99,22 @@ with app.app_context():
         "CREATE INDEX IF NOT EXISTS ix_admin_hoteles_id_hotel "
         "ON admin_hoteles (id_hotel)"
     ))
+
+    # Push notifications: device_tokens table
+    db.session.execute(text(
+        "CREATE TABLE IF NOT EXISTS device_tokens ("
+        "id VARCHAR(36) PRIMARY KEY, "
+        "user_id VARCHAR(36) NOT NULL, "
+        "token TEXT NOT NULL UNIQUE, "
+        "platform VARCHAR(20) NOT NULL DEFAULT 'expo', "
+        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+        "updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+        ")"
+    ))
+    db.session.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_device_tokens_user_id "
+        "ON device_tokens (user_id)"
+    ))
     db.session.commit()
 
 if __name__ == '__main__':

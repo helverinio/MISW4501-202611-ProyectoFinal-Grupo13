@@ -356,3 +356,17 @@ class ReservasService:
 
     def delete_regla_tarifaria(self, regla_id: str) -> Dict[str, Any]:
         return self._request('DELETE', f'reglas-tarifarias/{regla_id}')
+
+    # Device Tokens (Push Notifications)
+    def register_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'device-tokens', data)
+
+    def unregister_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('DELETE', 'device-tokens', data)
+
+    # Push Notifications
+    def send_push_notification(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'push-notifications/send', data)
+
+    def send_push_notification_to_reservation(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'push-notifications/send-to-reservation', data)

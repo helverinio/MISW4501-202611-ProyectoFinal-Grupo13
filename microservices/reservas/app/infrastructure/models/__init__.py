@@ -18,3 +18,4 @@ from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.notificacion_model import NotificacionModel
 from app.infrastructure.models.room_hold_model import RoomHoldModel
 from app.infrastructure.models.admin_hotel_model import AdminHotelModel
+from app.infrastructure.models.device_token_model import DeviceTokenModel

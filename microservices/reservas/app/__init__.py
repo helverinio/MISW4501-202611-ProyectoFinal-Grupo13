@@ -85,5 +85,16 @@ def create_app(config_name='default'):
         
         return health_status
     
+    # Initialize Firebase for push notifications
+    try:
+        from app.infrastructure.services import init_firebase
+        init_firebase(
+            app.config.get('FIREBASE_CREDENTIALS_PATH'),
+            app.config.get('FIREBASE_CREDENTIALS_JSON')
+        )
+        logger.info("Firebase initialized for push notifications")
+    except Exception as e:
+        logger.warning(f"Could not initialize Firebase: {str(e)}")
+    
     logger.info("Reservas microservice started")
     return app
