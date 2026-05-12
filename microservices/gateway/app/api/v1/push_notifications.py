@@ -7,6 +7,12 @@ def get_service():
     return ReservasService(current_app.config['RESERVAS_SERVICE_URL'])
 
 
+@api_v1_bp.route('/device-tokens/<user_id>', methods=['GET'])
+def get_device_tokens(user_id):
+    result = get_service().get_device_tokens(user_id)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/device-tokens', methods=['POST'])
 def register_device_token():
     data = request.get_json()

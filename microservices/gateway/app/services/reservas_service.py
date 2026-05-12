@@ -358,6 +358,9 @@ class ReservasService:
         return self._request('DELETE', f'reglas-tarifarias/{regla_id}')
 
     # Device Tokens (Push Notifications)
+    def get_device_tokens(self, user_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'device-tokens/{user_id}')
+
     def register_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'device-tokens', data)
 
