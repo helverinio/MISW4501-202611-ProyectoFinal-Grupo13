@@ -509,6 +509,7 @@ def test_payment_webhook_completed_returns_200(client, monkeypatch):
     monkeypatch.setattr(reservas_api, "get_repository", lambda: FakeReservaRepository())
     monkeypatch.setattr(reservas_api, "PaymentStatusUpdatedEvent", FakeEventType)
     monkeypatch.setattr(reservas_api, "MessagePublisher", FakePublisherType)
+    monkeypatch.setattr(reservas_api, "_ensure_completed_payment_record", lambda *_args, **_kwargs: None)
 
     response = client.post(
         "/api/v1/payments/webhook",
