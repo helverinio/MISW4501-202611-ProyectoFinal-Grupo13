@@ -28,6 +28,7 @@ jobs:
       TF_VAR_emailjs_public_key: ${{ vars.EMAILJS_PUBLIC_KEY }}
       TF_VAR_emailjs_private_key: ${{ secrets.EMAILJS_PRIVATE_KEY }}
       TF_VAR_emailjs_verification_template_id: ${{ vars.EMAILJS_VERIFICATION_TEMPLATE_ID }}
+      TF_VAR_firebase_credentials_json: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
       TF_BACKEND_BUCKET: ${{ vars.TF_BACKEND_BUCKET }}
       TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY }}
       TF_BACKEND_DYNAMODB_TABLE: ${{ vars.TF_BACKEND_DYNAMODB_TABLE }}

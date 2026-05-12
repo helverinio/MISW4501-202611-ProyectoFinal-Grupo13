@@ -42,7 +42,8 @@
         { "name": "DATABASE_URL", "valueFrom": "__SECRET_ARN__:reservas_database_url::" },
         { "name": "MQ_USERNAME", "valueFrom": "__SECRET_ARN__:mq_username::" },
         { "name": "MQ_PASSWORD", "valueFrom": "__SECRET_ARN__:mq_password::" },
-        { "name": "SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" }
+        { "name": "SECRET_KEY", "valueFrom": "__SECRET_ARN__:secret_key::" },
+        { "name": "FIREBASE_CREDENTIALS_JSON", "valueFrom": "__SECRET_ARN__:firebase_credentials_json::" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
