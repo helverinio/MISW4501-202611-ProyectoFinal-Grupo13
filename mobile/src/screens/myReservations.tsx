@@ -29,7 +29,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import OfflineBanner from '@/common/OfflineBanner';
 
 type ReservationTab = 'upcoming' | 'past' | 'cancelled';
-type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in';
+type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'checked_in' | 'paid';
 
 interface ReservationItemVm {
   id: string;
@@ -325,10 +325,21 @@ export default function MyReservationsScreen() {
       return 'pending';
     }
 
+    if (normalized === 'pago recibido' || normalized.includes('pago')) {
+      console.log('[resolveStatus] Matched: paid');
+      return 'paid';
+    }
+
+    if (normalized === 'confirmada' || normalized.includes('confirmada')) {
+      console.log('[resolveStatus] Matched: confirmed');
+      return 'confirmed';
+    }
+
     if (normalized === 'checked-in' || normalized.includes('checked-in')) {
       console.log('[resolveStatus] Matched: checked_in');
       return 'checked_in';
     }
+    
 
     console.log('[resolveStatus] Default: confirmed');
     return 'confirmed';
@@ -369,7 +380,7 @@ export default function MyReservationsScreen() {
     return reservations.filter((reservation) => {
       if (activeTab === 'upcoming') {
         return (
-          reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'checked_in'
+          reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'checked_in' || reservation.status === 'paid'
         );
       }
       if (activeTab === 'past') {
@@ -598,6 +609,8 @@ export default function MyReservationsScreen() {
         return { backgroundColor: '#FEF3C7', color: '#D97706' };
       case 'cancelled':
         return { backgroundColor: '#FEE2E2', color: '#DC2626' };
+      case 'paid':
+        return { backgroundColor: '#FEF3C7', color: '#D97706' };
       default:
         return { backgroundColor: '#F1F5F9', color: '#64748B' };
     }
@@ -738,6 +751,45 @@ export default function MyReservationsScreen() {
                 </Text>
               </TouchableOpacity>
             </>
+          ) : reservation.status === 'paid' ? (
+            <>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                onPress={() => handleViewDetails(reservation)}
+              >
+                <Text style={styles.primaryButtonText}>
+                  {t('myReservations.viewDetails')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.secondaryButton, isOffline && styles.disabledButton]}
+                onPress={() => handleModify(reservation)}
+                disabled={isOffline}
+              >
+                <Text
+                  style={[
+                    styles.secondaryButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
+                  {t('myReservations.modify')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.cancelButton, isOffline && styles.disabledButton]}
+                onPress={() => handleCancel(reservation)}
+                disabled={isOffline}
+              >
+                <Text
+                  style={[
+                    styles.cancelButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
+                  {t('myReservations.cancel')}
+                </Text>
+              </TouchableOpacity>
+            </>
           ) : reservation.status === 'confirmed' ? (
             <>
               {isCheckinWindowOpen(reservation) ? (
@@ -777,6 +829,20 @@ export default function MyReservationsScreen() {
                   ]}
                 >
                   {t('myReservations.modify')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.cancelButton, isOffline && styles.disabledButton]}
+                onPress={() => handleCancel(reservation)}
+                disabled={isOffline}
+              >
+                <Text
+                  style={[
+                    styles.cancelButtonText,
+                    isOffline && styles.disabledButtonText,
+                  ]}
+                >
+                  {t('myReservations.cancel')}
                 </Text>
               </TouchableOpacity>
             </>

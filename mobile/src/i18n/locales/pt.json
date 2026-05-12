@@ -177,5 +177,17 @@
     "currency": "USD",
     "qrCheckin": "Check-in com QR",
     "checkedInStatus": "Checked-in"
+  },
+  "pushNotifications": {
+    "paymentSuccessTitle": "Pagamento Bem-sucedido",
+    "paymentSuccessBody": "Seu pagamento foi processado com sucesso.",
+    "paymentFailedTitle": "Pagamento Falhou",
+    "paymentFailedBody": "Não foi possível processar seu pagamento.",
+    "paymentRefundedTitle": "Pagamento Reembolsado",
+    "paymentRefundedBody": "Seu pagamento foi reembolsado.",
+    "paymentUpdateTitle": "Atualização de Pagamento",
+    "paymentUpdateBody": "O status do seu pagamento foi alterado.",
+    "permissionRequired": "Permissão de notificação necessária",
+    "permissionMessage": "Ative as notificações para receber atualizações sobre suas reservas e pagamentos."
   }
 }
