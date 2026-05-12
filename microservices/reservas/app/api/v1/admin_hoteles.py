@@ -13,6 +13,13 @@ from app.infrastructure.models.estado_model import EstadoModel
 from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetalleTarifaModel
 from app.infrastructure.messaging import MessagePublisher, ReservationStateChangedEvent
+from app.infrastructure.repositories.sqlalchemy_comentario_hotel_repository import SQLAlchemyComentarioHotelRepository
+from app.application.use_cases.admin_review_use_cases import ListAdminReviewsUseCase
+
+
+PAID_PAYMENT_STATUSES = {'completado', 'pagado', 'paid'}
+REFUND_PAYMENT_STATUSES = {'reembolsado', 'refund', 'refunded', 'devuelto'}
+REVIEWABLE_ADMIN_STATES = {'pendiente', 'pago recibido'}
 
 
 def _require_admin(current_usuario):
@@ -21,10 +28,54 @@ def _require_admin(current_usuario):
     return None
 
 
+def _normalize_name(value):
+    return (value or '').strip().lower()
+
+
+def _is_paid_payment_status(status):
+    return _normalize_name(status) in PAID_PAYMENT_STATUSES
+
+
+def _is_refund_payment_status(status):
+    return _normalize_name(status) in REFUND_PAYMENT_STATUSES
+
+
+def _calculate_payment_net(pagos):
+    return round(
+        sum(
+            (p.total or 0.0)
+            for p in pagos
+            if _is_paid_payment_status(p.estado) or _is_refund_payment_status(p.estado)
+        ),
+        2,
+    )
+
+
+def _has_effective_payment(pagos):
+    return _calculate_payment_net(pagos) > 0
+
+
+def _create_virtual_refund_if_needed(reserva, pagos):
+    net_paid = _calculate_payment_net(pagos)
+    if net_paid <= 0:
+        return None
+
+    refund = PagoModel(
+        id=str(uuid.uuid4()),
+        fecha_pago=datetime.utcnow(),
+        total=-net_paid,
+        estado='reembolsado',
+        id_pais=reserva.id_pais,
+        id_reserva=reserva.id,
+    )
+    db.session.add(refund)
+    return refund
+
+
 def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, detalle_tarifa):
     subtotal_noches = sum((d.subtotal_noche or 0.0) for d in detalle_tarifa)
     impuestos_estimados = max((reserva.total or 0.0) - subtotal_noches, 0.0)
-    total_pagado = sum((p.total or 0.0) for p in pagos if (p.estado or '').lower() in ['completado', 'pagado', 'paid'])
+    total_pagado = max(_calculate_payment_net(pagos), 0.0)
 
     timeline = [{
         'type': 'created',
@@ -36,7 +87,7 @@ def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, d
     for pago in pagos:
         timeline.append({
             'type': 'payment',
-            'title': 'Payment Registered',
+            'title': 'Refund Registered' if _is_refund_payment_status(pago.estado) or (pago.total or 0.0) < 0 else 'Payment Registered',
             'at': pago.fecha_pago.isoformat() if pago.fecha_pago else None,
             'description': f"Payment status: {pago.estado}",
             'amount': pago.total,
@@ -97,7 +148,7 @@ def _serialize_admin_reserva_detail(reserva, habitacion, hotel, estado, pagos, d
             'subtotal_noches': subtotal_noches,
             'impuestos_estimados': impuestos_estimados,
             'total_pagado': total_pagado,
-            'balance_pendiente': max((reserva.total or 0.0) - total_pagado, 0.0),
+            'balance_pendiente': 0.0 if _normalize_name(estado.nombre) == 'rechazada' else max((reserva.total or 0.0) - total_pagado, 0.0),
             'detalle_noches': [
                 {
                     'fecha_noche': d.fecha_noche.isoformat() if d.fecha_noche else None,
@@ -151,6 +202,24 @@ def _build_daily_rows(year, month):
     return rows
 
 
+def _build_range_daily_rows(start: date, end: date) -> list:
+    """Build a zero-filled list of daily rows for a date range [start, end] inclusive."""
+    rows = []
+    current = start
+    while current <= end:
+        rows.append({
+            'date': current.isoformat(),
+            'bookings_count': 0,
+            'gross_revenue': 0.0,
+            'travelhub_commission': 0.0,
+            'net_revenue': 0.0,
+        })
+        current = date(current.year, current.month, current.day + 1) if current.day < calendar.monthrange(current.year, current.month)[1] else (
+            date(current.year, current.month + 1, 1) if current.month < 12 else date(current.year + 1, 1, 1)
+        )
+    return rows
+
+
 @api_v1_bp.route('/admin/revenue-report', methods=['GET'])
 @require_token
 def get_admin_revenue_report(current_usuario=None):
@@ -159,8 +228,29 @@ def get_admin_revenue_report(current_usuario=None):
         return err
 
     id_usuario = current_usuario['id']
-    year, month = _parse_revenue_period()
     hotel_id = request.args.get('hotel_id', '').strip() or None
+
+    # ── Parse optional date-range params (take priority over month/year) ─────
+    def _parse_date_param(name):
+        val = request.args.get(name, '').strip()
+        if not val:
+            return None
+        try:
+            return date.fromisoformat(val)
+        except ValueError:
+            return None
+
+    fecha_desde = _parse_date_param('fecha_desde')
+    fecha_hasta = _parse_date_param('fecha_hasta')
+
+    # Fall back to month/year when no explicit range is given
+    if fecha_desde and fecha_hasta:
+        use_range = True
+        range_start = fecha_desde
+        range_end = fecha_hasta
+    else:
+        use_range = False
+        year, month = _parse_revenue_period()
 
     hotel_rows = (
         db.session.query(AdminHotelModel, HotelModel)
@@ -170,71 +260,68 @@ def get_admin_revenue_report(current_usuario=None):
     )
 
     authorized_hotels = [
-        {
-            'id': hotel.id,
-            'nombre': hotel.nombre,
-        }
+        {'id': hotel.id, 'nombre': hotel.nombre}
         for _, hotel in hotel_rows
     ]
     hotel_ids = [hotel['id'] for hotel in authorized_hotels]
 
+    commission_percentage = float(
+        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
+    )
+
     if not hotel_ids:
+        empty_rows = _build_range_daily_rows(range_start, range_end) if use_range else _build_daily_rows(year, month)
         return jsonify({
-            'period': {
-                'year': year,
-                'month': month,
-                'month_label': date(year, month, 1).strftime('%B %Y'),
-            },
-            'scope': {
-                'hotel_id': hotel_id,
-                'is_consolidated': True,
-            },
-            'commission_percentage': current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0),
+            'commission_percentage': commission_percentage,
             'authorized_hotels': [],
-            'daily_rows': _build_daily_rows(year, month),
-            'summary': {
-                'total_bookings': 0,
-                'gross_revenue': 0.0,
-                'travelhub_commission': 0.0,
-                'net_revenue': 0.0,
-            },
+            'daily_rows': empty_rows,
+            'summary': {'total_bookings': 0, 'gross_revenue': 0.0, 'travelhub_commission': 0.0, 'net_revenue': 0.0},
         }), 200
 
     if hotel_id and hotel_id not in hotel_ids:
         return jsonify({'error': 'Hotel not authorized for current admin'}), 403
 
     scoped_hotel_ids = [hotel_id] if hotel_id else hotel_ids
-    commission_percentage = float(
-        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
-    )
-
-    month_start = datetime(year, month, 1)
-    if month == 12:
-        month_end = datetime(year + 1, 1, 1)
-    else:
-        month_end = datetime(year, month + 1, 1)
-
     included_statuses = ['pendiente', 'confirmada', 'completada']
+
+    # ── Build date filter ─────────────────────────────────────────────────────
+    if use_range:
+        range_start_dt = datetime(range_start.year, range_start.month, range_start.day)
+        range_end_dt = datetime(range_end.year, range_end.month, range_end.day, 23, 59, 59)
+        date_filter_start = range_start_dt
+        date_filter_end = range_end_dt
+    else:
+        date_filter_start = datetime(year, month, 1)
+        date_filter_end = datetime(year + 1, 1, 1) if month == 12 else datetime(year, month + 1, 1)
+
+    # Only count reservations that have a confirmed payment (money actually received)
+    # and are NOT cancelled (cancelled = refunded, should not appear in revenue)
+    paid_statuses = [s.lower() for s in PAID_PAYMENT_STATUSES]
+    refund_statuses = [s.lower() for s in REFUND_PAYMENT_STATUSES]
+    excluded_reservation_statuses = ['cancelada', 'cancelado', 'cancelled']
 
     rows = (
         db.session.query(
             db.func.date(ReservaModel.created_at).label('report_date'),
             db.func.count(ReservaModel.id).label('bookings_count'),
-            db.func.coalesce(db.func.sum(ReservaModel.total), 0.0).label('gross_revenue'),
+            db.func.coalesce(db.func.sum(PagoModel.total), 0.0).label('gross_revenue'),
         )
         .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
         .join(EstadoModel, ReservaModel.id_estado == EstadoModel.id)
+        .join(PagoModel, PagoModel.id_reserva == ReservaModel.id)
         .filter(HabitacionModel.id_hotel.in_(scoped_hotel_ids))
         .filter(ReservaModel.created_at.isnot(None))
-        .filter(ReservaModel.created_at >= month_start)
-        .filter(ReservaModel.created_at < month_end)
-        .filter(db.func.lower(EstadoModel.nombre).in_(included_statuses))
+        .filter(ReservaModel.created_at >= date_filter_start)
+        .filter(ReservaModel.created_at <= date_filter_end)
+        .filter(db.func.lower(PagoModel.estado).in_(paid_statuses))
+        .filter(~db.func.lower(PagoModel.estado).in_(refund_statuses))
+        .filter(~db.func.lower(EstadoModel.nombre).in_(excluded_reservation_statuses))
         .group_by(db.func.date(ReservaModel.created_at))
         .order_by(db.func.date(ReservaModel.created_at))
         .all()
     )
 
-    daily_rows = _build_daily_rows(year, month)
+    daily_rows = _build_range_daily_rows(range_start, range_end) if use_range else _build_daily_rows(year, month)
     daily_rows_by_date = {row['date']: row for row in daily_rows}
 
     for row in rows:
@@ -255,11 +342,17 @@ def get_admin_revenue_report(current_usuario=None):
 
     selected_hotel = next((hotel for hotel in authorized_hotels if hotel['id'] == hotel_id), None)
 
+    period_label = (
+        f"{range_start.isoformat()} – {range_end.isoformat()}"
+        if use_range
+        else date(year, month, 1).strftime('%B %Y')
+    )
+
     return jsonify({
         'period': {
-            'year': year,
-            'month': month,
-            'month_label': date(year, month, 1).strftime('%B %Y'),
+            'year': range_start.year if use_range else year,
+            'month': range_start.month if use_range else month,
+            'month_label': period_label,
         },
         'scope': {
             'hotel_id': hotel_id,
@@ -443,16 +536,19 @@ def get_dashboard_reservas(current_usuario=None):
             ReservaModel.id.ilike(f'{codigo_filter}%')
         )
 
-    # ── Aggregate stats (without date/estado filters to show all-time totals)
+    # ── Aggregate stats from the same filtered dataset shown in dashboard
+    # Use a subquery to guarantee the same WHERE/JOIN conditions are preserved.
+    filtered_subq = base_q.with_entities(
+        ReservaModel.id.label('id'),
+        EstadoModel.nombre.label('nombre'),
+    ).subquery()
+
     stats_q = (
         db.session.query(
-            EstadoModel.nombre,
-            db.func.count(ReservaModel.id).label('count'),
+            filtered_subq.c.nombre,
+            db.func.count(filtered_subq.c.id).label('count'),
         )
-        .join(ReservaModel, ReservaModel.id_estado == EstadoModel.id)
-        .join(HabitacionModel, ReservaModel.id_habitacion == HabitacionModel.id)
-        .filter(HabitacionModel.id_hotel.in_(hotel_ids))
-        .group_by(EstadoModel.nombre)
+        .group_by(filtered_subq.c.nombre)
         .all()
     )
 
@@ -571,12 +667,20 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
     if not nuevo_estado:
         return jsonify({'error': 'Estado not found'}), 404
 
-    estado_actual_nombre = (estado_actual.nombre or '').strip().lower()
-    nuevo_estado_nombre = (nuevo_estado.nombre or '').strip().lower()
+    pagos = (
+        PagoModel.query
+        .filter(PagoModel.id_reserva == reserva.id)
+        .order_by(PagoModel.fecha_pago.desc())
+        .all()
+    )
 
-    if estado_actual_nombre != 'pendiente':
+    estado_actual_nombre = _normalize_name(estado_actual.nombre)
+    nuevo_estado_nombre = _normalize_name(nuevo_estado.nombre)
+    has_effective_payment = _has_effective_payment(pagos)
+
+    if estado_actual_nombre not in REVIEWABLE_ADMIN_STATES:
         return jsonify({
-            'error': 'Only pending reservations can be confirmed or rejected',
+            'error': 'Only reservations pending admin review can be confirmed or rejected',
             'code': 'INVALID_SOURCE_STATE',
             'current_estado': estado_actual.nombre,
         }), 409
@@ -586,6 +690,12 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
             'error': 'Target estado must be Confirmada or Rechazada',
             'code': 'INVALID_TARGET_STATE',
         }), 400
+
+    if nuevo_estado_nombre == 'confirmada' and not has_effective_payment:
+        return jsonify({
+            'error': 'Reservation must have a completed payment before confirmation',
+            'code': 'PAYMENT_REQUIRED',
+        }), 409
 
     if nuevo_estado_nombre == 'rechazada' and not reason:
         return jsonify({
@@ -598,6 +708,11 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
     reserva.updated_by_user_id = id_usuario
     reserva.updated_at = datetime.utcnow()
     reserva.version = (reserva.version or 0) + 1
+
+    refund = None
+    if nuevo_estado_nombre == 'rechazada':
+        refund = _create_virtual_refund_if_needed(reserva, pagos)
+
     db.session.commit()
 
     current_app.logger.info(
@@ -608,6 +723,7 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
         f'from={previous_estado.nombre} '
         f'to={nuevo_estado.nombre} '
         f'reason={reason or "n/a"} '
+        f'refund_total={refund.total if refund else 0} '
         f'version={reserva.version}'
     )
 
@@ -685,3 +801,104 @@ def get_admin_reserva_detail(reserva_id, current_usuario=None):
         pagos,
         detalle_tarifa,
     )), 200
+
+
+@api_v1_bp.route('/admin/reviews', methods=['GET'])
+@require_token
+def get_admin_reviews(current_usuario=None):
+    """
+    Get admin reviews with filtering, sorting, and pagination.
+    
+    Query Parameters:
+    - hotel_id: Optional specific hotel ID (must be authorized)
+    - rating: Optional rating filter (1-5)
+    - date_from: Optional date filter (ISO format)
+    - date_to: Optional date filter (ISO format)
+    - sentiment: Optional sentiment filter (positive, neutral, negative)
+    - search: Optional free-text search in comments
+    - page: Page number (default 1)
+    - per_page: Items per page (default 10, max 100)
+    - sort_by: Sort key (created_at_desc, created_at_asc, rating_desc, rating_asc)
+    
+    Returns:
+    {
+        "reviews": [...],
+        "total": int,
+        "page": int,
+        "per_page": int,
+        "total_pages": int,
+        "kpis": {...}
+    }
+    """
+    err = _require_admin(current_usuario)
+    if err:
+        return err
+
+    id_usuario = current_usuario['id']
+
+    # Get authorized hotels
+    authorized_hotels = (
+        AdminHotelModel.query
+        .filter(AdminHotelModel.id_usuario == id_usuario)
+        .all()
+    )
+
+    if not authorized_hotels:
+        return jsonify({'error': 'No authorized hotels'}), 403
+
+    authorized_hotel_ids = [hotel.id_hotel for hotel in authorized_hotels]
+
+    # Parse query parameters
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        rating_filter = None
+        rating_param = request.args.get('rating')
+        if rating_param:
+            rating_filter = int(rating_param)
+        
+        date_from = None
+        date_from_param = request.args.get('date_from')
+        if date_from_param:
+            date_from = datetime.fromisoformat(date_from_param)
+        
+        date_to = None
+        date_to_param = request.args.get('date_to')
+        if date_to_param:
+            date_to = datetime.fromisoformat(date_to_param)
+        
+        sentiment_filter = request.args.get('sentiment')
+        search_text = request.args.get('search')
+        sort_by = request.args.get('sort_by', 'created_at_desc')
+        
+        hotel_id = request.args.get('hotel_id')
+        if hotel_id:
+            # Verify authorization for specific hotel
+            if hotel_id not in authorized_hotel_ids:
+                return jsonify({'error': 'Hotel not authorized for current admin'}), 403
+            authorized_hotel_ids = [hotel_id]
+        
+    except (ValueError, TypeError) as e:
+        return jsonify({'error': f'Invalid query parameter: {str(e)}'}), 400
+
+    # Use case execution
+    try:
+        repository = SQLAlchemyComentarioHotelRepository()
+        use_case = ListAdminReviewsUseCase(repository)
+        result = use_case.execute(
+            authorized_hotel_ids=authorized_hotel_ids,
+            rating_filter=rating_filter,
+            date_from=date_from,
+            date_to=date_to,
+            sentiment_filter=sentiment_filter,
+            search_text=search_text,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+        )
+        return jsonify(result), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        current_app.logger.error(f'Error fetching admin reviews: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
