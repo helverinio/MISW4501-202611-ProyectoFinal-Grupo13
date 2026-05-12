@@ -295,7 +295,10 @@ def get_admin_revenue_report(current_usuario=None):
         date_filter_end = datetime(year + 1, 1, 1) if month == 12 else datetime(year, month + 1, 1)
 
     # Only count reservations that have a confirmed payment (money actually received)
+    # and are NOT cancelled (cancelled = refunded, should not appear in revenue)
     paid_statuses = [s.lower() for s in PAID_PAYMENT_STATUSES]
+    refund_statuses = [s.lower() for s in REFUND_PAYMENT_STATUSES]
+    excluded_reservation_statuses = ['cancelada', 'cancelado', 'cancelled']
 
     rows = (
         db.session.query(
@@ -311,6 +314,8 @@ def get_admin_revenue_report(current_usuario=None):
         .filter(ReservaModel.created_at >= date_filter_start)
         .filter(ReservaModel.created_at <= date_filter_end)
         .filter(db.func.lower(PagoModel.estado).in_(paid_statuses))
+        .filter(~db.func.lower(PagoModel.estado).in_(refund_statuses))
+        .filter(~db.func.lower(EstadoModel.nombre).in_(excluded_reservation_statuses))
         .group_by(db.func.date(ReservaModel.created_at))
         .order_by(db.func.date(ReservaModel.created_at))
         .all()
