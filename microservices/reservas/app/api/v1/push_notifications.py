@@ -4,6 +4,7 @@ from app.api.v1.auth import require_token
 from app.application.use_cases import (
     RegisterDeviceTokenUseCase,
     UnregisterDeviceTokenUseCase,
+    ClearUserTokensUseCase,
     SendPushNotificationUseCase,
     SendPushNotificationToReservationUserUseCase,
 )
@@ -74,6 +75,14 @@ def unregister_device_token(current_usuario=None):
         return jsonify({'error': 'Token not found'}), 404
 
     return jsonify({'message': 'Device token removed successfully'})
+
+
+@api_v1_bp.route('/device-tokens/user/<user_id>', methods=['DELETE'])
+@require_token
+def clear_user_tokens(user_id, current_usuario=None):
+    use_case = ClearUserTokensUseCase(get_device_token_repository())
+    result = use_case.execute(user_id)
+    return jsonify(result)
 
 
 @api_v1_bp.route('/push-notifications/send', methods=['POST'])

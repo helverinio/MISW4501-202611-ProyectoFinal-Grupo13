@@ -23,3 +23,7 @@ class DeviceTokenRepository(ABC):
     @abstractmethod
     def update_token(self, device_token: DeviceToken) -> DeviceToken:
         pass
+
+    @abstractmethod
+    def delete_by_user_id(self, user_id: str) -> int:
+        pass

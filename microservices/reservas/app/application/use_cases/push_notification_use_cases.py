@@ -45,6 +45,20 @@ class UnregisterDeviceTokenUseCase:
         return self.repository.delete_by_token(token)
 
 
+class ClearUserTokensUseCase:
+    def __init__(self, repository: DeviceTokenRepository):
+        self.repository = repository
+
+    def execute(self, user_id: str) -> Dict[str, Any]:
+        deleted_count = self.repository.delete_by_user_id(user_id)
+        logger.info(f"[PUSH] Cleared {deleted_count} device tokens for user {user_id}")
+        return {
+            'success': True,
+            'deleted_count': deleted_count,
+            'message': f'Cleared {deleted_count} device token(s) for user'
+        }
+
+
 class SendPushNotificationUseCase:
     def __init__(self, device_token_repository: DeviceTokenRepository,
                  push_service: PushNotificationService):
@@ -62,9 +76,23 @@ class SendPushNotificationUseCase:
         logger.info(f"[PUSH] Sending notification to {len(tokens)} device(s) for user {user_id}")
 
         if len(tokens) == 1:
-            return self.push_service.send_to_token(tokens[0], title, body, data)
+            result = self.push_service.send_to_token(tokens[0], title, body, data)
+            # Clean up invalid token
+            if result.get('invalid_token'):
+                invalid_token = result['invalid_token']
+                logger.warning(f"[PUSH] Cleaning up invalid token for user {user_id}")
+                self.device_token_repository.delete_by_token(invalid_token)
+                result['cleaned_invalid_token'] = invalid_token
+            return result
         else:
-            return self.push_service.send_to_tokens(tokens, title, body, data)
+            result = self.push_service.send_to_tokens(tokens, title, body, data)
+            # Clean up invalid tokens
+            if result.get('invalid_tokens'):
+                for invalid_token in result['invalid_tokens']:
+                    logger.warning(f"[PUSH] Cleaning up invalid token for user {user_id}")
+                    self.device_token_repository.delete_by_token(invalid_token)
+                result['cleaned_invalid_tokens'] = result['invalid_tokens']
+            return result
 
 
 class SendPushNotificationToReservationUserUseCase:
@@ -97,6 +125,20 @@ class SendPushNotificationToReservationUserUseCase:
         logger.info(f"[PUSH] Sending notification to user {user_id} for reservation {reservation_id}")
 
         if len(tokens) == 1:
-            return self.push_service.send_to_token(tokens[0], title, body, notification_data)
+            result = self.push_service.send_to_token(tokens[0], title, body, notification_data)
+            # Clean up invalid token
+            if result.get('invalid_token'):
+                invalid_token = result['invalid_token']
+                logger.warning(f"[PUSH] Cleaning up invalid token for user {user_id}")
+                self.device_token_repository.delete_by_token(invalid_token)
+                result['cleaned_invalid_token'] = invalid_token
+            return result
         else:
-            return self.push_service.send_to_tokens(tokens, title, body, notification_data)
+            result = self.push_service.send_to_tokens(tokens, title, body, notification_data)
+            # Clean up invalid tokens
+            if result.get('invalid_tokens'):
+                for invalid_token in result['invalid_tokens']:
+                    logger.warning(f"[PUSH] Cleaning up invalid token for user {user_id}")
+                    self.device_token_repository.delete_by_token(invalid_token)
+                result['cleaned_invalid_tokens'] = result['invalid_tokens']
+            return result

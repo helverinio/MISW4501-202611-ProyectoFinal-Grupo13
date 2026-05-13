@@ -48,6 +48,11 @@ class SQLAlchemyDeviceTokenRepository(DeviceTokenRepository):
             db.session.commit()
         return device_token
 
+    def delete_by_user_id(self, user_id: str) -> int:
+        deleted_count = DeviceTokenModel.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
+        return deleted_count
+
     def _to_entity(self, model: DeviceTokenModel) -> DeviceToken:
         return DeviceToken(
             id=model.id,
