@@ -7,6 +7,7 @@ import {
   registerDeviceTokenWithBackend,
   unregisterDeviceTokenFromBackend,
 } from '@/services/pushNotificationService/pushNotificationService';
+import { Alert } from 'react-native';
 
 const PUSH_TOKEN_STORAGE_KEY = '_push_token';
 
@@ -21,11 +22,10 @@ export function usePushNotifications() {
   const responseListener = useRef<Notifications.Subscription | null>(null);
   const user = useUserStore((state) => state.user);
 
+  // Set up notification listeners (should run regardless of login state)
   useEffect(() => {
-    // Register for push notifications when user is available
-    if (user?.id) {
-      initializePushNotifications(user.id);
-    }
+    console.log('[PUSH] Setting up notification listeners');
+    // Alert.alert('[PUSH]', 'Setting up notification listeners');
 
     // Listen for incoming notifications (foreground)
     notificationListener.current = Notifications.addNotificationReceivedListener(
@@ -52,6 +52,15 @@ export function usePushNotifications() {
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
+  }, []);
+
+  // Register for push notifications when user is available
+  useEffect(() => {
+    console.log('[PUSH] User state changed, user?.id:', user?.id);
+    if (user?.id) {
+      console.log('[PUSH] User logged in:', user.id, 'Initializing push...');
+      initializePushNotifications(user.id);
+    }
   }, [user?.id]);
 
   const initializePushNotifications = async (userId: string) => {
@@ -65,12 +74,14 @@ export function usePushNotifications() {
       const savedToken = await AsyncStorage.getItem(PUSH_TOKEN_STORAGE_KEY);
       if (savedToken === token) {
         console.log('[PUSH] Token already registered, skipping backend registration');
+        // Alert.alert('[PUSH]', 'Token already registered, skipping backend registration');
         return;
       }
 
       // Register with backend
       const success = await registerDeviceTokenWithBackend(userId, token);
       if (success) {
+        // Alert.alert('[PUSH]', 'Token registered with backend');
         await AsyncStorage.setItem(PUSH_TOKEN_STORAGE_KEY, token);
       }
     } catch (error) {
