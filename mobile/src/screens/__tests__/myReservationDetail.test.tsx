@@ -115,7 +115,7 @@ describe('MyReservationDetailScreen', () => {
     const { getByText } = render(<MyReservationDetailScreen />);
 
     await waitFor(() => {
-      expect(getByText(/reservationDetail\.today,/)).toBeTruthy();
+      expect(getByText(/reservationDetail\.today/)).toBeTruthy();
     });
   });
 

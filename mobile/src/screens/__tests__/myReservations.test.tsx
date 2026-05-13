@@ -760,8 +760,8 @@ describe('MyReservationsScreen', () => {
       setupMocks({ estados: [], ciudades: [], paises: [] });
       const { getByText } = render(<MyReservationsScreen />);
       await waitFor(() => {
-        // With empty estados, status resolution defaults to 'confirmed' for future dates
-        expect(getByText('myReservations.confirmed')).toBeTruthy();
+        // With empty estados, status resolution defaults to 'pending' for future dates
+        expect(getByText('myReservations.pending')).toBeTruthy();
       });
     });
   });

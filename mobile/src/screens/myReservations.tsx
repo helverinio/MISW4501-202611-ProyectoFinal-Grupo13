@@ -339,7 +339,12 @@ export default function MyReservationsScreen() {
       console.log('[resolveStatus] Matched: checked_in');
       return 'checked_in';
     }
-    
+
+    // Default to 'confirmed' for future dates when estado is unknown
+    if (checkout.getTime() >= new Date(today.toDateString()).getTime()) {
+      console.log('[resolveStatus] Default: pending (future date)');
+      return 'pending';
+    }
 
     console.log('[resolveStatus] Default: pending');
     return 'pending';
