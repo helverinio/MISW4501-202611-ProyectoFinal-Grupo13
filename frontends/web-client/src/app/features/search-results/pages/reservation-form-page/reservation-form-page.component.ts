@@ -1106,11 +1106,7 @@ export class ReservationFormPageComponent {
 
     const preferred = estados.find((estado) => {
       const name = normalized(estado.nombre || '');
-      return (
-        name.includes('confirmada') ||
-        name.includes('reservada via pms') ||
-        name.includes('reservado')
-      );
+      return name.includes('pendiente') || name.includes('pending');
     });
 
     if (preferred) {

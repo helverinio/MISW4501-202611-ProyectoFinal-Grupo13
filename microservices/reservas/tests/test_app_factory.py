@@ -22,6 +22,7 @@ def patch_app_config(monkeypatch):
 def test_create_app_health_with_redis_service(monkeypatch):
     patch_app_config(monkeypatch)
     monkeypatch.setattr(services_module, "init_redis_lock_service", lambda _config: FakeHealthyRedisService())
+    monkeypatch.setattr(services_module, "init_firebase", lambda *_: None)
     app_module.redis_lock_service = None
 
     flask_app = app_module.create_app("default")
@@ -42,6 +43,7 @@ def test_create_app_health_when_redis_init_fails(monkeypatch):
         raise RuntimeError("redis down")
 
     monkeypatch.setattr(services_module, "init_redis_lock_service", raise_init_error)
+    monkeypatch.setattr(services_module, "init_firebase", lambda *_: None)
     app_module.redis_lock_service = None
 
     flask_app = app_module.create_app("default")
@@ -60,6 +62,7 @@ def test_request_logging_hooks_run_without_errors(monkeypatch):
 
     patch_app_config(monkeypatch)
     monkeypatch.setattr(services_module, "init_redis_lock_service", lambda _config: FakeHealthyRedisService())
+    monkeypatch.setattr(services_module, "init_firebase", lambda *_: None)
     monkeypatch.setattr(app_module, "setup_logging", lambda _app: fake_logger)
     app_module.redis_lock_service = None
 

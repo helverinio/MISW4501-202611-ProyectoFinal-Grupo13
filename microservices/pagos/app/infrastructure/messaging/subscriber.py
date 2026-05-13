@@ -142,6 +142,7 @@ class PaymentStatusSubscriber:
 
     def _handle_payment_status_updated(self, message: dict):
         from app.infrastructure.repositories.sqlalchemy_payment_repository import SQLAlchemyPaymentRepository
+        import requests
         
         payment_intent_id = message.get('payment_intent_id')
         payment_status = message.get('status')
@@ -159,6 +160,7 @@ class PaymentStatusSubscriber:
             raise ValueError(f"Payment not found for intent: {payment_intent_id}")
         
         logger.info(f"[PAGOS] Updated payment {payment.id} to status '{payment_status}'")
+
 
     def start(self):
         def run_subscriber():

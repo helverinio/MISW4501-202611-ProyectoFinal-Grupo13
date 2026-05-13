@@ -179,3 +179,10 @@ variable "emailjs_verification_template_id" {
   type        = string
   default     = ""
 }
+
+variable "firebase_credentials_json" {
+  description = "Firebase service account credentials JSON (minified, single line) used by the reservas microservice for push notifications."
+  type        = string
+  default     = ""
+  sensitive   = true
+}

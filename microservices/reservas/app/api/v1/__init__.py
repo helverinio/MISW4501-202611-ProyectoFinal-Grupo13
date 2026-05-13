@@ -18,3 +18,4 @@ from app.api.v1 import comentarios_hoteles
 from app.api.v1 import admin_hoteles
 from app.api.v1 import tipos_habitacion
 from app.api.v1 import planes_tarifarios
+from app.api.v1 import push_notifications

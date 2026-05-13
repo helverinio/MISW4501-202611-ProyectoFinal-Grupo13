@@ -1,0 +1,332 @@
+appId: com.travelhub.app
+---
+# Room Reservation Cancellation E2E Test Flow
+# This test performs a full reservation flow and then cancels it:
+# - Login
+# - Search hotels in Bogota for tomorrow -> day after tomorrow, 1 guest
+# - Open a hotel's details
+# - Select an available room
+# - Fill out the booking/guest form and continue to payment
+# - Fill out card details and pay
+# - Wait for the successful payment confirmation
+# - Navigate to My Reservations
+# - Find the reservation and cancel it
+# - Verify it appears in the cancelled tab
+
+- launchApp:
+    clearState: true
+
+# ============================================
+# Step 1: Login
+# ============================================
+- extendedWaitUntil:
+    visible:
+      text: "TravelHub"
+    timeout: 30000
+
+- tapOn:
+    text: "tu@email.com"
+- inputText: "orlando@example.com"
+
+- tapOn:
+    text: "••••••••"
+- inputText: "password2"
+
+# Dismiss keyboard
+- tapOn:
+    text: "TravelHub"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+- tapOn:
+    text: "Iniciar Sesión"
+    index: 1
+
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "Never"
+    optional: true
+
+# ============================================
+# Step 2: Wait for landing page
+# ============================================
+- extendedWaitUntil:
+    visible: "Encuentra tu estadía perfecta"
+    timeout: 10000
+
+# ============================================
+# Step 3: Fill destination (Bogota)
+# ============================================
+- tapOn:
+    text: "¿A dónde vas?"
+- inputText: "Bogota"
+
+- tapOn:
+    text: "Encuentra tu estadía perfecta"
+
+- swipe:
+    direction: UP
+    duration: 500
+
+# ============================================
+# Step 4: Select Check-in date (Tomorrow)
+# ============================================
+- tapOn:
+    text: "ENTRADA"
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-tomorrow.js
+- tapOn:
+    text: "${output.tomorrowDay}"
+
+# ============================================
+# Step 5: Select Check-out date (Day after tomorrow)
+# ============================================
+- tapOn:
+    text: "SALIDA"
+- extendedWaitUntil:
+    visible: "Listo"
+    timeout: 5000
+- runScript:
+    file: ../scripts/select-day-after-tomorrow.js
+- tapOn:
+    text: "${output.dayAfterTomorrowDay}"
+
+# ============================================
+# Step 6: Submit search
+# ============================================
+- assertVisible:
+    text: "1 Adulto"
+
+- tapOn:
+    text: "Buscar Hoteles"
+
+# ============================================
+# Step 7: Hotel results - open first hotel details
+# ============================================
+- extendedWaitUntil:
+    visible: "Ver Detalles"
+    timeout: 15000
+
+- tapOn:
+    text: "Ver Detalles"
+    index: 0
+
+# ============================================
+# Step 8: Hotel Details - select first available room
+# ============================================
+- extendedWaitUntil:
+    visible: "Habitaciones Disponibles"
+    timeout: 10000
+
+# Scroll down to reveal room cards if needed
+- swipe:
+    direction: UP
+    duration: 600
+
+- tapOn:
+    text: "Seleccionar Habitación"
+    index: 0
+
+# ============================================
+# Step 9: Booking form - fill guest information
+# ============================================
+- extendedWaitUntil:
+    visible: "Información del Huésped"
+    timeout: 15000
+
+- tapOn:
+    text: "Ingresa tu nombre"
+- inputText: "Orlando"
+
+- tapOn:
+    text: "Ingresa tu apellido"
+- inputText: "Arnedo"
+
+- tapOn:
+    text: "Ingresa tu correo electrónico"
+- inputText: "orlando@example.com"
+
+- tapOn:
+    text: "Número de teléfono"
+- inputText: "3001234567"
+
+# Scroll to terms/submit
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# Accept Terms & Conditions (tap the checkbox row label)
+- tapOn:
+    text: "Acepto los.*"
+
+- tapOn:
+    text: "Continuar al Pago"
+
+# ============================================
+# Step 10: Payment screen - fill card details
+# ============================================
+- extendedWaitUntil:
+    visible: "Método de Pago"
+    timeout: 15000
+
+- tapOn:
+    text: "1234 5678 9012 3456"
+- inputText: "4111111111111111"
+
+- tapOn:
+    text: "MM/AA"
+- inputText: "1230"
+
+- tapOn:
+    text: "123"
+- inputText: "123"
+- hideKeyboard
+
+- tapOn:
+    text: "Nombre en la tarjeta"
+- inputText: "ORLANDO ARNEDO"
+
+# Scroll to reveal terms + Pay button
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# Accept terms (tap the terms row text)
+- tapOn:
+    text: "Al completar este pago, acepto la.*"
+
+# ============================================
+# Step 11: Submit payment
+# ============================================
+- tapOn:
+    text: "Pagar Ahora.*"
+
+# ============================================
+# Step 12: Wait for successful payment confirmation
+# Payment takes around 2.5s to process; allow generous timeout
+# ============================================
+- extendedWaitUntil:
+    visible: "¡Pago Exitoso!"
+    timeout: 30000
+
+- assertVisible: "Referencia de Reserva"
+
+# ============================================
+# Step 13: Tap "Reservar Otro Hotel" to return to landing page
+# ============================================
+- tapOn:
+    text: "Reservar Otro Hotel"
+
+# Wait for landing page to load
+- extendedWaitUntil:
+    visible: "Encuentra tu estadía perfecta"
+    timeout: 10000
+
+# ============================================
+# Step 14: Navigate to My Reservations from landing page
+# ============================================
+- tapOn:
+    text: "Mis Reservas"
+
+# Wait for My Reservations screen to load
+- extendedWaitUntil:
+    visible: "Mis Reservas"
+    timeout: 10000
+
+# ============================================
+# Step 15: Find the reservation in the upcoming tab
+# The reservation should be in the "Próximas" tab by default
+# ============================================
+- extendedWaitUntil:
+    visible: "Próximas"
+    timeout: 10000
+
+# Wait for the reservation card to appear
+- extendedWaitUntil:
+    visible: "Ver Detalles"
+    timeout: 10000
+
+# ============================================
+# Step 16: Tap the cancel button on the reservation
+# ============================================
+- tapOn:
+    text: "Cancelar"
+    index: 0
+
+# ============================================
+# Step 17: Wait for cancel reservation screen
+# ============================================
+- extendedWaitUntil:
+    visible: "Cancelar Reserva"
+    timeout: 10000
+
+# ============================================
+# Step 18: Click the checkbox to enable cancellation
+# The agreement text is: "Entiendo y acepto la política de cancelación y reembolso indicada anteriormente..."
+# ============================================
+- tapOn:
+    text: "Entiendo y acepto la política de cancelación y reembolso indicada anteriormente. Reconozco que los reembolsos están sujetos a las condiciones de tiempo."
+
+# ============================================
+# Step 19: Tap the confirm cancellation button
+# ============================================
+- tapOn:
+    text: "Confirmar Cancelación"
+
+# ============================================
+# Step 20: Wait for cancellation success alert
+# ============================================
+- extendedWaitUntil:
+    visible: "Reserva Cancelada"
+    timeout: 15000
+
+# Tap OK to dismiss the alert
+- tapOn:
+    text: "OK"
+
+# ============================================
+# Step 21: Go back to My Reservations
+# After dismissing the alert, we should be back on My Reservations
+# ============================================
+- extendedWaitUntil:
+    visible: "Mis Reservas"
+    timeout: 10000
+
+# ============================================
+# Step 22: Tap the cancelled reservations tab
+# ============================================
+- tapOn:
+    text: "Canceladas"
+
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
+
+# ============================================
+# Step 23: Verify the reservation shows up in the cancelled list
+# ============================================
+# - extendedWaitUntil:
+#     visible: "TravelHub Hotel"
+#     timeout: 15000
+
+# Verify the status shows as "Cancelada"
+- assertVisible: "Cancelada"

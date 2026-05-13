@@ -55,3 +55,10 @@ from app.application.use_cases.comentario_hotel_use_cases import (
     GetHotelRatingSummaryUseCase,
     RatingAggregationService,
 )
+from app.application.use_cases.push_notification_use_cases import (
+    RegisterDeviceTokenUseCase,
+    UnregisterDeviceTokenUseCase,
+    ClearUserTokensUseCase,
+    SendPushNotificationUseCase,
+    SendPushNotificationToReservationUserUseCase,
+)

@@ -78,6 +78,7 @@ export interface ReservationPriceNightDetail {
 
 export interface ReservationPriceBreakdown {
   subtotal_noches: number;
+  discount: number;
   impuestos_estimados: number;
   total_pagado: number;
   balance_pendiente: number;

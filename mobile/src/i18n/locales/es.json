@@ -170,6 +170,8 @@
     "processing": "Procesando pago...",
     "invalidCard": "Por favor ingresa un número de tarjeta válido",
     "invalidExpiry": "Por favor ingresa una fecha de vencimiento válida",
+    "cardExpired": "La tarjeta ha expirado",
+    "cardExpiryTooFar": "La fecha de vencimiento es muy lejana",
     "invalidCvv": "Por favor ingresa un CVV válido",
     "invalidName": "Por favor ingresa el nombre del titular",
     "acceptTerms": "Por favor acepta los términos y condiciones",
@@ -369,6 +371,18 @@
     "agreementRequired": "Debes aceptar la política de cancelación para continuar.",
     "currency": "USD",
     "loading": "Cargando..."
+  },
+  "pushNotifications": {
+    "paymentSuccessTitle": "Pago Exitoso",
+    "paymentSuccessBody": "Tu pago ha sido procesado exitosamente.",
+    "paymentFailedTitle": "Pago Fallido",
+    "paymentFailedBody": "No pudimos procesar tu pago.",
+    "paymentRefundedTitle": "Pago Reembolsado",
+    "paymentRefundedBody": "Se ha reembolsado tu pago.",
+    "paymentUpdateTitle": "Actualización de Pago",
+    "paymentUpdateBody": "Tu pago ha cambiado de estado.",
+    "permissionRequired": "Se requieren permisos de notificación",
+    "permissionMessage": "Habilita las notificaciones para recibir actualizaciones de tus reservas y pagos."
   },
   "editReservation": {
     "title": "Editar Reserva",

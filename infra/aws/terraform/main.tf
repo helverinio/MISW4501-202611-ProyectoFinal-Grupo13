@@ -459,6 +459,7 @@ resource "aws_secretsmanager_secret_version" "app_config" {
     usuarios_database_url     = "postgresql://${var.db_username}:${local.effective_db_password}@${aws_db_instance.postgres.address}:5432/${var.db_name}?options=${urlencode("-csearch_path=usuarios")}" 
     public_api_url            = local.api_public_url
     public_alb_base_url       = local.public_alb_base_url
+    firebase_credentials_json = var.firebase_credentials_json
   })
 }
 

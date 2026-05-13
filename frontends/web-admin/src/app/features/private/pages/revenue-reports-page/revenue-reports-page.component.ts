@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import {
   RevenueDailyRow,
   RevenueReportResponse,
 } from '../../../../core/models/revenue-reports.models';
 import { Hotel } from '../../../../core/models/rate-management.models';
-import { LanguageCode } from '../../../../core/i18n/translations';
+import { AdminTranslation, LanguageCode } from '../../../../core/i18n/translations';
 import { AuthService } from '../../../../core/services/auth.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { RateManagementService } from '../../../../core/services/rate-management.service';
 import { RevenueReportsService } from '../../../../core/services/revenue-reports.service';
+import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 declare const Plotly:
   | {
@@ -28,7 +30,7 @@ declare const Plotly:
 @Component({
   selector: 'app-revenue-reports-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AdminFooterComponent],
   templateUrl: './revenue-reports-page.component.html',
 })
 export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
@@ -59,12 +61,15 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
   loadingReport = false;
   reportError: string | null = null;
   private viewInitialized = false;
+  private reportRequestSequence = 0;
 
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly rateManagementService: RateManagementService,
     private readonly revenueReportsService: RevenueReportsService,
+    private readonly ngZone: NgZone,
+    private readonly cdr: ChangeDetectorRef,
     readonly i18n: I18nService,
   ) {}
 
@@ -105,7 +110,7 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
     return this.dailyRows.some((row) => row.bookings_count > 0 || row.gross_revenue > 0);
   }
 
-  t(key: Parameters<I18nService['t']>[0]): string {
+  t(key: keyof AdminTranslation): string {
     return this.i18n.t(key);
   }
 
@@ -128,6 +133,7 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
   }
 
   loadReport(): void {
+    const requestSequence = ++this.reportRequestSequence;
     this.loadingReport = true;
     this.reportError = null;
     this.revenueReportsService
@@ -136,17 +142,31 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
         year: this.selectedYear,
         hotel_id: this.selectedHotelId === 'all' ? undefined : this.selectedHotelId,
       })
+      .pipe(
+        finalize(() => {
+          if (requestSequence === this.reportRequestSequence) {
+            this.ngZone.run(() => {
+              this.loadingReport = false;
+              this.cdr.detectChanges();
+            });
+          }
+        }),
+      )
       .subscribe({
         next: (report) => {
+          if (requestSequence !== this.reportRequestSequence) {
+            return;
+          }
           this.report = report;
           this.dailyRows = report.daily_rows;
-          this.loadingReport = false;
           this.renderCharts();
         },
         error: () => {
+          if (requestSequence !== this.reportRequestSequence) {
+            return;
+          }
           this.report = null;
           this.dailyRows = [];
-          this.loadingReport = false;
           this.reportError = 'Unable to load the revenue report for the selected period.';
           this.renderCharts();
         },
