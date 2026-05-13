@@ -341,8 +341,8 @@ export default function MyReservationsScreen() {
     }
     
 
-    console.log('[resolveStatus] Default: confirmed');
-    return 'confirmed';
+    console.log('[resolveStatus] Default: pending');
+    return 'pending';
   };
 
   const normalize = (value: string): string => {
