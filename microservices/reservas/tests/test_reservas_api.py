@@ -295,10 +295,10 @@ def test_update_reserva_sends_push_notification_when_confirmed(client, auth_head
             return FakeEstado("confirmada")
 
     class FakePushUseCase:
-        def execute(self, reservation_id, title, body, data=None):
+        def execute(self, user_id, title, body, data=None):
             push_called["called"] = True
             push_called["args"] = {
-                "reservation_id": reservation_id,
+                "user_id": user_id,
                 "title": title,
                 "body": body,
                 "data": data,
