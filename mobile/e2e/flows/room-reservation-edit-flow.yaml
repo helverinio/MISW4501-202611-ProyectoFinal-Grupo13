@@ -68,7 +68,7 @@ appId: com.travelhub.app
     timeout: 10000
 
 - assertVisible:
-    text: "Confirmada"
+    text: "Paid"
 
 - tapOn:
     text: "Modificar"
