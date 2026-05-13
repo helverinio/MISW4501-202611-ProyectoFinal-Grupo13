@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_35" tests="6" failures="0" time="818.0">
+    <testcase id="hotel-search-flow" name="hotel-search-flow" classname="hotel-search-flow" time="92.0" status="SUCCESS"/>
+    <testcase id="login" name="login" classname="login" time="56.0" status="SUCCESS"/>
+    <testcase id="room-reservation-cancel-flow" name="room-reservation-cancel-flow" classname="room-reservation-cancel-flow" time="268.0" status="SUCCESS"/>
+    <testcase id="room-reservation-edit-flow" name="room-reservation-edit-flow" classname="room-reservation-edit-flow" time="147.0" status="SUCCESS"/>
+    <testcase id="room-reservation-flow" name="room-reservation-flow" classname="room-reservation-flow" time="232.0" status="SUCCESS"/>
+    <testcase id="tab-navigation" name="tab-navigation" classname="tab-navigation" time="23.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

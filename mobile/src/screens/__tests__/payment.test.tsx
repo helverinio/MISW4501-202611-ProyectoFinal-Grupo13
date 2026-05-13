@@ -360,7 +360,7 @@ describe('PaymentScreen', () => {
       await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '12');
       fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
       fireEvent.press(getByText(/payment\.termsAgreement/));
@@ -378,7 +378,7 @@ describe('PaymentScreen', () => {
       await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
       fireEvent.press(getByText(/payment\.termsAgreement/));
       
@@ -395,7 +395,7 @@ describe('PaymentScreen', () => {
       await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
       fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
       
@@ -425,7 +425,7 @@ describe('PaymentScreen', () => {
   describe('Payment Processing', () => {
     const fillValidCardForm = (getByPlaceholderText: any, getByText: any) => {
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
       fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
       fireEvent.press(getByText(/payment\.termsAgreement/));
@@ -676,7 +676,7 @@ describe('PaymentScreen', () => {
       getByText: any
     ) => {
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), cardNumber);
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
       fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
       fireEvent.press(getByText(/payment\.termsAgreement/));
@@ -853,7 +853,7 @@ describe('PaymentScreen', () => {
       await waitFor(() => expect(mockCreateReserva).toHaveBeenCalled());
       
       fireEvent.changeText(getByPlaceholderText('payment.cardNumberPlaceholder'), '4111111111111111');
-      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/25');
+      fireEvent.changeText(getByPlaceholderText('payment.expiryPlaceholder'), '12/30');
       fireEvent.changeText(getByPlaceholderText('payment.cvvPlaceholder'), '123');
       fireEvent.changeText(getByPlaceholderText('payment.cardholderPlaceholder'), 'JOHN DOE');
       fireEvent.press(getByText(/payment\.termsAgreement/));
