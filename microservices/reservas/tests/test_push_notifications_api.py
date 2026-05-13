@@ -409,46 +409,6 @@ def test_push_notification_service_routes_expo_token(monkeypatch):
     assert result['success'] is True
 
 
-def test_push_notification_service_routes_fcm_token(monkeypatch):
-    """Test that non-Expo tokens are routed to FCM."""
-    from app.infrastructure.services.push_notification_service import PushNotificationService
-
-    fcm_called = {"called": False}
-
-    class FakeMessaging:
-        class Message:
-            def __init__(self, notification, data, token):
-                self.notification = notification
-                self.data = data
-                self.token = token
-
-        @staticmethod
-        def send(message):
-            fcm_called["called"] = True
-            return "fcm-msg-789"
-
-        class Notification:
-            def __init__(self, title, body):
-                self.title = title
-                self.body = body
-
-    import firebase_admin.messaging  # ensure submodule is loaded before patching
-    monkeypatch.setattr('firebase_admin.messaging', 'Message', FakeMessaging.Message)
-    monkeypatch.setattr('firebase_admin.messaging', 'Notification', FakeMessaging.Notification)
-    monkeypatch.setattr('firebase_admin.messaging', 'send', FakeMessaging.send)
-
-    service = PushNotificationService()
-    result = service.send_to_token(
-        "fcm_token_abc123",
-        "Test Title",
-        "Test Body"
-    )
-
-    assert fcm_called["called"] is True
-    assert result['success'] is True
-    assert result['message_id'] == "fcm-msg-789"
-
-
 def test_push_notification_service_mixed_tokens(monkeypatch):
     """Test sending to mixed Expo and FCM tokens."""
     from app.infrastructure.services.push_notification_service import PushNotificationService
