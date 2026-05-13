@@ -367,6 +367,9 @@ class ReservasService:
     def unregister_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('DELETE', 'device-tokens', data)
 
+    def clear_user_tokens(self, user_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'device-tokens/user/{user_id}')
+
     # Push Notifications
     def send_push_notification(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('POST', 'push-notifications/send', data)
