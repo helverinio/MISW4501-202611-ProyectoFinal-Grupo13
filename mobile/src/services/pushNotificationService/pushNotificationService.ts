@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-import { Platform, Alert } from 'react-native';
+import { Platform } from 'react-native';
 import customAxios from '@/utils/api';
 
 // Configure how notifications are presented when the app is in foreground
@@ -21,7 +21,7 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   console.log('[PUSH] Starting registration... isDevice:', Device.isDevice);
 
   if (!Device.isDevice) {
-    Alert.alert('[PUSH] Debug', 'Push notifications require a physical device');
+    console.warn('[PUSH] Push notifications require a physical device');
     return null;
   }
 
@@ -39,7 +39,7 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   }
 
   if (finalStatus !== 'granted') {
-    Alert.alert('[PUSH] Debug', `Permission not granted. Status: ${finalStatus}`);
+    console.warn('[PUSH] Permission not granted. Status:', finalStatus);
     return null;
   }
 
@@ -61,10 +61,8 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
       projectId,
     });
     console.log('[PUSH] Expo push token:', tokenData.data);
-    Alert.alert('[PUSH] Debug', `Token: ${tokenData.data.substring(0, 30)}...`);
     return tokenData.data;
   } catch (error: any) {
-    Alert.alert('[PUSH] Debug Error', `Failed to get token: ${error.message}`);
     console.error('[PUSH] Error getting push token:', error);
     return null;
   }

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUserStore } from '@/store/userStore';
@@ -22,13 +21,9 @@ export function usePushNotifications() {
   const responseListener = useRef<Notifications.Subscription | null>(null);
   const user = useUserStore((state) => state.user);
 
+  // Set up notification listeners (should run regardless of login state)
   useEffect(() => {
-    // Register for push notifications when user is available
-    console.log('[PUSH] usePushNotifications useEffect fired, user?.id:', user?.id);
-    if (user?.id) {
-      Alert.alert('[PUSH] Hook', `User logged in: ${user.id.substring(0, 8)}... Initializing push...`);
-      initializePushNotifications(user.id);
-    }
+    console.log('[PUSH] Setting up notification listeners');
 
     // Listen for incoming notifications (foreground)
     notificationListener.current = Notifications.addNotificationReceivedListener(
@@ -55,6 +50,15 @@ export function usePushNotifications() {
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
+  }, []);
+
+  // Register for push notifications when user is available
+  useEffect(() => {
+    console.log('[PUSH] User state changed, user?.id:', user?.id);
+    if (user?.id) {
+      console.log('[PUSH] User logged in:', user.id, 'Initializing push...');
+      initializePushNotifications(user.id);
+    }
   }, [user?.id]);
 
   const initializePushNotifications = async (userId: string) => {
