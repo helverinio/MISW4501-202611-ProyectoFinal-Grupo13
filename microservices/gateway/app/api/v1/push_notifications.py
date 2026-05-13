@@ -31,6 +31,12 @@ def unregister_device_token():
     return jsonify(result['data']), result['status_code']
 
 
+@api_v1_bp.route('/device-tokens/user/<user_id>', methods=['DELETE'])
+def clear_user_tokens(user_id):
+    result = get_service().clear_user_tokens(user_id)
+    return jsonify(result['data']), result['status_code']
+
+
 @api_v1_bp.route('/push-notifications/send', methods=['POST'])
 def send_push_notification():
     data = request.get_json()

@@ -1724,6 +1724,193 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Push Notifications",
+      "description": "Push notification and device token management endpoints",
+      "item": [
+        {
+          "name": "Get Device Tokens by User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/device-tokens/:user_id",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "device-tokens",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "user-uuid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Device Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]\",\n  \"platform\": \"expo\",\n  \"user_id\": \"user-uuid\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/device-tokens",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "device-tokens"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unregister Device Token",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]\"\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/device-tokens",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "device-tokens"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clear User Tokens",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/device-tokens/user/:user_id",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "device-tokens",
+                "user",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "user-uuid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Push Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"user-uuid\",\n  \"title\": \"Reservation Confirmation\",\n  \"body\": \"Your reservation has been confirmed successfully\",\n  \"data\": {\n    \"reservation_id\": \"reserva-uuid\",\n    \"type\": \"reservation_confirmed\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/push-notifications/send",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "push-notifications",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Push Notification to Reservation User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservation_id\": \"reserva-uuid\",\n  \"title\": \"Check-in Reminder\",\n  \"body\": \"Your check-in is tomorrow at 3:00 PM\",\n  \"data\": {\n    \"type\": \"checkin_reminder\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/push-notifications/send-to-reservation",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "push-notifications",
+                "send-to-reservation"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

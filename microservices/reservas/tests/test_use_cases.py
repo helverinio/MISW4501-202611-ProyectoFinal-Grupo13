@@ -8,6 +8,7 @@ from app.application.use_cases import (
     AcquireRoomHoldUseCase,
     CheckRoomHoldUseCase,
     CleanupExpiredHoldsUseCase,
+    ClearUserTokensUseCase,
     CreateCiudadUseCase,
     CreateEstadoUseCase,
     CreateHabitacionUseCase,
@@ -236,3 +237,17 @@ def test_room_hold_acquire_check_validate_and_cleanup_paths():
     repo.delete_expired.return_value = 7
     assert CleanupExpiredHoldsUseCase(repo).execute() == 7
     repo.delete_expired.assert_called_once_with()
+
+
+def test_clear_user_tokens_use_case():
+    """Test ClearUserTokensUseCase delegates to repository delete_by_user_id."""
+    repo = Mock()
+    repo.delete_by_user_id.return_value = 3
+
+    use_case = ClearUserTokensUseCase(repo)
+    result = use_case.execute("user-123")
+
+    assert result['success'] is True
+    assert result['deleted_count'] == 3
+    assert 'message' in result
+    repo.delete_by_user_id.assert_called_once_with("user-123")
