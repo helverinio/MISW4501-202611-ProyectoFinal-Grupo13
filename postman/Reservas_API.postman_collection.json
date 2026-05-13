@@ -1819,6 +1819,36 @@
           "response": []
         },
         {
+          "name": "Clear User Tokens",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{reservas_url}}/api/v1/device-tokens/user/:user_id",
+              "host": ["{{reservas_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "device-tokens",
+                "user",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "user-uuid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Send Push Notification",
           "request": {
             "method": "POST",

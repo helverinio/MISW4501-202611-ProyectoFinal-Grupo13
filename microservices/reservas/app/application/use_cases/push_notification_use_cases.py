@@ -45,6 +45,20 @@ class UnregisterDeviceTokenUseCase:
         return self.repository.delete_by_token(token)
 
 
+class ClearUserTokensUseCase:
+    def __init__(self, repository: DeviceTokenRepository):
+        self.repository = repository
+
+    def execute(self, user_id: str) -> Dict[str, Any]:
+        deleted_count = self.repository.delete_by_user_id(user_id)
+        logger.info(f"[PUSH] Cleared {deleted_count} device tokens for user {user_id}")
+        return {
+            'success': True,
+            'deleted_count': deleted_count,
+            'message': f'Cleared {deleted_count} device token(s) for user'
+        }
+
+
 class SendPushNotificationUseCase:
     def __init__(self, device_token_repository: DeviceTokenRepository,
                  push_service: PushNotificationService):
