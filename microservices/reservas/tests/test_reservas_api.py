@@ -279,6 +279,135 @@ def test_update_reserva_returns_404_when_missing(client, auth_headers, monkeypat
     assert response.get_json()["error"] == "Reserva not found"
 
 
+def test_update_reserva_sends_push_notification_when_confirmed(client, auth_headers, monkeypatch):
+    """Test that push notification is sent when reserva estado is updated to confirmed."""
+    push_called = {"called": False, "args": None}
+    existing_reserva = make_reserva("res-1")
+    updated_reserva = make_reserva("res-1")
+    updated_reserva.id_estado = "estado-confirmado"
+
+    class FakeEstado:
+        def __init__(self, nombre):
+            self.nombre = nombre
+
+    class FakeEstadoRepository:
+        def find_by_id(self, _estado_id):
+            return FakeEstado("confirmada")
+
+    class FakePushUseCase:
+        def execute(self, reservation_id, title, body, data=None):
+            push_called["called"] = True
+            push_called["args"] = {
+                "reservation_id": reservation_id,
+                "title": title,
+                "body": body,
+                "data": data,
+            }
+            return {"success": True}
+
+    monkeypatch.setattr(
+        reservas_api,
+        "GetReservaUseCase",
+        lambda _repo: FixedResultUseCase(existing_reserva),
+    )
+    monkeypatch.setattr(
+        reservas_api,
+        "UpdateReservaUseCase",
+        lambda _repo: FixedResultUseCase(updated_reserva),
+    )
+    monkeypatch.setattr(reservas_api, "SQLAlchemyEstadoRepository", lambda: FakeEstadoRepository())
+    monkeypatch.setattr(reservas_api, "get_push_notification_use_case", lambda: FakePushUseCase())
+
+    response = client.put(
+        "/api/v1/reservas/res-1",
+        headers=auth_headers,
+        json={"id_estado": "estado-confirmado"},
+    )
+
+    assert response.status_code == 200
+    assert push_called["called"] is True
+    assert push_called["args"]["title"] == "Reserva Confirmada"
+    assert push_called["args"]["body"] == "Tu reserva ha sido confirmada exitosamente"
+    assert push_called["args"]["data"]["type"] == "reservation_confirmed"
+    assert push_called["args"]["data"]["reservation_id"] == "res-1"
+
+
+def test_update_reserva_no_push_notification_when_not_confirmed(client, auth_headers, monkeypatch):
+    """Test that push notification is NOT sent when reserva estado is not confirmed."""
+    push_called = {"called": False}
+    existing_reserva = make_reserva("res-1")
+    updated_reserva = make_reserva("res-1")
+    updated_reserva.id_estado = "estado-pendiente"
+
+    class FakeEstado:
+        def __init__(self, nombre):
+            self.nombre = nombre
+
+    class FakeEstadoRepository:
+        def find_by_id(self, _estado_id):
+            return FakeEstado("pendiente")
+
+    class FakePushUseCase:
+        def execute(self, reservation_id, title, body, data=None):
+            push_called["called"] = True
+            return {"success": True}
+
+    monkeypatch.setattr(
+        reservas_api,
+        "GetReservaUseCase",
+        lambda _repo: FixedResultUseCase(existing_reserva),
+    )
+    monkeypatch.setattr(
+        reservas_api,
+        "UpdateReservaUseCase",
+        lambda _repo: FixedResultUseCase(updated_reserva),
+    )
+    monkeypatch.setattr(reservas_api, "SQLAlchemyEstadoRepository", lambda: FakeEstadoRepository())
+    monkeypatch.setattr(reservas_api, "get_push_notification_use_case", lambda: FakePushUseCase())
+
+    response = client.put(
+        "/api/v1/reservas/res-1",
+        headers=auth_headers,
+        json={"id_estado": "estado-pendiente"},
+    )
+
+    assert response.status_code == 200
+    assert push_called["called"] is False
+
+
+def test_update_reserva_no_push_notification_when_estado_not_updated(client, auth_headers, monkeypatch):
+    """Test that push notification is NOT sent when estado is not in update_data."""
+    push_called = {"called": False}
+    existing_reserva = make_reserva("res-1")
+    updated_reserva = make_reserva("res-1")
+
+    class FakePushUseCase:
+        def execute(self, reservation_id, title, body, data=None):
+            push_called["called"] = True
+            return {"success": True}
+
+    monkeypatch.setattr(
+        reservas_api,
+        "GetReservaUseCase",
+        lambda _repo: FixedResultUseCase(existing_reserva),
+    )
+    monkeypatch.setattr(
+        reservas_api,
+        "UpdateReservaUseCase",
+        lambda _repo: FixedResultUseCase(updated_reserva),
+    )
+    monkeypatch.setattr(reservas_api, "get_push_notification_use_case", lambda: FakePushUseCase())
+
+    response = client.put(
+        "/api/v1/reservas/res-1",
+        headers=auth_headers,
+        json={"total": 400},
+    )
+
+    assert response.status_code == 200
+    assert push_called["called"] is False
+
+
 def test_delete_reserva_returns_200(client, auth_headers, monkeypatch):
     monkeypatch.setattr(reservas_api, "DeleteReservaUseCase", lambda _repo: FixedResultUseCase(True))
 
