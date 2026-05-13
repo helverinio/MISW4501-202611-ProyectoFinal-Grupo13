@@ -64,8 +64,14 @@ class PushNotificationService:
             return {'success': True, 'message_id': response}
 
         except Exception as e:
-            logger.error(f"[PUSH] Failed to send notification to token: {str(e)}")
-            return {'success': False, 'error': str(e)}
+            error_str = str(e)
+            logger.error(f"[PUSH] Failed to send notification to token: {error_str}")
+            
+            # Check if this is an invalid token error
+            if 'InvalidRegistrationToken' in error_str or 'registration token is not a valid' in error_str.lower():
+                return {'success': False, 'error': error_str, 'invalid_token': token}
+            
+            return {'success': False, 'error': error_str}
 
     def send_to_tokens(self, tokens: List[str], title: str, body: str,
                        data: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
@@ -90,11 +96,26 @@ class PushNotificationService:
                 f"[PUSH] Multicast sent: {response.success_count} success, "
                 f"{response.failure_count} failures"
             )
-            return {
+            
+            # Extract invalid tokens from the response
+            invalid_tokens = []
+            for idx, resp in enumerate(response.responses):
+                if not resp.success:
+                    exception = resp.exception
+                    if exception and ('InvalidRegistrationToken' in str(exception) or 
+                                      'registration token is not a valid' in str(exception).lower()):
+                        invalid_tokens.append(tokens[idx])
+            
+            result = {
                 'success': True,
                 'success_count': response.success_count,
                 'failure_count': response.failure_count,
             }
+            
+            if invalid_tokens:
+                result['invalid_tokens'] = invalid_tokens
+                
+            return result
 
         except Exception as e:
             logger.error(f"[PUSH] Failed to send multicast notification: {str(e)}")
