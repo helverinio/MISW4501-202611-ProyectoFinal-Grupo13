@@ -234,35 +234,177 @@ def test_repository_delete_by_user_id(monkeypatch):
     app_module.redis_lock_service = None
 
     flask_app = app_module.create_app("default")
-    
+
     with flask_app.app_context():
         db.create_all()
-        
+
         # Create test tokens
         repo = SQLAlchemyDeviceTokenRepository()
-        
+
         # Create multiple tokens for the same user
         token1 = DeviceTokenModel(id="token-1", user_id="user-123", token="expo-token-1", platform="expo")
         token2 = DeviceTokenModel(id="token-2", user_id="user-123", token="expo-token-2", platform="expo")
         token3 = DeviceTokenModel(id="token-3", user_id="user-456", token="expo-token-3", platform="expo")
-        
+
         db.session.add(token1)
         db.session.add(token2)
         db.session.add(token3)
         db.session.commit()
-        
+
         # Delete all tokens for user-123
         deleted_count = repo.delete_by_user_id("user-123")
-        
+
         assert deleted_count == 2
-        
+
         # Verify only user-123 tokens were deleted
         remaining = DeviceTokenModel.query.filter_by(user_id="user-123").all()
         assert len(remaining) == 0
-        
+
         # Verify user-456 token still exists
         remaining_456 = DeviceTokenModel.query.filter_by(user_id="user-456").all()
         assert len(remaining_456) == 1
-        
+
         db.session.rollback()
         db.drop_all()
+
+
+def test_push_notification_service_detects_expo_token():
+    """Test that the service correctly identifies Expo push tokens."""
+    from app.infrastructure.services.push_notification_service import PushNotificationService
+
+    service = PushNotificationService()
+
+    # Test Expo token formats
+    assert service._is_expo_token("ExponentPushToken[abc123]") is True
+    assert service._is_expo_token("ExpoPushToken[xyz789]") is True
+    assert service._is_expo_token("ExponentPushToken[QxgHGdADmx2pbGEx862n3n]") is True
+
+    # Test non-Expo tokens (FCM tokens)
+    assert service._is_expo_token("fcm_token_abc123") is False
+    assert service._is_expo_token("dXhGhKjLmNoPqRsTuVwXyZ") is False
+    assert service._is_expo_token("") is False
+
+
+def test_push_notification_service_send_via_expo_success(monkeypatch):
+    """Test sending push notification via Expo API successfully."""
+    from app.infrastructure.services.push_notification_service import PushNotificationService
+
+    class MockResponse:
+        def __init__(self, status_code, json_data):
+            self.status_code = status_code
+            self._json_data = json_data
+
+        def json(self):
+            return self._json_data
+
+    mock_response = MockResponse(200, {
+        'data': [{'status': 'ok', 'id': 'expo-msg-123'}]
+    })
+
+    monkeypatch.setattr('requests.post', lambda *args, **kwargs: mock_response)
+
+    service = PushNotificationService()
+    result = service._send_via_expo(
+        "ExponentPushToken[abc123]",
+        "Test Title",
+        "Test Body",
+        {"key": "value"}
+    )
+
+    assert result['success'] is True
+    assert result['message_id'] == 'expo-msg-123'
+
+
+def test_push_notification_service_send_via_expo_success_dict_response(monkeypatch):
+    """Test that a dict-shaped Expo data response (single token) is handled correctly."""
+    from app.infrastructure.services.push_notification_service import PushNotificationService
+
+    class MockResponse:
+        def __init__(self, status_code, json_data):
+            self.status_code = status_code
+            self._json_data = json_data
+
+        def json(self):
+            return self._json_data
+
+    mock_response = MockResponse(200, {
+        'data': {'status': 'ok', 'id': '019e1fcc-5a6e-756b-a099-c585c2a8b947'}
+    })
+
+    monkeypatch.setattr('requests.post', lambda *args, **kwargs: mock_response)
+
+    service = PushNotificationService()
+    result = service._send_via_expo(
+        "ExponentPushToken[abc123]",
+        "Test Title",
+        "Test Body"
+    )
+
+    assert result['success'] is True
+    assert result['message_id'] == '019e1fcc-5a6e-756b-a099-c585c2a8b947'
+
+
+def test_push_notification_service_send_via_expo_error(monkeypatch):
+    """Test handling Expo API error response."""
+    from app.infrastructure.services.push_notification_service import PushNotificationService
+
+    class MockResponse:
+        def __init__(self, status_code, json_data):
+            self.status_code = status_code
+            self._json_data = json_data
+
+        def json(self):
+            return self._json_data
+
+    mock_response = MockResponse(200, {
+        'data': [{'status': 'error', 'message': 'DeviceNotRegistered'}]
+    })
+
+    monkeypatch.setattr('requests.post', lambda *args, **kwargs: mock_response)
+
+    service = PushNotificationService()
+    result = service._send_via_expo(
+        "ExponentPushToken[abc123]",
+        "Test Title",
+        "Test Body"
+    )
+
+    assert result['success'] is False
+    assert result['invalid_token'] == "ExponentPushToken[abc123]"
+    assert 'DeviceNotRegistered' in result['error']
+
+
+def test_push_notification_service_routes_expo_token(monkeypatch):
+    """Test that Expo tokens are routed to Expo API instead of FCM."""
+    from app.infrastructure.services.push_notification_service import PushNotificationService
+
+    expo_called = {"called": False}
+
+    class MockResponse:
+        def __init__(self, status_code, json_data):
+            self.status_code = status_code
+            self._json_data = json_data
+
+        def json(self):
+            return self._json_data
+
+    mock_response = MockResponse(200, {
+        'data': [{'status': 'ok', 'id': 'expo-msg-456'}]
+    })
+
+    def mock_post(*args, **kwargs):
+        expo_called["called"] = True
+        return mock_response
+
+    monkeypatch.setattr('requests.post', mock_post)
+
+    service = PushNotificationService()
+    result = service.send_to_token(
+        "ExponentPushToken[QxgHGdADmx2pbGEx862n3n]",
+        "Reserva Confirmada",
+        "Tu reserva ha sido confirmada"
+    )
+
+    assert expo_called["called"] is True
+    assert result['success'] is True
+
