@@ -520,7 +520,8 @@ export class ReservationFormPageComponent {
         bestPriceGuarantee: 'Best Price Guarantee',
         confirmationEmailInbox: 'Please check your inbox (and spam folder just in case).',
         paymentConfirmedTitle: 'Payment Confirmed!',
-        paymentConfirmedSub: 'Your payment was successful. Your reservation is pending hotel approval.',
+        paymentConfirmedSub:
+          'Your payment was successful. Your reservation is pending hotel approval.',
       },
       es: {
         title: 'Completa tu reserva',
@@ -582,7 +583,8 @@ export class ReservationFormPageComponent {
         bestPriceGuarantee: 'Mejor precio garantizado',
         confirmationEmailInbox: 'Revisa tu bandeja de entrada (y carpeta de spam por si acaso).',
         paymentConfirmedTitle: '¡Pago confirmado!',
-        paymentConfirmedSub: 'Tu pago fue exitoso. Tu reserva está sujeta a la aprobación del hotel.',
+        paymentConfirmedSub:
+          'Tu pago fue exitoso. Tu reserva está sujeta a la aprobación del hotel.',
       },
       pt: {
         title: 'Conclua sua reserva',
@@ -643,9 +645,10 @@ export class ReservationFormPageComponent {
           'Precisa fazer alterações? Nossa equipe de suporte está disponível a qualquer momento.',
         bestPriceGuarantee: 'Melhor preço garantido',
         confirmationEmailInbox:
-            'Verifique sua caixa de entrada (e pasta de spam, só por garantia).',
-          paymentConfirmedTitle: 'Pagamento confirmado!',
-          paymentConfirmedSub: 'Seu pagamento foi realizado com sucesso. Sua reserva está sujeita à aprovação do hotel.',
+          'Verifique sua caixa de entrada (e pasta de spam, só por garantia).',
+        paymentConfirmedTitle: 'Pagamento confirmado!',
+        paymentConfirmedSub:
+          'Seu pagamento foi realizado com sucesso. Sua reserva está sujeita à aprovação do hotel.',
       },
     } as const;
 
