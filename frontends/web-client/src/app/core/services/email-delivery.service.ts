@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 const EMAILJS_CANCELLATION_TEMPLATE_ID = 'template_8yp6uod';
+const EMAILJS_PAYMENT_CONFIRMATION_TEMPLATE_ID = 'template_15fk4wd';
 
 export interface BookingConfirmationEmailPayload {
   toEmail: string;
@@ -100,6 +101,39 @@ export class EmailDeliveryService {
       headers: {
         'Content-Type': 'application/json',
       },
+      responseType: 'text',
+    });
+  }
+
+  sendPaymentConfirmation(payload: BookingConfirmationEmailPayload): Observable<string> {
+    if (!environment.emailJs.enabled) {
+      throw new Error('EmailJS is not configured.');
+    }
+
+    const requestBody = {
+      service_id: environment.emailJs.serviceId,
+      template_id: EMAILJS_PAYMENT_CONFIRMATION_TEMPLATE_ID,
+      user_id: environment.emailJs.publicKey,
+      template_params: {
+        to_email: payload.toEmail,
+        email: payload.toEmail,
+        booking_id: payload.bookingId,
+        hotel_name: payload.hotelName,
+        room_type: payload.roomType,
+        check_in: payload.checkIn,
+        check_out: payload.checkOut,
+        guest_name: payload.guestName,
+        guest_email: payload.guestEmail,
+        phone: payload.phone,
+        guests: payload.guests,
+        nights: payload.nights,
+        total_paid: payload.totalPaid,
+        payment_method: payload.paymentMethod,
+      },
+    };
+
+    return this.http.post(environment.emailJs.endpoint, requestBody, {
+      headers: { 'Content-Type': 'application/json' },
       responseType: 'text',
     });
   }
