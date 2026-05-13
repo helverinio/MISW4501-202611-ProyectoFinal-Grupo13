@@ -18,6 +18,8 @@ Notifications.setNotificationHandler({
  * On Android, also creates a default notification channel.
  */
 export async function registerForPushNotificationsAsync(): Promise<string | null> {
+  console.log('[PUSH] Starting registration... isDevice:', Device.isDevice);
+
   if (!Device.isDevice) {
     console.warn('[PUSH] Push notifications require a physical device');
     return null;
@@ -26,15 +28,18 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   // Check existing permissions
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
+  console.log('[PUSH] Existing permission status:', existingStatus);
 
   // Request permissions if not already granted
   if (existingStatus !== 'granted') {
+    console.log('[PUSH] Requesting permissions...');
     const { status } = await Notifications.requestPermissionsAsync();
     finalStatus = status;
+    console.log('[PUSH] Permission result:', status);
   }
 
   if (finalStatus !== 'granted') {
-    console.warn('[PUSH] Permission not granted for push notifications');
+    console.warn('[PUSH] Permission not granted. Status:', finalStatus);
     return null;
   }
 
@@ -51,12 +56,13 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   // Get the FCM token via Expo's push notification token
   try {
     const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    console.log('[PUSH] Getting token with projectId:', projectId);
     const tokenData = await Notifications.getExpoPushTokenAsync({
       projectId,
     });
     console.log('[PUSH] Expo push token:', tokenData.data);
     return tokenData.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('[PUSH] Error getting push token:', error);
     return null;
   }
