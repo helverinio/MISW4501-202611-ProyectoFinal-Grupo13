@@ -19,6 +19,23 @@ def get_push_service():
     return PushNotificationService()
 
 
+@api_v1_bp.route('/device-tokens/<user_id>', methods=['GET'])
+@require_token
+def get_device_tokens(user_id, current_usuario=None):
+    repo = get_device_token_repository()
+    tokens = repo.find_by_user_id(user_id)
+    return jsonify([
+        {
+            'id': t.id,
+            'user_id': t.user_id,
+            'token': t.token,
+            'platform': t.platform,
+            'created_at': t.created_at.isoformat() if t.created_at else None,
+        }
+        for t in tokens
+    ])
+
+
 @api_v1_bp.route('/device-tokens', methods=['POST'])
 @require_token
 def register_device_token(current_usuario=None):
