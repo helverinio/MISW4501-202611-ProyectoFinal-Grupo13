@@ -432,6 +432,7 @@ def test_push_notification_service_routes_fcm_token(monkeypatch):
                 self.title = title
                 self.body = body
 
+    import firebase_admin.messaging  # ensure submodule is loaded before patching
     monkeypatch.setattr('firebase_admin.messaging', 'Message', FakeMessaging.Message)
     monkeypatch.setattr('firebase_admin.messaging', 'Notification', FakeMessaging.Notification)
     monkeypatch.setattr('firebase_admin.messaging', 'send', FakeMessaging.send)
@@ -490,6 +491,7 @@ def test_push_notification_service_mixed_tokens(monkeypatch):
                 self.title = title
                 self.body = body
 
+    import firebase_admin.messaging  # ensure submodule is loaded before patching
     monkeypatch.setattr('requests.post', mock_post)
     monkeypatch.setattr('firebase_admin.messaging', 'MulticastMessage', FakeMessaging.MulticastMessage)
     monkeypatch.setattr('firebase_admin.messaging', 'send_each_for_multicast', FakeMessaging.send_each_for_multicast)
