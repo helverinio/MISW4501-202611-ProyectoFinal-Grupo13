@@ -170,6 +170,8 @@
     "processing": "Procesando pago...",
     "invalidCard": "Por favor ingresa un número de tarjeta válido",
     "invalidExpiry": "Por favor ingresa una fecha de vencimiento válida",
+    "cardExpired": "La tarjeta ha expirado",
+    "cardExpiryTooFar": "La fecha de vencimiento es muy lejana",
     "invalidCvv": "Por favor ingresa un CVV válido",
     "invalidName": "Por favor ingresa el nombre del titular",
     "acceptTerms": "Por favor acepta los términos y condiciones",
