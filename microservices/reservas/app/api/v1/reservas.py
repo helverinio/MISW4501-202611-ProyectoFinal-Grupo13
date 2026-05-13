@@ -12,7 +12,7 @@ from app.application.use_cases import (
     ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase,
     AcquireRoomHoldUseCase,
     PricingService, QuotationService, PricingRuleNotFoundError,
-    SendPushNotificationToReservationUserUseCase,
+    SendPushNotificationUseCase,
 )
 from app.infrastructure.repositories import (
     SQLAlchemyReservaRepository,
@@ -53,7 +53,7 @@ def get_pricing_services():
 def get_push_notification_use_case():
     device_token_repository = SQLAlchemyDeviceTokenRepository()
     push_service = PushNotificationService()
-    return SendPushNotificationToReservationUserUseCase(device_token_repository, push_service)
+    return SendPushNotificationUseCase(device_token_repository, push_service)
 
 
 def parse_datetime(date_str):
@@ -396,7 +396,7 @@ def update_reserva(reserva_id, current_usuario=None):
             try:
                 push_use_case = get_push_notification_use_case()
                 push_result = push_use_case.execute(
-                    reservation_id=reserva.id,
+                    user_id=reserva.id_usuario,
                     title='Reserva Confirmada',
                     body='Tu reserva ha sido confirmada exitosamente',
                     data={'type': 'reservation_confirmed', 'reservation_id': reserva.id}
