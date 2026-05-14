@@ -18,7 +18,13 @@ import {
 } from '../../../search-results/services/reservation.service';
 
 type ReservationTab = 'all' | 'upcoming' | 'past' | 'cancelled';
-type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'rejected' | 'paymentReceived';
+type ReservationStatus =
+  | 'confirmed'
+  | 'pending'
+  | 'completed'
+  | 'cancelled'
+  | 'rejected'
+  | 'paymentReceived';
 
 interface ReservationItemVm {
   id: string;
@@ -77,9 +83,12 @@ export class MyReservationsPageComponent {
       const matchesTab =
         tab === 'all' ||
         (tab === 'upcoming' &&
-          (reservation.status === 'confirmed' || reservation.status === 'pending' || reservation.status === 'paymentReceived')) ||
+          (reservation.status === 'confirmed' ||
+            reservation.status === 'pending' ||
+            reservation.status === 'paymentReceived')) ||
         (tab === 'past' && reservation.status === 'completed') ||
-        (tab === 'cancelled' && (reservation.status === 'cancelled' || reservation.status === 'rejected'));
+        (tab === 'cancelled' &&
+          (reservation.status === 'cancelled' || reservation.status === 'rejected'));
 
       if (!matchesTab) {
         return false;

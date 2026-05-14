@@ -166,7 +166,9 @@
                   </button>
                 }
 
-                @if (reservation.status === 'confirmed' || reservation.status === 'paymentReceived') {
+                @if (
+                  reservation.status === 'confirmed' || reservation.status === 'paymentReceived'
+                ) {
                   <button
                     type="button"
                     class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
@@ -183,7 +185,9 @@
                   >
                     {{ primaryActionLabel(reservation) }}
                   </button>
-                } @else if (reservation.status !== 'cancelled' && reservation.status !== 'rejected') {
+                } @else if (
+                  reservation.status !== 'cancelled' && reservation.status !== 'rejected'
+                ) {
                   <button
                     type="button"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
