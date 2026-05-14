@@ -252,6 +252,13 @@ export class ReservationDetailPageComponent implements OnInit {
   getTotalPaid(): number {
     const backendTotalPaid = this.detail?.price_breakdown?.total_pagado ?? 0;
     if (backendTotalPaid > 0) {
+      const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
+      // When balance is 0 the full amount (including taxes) was paid.
+      // The backend stores only the pre-tax base in total_pagado, so we
+      // return the full calculated total to avoid showing the wrong amount.
+      if (backendBalance === 0) {
+        return this.getCalculatedTotal();
+      }
       return backendTotalPaid;
     }
 
@@ -260,6 +267,20 @@ export class ReservationDetailPageComponent implements OnInit {
 
   getTotalPaidWithTax(): number {
     return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+  }
+
+  /**
+   * Returns the display amount for a payment row.
+   * When there is only one payment and the balance is fully settled,
+   * the backend may store only the pre-tax base; we return the full
+   * calculated total (including taxes) so the UI matches what was charged.
+   */
+  getPaymentDisplayTotal(payment: ReservationPaymentItem): number {
+    const balance = this.detail?.price_breakdown?.balance_pendiente ?? -1;
+    if (balance === 0 && this.paymentsToShow.length === 1) {
+      return this.getCalculatedTotal();
+    }
+    return payment.total;
   }
 
   getRemainingBalance(): number {
@@ -459,7 +480,7 @@ export class ReservationDetailPageComponent implements OnInit {
             phone: this.getPlaceholderPhone(),
             guests: String(this.detail.nro_personas),
             nights: String(this.detail.nro_noches ?? 0),
-            totalPaid: this.formatCurrency(this.getTotalPaidWithTax()),
+            totalPaid: this.formatCurrency(this.getTotalPaid()),
             paymentMethod: 'TravelHub',
           };
 
@@ -481,7 +502,7 @@ export class ReservationDetailPageComponent implements OnInit {
           hotelName: this.detail.hotel.nombre,
           checkIn: this.formatDate(this.detail.fecha_ingreso),
           checkOut: this.formatDate(this.detail.fecha_salida),
-          totalRefunded: this.formatCurrency(this.getTotalPaidWithTax()),
+          totalRefunded: this.formatCurrency(this.getTotalPaid()),
           rejectionReason: actionReason || 'No reason provided',
         };
 

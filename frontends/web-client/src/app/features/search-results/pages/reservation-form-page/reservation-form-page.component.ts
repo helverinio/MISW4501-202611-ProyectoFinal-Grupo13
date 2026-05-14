@@ -676,7 +676,10 @@ export class ReservationFormPageComponent {
       return '-';
     }
 
-    const parsed = new Date(value);
+    // Append T00:00:00 so the date-only string is parsed as local midnight,
+    // avoiding timezone offset shifting the day backwards (e.g. UTC-5).
+    const localStr = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value;
+    const parsed = new Date(localStr);
     if (Number.isNaN(parsed.getTime())) {
       return value;
     }
