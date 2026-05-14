@@ -165,6 +165,29 @@ export default function PaymentScreen() {
         return false;
       }
 
+      // Validate expiry date is not in the past or too far in the future
+      const monthNum = parseInt(month, 10);
+      const yearNum = parseInt(year, 10);
+      const currentYear = new Date().getFullYear() % 100;
+      const currentMonth = new Date().getMonth() + 1;
+      
+      // Convert YY to full year (assuming 2000+ for 00-99)
+      const fullYear = yearNum < 100 ? 2000 + yearNum : yearNum;
+      const currentFullYear = new Date().getFullYear();
+      
+      // Check if card is expired
+      if (fullYear < currentFullYear || (fullYear === currentFullYear && monthNum < currentMonth)) {
+        setErrorMessage(t('payment.cardExpired'));
+        return false;
+      }
+      
+      // Check if expiry date is too far in the future (more than 20 years)
+      const maxFutureYear = currentFullYear + 20;
+      if (fullYear > maxFutureYear) {
+        setErrorMessage(t('payment.cardExpiryTooFar'));
+        return false;
+      }
+
       if (cvv.length < 3) {
         setErrorMessage(t('payment.invalidCvv'));
         return false;

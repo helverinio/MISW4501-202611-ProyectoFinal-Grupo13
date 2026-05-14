@@ -68,7 +68,7 @@ appId: com.travelhub.app
     timeout: 10000
 
 - assertVisible:
-    text: "Confirmada"
+    text: "Paid"
 
 - tapOn:
     text: "Modificar"
@@ -88,6 +88,12 @@ appId: com.travelhub.app
     id: "checkout-increment"
 
 # Scroll to the bottom and verify the price difference warning is visible
+- swipe:
+    direction: UP
+    duration: 600
+- swipe:
+    direction: UP
+    duration: 600
 - swipe:
     direction: UP
     duration: 600

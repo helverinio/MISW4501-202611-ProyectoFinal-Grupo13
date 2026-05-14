@@ -180,7 +180,7 @@ services:
       EMAILJS_ENABLED: true
       EMAILJS_ENDPOINT: https://api.emailjs.com/api/v1.0/email/send
       EMAILJS_SERVICE_ID: service_ir1ojbq
-      EMAILJS_PUBLIC_KEY: qIWlUVUW18YUGcMH2
+      EMAILJS_PUBLIC_KEY: iqjzNhxcPVbGXAAo4
       EMAILJS_PRIVATE_KEY: n4H5CFwXGhTufBT8lLpeM
       EMAILJS_VERIFICATION_TEMPLATE_ID: template_r0guto8
       EMAILJS_ALLOWED_ORIGIN: http://localhost:4200
