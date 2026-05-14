@@ -258,6 +258,10 @@ export class ReservationDetailPageComponent implements OnInit {
     return Math.max(this.getDisplayedPaymentsNet(), 0);
   }
 
+  getTotalPaidWithTax(): number {
+    return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+  }
+
   getRemainingBalance(): number {
     const estado = (this.detail?.estado?.nombre || '').toLowerCase().trim();
     if (estado === 'rechazada') {
@@ -455,7 +459,7 @@ export class ReservationDetailPageComponent implements OnInit {
             phone: this.getPlaceholderPhone(),
             guests: String(this.detail.nro_personas),
             nights: String(this.detail.nro_noches ?? 0),
-            totalPaid: this.formatCurrency(this.getTotalPaid()),
+            totalPaid: this.formatCurrency(this.getTotalPaidWithTax()),
             paymentMethod: 'TravelHub',
           };
 
@@ -477,7 +481,7 @@ export class ReservationDetailPageComponent implements OnInit {
           hotelName: this.detail.hotel.nombre,
           checkIn: this.formatDate(this.detail.fecha_ingreso),
           checkOut: this.formatDate(this.detail.fecha_salida),
-          totalRefunded: this.formatCurrency(this.getTotalPaid()),
+          totalRefunded: this.formatCurrency(this.getTotalPaidWithTax()),
           rejectionReason: actionReason || 'No reason provided',
         };
 
