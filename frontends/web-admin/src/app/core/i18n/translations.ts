@@ -103,6 +103,7 @@ export interface AdminTranslation {
   'reservations.table.checkOut': string;
   'reservations.table.nights': string;
   'reservations.table.amount': string;
+  'reservations.table.taxes': string;
   'reservations.table.status': string;
   'reservations.pagination.showing': string;
   'reservations.pagination.to': string;
@@ -413,6 +414,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Check-out',
     'reservations.table.nights': 'Nights',
     'reservations.table.amount': 'Amount',
+    'reservations.table.taxes': 'Taxes (10%)',
     'reservations.table.status': 'Status',
     'reservations.pagination.showing': 'Showing',
     'reservations.pagination.to': 'to',
@@ -724,6 +726,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Salida',
     'reservations.table.nights': 'Noches',
     'reservations.table.amount': 'Monto',
+    'reservations.table.taxes': 'Impuestos (10%)',
     'reservations.table.status': 'Estado',
     'reservations.pagination.showing': 'Mostrando',
     'reservations.pagination.to': 'a',
@@ -1038,6 +1041,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Check-out',
     'reservations.table.nights': 'Noites',
     'reservations.table.amount': 'Valor',
+    'reservations.table.taxes': 'Impostos (10%)',
     'reservations.table.status': 'Status',
     'reservations.pagination.showing': 'Mostrando',
     'reservations.pagination.to': 'a',

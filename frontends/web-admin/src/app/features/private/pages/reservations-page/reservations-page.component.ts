@@ -195,6 +195,13 @@ export class ReservationsPageComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   }
 
+  formatTaxes(amount: number | null): string {
+    if (amount == null) return '—';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+      Math.round(amount * 0.1 * 100) / 100,
+    );
+  }
+
   logout(): void {
     this.authService.clearSession();
     void this.router.navigate(['/login']);
