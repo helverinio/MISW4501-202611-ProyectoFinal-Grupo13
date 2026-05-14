@@ -8,6 +8,6 @@ export const environment = {
     templateId: 'template_599obil', // Confirmación de reserva
     cancellationTemplateId: 'template_8yp6uod', // Cancelación de reserva
     verificationTemplateId: 'template_r0guto8', // Verificación de correo
-    publicKey: 'iqjzNhxcPVbGXAAo4',
+    publicKey: 'qIWlUVUW18YUGcMH2',
   },
 };
