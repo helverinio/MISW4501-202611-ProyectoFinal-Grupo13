@@ -144,14 +144,6 @@
               </div>
 
               <div class="flex flex-wrap gap-2 xl:justify-end">
-                <button
-                  type="button"
-                  class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
-                  (click)="navigateToReservation(reservation)"
-                >
-                  {{ label('viewDetails') }}
-                </button>
-
                 @if (
                   reservation.status === 'completed' &&
                   reservation.hotelId &&
