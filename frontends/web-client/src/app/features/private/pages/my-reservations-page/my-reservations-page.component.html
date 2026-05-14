@@ -166,14 +166,7 @@
                   </button>
                 }
 
-                @if (reservation.status === 'confirmed') {
-                  <button
-                    type="button"
-                    class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
-                    (click)="navigateToModify(reservation)"
-                  >
-                    {{ label('modify') }}
-                  </button>
+                @if (reservation.status === 'confirmed' || reservation.status === 'paymentReceived') {
                   <button
                     type="button"
                     class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
@@ -181,7 +174,16 @@
                   >
                     {{ label('cancel') }}
                   </button>
-                } @else if (reservation.status !== 'cancelled') {
+                } @else if (reservation.status === 'pending') {
+                  <button
+                    type="button"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    [class]="primaryActionClasses(reservation.status)"
+                    (click)="navigateToCancelReservation(reservation)"
+                  >
+                    {{ primaryActionLabel(reservation) }}
+                  </button>
+                } @else if (reservation.status !== 'cancelled' && reservation.status !== 'rejected') {
                   <button
                     type="button"
                     class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
