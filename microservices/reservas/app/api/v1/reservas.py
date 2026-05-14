@@ -384,13 +384,40 @@ def update_reserva(reserva_id, current_usuario=None):
     if not reserva:
         return jsonify({'error': 'Reserva not found'}), 404
 
-    # Check if estado was updated to confirmed and send push notification
+    # Check if estado was updated and handle side effects
     if 'id_estado' in update_data:
         estado_repo = SQLAlchemyEstadoRepository()
         estado = estado_repo.find_by_id(reserva.id_estado)
         estado_nombre = estado.nombre if estado else ''
         normalized_estado = estado_nombre.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
-        
+
+        # When cancelling, create a virtual refund for any paid amount (same logic as admin rejection)
+        if 'cancel' in normalized_estado:
+            pagos = PagoModel.query.filter_by(id_reserva=reserva_id).all()
+            refund_statuses = {'reembolsado', 'refund', 'refunded', 'devuelto'}
+            paid_statuses = {'completado', 'pagado', 'paid', 'succeeded', 'approved', 'pago recibido', 'pago_recibido'}
+            net_paid = sum(
+                (p.total or 0.0) for p in pagos
+                if (p.estado or '').lower() in paid_statuses
+            ) - sum(
+                abs(p.total or 0.0) for p in pagos
+                if (p.estado or '').lower() in refund_statuses
+            )
+            if net_paid > 0:
+                refund = PagoModel(
+                    id=str(uuid.uuid4()),
+                    fecha_pago=datetime.utcnow(),
+                    total=-net_paid,
+                    estado='reembolsado',
+                    id_pais=reserva.id_pais,
+                    id_reserva=reserva.id,
+                )
+                db.session.add(refund)
+                db.session.commit()
+                current_app.logger.info(
+                    f"[RESERVAS] Virtual refund created for cancelled reservation {reserva_id}, amount={net_paid}"
+                )
+
         if 'confirm' in normalized_estado:
             current_app.logger.info(f"[RESERVAS] Reservation {reserva_id} updated to confirmed estado, sending push notification")
             try:
