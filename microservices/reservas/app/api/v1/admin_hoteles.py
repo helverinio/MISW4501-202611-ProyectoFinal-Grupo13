@@ -298,7 +298,7 @@ def get_admin_revenue_report(current_usuario=None):
     # and are NOT cancelled (cancelled = refunded, should not appear in revenue)
     paid_statuses = [s.lower() for s in PAID_PAYMENT_STATUSES]
     refund_statuses = [s.lower() for s in REFUND_PAYMENT_STATUSES]
-    excluded_reservation_statuses = ['cancelada', 'cancelado', 'cancelled']
+    excluded_reservation_statuses = ['cancelada', 'cancelado', 'cancelled', 'rechazada', 'rechazado', 'rejected', 'pendiente', 'pending', 'en proceso', 'en_proceso', 'in process']
 
     rows = (
         db.session.query(

@@ -88,7 +88,7 @@ def search_available_hotels(current_usuario=None):
 
     try:
         # Estados confirmados (para buscar reservas que conflictúen)
-        confirmed_estado_nombres = ['Confirmada', 'Confirmado']
+        confirmed_estado_nombres = ['Confirmada', 'Confirmado', 'Pago recibido', 'Pago Recibido']
         logger.info("[buscar-disponibles] Estados confirmados a filtrar: %s", confirmed_estado_nombres)
 
         # Obtener repositories

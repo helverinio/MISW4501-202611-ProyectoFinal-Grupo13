@@ -620,10 +620,12 @@ export class HotelDetailsPageComponent {
       ]),
     );
 
-    const mergedRooms = rooms.map((room) => {
-      const priced = pricedByRoomId.get(room.id);
-      return priced ? { ...room, ...priced } : room;
-    });
+    const mergedRooms = rooms
+      .filter((room) => pricedByRoomId.has(room.id))
+      .map((room) => {
+        const priced = pricedByRoomId.get(room.id);
+        return priced ? { ...room, ...priced } : room;
+      });
 
     const ratingSummaryFromSearch = {
       average: matchingHotel.rating_promedio || 0,

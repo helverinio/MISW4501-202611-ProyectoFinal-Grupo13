@@ -252,10 +252,35 @@ export class ReservationDetailPageComponent implements OnInit {
   getTotalPaid(): number {
     const backendTotalPaid = this.detail?.price_breakdown?.total_pagado ?? 0;
     if (backendTotalPaid > 0) {
+      const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
+      // When balance is 0 the full amount (including taxes) was paid.
+      // The backend stores only the pre-tax base in total_pagado, so we
+      // return the full calculated total to avoid showing the wrong amount.
+      if (backendBalance === 0) {
+        return this.getCalculatedTotal();
+      }
       return backendTotalPaid;
     }
 
     return Math.max(this.getDisplayedPaymentsNet(), 0);
+  }
+
+  getTotalPaidWithTax(): number {
+    return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+  }
+
+  /**
+   * Returns the display amount for a payment row.
+   * When there is only one payment and the balance is fully settled,
+   * the backend may store only the pre-tax base; we return the full
+   * calculated total (including taxes) so the UI matches what was charged.
+   */
+  getPaymentDisplayTotal(payment: ReservationPaymentItem): number {
+    const balance = this.detail?.price_breakdown?.balance_pendiente ?? -1;
+    if (balance === 0 && this.paymentsToShow.length === 1) {
+      return this.getCalculatedTotal();
+    }
+    return payment.total;
   }
 
   getRemainingBalance(): number {
