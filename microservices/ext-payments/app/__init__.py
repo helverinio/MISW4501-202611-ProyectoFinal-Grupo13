@@ -31,7 +31,7 @@ def create_app(config_name='default'):
     db.init_app(app)
     migrate.init_app(app, db)
     
-    CORS(app, resources={r"/api/v1/*": {"origins": ["http://localhost:4200", "http://localhost:8080"]}})
+    CORS(app, resources={r"/api/v1/*": {"origins": ["http://localhost:4200", "http://localhost:8080","https://d3hkc7ho8q0zd0.cloudfront.net"]}})
     
     @app.before_request
     def log_request_start():
