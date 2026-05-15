@@ -32,8 +32,9 @@ class Config:
     REDIS_LOCK_RETRY_DELAY_MS = int(os.environ.get('REDIS_LOCK_RETRY_DELAY_MS', '50'))
 
     # Revenue report configuration
+    TAX_PERCENTAGE = float(os.environ.get('TAX_PERCENTAGE', '10.0'))
     TRAVELHUB_COMMISSION_PERCENTAGE = float(
-        os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '12.0')
+        os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '5.0')
     )
 
     # Firebase Configuration for Push Notifications

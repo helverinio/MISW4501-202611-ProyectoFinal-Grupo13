@@ -110,6 +110,55 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
     return this.dailyRows.some((row) => row.bookings_count > 0 || row.gross_revenue > 0);
   }
 
+  /**
+   * Base revenue extracted from gross: total / 1.15 (removes 10% taxes + 5% service fee).
+   */
+  get totalBaseRevenue(): number {
+    return Math.round((this.summary.gross_revenue / 1.15) * 100) / 100;
+  }
+
+  /**
+   * Total taxes (10%) extracted from gross revenue.
+   */
+  get totalTaxes(): number {
+    return Math.round(this.totalBaseRevenue * 0.1 * 100) / 100;
+  }
+
+  /**
+   * TravelHub commission (5%) extracted from gross revenue.
+   */
+  get totalCommission(): number {
+    return Math.round(this.totalBaseRevenue * 0.05 * 100) / 100;
+  }
+
+  /**
+   * Net revenue (hotel keeps) = base revenue extracted from gross.
+   */
+  get totalNetRevenue(): number {
+    return this.totalBaseRevenue;
+  }
+
+  /**
+   * Taxes (10%) extracted from a single daily row's gross revenue.
+   */
+  getTaxesForRow(row: RevenueDailyRow): number {
+    return Math.round((row.gross_revenue / 1.15) * 0.1 * 100) / 100;
+  }
+
+  /**
+   * TravelHub commission (5%) extracted from a single daily row's gross revenue.
+   */
+  getCommissionForRow(row: RevenueDailyRow): number {
+    return Math.round((row.gross_revenue / 1.15) * 0.05 * 100) / 100;
+  }
+
+  /**
+   * Net revenue (hotel keeps) for a single daily row.
+   */
+  getNetRevenueForRow(row: RevenueDailyRow): number {
+    return Math.round((row.gross_revenue / 1.15) * 100) / 100;
+  }
+
   t(key: keyof AdminTranslation): string {
     return this.i18n.t(key);
   }

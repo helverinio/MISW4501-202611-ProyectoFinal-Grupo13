@@ -186,7 +186,13 @@ export class HotelDetailsPageComponent {
     () => Math.round(this.taxableAmount() * 0.1 * 100) / 100,
   );
 
-  protected readonly grandTotal = computed(() => this.taxableAmount() + this.taxesAndFees());
+  protected readonly commissionAmount = computed(
+    () => Math.round(this.taxableAmount() * 0.05 * 100) / 100,
+  );
+
+  protected readonly grandTotal = computed(
+    () => this.taxableAmount() + this.taxesAndFees() + this.commissionAmount(),
+  );
 
   protected readonly galleryImages = computed(() => {
     const hotelName = this.hotel()?.nombre || 'Hotel';
@@ -336,6 +342,7 @@ export class HotelDetailsPageComponent {
       | 'noChargeYet'
       | 'earlyBirdDiscount'
       | 'taxesFees'
+      | 'serviceFee'
       | 'holdExpiredError'
       | 'roomType'
       | 'guestsExceedCapacity'
@@ -365,7 +372,8 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reserve Now',
         noChargeYet: 'You will not be charged yet',
         earlyBirdDiscount: 'Early bird discount',
-        taxesFees: 'Taxes & fees',
+        taxesFees: 'Taxes (10%)',
+        serviceFee: 'TravelHub Commission (5%)',
         holdExpiredError:
           'You exceeded the maximum time to complete the reservation. Please try again.',
         roomType: 'Room type',
@@ -393,7 +401,8 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reservar ahora',
         noChargeYet: 'Todavia no se realizara ningun cobro',
         earlyBirdDiscount: 'Descuento por reserva anticipada',
-        taxesFees: 'Impuestos y cargos',
+        taxesFees: 'Impuestos (10%)',
+        serviceFee: 'Comisión TravelHub (5%)',
         holdExpiredError:
           'Has excedido el tiempo maximo para completar la reserva. Intentalo nuevamente.',
         roomType: 'Tipo de habitacion',
@@ -421,7 +430,8 @@ export class HotelDetailsPageComponent {
         reserveNow: 'Reservar agora',
         noChargeYet: 'Voce ainda nao sera cobrado',
         earlyBirdDiscount: 'Desconto por reserva antecipada',
-        taxesFees: 'Impostos e taxas',
+        taxesFees: 'Impostos (10%)',
+        serviceFee: 'Comissão TravelHub (5%)',
         holdExpiredError: 'Voce excedeu o tempo maximo para concluir a reserva. Tente novamente.',
         roomType: 'Tipo de quarto',
         guestsExceedCapacity: 'Excede o maximo de hospedes permitido para este quarto.',
