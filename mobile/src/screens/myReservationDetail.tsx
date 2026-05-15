@@ -83,9 +83,12 @@ export default function MyReservationDetailScreen() {
     const src = { ...params, ...overrides };
     const nights = parseInt(src.nights || '1', 10);
     const total = parseFloat(src.total || '0');
-    const roomRate = total * 0.885;
-    const serviceFee = total * 0.044;
-    const taxes = total * 0.071;
+    // Total includes room rate + 10% taxes + 5% service fee
+    // Total = roomRate + 0.10*roomRate + 0.05*roomRate = 1.15*roomRate
+    // Therefore: roomRate = total / 1.15
+    const roomRate = total / 1.15;
+    const serviceFee = roomRate * 0.05;
+    const taxes = roomRate * 0.10;
 
     const bookingId = `TH-${new Date().getFullYear()}-${src.reservationId?.slice(-4).toUpperCase() || '0000'}`;
 

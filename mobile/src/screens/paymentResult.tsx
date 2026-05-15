@@ -72,7 +72,7 @@ export default function PaymentResultScreen() {
   };
 
   const handleViewBookingDetails = () => {
-    router.push('/screens/bookings');
+    router.push('/screens/myReservations');
   };
 
   const renderStars = (rating: number) => {
