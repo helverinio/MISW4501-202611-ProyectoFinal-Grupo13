@@ -189,6 +189,8 @@ export interface AdminTranslation {
   'revenue.filter.applyFilters': string;
   'revenue.filter.reset': string;
   'revenue.kpi.grossRevenue': string;
+  'revenue.kpi.baseRevenue': string;
+  'revenue.kpi.taxes': string;
   'revenue.kpi.netRevenue': string;
   'revenue.kpi.totalBookings': string;
   'revenue.kpi.commission': string;
@@ -206,6 +208,7 @@ export interface AdminTranslation {
   'revenue.table.date': string;
   'revenue.table.bookings': string;
   'revenue.table.grossRevenue': string;
+  'revenue.table.taxes': string;
   'revenue.table.commission': string;
   'revenue.table.netRevenue': string;
   'revenue.table.noData': string;
@@ -292,6 +295,7 @@ export interface AdminTranslation {
   'reservationDetail.discountEarlyReservation': string;
   'reservationDetail.taxesAndCharges': string;
   'reservationDetail.estimatedTaxesFees': string;
+  'reservationDetail.serviceFee': string;
   'reservationDetail.totalAmount': string;
   'reservationDetail.totalPaid': string;
   'reservationDetail.remainingBalance': string;
@@ -498,6 +502,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.filter.applyFilters': 'Apply Filters',
     'revenue.filter.reset': 'Reset',
     'revenue.kpi.grossRevenue': 'Gross Revenue',
+    'revenue.kpi.baseRevenue': 'Base Revenue',
+    'revenue.kpi.taxes': 'Taxes (10%)',
     'revenue.kpi.netRevenue': 'Net Revenue',
     'revenue.kpi.totalBookings': 'Total Bookings',
     'revenue.kpi.commission': 'TravelHub Commission',
@@ -515,6 +521,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.table.date': 'Date',
     'revenue.table.bookings': 'Bookings',
     'revenue.table.grossRevenue': 'Gross Revenue',
+    'revenue.table.taxes': 'Taxes (10%)',
     'revenue.table.commission': 'TravelHub Commission',
     'revenue.table.netRevenue': 'Net Revenue',
     'revenue.table.noData': 'No data available',
@@ -599,8 +606,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.roomRate': 'Room Rate',
     'reservationDetail.discount': 'Discount',
     'reservationDetail.discountEarlyReservation': 'Early booking discount',
-    'reservationDetail.taxesAndCharges': 'Taxes and charges',
+    'reservationDetail.taxesAndCharges': 'Taxes and charges (10%)',
     'reservationDetail.estimatedTaxesFees': 'Estimated Taxes and Fees',
+    'reservationDetail.serviceFee': 'TravelHub Commission (5%)',
     'reservationDetail.totalAmount': 'Total Amount',
     'reservationDetail.totalPaid': 'Total Paid',
     'reservationDetail.remainingBalance': 'Remaining Balance',
@@ -817,6 +825,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.kpi.currentScope': 'Alcance actual',
     'revenue.kpi.selectedMonthTotal': 'Total del mes seleccionado',
     'revenue.kpi.afterCommission': 'Después de la comisión TravelHub',
+    'revenue.kpi.baseRevenue': 'Ingresos base',
+    'revenue.kpi.taxes': 'Impuestos (10%)',
     'revenue.kpi.reservationsIncluded': 'Reservas incluidas en el reporte',
     'revenue.kpi.fixedCommission': '% de comisión fija',
     'revenue.loading': 'Cargando reporte de ingresos del mes seleccionado...',
@@ -828,6 +838,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.table.date': 'Fecha',
     'revenue.table.bookings': 'Reservas',
     'revenue.table.grossRevenue': 'Ingreso Bruto',
+    'revenue.table.taxes': 'Impuestos (10%)',
     'revenue.table.commission': 'Comisión TravelHub',
     'revenue.table.netRevenue': 'Ingreso Neto',
     'revenue.table.noData': 'Sin datos disponibles',
@@ -913,8 +924,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.roomRate': 'Tarifa de habitación',
     'reservationDetail.discount': 'Descuento',
     'reservationDetail.discountEarlyReservation': 'Descuento por reserva anticipada',
-    'reservationDetail.taxesAndCharges': 'Impuestos y cargos',
+    'reservationDetail.taxesAndCharges': 'Impuestos y cargos (10%)',
     'reservationDetail.estimatedTaxesFees': 'Impuestos y cargos estimados',
+    'reservationDetail.serviceFee': 'Comisión TravelHub (5%)',
     'reservationDetail.totalAmount': 'Monto total',
     'reservationDetail.totalPaid': 'Total pagado',
     'reservationDetail.remainingBalance': 'Saldo pendiente',
@@ -1131,6 +1143,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.kpi.currentScope': 'Escopo atual',
     'revenue.kpi.selectedMonthTotal': 'Total do mês selecionado',
     'revenue.kpi.afterCommission': 'Após comissão TravelHub',
+    'revenue.kpi.baseRevenue': 'Receita base',
+    'revenue.kpi.taxes': 'Impostos (10%)',
     'revenue.kpi.reservationsIncluded': 'Reservas incluídas no relatório',
     'revenue.kpi.fixedCommission': '% de comissão fixa',
     'revenue.loading': 'Carregando relatório de receita do mês selecionado...',
@@ -1142,6 +1156,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.table.date': 'Data',
     'revenue.table.bookings': 'Reservas',
     'revenue.table.grossRevenue': 'Receita Bruta',
+    'revenue.table.taxes': 'Impostos (10%)',
     'revenue.table.commission': 'Comissão TravelHub',
     'revenue.table.netRevenue': 'Receita Líquida',
     'revenue.table.noData': 'Nenhum dado disponível',
@@ -1227,8 +1242,9 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.roomRate': 'Tarifa do quarto',
     'reservationDetail.discount': 'Desconto',
     'reservationDetail.discountEarlyReservation': 'Desconto por reserva antecipada',
-    'reservationDetail.taxesAndCharges': 'Impostos e taxas',
+    'reservationDetail.taxesAndCharges': 'Impostos e taxas (10%)',
     'reservationDetail.estimatedTaxesFees': 'Impostos e taxas estimados',
+    'reservationDetail.serviceFee': 'Comissão TravelHub (5%)',
     'reservationDetail.totalAmount': 'Valor total',
     'reservationDetail.totalPaid': 'Total pago',
     'reservationDetail.remainingBalance': 'Saldo restante',

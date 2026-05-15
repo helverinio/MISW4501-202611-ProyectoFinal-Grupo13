@@ -312,6 +312,12 @@
               <span>{{ label('taxesFees') }}</span>
               <span>{{ displayRoomPrice(taxesAndFees(), !!activeRoomCard()?.canReserve) }}</span>
             </div>
+            <div class="flex items-center justify-between text-gray-600">
+              <span>{{ label('serviceFee') }}</span>
+              <span>{{
+                displayRoomPrice(commissionAmount(), !!activeRoomCard()?.canReserve)
+              }}</span>
+            </div>
             <div
               class="flex items-center justify-between text-base font-semibold text-gray-900 pt-2 border-t border-gray-100"
             >

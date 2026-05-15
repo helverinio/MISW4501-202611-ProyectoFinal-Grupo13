@@ -80,6 +80,7 @@ export interface ReservationPriceBreakdown {
   subtotal_noches: number;
   discount: number;
   impuestos_estimados: number;
+  comision_travelkhub: number;
   total_pagado: number;
   balance_pendiente: number;
   detalle_noches: ReservationPriceNightDetail[];
