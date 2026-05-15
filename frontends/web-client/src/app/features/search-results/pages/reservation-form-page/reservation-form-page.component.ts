@@ -956,7 +956,10 @@ export class ReservationFormPageComponent {
       });
   }
 
-  private startPaymentProcessing(paymentIntentId: string, paymentMethod: 'card' | 'pse' | 'transfer'): void {
+  private startPaymentProcessing(
+    paymentIntentId: string,
+    paymentMethod: 'card' | 'pse' | 'transfer',
+  ): void {
     this.processingPayment.set(true);
     this.paymentError.set('');
     this.paymentStatusMessage.set('Processing payment...');
@@ -970,7 +973,7 @@ export class ReservationFormPageComponent {
           this.paymentStatusMessage.set(
             response.message || 'Payment initiated. Waiting for provider confirmation.',
           );
-          
+
           setTimeout(() => {
             this.paymentStatus.set('completado');
             this.paymentStatusMessage.set('Payment confirmed successfully.');

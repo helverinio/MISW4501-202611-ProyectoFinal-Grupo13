@@ -253,7 +253,10 @@ export class ReservationService {
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
-  processPayment(paymentIntentId: string, paymentMethod: 'card' | 'pse' | 'transfer' = 'card'): Observable<PaymentResponse> {
+  processPayment(
+    paymentIntentId: string,
+    paymentMethod: 'card' | 'pse' | 'transfer' = 'card',
+  ): Observable<PaymentResponse> {
     const payload = {
       payment_intent_id: paymentIntentId,
       payment_method: paymentMethod,
