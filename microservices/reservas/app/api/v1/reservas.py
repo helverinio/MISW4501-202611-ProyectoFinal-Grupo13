@@ -220,10 +220,18 @@ def _execute_reservation_creation(
             'error': 'You must acquire a hold on the room before making a reservation. POST to /habitaciones/{id}/hold first.'
         }), 400
         
+    # Apply taxes (10%) and TravelHub commission (5%) to get gross total stored in DB
+    tax_pct = current_app.config.get('TAX_PERCENTAGE', 10.0)
+    commission_pct = current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 5.0)
+    gross_total = round(total * (1 + tax_pct / 100.0 + commission_pct / 100.0), 2)
+    current_app.logger.info(
+        f"[RESERVAS] Base price: {total}, Gross total (taxes+commission): {gross_total}"
+    )
+
     use_case = CreateReservaUseCase(repository)
     try:
         reserva = use_case.execute(
-            fecha_ingreso, fecha_salida, total, nro_personas,
+            fecha_ingreso, fecha_salida, gross_total, nro_personas,
             id_usuario, id_pais, id_habitacion, id_estado, id_cotizacion
         )
         if not reserva:
@@ -257,7 +265,7 @@ def _execute_reservation_creation(
     pagos_service = get_pagos_service()
     payment_result = pagos_service.create_payment(
         reservation_id=reserva.id,
-        amount=total,
+        amount=gross_total,
         currency=moneda,
         payment_method=payment_method,
         description=f"Payment for reservation {reserva.id}"
