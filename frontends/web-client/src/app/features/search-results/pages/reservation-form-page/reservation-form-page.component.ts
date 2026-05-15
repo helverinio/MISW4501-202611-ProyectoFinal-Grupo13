@@ -252,7 +252,10 @@ export class ReservationFormPageComponent {
   });
 
   protected readonly grandTotal = computed(
-    () => Math.max(this.totalPrice() - this.discountAmount(), 0) + this.taxesAmount() + this.commissionAmount(),
+    () =>
+      Math.max(this.totalPrice() - this.discountAmount(), 0) +
+      this.taxesAmount() +
+      this.commissionAmount(),
   );
 
   protected readonly holdCountdownLabel = computed(() => {
