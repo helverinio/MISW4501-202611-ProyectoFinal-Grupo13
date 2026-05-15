@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { AdminLoginStep1Response } from '../../../../core/models/auth.models';
@@ -11,7 +11,7 @@ import { LanguageCode } from '../../../../core/i18n/translations';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent {
@@ -91,7 +91,8 @@ export class LoginPageComponent {
       .subscribe({
         next: () => {
           this.ngZone.run(() => {
-            const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || '/dashboard';
+            const redirectTo =
+              this.route.snapshot.queryParamMap.get('redirectTo') || '/revenue-reports';
             void this.router.navigateByUrl(redirectTo);
           });
         },

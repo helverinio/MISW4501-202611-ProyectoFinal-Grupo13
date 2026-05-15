@@ -72,6 +72,7 @@
             </div>
           </div>
         </div>
+        <app-admin-footer></app-admin-footer>
       </div>
     </div>
   </header>
@@ -80,13 +81,6 @@
     <aside id="sidebar" class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen">
       <nav class="p-4 space-y-1">
         <a
-          [routerLink]="['/dashboard']"
-          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-        >
-          <i class="fas fa-chart-line w-5 mr-3"></i>
-          {{ t('sidebar.dashboard') }}
-        </a>
-        <a
           [routerLink]="['/reservations']"
           class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl transition-colors"
         >
@@ -94,25 +88,18 @@
           {{ t('sidebar.reservations') }}
         </a>
         <a
-          href="#"
-          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-        >
-          <i class="fas fa-hotel w-5 mr-3"></i>
-          {{ t('sidebar.properties') }}
-        </a>
-        <a
-          href="#"
-          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-        >
-          <i class="fas fa-users w-5 mr-3"></i>
-          {{ t('sidebar.guests') }}
-        </a>
-        <a
           [routerLink]="['/revenue-reports']"
           class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
         >
           <i class="fas fa-dollar-sign w-5 mr-3"></i>
           {{ t('sidebar.revenue') }}
+        </a>
+        <a
+          [routerLink]="['/reviews']"
+          class="flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+        >
+          <i class="fas fa-star w-5 mr-3"></i>
+          {{ t('sidebar.reviews') }}
         </a>
         <a
           [routerLink]="['/room-rate-management']"
@@ -220,14 +207,16 @@
                   {{ detail.estado.nombre }}
                 </span>
                 <span class="text-sm text-gray-600"
-                  >{{ t('reservationDetail.createdAt') }} {{ formatDateTime(detail.created_at) }}</span
+                  >{{ t('reservationDetail.createdAt') }}
+                  {{ formatDateTime(detail.created_at) }}</span
                 >
               </div>
             </div>
-            <div class="mt-4 sm:mt-0 flex items-center space-x-3" *ngIf="isPending">
+            <div class="mt-4 sm:mt-0 flex items-center space-x-3" *ngIf="canReject || canConfirm">
               <button
                 type="button"
                 class="px-5 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-60"
+                *ngIf="canReject"
                 [disabled]="actionLoading"
                 (click)="openConfirmAction('rechazada')"
               >
@@ -237,6 +226,7 @@
               <button
                 type="button"
                 class="px-5 py-2.5 bg-success-600 text-white rounded-xl text-sm font-medium hover:bg-success-700 transition-colors disabled:opacity-60"
+                *ngIf="canConfirm"
                 [disabled]="actionLoading"
                 (click)="openConfirmAction('confirmada')"
               >
@@ -266,9 +256,9 @@
                 <div class="flex-1">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label class="text-xs font-medium text-gray-500 uppercase"
-                        >{{ t('reservationDetail.fullName') }}</label
-                      >
+                      <label class="text-xs font-medium text-gray-500 uppercase">{{
+                        t('reservationDetail.fullName')
+                      }}</label>
                       <p class="text-sm font-semibold text-gray-900 mt-1">
                         {{ guestInfo?.nombre || t('reservationDetail.notAvailable') }}
                       </p>
@@ -416,9 +406,12 @@
                   </div>
                   <div class="text-right">
                     <p class="text-lg font-bold mt-1" [ngClass]="getPaymentAmountClass(p.estado)">
-                      {{ formatCurrency(p.total) }}
+                      {{ formatCurrency(getPaymentDisplayTotal(p)) }}
                     </p>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1" [ngClass]="getPaymentBadgeClass(p.estado)">
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1"
+                      [ngClass]="getPaymentBadgeClass(p.estado)"
+                    >
                       <i class="mr-1" [ngClass]="getPaymentBadgeIcon(p.estado)"></i>
                       {{ getPaymentBadgeText(p.estado) }}
                     </span>
@@ -448,7 +441,9 @@
                   </p>
                 </div>
                 <div class="flex items-center justify-between">
-                  <p class="text-sm text-gray-700">{{ t('reservationDetail.discountEarlyReservation') }}</p>
+                  <p class="text-sm text-gray-700">
+                    {{ t('reservationDetail.discountEarlyReservation') }}
+                  </p>
                   <p class="text-sm font-medium text-red-600">
                     -{{ formatCurrency(detail.price_breakdown.discount) }}
                   </p>
@@ -461,7 +456,9 @@
                 </div>
                 <div class="pt-3 border-t-2 border-gray-300">
                   <div class="flex items-center justify-between">
-                    <p class="text-base font-bold text-gray-900">{{ t('reservationDetail.totalAmount') }}</p>
+                    <p class="text-base font-bold text-gray-900">
+                      {{ t('reservationDetail.totalAmount') }}
+                    </p>
                     <p class="text-xl font-bold text-primary-600">
                       {{ formatCurrency(getCalculatedTotal()) }}
                     </p>
@@ -571,7 +568,8 @@
         >
           <span *ngIf="!actionLoading">{{ t('reservationDetail.confirmAction') }}</span>
           <span *ngIf="actionLoading"
-            ><i class="fas fa-spinner fa-spin mr-1"></i>{{ t('reservationDetail.processing') }}</span
+            ><i class="fas fa-spinner fa-spin mr-1"></i
+            >{{ t('reservationDetail.processing') }}</span
           >
         </button>
       </div>

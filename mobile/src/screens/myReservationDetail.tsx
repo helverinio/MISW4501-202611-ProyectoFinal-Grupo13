@@ -168,11 +168,18 @@ export default function MyReservationDetailScreen() {
 
   const formatDate = (dateStr: string): string => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr + 'T00:00:00');
+    // Parse date string to avoid timezone issues
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     const today = new Date();
-    const isToday = date.toDateString() === today.toDateString();
-    const locale = i18n.language === 'en' ? 'en-US' : i18n.language === 'pt' ? 'pt-BR' : 'es-ES';
     
+    // Compare date parts directly
+    const isToday = date.getFullYear() === today.getFullYear() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getDate() === today.getDate();
+    
+    const locale = i18n.language === 'en' ? 'en-US' : i18n.language === 'pt' ? 'pt-BR' : 'es-ES';
+
     const formatted = date.toLocaleDateString(locale, {
       month: 'short',
       day: 'numeric',

@@ -103,6 +103,7 @@ export interface AdminTranslation {
   'reservations.table.checkOut': string;
   'reservations.table.nights': string;
   'reservations.table.amount': string;
+  'reservations.table.taxes': string;
   'reservations.table.status': string;
   'reservations.pagination.showing': string;
   'reservations.pagination.to': string;
@@ -212,6 +213,45 @@ export interface AdminTranslation {
   'revenue.chart.btnGross': string;
   'revenue.chart.btnNet': string;
   'revenue.chart.btnSort': string;
+
+  // Reviews & Ratings page
+  'sidebar.reviews': string;
+  'reviews.title': string;
+  'reviews.subtitle': string;
+  'reviews.buttons.export': string;
+  'reviews.buttons.analytics': string;
+  'reviews.buttons.filter': string;
+  'reviews.buttons.retry': string;
+  'reviews.kpi.average_rating': string;
+  'reviews.kpi.out_of_5': string;
+  'reviews.kpi.total_reviews': string;
+  'reviews.kpi.positive': string;
+  'reviews.kpi.response_rate': string;
+  'reviews.filters.property': string;
+  'reviews.filters.all_properties': string;
+  'reviews.filters.rating': string;
+  'reviews.filters.from_date': string;
+  'reviews.filters.to_date': string;
+  'reviews.filters.sentiment': string;
+  'reviews.search_placeholder': string;
+  'reviews.list.title': string;
+  'reviews.list.subtitle': string;
+  'reviews.room_label': string;
+  'reviews.night': string;
+  'reviews.nights': string;
+  'reviews.verified_stay': string;
+  'reviews.sentiments.positive': string;
+  'reviews.sentiments.neutral': string;
+  'reviews.sentiments.negative': string;
+  'reviews.loading': string;
+  'reviews.empty_state': string;
+  'reviews.errors.loading_hotels': string;
+  'reviews.errors.loading_reviews': string;
+  'reviews.pagination.showing': string;
+  'reviews.pagination.to': string;
+  'reviews.pagination.of': string;
+  'reviews.pagination.previous': string;
+  'reviews.pagination.next': string;
 
   // Reservation Detail page
   'reservationDetail.title': string;
@@ -374,6 +414,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Check-out',
     'reservations.table.nights': 'Nights',
     'reservations.table.amount': 'Amount',
+    'reservations.table.taxes': 'Taxes (10%)',
     'reservations.table.status': 'Status',
     'reservations.pagination.showing': 'Showing',
     'reservations.pagination.to': 'to',
@@ -481,6 +522,45 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnGross': 'Gross',
     'revenue.chart.btnNet': 'Net',
     'revenue.chart.btnSort': 'Sort',
+
+    // Reviews & Ratings
+    'sidebar.reviews': 'Reviews & Ratings',
+    'reviews.title': 'Guest Reviews & Ratings',
+    'reviews.subtitle': 'Monitor and analyze customer feedback across all properties',
+    'reviews.buttons.export': 'Export Reviews',
+    'reviews.buttons.analytics': 'Analytics',
+    'reviews.buttons.filter': 'Filter',
+    'reviews.buttons.retry': 'Retry',
+    'reviews.kpi.average_rating': 'Average Rating',
+    'reviews.kpi.out_of_5': 'out of 5 stars',
+    'reviews.kpi.total_reviews': 'Total Reviews',
+    'reviews.kpi.positive': 'Positive (4-5★)',
+    'reviews.kpi.response_rate': 'Response Rate',
+    'reviews.filters.property': 'Property',
+    'reviews.filters.all_properties': 'All Properties',
+    'reviews.filters.rating': 'Rating',
+    'reviews.filters.from_date': 'From Date',
+    'reviews.filters.to_date': 'To Date',
+    'reviews.filters.sentiment': 'Sentiment',
+    'reviews.search_placeholder': 'Search in comments...',
+    'reviews.list.title': 'Guest Reviews',
+    'reviews.list.subtitle': 'Complete list of all customer feedback',
+    'reviews.room_label': 'Room',
+    'reviews.night': 'night',
+    'reviews.nights': 'nights',
+    'reviews.verified_stay': 'Verified Stay',
+    'reviews.sentiments.positive': 'Positive',
+    'reviews.sentiments.neutral': 'Neutral',
+    'reviews.sentiments.negative': 'Negative',
+    'reviews.loading': 'Loading reviews...',
+    'reviews.empty_state': 'No reviews found matching your filters',
+    'reviews.errors.loading_hotels': 'Error loading properties',
+    'reviews.errors.loading_reviews': 'Error loading reviews',
+    'reviews.pagination.showing': 'Showing',
+    'reviews.pagination.to': 'to',
+    'reviews.pagination.of': 'of',
+    'reviews.pagination.previous': 'Previous',
+    'reviews.pagination.next': 'Next',
 
     'reservationDetail.title': 'Reservation Detail',
     'reservationDetail.subtitle': 'Review booking information and manage its status.',
@@ -646,6 +726,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Salida',
     'reservations.table.nights': 'Noches',
     'reservations.table.amount': 'Monto',
+    'reservations.table.taxes': 'Impuestos (10%)',
     'reservations.table.status': 'Estado',
     'reservations.pagination.showing': 'Mostrando',
     'reservations.pagination.to': 'a',
@@ -754,6 +835,46 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnGross': 'Bruto',
     'revenue.chart.btnNet': 'Neto',
     'revenue.chart.btnSort': 'Ordenar',
+
+    // Reseñas y Calificaciones
+    'sidebar.reviews': 'Reseñas y Calificaciones',
+    'reviews.title': 'Reseñas y Calificaciones de Huéspedes',
+    'reviews.subtitle':
+      'Monitorea y analiza las opiniones de los clientes en todas las propiedades',
+    'reviews.buttons.export': 'Exportar Reseñas',
+    'reviews.buttons.analytics': 'Análisis',
+    'reviews.buttons.filter': 'Filtro',
+    'reviews.buttons.retry': 'Reintentar',
+    'reviews.kpi.average_rating': 'Calificación Promedio',
+    'reviews.kpi.out_of_5': 'de 5 estrellas',
+    'reviews.kpi.total_reviews': 'Total de Reseñas',
+    'reviews.kpi.positive': 'Positivo (4-5★)',
+    'reviews.kpi.response_rate': 'Tasa de Respuesta',
+    'reviews.filters.property': 'Propiedad',
+    'reviews.filters.all_properties': 'Todas las Propiedades',
+    'reviews.filters.rating': 'Calificación',
+    'reviews.filters.from_date': 'Desde la Fecha',
+    'reviews.filters.to_date': 'Hasta la Fecha',
+    'reviews.filters.sentiment': 'Sentimiento',
+    'reviews.search_placeholder': 'Buscar en comentarios...',
+    'reviews.list.title': 'Reseñas de Huéspedes',
+    'reviews.list.subtitle': 'Lista completa de todas las opiniones de clientes',
+    'reviews.room_label': 'Habitación',
+    'reviews.night': 'noche',
+    'reviews.nights': 'noches',
+    'reviews.verified_stay': 'Estancia Verificada',
+    'reviews.sentiments.positive': 'Positivo',
+    'reviews.sentiments.neutral': 'Neutral',
+    'reviews.sentiments.negative': 'Negativo',
+    'reviews.loading': 'Cargando reseñas...',
+    'reviews.empty_state': 'No se encontraron reseñas que coincidan con tus filtros',
+    'reviews.errors.loading_hotels': 'Error cargando propiedades',
+    'reviews.errors.loading_reviews': 'Error cargando reseñas',
+    'reviews.pagination.showing': 'Mostrando',
+    'reviews.pagination.to': 'a',
+    'reviews.pagination.of': 'de',
+    'reviews.pagination.previous': 'Anterior',
+    'reviews.pagination.next': 'Siguiente',
 
     'reservationDetail.title': 'Detalle de reserva',
     'reservationDetail.subtitle': 'Revisa la información de la reserva y gestiona su estado.',
@@ -920,6 +1041,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservations.table.checkOut': 'Check-out',
     'reservations.table.nights': 'Noites',
     'reservations.table.amount': 'Valor',
+    'reservations.table.taxes': 'Impostos (10%)',
     'reservations.table.status': 'Status',
     'reservations.pagination.showing': 'Mostrando',
     'reservations.pagination.to': 'a',
@@ -1028,6 +1150,45 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'revenue.chart.btnNet': 'Líquido',
     'revenue.chart.btnSort': 'Ordenar',
 
+    // Avaliações e Classificações
+    'sidebar.reviews': 'Avaliações e Classificações',
+    'reviews.title': 'Avaliações e Classificações de Hóspedes',
+    'reviews.subtitle': 'Monitore e analise o feedback dos clientes em todas as propriedades',
+    'reviews.buttons.export': 'Exportar Avaliações',
+    'reviews.buttons.analytics': 'Análise',
+    'reviews.buttons.filter': 'Filtro',
+    'reviews.buttons.retry': 'Tentar Novamente',
+    'reviews.kpi.average_rating': 'Classificação Média',
+    'reviews.kpi.out_of_5': 'de 5 estrelas',
+    'reviews.kpi.total_reviews': 'Total de Avaliações',
+    'reviews.kpi.positive': 'Positivo (4-5★)',
+    'reviews.kpi.response_rate': 'Taxa de Resposta',
+    'reviews.filters.property': 'Propriedade',
+    'reviews.filters.all_properties': 'Todas as Propriedades',
+    'reviews.filters.rating': 'Classificação',
+    'reviews.filters.from_date': 'Data Inicial',
+    'reviews.filters.to_date': 'Data Final',
+    'reviews.filters.sentiment': 'Sentimento',
+    'reviews.search_placeholder': 'Procurar nos comentários...',
+    'reviews.list.title': 'Avaliações de Hóspedes',
+    'reviews.list.subtitle': 'Lista completa de todos os comentários de clientes',
+    'reviews.room_label': 'Quarto',
+    'reviews.night': 'noite',
+    'reviews.nights': 'noites',
+    'reviews.verified_stay': 'Estadia Verificada',
+    'reviews.sentiments.positive': 'Positivo',
+    'reviews.sentiments.neutral': 'Neutro',
+    'reviews.sentiments.negative': 'Negativo',
+    'reviews.loading': 'Carregando avaliações...',
+    'reviews.empty_state': 'Nenhuma avaliação encontrada correspondendo aos seus filtros',
+    'reviews.errors.loading_hotels': 'Erro ao carregar propriedades',
+    'reviews.errors.loading_reviews': 'Erro ao carregar avaliações',
+    'reviews.pagination.showing': 'Exibindo',
+    'reviews.pagination.to': 'para',
+    'reviews.pagination.of': 'de',
+    'reviews.pagination.previous': 'Anterior',
+    'reviews.pagination.next': 'Próximo',
+
     'reservationDetail.title': 'Detalhe da reserva',
     'reservationDetail.subtitle': 'Revise as informações da reserva e gerencie seu status.',
     'reservationDetail.backToReservations': 'Voltar para reservas',
@@ -1060,7 +1221,8 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.version': 'Versão',
     'reservationDetail.bookingTimeline': 'Linha do tempo da reserva',
     'reservationDetail.paymentStatus': 'Status de pagamento',
-    'reservationDetail.noPaymentRecords': 'Nenhum registro de pagamento encontrado para esta reserva.',
+    'reservationDetail.noPaymentRecords':
+      'Nenhum registro de pagamento encontrado para esta reserva.',
     'reservationDetail.priceBreakdown': 'Resumo de preços',
     'reservationDetail.roomRate': 'Tarifa do quarto',
     'reservationDetail.discount': 'Desconto',
@@ -1084,8 +1246,7 @@ export const translations: Record<LanguageCode, AdminTranslation> = {
     'reservationDetail.error.reservationIdRequired': 'O id da reserva é obrigatório.',
     'reservationDetail.error.targetEstadoNotConfigured':
       'O status de destino da reserva não está configurado.',
-    'reservationDetail.error.reasonRequired':
-      'O motivo é obrigatório ao rejeitar uma reserva.',
+    'reservationDetail.error.reasonRequired': 'O motivo é obrigatório ao rejeitar uma reserva.',
     'reservationDetail.error.staleVersion':
       'A reserva já foi atualizada por outro canal. Atualizando o estado mais recente...',
     'reservationDetail.error.couldNotUpdate': 'Não foi possível atualizar o status da reserva.',

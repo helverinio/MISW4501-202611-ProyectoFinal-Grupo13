@@ -3,6 +3,7 @@ import sys
 from flask import Flask, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 from config import config
 import time
 
@@ -29,6 +30,12 @@ def create_app(config_name='default'):
     
     db.init_app(app)
     migrate.init_app(app, db)
+    
+    _allowed_origins = ["http://localhost:4200", "http://localhost:8080", "https://d3hkc7ho8q0zd0.cloudfront.net"]
+    CORS(app, resources={
+        r"/api/v1/*": {"origins": _allowed_origins},
+        r"/ext-payments/api/v1/*": {"origins": _allowed_origins},
+    })
     
     @app.before_request
     def log_request_start():

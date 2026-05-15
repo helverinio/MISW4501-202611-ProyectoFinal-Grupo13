@@ -160,7 +160,7 @@ def test_subscriber_handle_payment_status_updated(monkeypatch):
             self.called = True
             if payment_intent_id == "missing":
                 return None
-            return type("P", (), {"id": "pay-1"})()
+            return type("P", (), {"id": "pay-1", "reservation_id": "res-1", "amount": 100.0, "currency": "USD"})()
 
     import app.infrastructure.messaging.subscriber as subscriber_module
 
@@ -168,6 +168,15 @@ def test_subscriber_handle_payment_status_updated(monkeypatch):
         "app.infrastructure.repositories.sqlalchemy_payment_repository.SQLAlchemyPaymentRepository",
         FakeRepo,
     )
+
+    # Mock the HTTP request to reservas for push notifications
+    class MockResponse:
+        status_code = 200
+
+    def mock_post(*args, **kwargs):
+        return MockResponse()
+
+    monkeypatch.setattr("requests.post", mock_post)
 
     subscriber = PaymentStatusSubscriber(
         app=DummyApp(),

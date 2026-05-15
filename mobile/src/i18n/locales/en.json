@@ -186,6 +186,18 @@
     "currency": "USD",
     "loading": "Loading..."
   },
+  "pushNotifications": {
+    "paymentSuccessTitle": "Payment Successful",
+    "paymentSuccessBody": "Your payment has been processed successfully.",
+    "paymentFailedTitle": "Payment Failed",
+    "paymentFailedBody": "We could not process your payment.",
+    "paymentRefundedTitle": "Payment Refunded",
+    "paymentRefundedBody": "Your payment has been refunded.",
+    "paymentUpdateTitle": "Payment Update",
+    "paymentUpdateBody": "Your payment status has changed.",
+    "permissionRequired": "Notification permissions required",
+    "permissionMessage": "Enable notifications to receive updates about your reservations and payments."
+  },
   "offline": {
     "banner": "Offline - showing saved data",
     "cachedNotice": "Showing locally saved data",

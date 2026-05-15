@@ -11,3 +11,4 @@ stomp.py==8.1.0
 redis==4.6.0
 qrcode==7.4.2
 Pillow==10.2.0
+firebase-admin==6.4.0

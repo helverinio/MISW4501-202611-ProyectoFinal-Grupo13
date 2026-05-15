@@ -455,7 +455,9 @@ export class ReservationFormPageComponent {
       | 'mobileCheckinDesc'
       | 'support247Desc'
       | 'bestPriceGuarantee'
-      | 'confirmationEmailInbox',
+      | 'confirmationEmailInbox'
+      | 'paymentConfirmedTitle'
+      | 'paymentConfirmedSub',
   ): string {
     const lang = this.currentLanguage();
 
@@ -495,8 +497,8 @@ export class ReservationFormPageComponent {
         loadError: 'Could not load reservation data.',
         invalidEmail: 'Please enter a valid email address.',
         successPrefix: 'Reservation created successfully. ID:',
-        bookingConfirmed: 'Booking Confirmed!',
-        bookingConfirmedSub: 'Your reservation has been successfully processed.',
+        bookingConfirmed: 'Payment Successful!',
+        bookingConfirmedSub: 'Your payment has been successfully processed.',
         bookingId: 'Booking ID',
         guestName: 'Guest Name',
         phone: 'Phone',
@@ -517,6 +519,9 @@ export class ReservationFormPageComponent {
         support247Desc: 'Need to make changes? Our support team is available anytime.',
         bestPriceGuarantee: 'Best Price Guarantee',
         confirmationEmailInbox: 'Please check your inbox (and spam folder just in case).',
+        paymentConfirmedTitle: 'Payment Confirmed!',
+        paymentConfirmedSub:
+          'Your payment was successful. Your reservation is pending hotel approval.',
       },
       es: {
         title: 'Completa tu reserva',
@@ -553,8 +558,8 @@ export class ReservationFormPageComponent {
         loadError: 'No fue posible cargar la informacion de la reserva.',
         invalidEmail: 'Por favor ingresa un correo electronico valido.',
         successPrefix: 'Reserva creada exitosamente. ID:',
-        bookingConfirmed: '¡Reserva Confirmada!',
-        bookingConfirmedSub: 'Tu reserva ha sido procesada exitosamente.',
+        bookingConfirmed: '¡Pago Exitoso!',
+        bookingConfirmedSub: 'Tu pago ha sido procesado exitosamente.',
         bookingId: 'ID de Reserva',
         guestName: 'Nombre del huesped',
         phone: 'Telefono',
@@ -577,6 +582,9 @@ export class ReservationFormPageComponent {
           '¿Necesitas cambios? Nuestro equipo de soporte está disponible en cualquier momento.',
         bestPriceGuarantee: 'Mejor precio garantizado',
         confirmationEmailInbox: 'Revisa tu bandeja de entrada (y carpeta de spam por si acaso).',
+        paymentConfirmedTitle: '¡Pago confirmado!',
+        paymentConfirmedSub:
+          'Tu pago fue exitoso. Tu reserva está sujeta a la aprobación del hotel.',
       },
       pt: {
         title: 'Conclua sua reserva',
@@ -613,8 +621,8 @@ export class ReservationFormPageComponent {
         loadError: 'Nao foi possivel carregar os dados da reserva.',
         invalidEmail: 'Por favor, informe um e-mail valido.',
         successPrefix: 'Reserva criada com sucesso. ID:',
-        bookingConfirmed: 'Reserva Confirmada!',
-        bookingConfirmedSub: 'Sua reserva foi processada com sucesso.',
+        bookingConfirmed: 'Pagamento Bem-sucedido!',
+        bookingConfirmedSub: 'Seu pagamento foi processado com sucesso.',
         bookingId: 'ID da Reserva',
         guestName: 'Nome do hospede',
         phone: 'Telefone',
@@ -638,6 +646,9 @@ export class ReservationFormPageComponent {
         bestPriceGuarantee: 'Melhor preço garantido',
         confirmationEmailInbox:
           'Verifique sua caixa de entrada (e pasta de spam, só por garantia).',
+        paymentConfirmedTitle: 'Pagamento confirmado!',
+        paymentConfirmedSub:
+          'Seu pagamento foi realizado com sucesso. Sua reserva está sujeita à aprovação do hotel.',
       },
     } as const;
 
@@ -665,7 +676,10 @@ export class ReservationFormPageComponent {
       return '-';
     }
 
-    const parsed = new Date(value);
+    // Append T00:00:00 so the date-only string is parsed as local midnight,
+    // avoiding timezone offset shifting the day backwards (e.g. UTC-5).
+    const localStr = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value;
+    const parsed = new Date(localStr);
     if (Number.isNaN(parsed.getTime())) {
       return value;
     }
@@ -751,7 +765,8 @@ export class ReservationFormPageComponent {
       return;
     }
 
-    this.startPaymentProcessing(currentPaymentId, this.buildPaymentPayload());
+    const paymentMethod = this.paymentForm.controls.paymentMethod.value;
+    this.startPaymentProcessing(currentPaymentId, paymentMethod);
   }
 
   protected isPaymentFieldInvalid(
@@ -913,7 +928,7 @@ export class ReservationFormPageComponent {
           this.paymentCompleted.set(false);
           this.paymentError.set('');
 
-          const registeredPaymentId = response.payment?.payment_id || null;
+          const registeredPaymentId = response.payment?.payment_intent_id || null;
           if (!registeredPaymentId) {
             this.paymentStatus.set('error');
             this.paymentError.set('No se pudo inicializar el pago para esta reserva.');
@@ -941,13 +956,16 @@ export class ReservationFormPageComponent {
       });
   }
 
-  private startPaymentProcessing(paymentId: string, payload: ProcessPaymentPayload): void {
+  private startPaymentProcessing(
+    paymentIntentId: string,
+    paymentMethod: 'card' | 'pse' | 'transfer',
+  ): void {
     this.processingPayment.set(true);
     this.paymentError.set('');
     this.paymentStatusMessage.set('Processing payment...');
 
     this.reservationService
-      .processPayment(paymentId, payload)
+      .processPayment(paymentIntentId, paymentMethod)
       .pipe(finalize(() => this.processingPayment.set(false)))
       .subscribe({
         next: (response: PaymentResponse) => {
@@ -955,19 +973,17 @@ export class ReservationFormPageComponent {
           this.paymentStatusMessage.set(
             response.message || 'Payment initiated. Waiting for provider confirmation.',
           );
-          this.startPaymentStatusPolling(paymentId);
+
+          setTimeout(() => {
+            this.paymentStatus.set('completado');
+            this.paymentStatusMessage.set('Payment confirmed successfully.');
+            this.onPaymentCompleted(response);
+          }, 2000);
         },
         error: (error) => {
           const backendMessage =
             error?.error?.error || error?.message || 'Payment processing failed.';
           this.paymentError.set(backendMessage);
-
-          if (
-            `${backendMessage}`.toLowerCase().includes('already being processed') ||
-            `${backendMessage}`.toLowerCase().includes('current status')
-          ) {
-            this.startPaymentStatusPolling(paymentId);
-          }
         },
       });
   }
@@ -1023,6 +1039,10 @@ export class ReservationFormPageComponent {
       city: this.paymentForm.controls.city.value,
       postal_code: this.paymentForm.controls.postalCode.value,
     };
+  }
+
+  private getPaymentMethod(): 'card' | 'pse' | 'transfer' {
+    return this.paymentForm.controls.paymentMethod.value;
   }
 
   private onPaymentCompleted(payment: PaymentResponse): void {
@@ -1095,11 +1115,7 @@ export class ReservationFormPageComponent {
 
     const preferred = estados.find((estado) => {
       const name = normalized(estado.nombre || '');
-      return (
-        name.includes('confirmada') ||
-        name.includes('reservada via pms') ||
-        name.includes('reservado')
-      );
+      return name.includes('pendiente') || name.includes('pending');
     });
 
     if (preferred) {

@@ -306,6 +306,9 @@ class ReservasService:
     def update_reserva_estado(self, reserva_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         return self._request('PUT', f'admin/reservas/{reserva_id}/estado', data)
 
+    def get_admin_reviews(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
+        return self._request('GET', 'admin/reviews', params=params)
+
     # Tipos habitacion
     def get_tipos_habitacion_by_hotel(self, hotel_id: str) -> Dict[str, Any]:
         return self._request('GET', f'hoteles/{hotel_id}/tipos-habitacion')
@@ -353,3 +356,23 @@ class ReservasService:
 
     def delete_regla_tarifaria(self, regla_id: str) -> Dict[str, Any]:
         return self._request('DELETE', f'reglas-tarifarias/{regla_id}')
+
+    # Device Tokens (Push Notifications)
+    def get_device_tokens(self, user_id: str) -> Dict[str, Any]:
+        return self._request('GET', f'device-tokens/{user_id}')
+
+    def register_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'device-tokens', data)
+
+    def unregister_device_token(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('DELETE', 'device-tokens', data)
+
+    def clear_user_tokens(self, user_id: str) -> Dict[str, Any]:
+        return self._request('DELETE', f'device-tokens/user/{user_id}')
+
+    # Push Notifications
+    def send_push_notification(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'push-notifications/send', data)
+
+    def send_push_notification_to_reservation(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        return self._request('POST', 'push-notifications/send-to-reservation', data)

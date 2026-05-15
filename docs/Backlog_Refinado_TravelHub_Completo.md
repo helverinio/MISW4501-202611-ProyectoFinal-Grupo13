@@ -1148,7 +1148,7 @@ o La carga se distribuye entre servicios y regiones.
 • Artefacto: Sistema completo 
 • Ambiente: Pico de carga (temporadas altas) 
 • Respuesta: Mantener el servicio operativo sin degradación 
-• Medida de la respuesta: 600 usuarios concurrentes por país (3,600 total) 
+• Medida de la respuesta: 600 usuarios concurrentes por país (3,600 total)/min
 ASR09 - Alta disponibilidad mensual 
 • Descripción: Como operador del sistema, necesito que TravelHub esté disponible 
 prácticamente todo el tiempo, para garantizar continuidad del negocio y 

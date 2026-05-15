@@ -12,12 +12,13 @@ import {
   ReservationStats,
 } from '../../../../core/models/reservations.models';
 import { I18nService } from '../../../../core/services/i18n.service';
-import { LanguageCode } from '../../../../core/i18n/translations';
+import { AdminTranslation, LanguageCode } from '../../../../core/i18n/translations';
+import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 @Component({
   selector: 'app-reservations-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, AdminFooterComponent],
   templateUrl: './reservations-page.component.html',
 })
 export class ReservationsPageComponent implements OnInit {
@@ -73,7 +74,7 @@ export class ReservationsPageComponent implements OnInit {
     return this.authService.currentUser();
   }
 
-  t(key: Parameters<I18nService['t']>[0]): string {
+  t(key: keyof AdminTranslation): string {
     return this.i18n.t(key);
   }
 
@@ -192,6 +193,13 @@ export class ReservationsPageComponent implements OnInit {
   formatCurrency(amount: number | null): string {
     if (amount == null) return '—';
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  }
+
+  formatTaxes(amount: number | null): string {
+    if (amount == null) return '—';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+      Math.round(amount * 0.1 * 100) / 100,
+    );
   }
 
   logout(): void {

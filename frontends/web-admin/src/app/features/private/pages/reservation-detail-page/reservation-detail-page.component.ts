@@ -13,17 +13,23 @@ import {
 } from '../../../../core/models/reservations.models';
 import { UsuarioDetail } from '../../../../core/models/usuarios.models';
 import { AuthService } from '../../../../core/services/auth.service';
+import {
+  BookingConfirmationEmailPayload,
+  EmailDeliveryService,
+  AdminRejectionEmailPayload,
+} from '../../../../core/services/email-delivery.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { ReservationsService } from '../../../../core/services/reservations.service';
 import { UsuariosService } from '../../../../core/services/usuarios.service';
 import { LanguageCode } from '../../../../core/i18n/translations';
+import { AdminFooterComponent } from '../../../../shared/components/admin-footer/admin-footer.component';
 
 type ReservationAction = 'confirmada' | 'rechazada';
 
 @Component({
   selector: 'app-reservation-detail-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AdminFooterComponent],
   templateUrl: './reservation-detail-page.component.html',
 })
 export class ReservationDetailPageComponent implements OnInit {
@@ -35,7 +41,6 @@ export class ReservationDetailPageComponent implements OnInit {
   error: string | null = null;
   actionError: string | null = null;
   successMessage: string | null = null;
-
 
   confirmModalOpen = false;
   pendingAction: ReservationAction | null = null;
@@ -51,12 +56,14 @@ export class ReservationDetailPageComponent implements OnInit {
     const isPaid = estado === 'pago recibido' || estado === 'completada';
     if (pagos.length > 0) return pagos;
     if (isPaid) {
-      return [{
-        id: 'virtual',
-        fecha_pago: this.detail.created_at,
-        total: this.getCalculatedTotal(),
-        estado: 'completado',
-      }];
+      return [
+        {
+          id: 'virtual',
+          fecha_pago: this.detail.created_at,
+          total: this.getCalculatedTotal(),
+          estado: 'completado',
+        },
+      ];
     }
     return [];
   }
@@ -73,6 +80,7 @@ export class ReservationDetailPageComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly authService: AuthService,
+    private readonly emailDeliveryService: EmailDeliveryService,
     private readonly reservationsService: ReservationsService,
     private readonly usuariosService: UsuariosService,
     private readonly cdr: ChangeDetectorRef,
@@ -131,6 +139,27 @@ export class ReservationDetailPageComponent implements OnInit {
 
   get isPending(): boolean {
     return (this.detail?.estado?.nombre || '').toLowerCase() === 'pendiente';
+  }
+
+  get isAwaitingAdminReview(): boolean {
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
+    return estado === 'pendiente' || estado === 'pago recibido';
+  }
+
+  get canReject(): boolean {
+    return this.isAwaitingAdminReview;
+  }
+
+  get canConfirm(): boolean {
+    if (!this.isAwaitingAdminReview) return false;
+
+    const totalPaid = this.detail?.price_breakdown?.total_pagado ?? 0;
+    const hasCompletedPayment = (this.detail?.payments || []).some((payment) => {
+      const estado = (payment.estado || '').toLowerCase();
+      return estado === 'completado' || estado === 'pagado' || estado === 'paid';
+    });
+
+    return totalPaid > 0 || hasCompletedPayment;
   }
 
   get requiresReason(): boolean {
@@ -199,42 +228,135 @@ export class ReservationDetailPageComponent implements OnInit {
     return subtotal - discount + taxes;
   }
 
+  private getDisplayedPaymentsNet(): number {
+    return this.paymentsToShow.reduce((acc, payment) => {
+      const estado = (payment.estado || '').toLowerCase().trim();
+      const amount = payment.total ?? 0;
+
+      if (
+        estado === 'completado' ||
+        estado === 'pagado' ||
+        estado === 'paid' ||
+        estado === 'reembolsado' ||
+        estado === 'refund' ||
+        estado === 'refunded' ||
+        estado === 'devuelto'
+      ) {
+        return acc + amount;
+      }
+
+      return acc;
+    }, 0);
+  }
+
   getTotalPaid(): number {
-    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
-    const isPaid = estado === 'pago recibido' || estado === 'completada';
-    return isPaid ? this.getCalculatedTotal() : 0;
+    const backendTotalPaid = this.detail?.price_breakdown?.total_pagado ?? 0;
+    if (backendTotalPaid > 0) {
+      const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
+      // When balance is 0 the full amount (including taxes) was paid.
+      // The backend stores only the pre-tax base in total_pagado, so we
+      // return the full calculated total to avoid showing the wrong amount.
+      if (backendBalance === 0) {
+        return this.getCalculatedTotal();
+      }
+      return backendTotalPaid;
+    }
+
+    return Math.max(this.getDisplayedPaymentsNet(), 0);
+  }
+
+  getTotalPaidWithTax(): number {
+    return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+  }
+
+  /**
+   * Returns the display amount for a payment row.
+   * When there is only one payment and the balance is fully settled,
+   * the backend may store only the pre-tax base; we return the full
+   * calculated total (including taxes) so the UI matches what was charged.
+   */
+  getPaymentDisplayTotal(payment: ReservationPaymentItem): number {
+    const balance = this.detail?.price_breakdown?.balance_pendiente ?? -1;
+    if (balance === 0 && this.paymentsToShow.length === 1) {
+      return this.getCalculatedTotal();
+    }
+    return payment.total;
   }
 
   getRemainingBalance(): number {
-    const estado = (this.detail?.estado?.nombre || '').toLowerCase();
-    const isPaid = estado === 'pago recibido' || estado === 'completada';
-    return isPaid ? 0 : this.getCalculatedTotal();
+    const estado = (this.detail?.estado?.nombre || '').toLowerCase().trim();
+    if (estado === 'rechazada') {
+      return 0;
+    }
+
+    const remainingByDisplayedPayments = Math.max(
+      this.getCalculatedTotal() - this.getTotalPaid(),
+      0,
+    );
+    const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
+
+    if ((this.detail?.price_breakdown?.total_pagado ?? 0) > 0) {
+      return Math.max(backendBalance, 0);
+    }
+
+    return remainingByDisplayedPayments;
   }
 
   getPaymentBackgroundClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
     if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-50';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'bg-red-50';
     if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-50';
     return 'bg-gray-50';
   }
 
   getPaymentAmountClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'text-success-600';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'text-success-600';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'text-red-600';
     if (estado === 'pendiente' || estado === 'pending') return 'text-yellow-600';
     return 'text-gray-600';
   }
 
   getPaymentBadgeClass(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'bg-success-100 text-success-800';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'bg-success-100 text-success-800';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'bg-red-100 text-red-800';
     if (estado === 'pendiente' || estado === 'pending') return 'bg-yellow-100 text-yellow-800';
     return 'bg-gray-100 text-gray-800';
   }
 
   getPaymentBadgeIcon(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
-    if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'fas fa-check-circle';
+    if (estado === 'completado' || estado === 'pagado' || estado === 'paid')
+      return 'fas fa-check-circle';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'fas fa-rotate-left';
     if (estado === 'pendiente' || estado === 'pending') return 'fas fa-clock';
     return 'fas fa-info-circle';
   }
@@ -242,6 +364,13 @@ export class ReservationDetailPageComponent implements OnInit {
   getPaymentBadgeText(paymentEstado: string): string {
     const estado = (paymentEstado || '').toLowerCase();
     if (estado === 'completado' || estado === 'pagado' || estado === 'paid') return 'Paid';
+    if (
+      estado === 'reembolsado' ||
+      estado === 'refund' ||
+      estado === 'refunded' ||
+      estado === 'devuelto'
+    )
+      return 'Refunded';
     if (estado === 'pendiente' || estado === 'pending') return 'Pending';
     return estado;
   }
@@ -273,6 +402,7 @@ export class ReservationDetailPageComponent implements OnInit {
     if (!this.detail || !this.pendingAction || this.actionLoading) return;
 
     const action = this.pendingAction;
+    const actionReason = this.reason.trim();
     const targetEstado = Array.from(this.estadoMap.values()).find(
       (estado) => (estado.nombre || '').toLowerCase() === action,
     );
@@ -294,7 +424,7 @@ export class ReservationDetailPageComponent implements OnInit {
       .updateReservaEstado(this.detail.id, {
         id_estado: targetEstado.id,
         version: this.detail.version,
-        reason: this.reason.trim() || undefined,
+        reason: actionReason || undefined,
       })
       .subscribe({
         next: () => {
@@ -302,6 +432,7 @@ export class ReservationDetailPageComponent implements OnInit {
             action === 'confirmada'
               ? this.t('reservationDetail.success.confirmed')
               : this.t('reservationDetail.success.rejected');
+          this.sendActionEmailIfNeeded(action, actionReason);
           this.actionLoading = false;
           this.closeModal();
           this.loadDetail();
@@ -318,6 +449,85 @@ export class ReservationDetailPageComponent implements OnInit {
           this.actionLoading = false;
         },
       });
+  }
+
+  private sendActionEmailIfNeeded(action: ReservationAction, actionReason: string): void {
+    if (!this.detail || !this.guestInfo?.email) return;
+
+    const notificationType = action === 'confirmada' ? 'admin_confirmacion' : 'admin_rechazo';
+
+    this.reservationsService
+      .getNotificacionesByReservaAndType(this.detail.id, notificationType)
+      .pipe(
+        timeout(8000),
+        catchError(() => of([])),
+      )
+      .subscribe((notifications) => {
+        if (notifications.length > 0 || !this.detail || !this.guestInfo?.email) {
+          return;
+        }
+
+        if (action === 'confirmada') {
+          const payload: BookingConfirmationEmailPayload = {
+            toEmail: this.guestInfo.email,
+            bookingId: this.detail.id_corto,
+            hotelName: this.detail.hotel.nombre,
+            roomType: this.detail.habitacion.tipo,
+            checkIn: this.formatDate(this.detail.fecha_ingreso),
+            checkOut: this.formatDate(this.detail.fecha_salida),
+            guestName: this.guestInfo.nombre,
+            guestEmail: this.guestInfo.email,
+            phone: this.getPlaceholderPhone(),
+            guests: String(this.detail.nro_personas),
+            nights: String(this.detail.nro_noches ?? 0),
+            totalPaid: this.formatCurrency(this.getTotalPaid()),
+            paymentMethod: 'TravelHub',
+          };
+
+          this.emailDeliveryService.sendBookingConfirmation(payload).subscribe({
+            next: () => {
+              this.createActionNotification(notificationType, 'Reservation confirmed email sent.');
+            },
+            error: (error) => {
+              console.warn('[AdminEmail] Confirmation email failed', error);
+            },
+          });
+          return;
+        }
+
+        const payload: AdminRejectionEmailPayload = {
+          toEmail: this.guestInfo.email,
+          reservationId: this.detail.id_corto,
+          guestName: this.guestInfo.nombre,
+          hotelName: this.detail.hotel.nombre,
+          checkIn: this.formatDate(this.detail.fecha_ingreso),
+          checkOut: this.formatDate(this.detail.fecha_salida),
+          totalRefunded: this.formatCurrency(this.getTotalPaid()),
+          rejectionReason: actionReason || 'No reason provided',
+        };
+
+        this.emailDeliveryService.sendAdminRejectionEmail(payload).subscribe({
+          next: () => {
+            this.createActionNotification(notificationType, 'Reservation rejection email sent.');
+          },
+          error: (error) => {
+            console.warn('[AdminEmail] Rejection email failed', error);
+          },
+        });
+      });
+  }
+
+  private createActionNotification(notificationType: string, description: string): void {
+    if (!this.detail) return;
+
+    this.reservationsService
+      .createNotificacion({
+        titulo: notificationType,
+        descripcion: description,
+        id_reserva: this.detail.id,
+      })
+      .pipe(catchError(() => of(null)))
+      .subscribe();
   }
 
   private loadEstados(): void {
@@ -391,7 +601,7 @@ export class ReservationDetailPageComponent implements OnInit {
       price_breakdown: {
         subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
         discount: 0,
-        impuestos_estimados: ((detail.price_breakdown?.subtotal_noches ?? 0) * 0.1),
+        impuestos_estimados: (detail.price_breakdown?.subtotal_noches ?? 0) * 0.1,
         total_pagado: detail.price_breakdown?.total_pagado ?? 0,
         balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
         detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)

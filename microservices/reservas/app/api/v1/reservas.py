@@ -1,24 +1,28 @@
 from flask import request, jsonify, current_app
 from datetime import datetime, date
-import io, base64, json
+import io, base64, json, uuid
 import qrcode
 from app.api.v1 import api_v1_bp
 from app.api.v1.auth import require_token
+from app import db
 from app.application.use_cases import (
     CreateReservaUseCase, GetReservaUseCase, GetAllReservasUseCase,
     GetReservasByUsuarioUseCase, GetReservasByHabitacionUseCase,
     UpdateReservaUseCase, DeleteReservaUseCase,
     ValidateUserHoldUseCase, ReleaseRoomHoldUseCase, CheckRoomHoldUseCase,
     AcquireRoomHoldUseCase,
-    PricingService, QuotationService, PricingRuleNotFoundError
+    PricingService, QuotationService, PricingRuleNotFoundError,
+    SendPushNotificationUseCase,
 )
 from app.infrastructure.repositories import (
     SQLAlchemyReservaRepository,
     SQLAlchemyRoomHoldRepository,
     SQLAlchemyEstadoRepository,
     SQLAlchemyPricingRepository,
+    SQLAlchemyDeviceTokenRepository,
 )
-from app.infrastructure.services import PagosService, get_redis_lock_service, RedisLockAcquisitionError
+from app.infrastructure.services import PagosService, get_redis_lock_service, RedisLockAcquisitionError, PushNotificationService
+from app.infrastructure.models.pago_model import PagoModel
 from app.infrastructure.messaging import MessagePublisher, PaymentStatusUpdatedEvent
 from app.domain.entities.estado import Estado
 
@@ -46,6 +50,12 @@ def get_pricing_services():
     return pricing_repository, pricing_service, quotation_service
 
 
+def get_push_notification_use_case():
+    device_token_repository = SQLAlchemyDeviceTokenRepository()
+    push_service = PushNotificationService()
+    return SendPushNotificationUseCase(device_token_repository, push_service)
+
+
 def parse_datetime(date_str):
     if not date_str:
         return None
@@ -53,6 +63,32 @@ def parse_datetime(date_str):
         return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
     except ValueError:
         return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+
+
+def _ensure_completed_payment_record(reserva, amount):
+    existing_payment = (
+        PagoModel.query
+        .filter(
+            PagoModel.id_reserva == reserva.id,
+            db.func.lower(PagoModel.estado).in_(['completado', 'pagado', 'paid']),
+        )
+        .order_by(PagoModel.fecha_pago.desc())
+        .first()
+    )
+
+    if existing_payment:
+        return existing_payment
+
+    payment = PagoModel(
+        id=str(uuid.uuid4()),
+        fecha_pago=datetime.utcnow(),
+        total=amount,
+        estado='completado',
+        id_pais=reserva.id_pais,
+        id_reserva=reserva.id,
+    )
+    db.session.add(payment)
+    return payment
 
 
 @api_v1_bp.route('/reservas', methods=['POST'])
@@ -348,6 +384,57 @@ def update_reserva(reserva_id, current_usuario=None):
     if not reserva:
         return jsonify({'error': 'Reserva not found'}), 404
 
+    # Check if estado was updated and handle side effects
+    if 'id_estado' in update_data:
+        estado_repo = SQLAlchemyEstadoRepository()
+        estado = estado_repo.find_by_id(reserva.id_estado)
+        estado_nombre = estado.nombre if estado else ''
+        normalized_estado = estado_nombre.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
+
+        # When cancelling, create a virtual refund for any paid amount (same logic as admin rejection)
+        if 'cancel' in normalized_estado:
+            pagos = PagoModel.query.filter_by(id_reserva=reserva_id).all()
+            refund_statuses = {'reembolsado', 'refund', 'refunded', 'devuelto'}
+            paid_statuses = {'completado', 'pagado', 'paid', 'succeeded', 'approved', 'pago recibido', 'pago_recibido'}
+            net_paid = sum(
+                (p.total or 0.0) for p in pagos
+                if (p.estado or '').lower() in paid_statuses
+            ) - sum(
+                abs(p.total or 0.0) for p in pagos
+                if (p.estado or '').lower() in refund_statuses
+            )
+            if net_paid > 0:
+                refund = PagoModel(
+                    id=str(uuid.uuid4()),
+                    fecha_pago=datetime.utcnow(),
+                    total=-net_paid,
+                    estado='reembolsado',
+                    id_pais=reserva.id_pais,
+                    id_reserva=reserva.id,
+                )
+                db.session.add(refund)
+                db.session.commit()
+                current_app.logger.info(
+                    f"[RESERVAS] Virtual refund created for cancelled reservation {reserva_id}, amount={net_paid}"
+                )
+
+        if 'confirm' in normalized_estado:
+            current_app.logger.info(f"[RESERVAS] Reservation {reserva_id} updated to confirmed estado, sending push notification")
+            try:
+                push_use_case = get_push_notification_use_case()
+                push_result = push_use_case.execute(
+                    user_id=reserva.id_usuario,
+                    title='Reserva Confirmada',
+                    body='Tu reserva ha sido confirmada exitosamente',
+                    data={'type': 'reservation_confirmed', 'reservation_id': reserva.id}
+                )
+                if push_result.get('success'):
+                    current_app.logger.info(f"[RESERVAS] Push notification sent successfully for reservation {reserva_id}")
+                else:
+                    current_app.logger.warning(f"[RESERVAS] Failed to send push notification for reservation {reserva_id}: {push_result.get('error')}")
+            except Exception as e:
+                current_app.logger.error(f"[RESERVAS] Error sending push notification for reservation {reserva_id}: {str(e)}")
+
     response_payload = _serialize_reserva(reserva)
 
     if total_edited:
@@ -622,6 +709,8 @@ def payment_webhook():
     if not reserva:
         current_app.logger.error(f"[RESERVAS] Reservation {reservation_id} not found")
         return jsonify({'error': 'Reservation not found'}), 404
+
+    _ensure_completed_payment_record(reserva, amount or reserva.total)
     
     reserva.id_estado = estado.id
     reserva_repo.update(reserva)
