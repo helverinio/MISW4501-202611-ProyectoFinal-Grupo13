@@ -253,15 +253,19 @@ export class ReservationService {
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
-  processPayment(paymentId: string, payload: ProcessPaymentPayload): Observable<PaymentResponse> {
+  processPayment(paymentIntentId: string, paymentMethod: 'card' | 'pse' | 'transfer' = 'card'): Observable<PaymentResponse> {
+    const payload = {
+      payment_intent_id: paymentIntentId,
+      payment_method: paymentMethod,
+    };
     return this.http
-      .post<PaymentResponse>(`${environment.apiBaseUrl}/payments/${paymentId}/process`, payload)
+      .post<PaymentResponse>(`${environment.extPaymentsBaseUrl}/api/v1/payments`, payload)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
   getPayment(paymentId: string): Observable<PaymentResponse> {
     return this.http
-      .get<PaymentResponse>(`${environment.apiBaseUrl}/payments/${paymentId}`)
+      .get<PaymentResponse>(`${environment.extPaymentsBaseUrl}/api/v1/payments/${paymentId}`)
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
