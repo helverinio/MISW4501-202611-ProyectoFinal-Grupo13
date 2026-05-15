@@ -38,6 +38,7 @@ export default function PaymentResultScreen() {
   const grandTotal = getParam('grandTotal');
   const cardLast4 = getParam('cardLast4');
   const cardType = getParam('cardType') || 'Card';
+  const serviceFee = getParam('serviceFee');
   const errorMessage = getParam('errorMessage');
 
   const formatDate = (dateStr: string) => {
@@ -71,7 +72,7 @@ export default function PaymentResultScreen() {
   };
 
   const handleViewBookingDetails = () => {
-    router.push('/screens/bookings');
+    router.push('/screens/myReservations');
   };
 
   const renderStars = (rating: number) => {
@@ -186,7 +187,7 @@ export default function PaymentResultScreen() {
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>{t('paymentResult.taxesAndFees')}</Text>
                 <Text style={styles.summaryValue}>
-                  ${taxesFees ? parseFloat(taxesFees).toFixed(2) : '0.00'}
+                  ${(parseFloat(taxesFees) || 0).toFixed(2)}
                 </Text>
               </View>
               

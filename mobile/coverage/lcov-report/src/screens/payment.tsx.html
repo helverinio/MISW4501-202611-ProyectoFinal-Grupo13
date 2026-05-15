@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.58% </span>
+                <span class="strong">71.69% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>194/271</span>
+                <span class='fraction'>195/272</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.83% </span>
+                <span class="strong">60.16% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>143/239</span>
+                <span class='fraction'>145/241</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.93% </span>
+                <span class="strong">71.04% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>183/258</span>
+                <span class='fraction'>184/259</span>
             </div>
         
             
@@ -1294,7 +1294,13 @@
 <a name='L1229'></a><a href='#L1229'>1229</a>
 <a name='L1230'></a><a href='#L1230'>1230</a>
 <a name='L1231'></a><a href='#L1231'>1231</a>
-<a name='L1232'></a><a href='#L1232'>1232</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1232'></a><a href='#L1232'>1232</a>
+<a name='L1233'></a><a href='#L1233'>1233</a>
+<a name='L1234'></a><a href='#L1234'>1234</a>
+<a name='L1235'></a><a href='#L1235'>1235</a>
+<a name='L1236'></a><a href='#L1236'>1236</a>
+<a name='L1237'></a><a href='#L1237'>1237</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1346,10 +1352,11 @@
 <span class="cline-any cline-yes">434x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">434x</span>
-<span class="cline-any cline-yes">6944x</span>
-<span class="cline-any cline-yes">6944x</span>
+<span class="cline-any cline-yes">7378x</span>
+<span class="cline-any cline-yes">7378x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">434x</span>
 <span class="cline-any cline-yes">434x</span>
 <span class="cline-any cline-yes">434x</span>
 <span class="cline-any cline-yes">434x</span>
@@ -1738,6 +1745,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1800,6 +1808,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1858,6 +1867,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2565,6 +2575,7 @@ interface PaymentParams {
   holdId: string;
   taxRate: string;
   taxesAmount: string;
+  serviceFee: string;
   isModification?: string;
   reservationId?: string;
   originalTotal?: string;
@@ -2594,6 +2605,7 @@ export default function PaymentScreen() {
   const holdId = getParam('holdId');
   const taxRate = parseFloat(getParam('taxRate') || <span class="branch-1 cbranch-no" title="branch not covered" >'0.12')</span>;
   const taxesAmount = parseFloat(getParam('taxesAmount') || <span class="branch-1 cbranch-no" title="branch not covered" >'0')</span>;
+  const serviceFee = parseFloat(getParam('serviceFee') || '0');
   const reservationId = getParam('reservationId');
   const originalTotal = parseFloat(getParam('originalTotal') || '0');
   const newTotal = parseFloat(getParam('newTotal') || '0');
@@ -2960,13 +2972,14 @@ export default function PaymentScreen() {
             checkOut,
             nights: nights.toString(),
             guests: guests.toString(),
-            roomPrice: (newTotal - taxesAmount).toFixed(2),
-            taxesFees: taxesAmount.toFixed(2),
+            roomPrice: (newTotal - taxesAmount - serviceFee).toFixed(2),
+            taxesFees: taxesAmount.toString(),
             grandTotal: newTotal.toString(),
             cardLast4,
             cardType,
             isModification: 'true',
             priceDifference: finalTotal.toString(),
+            serviceFee: serviceFee.toString(),
           },
         });
 <span class="cstat-no" title="statement not covered" >        return;</span>
@@ -3048,6 +3061,7 @@ export default function PaymentScreen() {
             grandTotal: finalTotal.toString(),
             cardLast4,
             cardType,
+            serviceFee: (grandTotal * SERVICE_FEE).toFixed(2),
           },
         });
 <span class="cstat-no" title="statement not covered" >        return;</span>
@@ -3077,14 +3091,14 @@ export default function PaymentScreen() {
         });
       }
 &nbsp;
-      const checkInDate = new Date(checkIn + 'T00:00:00');
-      const checkOutDate = new Date(checkOut + 'T00:00:00');
-      const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-      const taxesFees = taxesAmount;
-      const roomPrice = finalTotal - taxesFees;
-      const cleanedCard = cardNumber.replace(/\s/g, '');
-      const cardLast4 = cleanedCard.slice(-4);
-      const cardType = detectCardType(cleanedCard);
+      const stdCheckInDate = new Date(checkIn + 'T00:00:00');
+      const stdCheckOutDate = new Date(checkOut + 'T00:00:00');
+      const stdNights = Math.ceil((stdCheckOutDate.getTime() - stdCheckInDate.getTime()) / (1000 * 60 * 60 * 24));
+      const stdTaxesFees = taxesAmount + serviceFee;
+      const stdRoomPrice = finalTotal - stdTaxesFees;
+      const stdCleanedCard = cardNumber.replace(/\s/g, '');
+      const stdCardLast4 = stdCleanedCard.slice(-4);
+      const stdCardType = detectCardType(stdCleanedCard);
 &nbsp;
       await new Promise((resolve) =&gt; { processingTimerRef.current = setTimeout(resolve, 2000); });
 &nbsp;
@@ -3099,13 +3113,14 @@ export default function PaymentScreen() {
           roomImage: roomData.imagen || <span class="branch-1 cbranch-no" title="branch not covered" >hotelData.imagen </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >'',</span>
           checkIn,
           checkOut,
-          nights: nights.toString(),
+          nights: stdNights.toString(),
           guests: guests.toString(),
-          roomPrice: roomPrice.toFixed(2),
-          taxesFees: taxesFees.toFixed(2),
+          roomPrice: stdRoomPrice.toFixed(2),
+          taxesFees: stdTaxesFees.toFixed(2),
           grandTotal: finalTotal.toString(),
-          cardLast4,
-          cardType,
+          cardLast4: stdCardLast4,
+          cardType: stdCardType,
+          serviceFee: serviceFee.toString(),
         },
       });
     } catch (error: any) {
@@ -3763,7 +3778,7 @@ const styles = StyleSheet.create({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-13T18:54:43.967Z
+                at 2026-05-15T20:03:00.482Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
