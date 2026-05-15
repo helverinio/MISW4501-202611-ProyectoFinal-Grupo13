@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
@@ -68,6 +68,7 @@ export default function MyReservationsScreen() {
   const [activeTab, setActiveTab] = useState<ReservationTab>('upcoming');
   const [estados, setEstados] = useState<EstadoResponse[]>([]);
   const [isShowingCached, setIsShowingCached] = useState(false);
+  const params = useLocalSearchParams<{ refresh?: string }>();
 
   const loadFromCache = useCallback(async (userId: string): Promise<boolean> => {
     const cached = await ReservationsOfflineCache.loadList<{
@@ -192,7 +193,7 @@ export default function MyReservationsScreen() {
 
   useEffect(() => {
     loadReservations();
-  }, [loadReservations]);
+  }, [loadReservations, params.refresh]);
 
   const enrichReservation = (
     reserva: ReservaResponse,

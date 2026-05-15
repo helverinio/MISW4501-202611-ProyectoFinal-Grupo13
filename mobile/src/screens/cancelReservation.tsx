@@ -182,6 +182,8 @@ export default function CancelReservationScreen() {
           t('cancelReservation.successMessage'),
           [{ text: t('common.ok'), onPress: () => router.back() }]
         );
+        // Navigate back with refresh parameter to trigger reload
+        router.setParams({ refresh: Date.now().toString() });
       } else {
         Alert.alert('Error', result.error?.message || t('cancelReservation.errorMessage'));
       }

@@ -257,6 +257,7 @@ export default function BookingScreen() {
         grandTotal: grandTotal.toString(),
         taxRate: taxRate.toString(),
         taxesAmount: taxesAmount.toString(),
+        serviceFee: serviceFee.toString(),
         firstName,
         lastName,
         email,
