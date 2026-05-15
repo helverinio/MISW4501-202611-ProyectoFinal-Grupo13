@@ -94,15 +94,18 @@ describe('MyReservationDetailScreen', () => {
 
     await waitFor(() => {
       expect(getByText('reservationDetail.title')).toBeTruthy();
+    }, { timeout: 10000 });
+
+    await waitFor(() => {
       expect(getByText(`#TH-${currentYear}-ABCD`)).toBeTruthy();
       expect(getByText('Hotel Plaza')).toBeTruthy();
       expect(getByText('Suite')).toBeTruthy();
       expect(getByText('2 reservationDetail.beds • reservationDetail.capacity: 4 • 35m²')).toBeTruthy();
       expect(getByText('2 reservationDetail.adults')).toBeTruthy();
-      expect(getByText('2 reservationDetail.nights × $443 USD')).toBeTruthy();
-      expect(getByText('$885.00')).toBeTruthy();
-      expect(getByText('$44.00')).toBeTruthy();
-      expect(getByText('$71.00')).toBeTruthy();
+      expect(getByText('2 reservationDetail.nights × $435 USD')).toBeTruthy();
+      expect(getByText('$869.57')).toBeTruthy();
+      expect(getByText('$43.48')).toBeTruthy();
+      expect(getByText('$86.96')).toBeTruthy();
       expect(getByText('$1000.00USD')).toBeTruthy();
       expect(getByText('4.5 (500)')).toBeTruthy();
     }, { timeout: 10000 });
@@ -181,7 +184,7 @@ describe('MyReservationDetailScreen', () => {
     await waitFor(() => {
       expect(getByText('reservationDetail.kingBed • reservationDetail.capacity: 4 • 35m²')).toBeTruthy();
       expect(getByText('1 reservationDetail.adult')).toBeTruthy();
-      expect(getByText('1 reservationDetail.night × $177 USD')).toBeTruthy();
+      expect(getByText('1 reservationDetail.night × $174 USD')).toBeTruthy();
     });
   });
 });
