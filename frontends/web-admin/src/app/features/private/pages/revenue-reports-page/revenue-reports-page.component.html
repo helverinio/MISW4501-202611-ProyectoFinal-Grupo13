@@ -215,7 +215,10 @@
         </div>
       </div>
 
-      <div id="summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-6">
+      <div
+        id="summary-cards"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-6"
+      >
         <div
           id="total-revenue-card"
           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
@@ -238,10 +241,7 @@
           <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.selectedMonthTotal') }}</p>
         </div>
 
-        <div
-          id="taxes-card"
-          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
-        >
+        <div id="taxes-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
               <i class="fas fa-file-invoice-dollar text-yellow-600 text-xl"></i>
@@ -414,7 +414,9 @@
                 <td class="py-4 px-4 text-sm font-semibold text-gray-900">
                   {{ formatCurrency(row.gross_revenue) }}
                 </td>
-                <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(getTaxesForRow(row)) }}</td>
+                <td class="py-4 px-4 text-sm text-gray-700">
+                  {{ formatCurrency(getTaxesForRow(row)) }}
+                </td>
                 <td class="py-4 px-4 text-sm text-gray-700">
                   {{ formatCurrency(getCommissionForRow(row)) }}
                 </td>

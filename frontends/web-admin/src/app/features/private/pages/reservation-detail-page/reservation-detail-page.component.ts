@@ -233,7 +233,7 @@ export class ReservationDetailPageComponent implements OnInit {
   getTaxesAmount(): number {
     const gross = this.detail?.price_breakdown?.total_pagado ?? 0;
     const base = gross / 1.15;
-    return Math.round(base * 0.10 * 100) / 100;
+    return Math.round(base * 0.1 * 100) / 100;
   }
 
   getCommissionAmount(): number {
@@ -600,7 +600,7 @@ export class ReservationDetailPageComponent implements OnInit {
         // Example: if raw = 115 → base = 100, taxes = 10, commission = 5.
         const raw = detail.price_breakdown?.subtotal_noches ?? detail.total ?? 0;
         const base = raw / 1.15;
-        const taxes = Math.round(base * 0.10 * 100) / 100;
+        const taxes = Math.round(base * 0.1 * 100) / 100;
         const commission = Math.round(base * 0.05 * 100) / 100;
         return {
           subtotal_noches: Math.round(base * 100) / 100,

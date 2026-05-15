@@ -121,7 +121,7 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
    * Total taxes (10%) extracted from gross revenue.
    */
   get totalTaxes(): number {
-    return Math.round(this.totalBaseRevenue * 0.10 * 100) / 100;
+    return Math.round(this.totalBaseRevenue * 0.1 * 100) / 100;
   }
 
   /**
@@ -142,7 +142,7 @@ export class RevenueReportsPageComponent implements OnInit, AfterViewInit {
    * Taxes (10%) extracted from a single daily row's gross revenue.
    */
   getTaxesForRow(row: RevenueDailyRow): number {
-    return Math.round((row.gross_revenue / 1.15) * 0.10 * 100) / 100;
+    return Math.round((row.gross_revenue / 1.15) * 0.1 * 100) / 100;
   }
 
   /**
