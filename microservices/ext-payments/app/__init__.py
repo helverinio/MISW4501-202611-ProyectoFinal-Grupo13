@@ -3,6 +3,7 @@ import sys
 from flask import Flask, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 from config import config
 import time
 
@@ -29,6 +30,8 @@ def create_app(config_name='default'):
     
     db.init_app(app)
     migrate.init_app(app, db)
+    
+    CORS(app, resources={r"/api/v1/*": {"origins": ["http://localhost:4200", "http://localhost:8080"]}})
     
     @app.before_request
     def log_request_start():
