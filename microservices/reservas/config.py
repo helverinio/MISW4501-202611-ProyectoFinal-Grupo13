@@ -33,7 +33,7 @@ class Config:
 
     # Revenue report configuration
     TRAVELHUB_COMMISSION_PERCENTAGE = float(
-        os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '12.0')
+        os.environ.get('TRAVELHUB_COMMISSION_PERCENTAGE', '5.0')
     )
 
     # Firebase Configuration for Push Notifications

@@ -275,7 +275,7 @@ def get_admin_revenue_report(current_usuario=None):
     hotel_ids = [hotel['id'] for hotel in authorized_hotels]
 
     commission_percentage = float(
-        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
+        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 5.0)
     )
 
     if not hotel_ids:
@@ -336,8 +336,9 @@ def get_admin_revenue_report(current_usuario=None):
     for row in rows:
         report_date = row.report_date.isoformat() if hasattr(row.report_date, 'isoformat') else str(row.report_date)
         gross_revenue = float(row.gross_revenue or 0.0)
-        commission_amount = round(gross_revenue * (commission_percentage / 100.0), 2)
-        net_revenue = round(gross_revenue - commission_amount, 2)
+        base_revenue = gross_revenue / 1.15  # DB total includes 10% tax + 5% commission
+        commission_amount = round(base_revenue * (commission_percentage / 100.0), 2)
+        net_revenue = round(base_revenue, 2)
         if report_date in daily_rows_by_date:
             daily_rows_by_date[report_date]['bookings_count'] = int(row.bookings_count or 0)
             daily_rows_by_date[report_date]['gross_revenue'] = round(gross_revenue, 2)

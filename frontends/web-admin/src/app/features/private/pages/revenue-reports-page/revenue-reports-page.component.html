@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <div id="summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div id="summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-6">
         <div
           id="total-revenue-card"
           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
@@ -239,6 +239,24 @@
         </div>
 
         <div
+          id="taxes-card"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-file-invoice-dollar text-yellow-600 text-xl"></i>
+            </div>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+              >{{ t('revenue.kpi.currentScope') }}</span
+            >
+          </div>
+          <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.taxes') }}</h3>
+          <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(totalTaxes) }}</p>
+          <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.selectedMonthTotal') }}</p>
+        </div>
+
+        <div
           id="avg-booking-card"
           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
         >
@@ -252,7 +270,7 @@
             >
           </div>
           <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.netRevenue') }}</h3>
-          <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(summary.net_revenue) }}</p>
+          <p class="text-3xl font-bold text-gray-900">{{ formatCurrency(totalNetRevenue) }}</p>
           <p class="text-xs text-gray-500 mt-2">{{ t('revenue.kpi.afterCommission') }}</p>
         </div>
 
@@ -288,7 +306,7 @@
           </div>
           <h3 class="text-sm font-medium text-gray-600 mb-1">{{ t('revenue.kpi.commission') }}</h3>
           <p class="text-3xl font-bold text-gray-900">
-            {{ formatCurrency(summary.travelhub_commission) }}
+            {{ formatCurrency(totalCommission) }}
           </p>
           <p class="text-xs text-gray-500 mt-2">
             {{ commissionPercentage }}{{ t('revenue.kpi.fixedCommission') }}
@@ -377,6 +395,9 @@
                   {{ t('revenue.table.grossRevenue') }}
                 </th>
                 <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
+                  {{ t('revenue.table.taxes') }}
+                </th>
+                <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
                   {{ t('revenue.table.commission') }}
                 </th>
                 <th class="text-left py-3 px-4 text-xs font-semibold text-gray-600 uppercase">
@@ -393,11 +414,12 @@
                 <td class="py-4 px-4 text-sm font-semibold text-gray-900">
                   {{ formatCurrency(row.gross_revenue) }}
                 </td>
+                <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(getTaxesForRow(row)) }}</td>
                 <td class="py-4 px-4 text-sm text-gray-700">
-                  {{ formatCurrency(row.travelhub_commission) }}
+                  {{ formatCurrency(getCommissionForRow(row)) }}
                 </td>
                 <td class="py-4 px-4 text-sm text-gray-700">
-                  {{ formatCurrency(row.net_revenue) }}
+                  {{ formatCurrency(getNetRevenueForRow(row)) }}
                 </td>
               </tr>
               <tr *ngIf="!dailyRows.length" class="hover:bg-gray-50 transition-colors">
@@ -408,6 +430,7 @@
                 <td class="py-4 px-4 text-sm font-semibold text-gray-900">
                   {{ formatCurrency(0) }}
                 </td>
+                <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(0) }}</td>
                 <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(0) }}</td>
                 <td class="py-4 px-4 text-sm text-gray-700">{{ formatCurrency(0) }}</td>
               </tr>

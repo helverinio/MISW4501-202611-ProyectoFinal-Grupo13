@@ -225,7 +225,8 @@ export class ReservationDetailPageComponent implements OnInit {
     const subtotal = this.detail?.price_breakdown?.subtotal_noches ?? 0;
     const discount = this.detail?.price_breakdown?.discount ?? 0;
     const taxes = this.detail?.price_breakdown?.impuestos_estimados ?? 0;
-    return subtotal - discount + taxes;
+    const commission = this.detail?.price_breakdown?.comision_travelkhub ?? 0;
+    return subtotal - discount + taxes + commission;
   }
 
   private getDisplayedPaymentsNet(): number {
@@ -266,7 +267,8 @@ export class ReservationDetailPageComponent implements OnInit {
   }
 
   getTotalPaidWithTax(): number {
-    return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+    // Total already includes taxes and service fee — no further multiplication needed.
+    return this.getTotalPaid();
   }
 
   /**
@@ -598,16 +600,25 @@ export class ReservationDetailPageComponent implements OnInit {
       },
       payments: Array.isArray(detail.payments) ? detail.payments : [],
       timeline: Array.isArray(detail.timeline) ? detail.timeline : [],
-      price_breakdown: {
-        subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
-        discount: 0,
-        impuestos_estimados: (detail.price_breakdown?.subtotal_noches ?? 0) * 0.1,
-        total_pagado: detail.price_breakdown?.total_pagado ?? 0,
-        balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
-        detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
-          ? detail.price_breakdown.detalle_noches
-          : [],
-      },
+      price_breakdown: (() => {
+        // The value stored in DB already includes 10% taxes + 5% TravelHub service fee.
+        // Example: if raw = 115 → base = 100, taxes = 10, commission = 5.
+        const raw = detail.price_breakdown?.subtotal_noches ?? detail.total ?? 0;
+        const base = raw / 1.15;
+        const taxes = Math.round(base * 0.10 * 100) / 100;
+        const commission = Math.round(base * 0.05 * 100) / 100;
+        return {
+          subtotal_noches: Math.round(base * 100) / 100,
+          discount: 0,
+          impuestos_estimados: taxes,
+          comision_travelkhub: commission,
+          total_pagado: detail.price_breakdown?.total_pagado ?? 0,
+          balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
+          detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
+            ? detail.price_breakdown.detalle_noches
+            : [],
+        };
+      })(),
     };
   }
 }

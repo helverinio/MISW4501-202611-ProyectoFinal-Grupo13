@@ -453,6 +453,12 @@
                     {{ formatCurrency(detail.price_breakdown.impuestos_estimados) }}
                   </p>
                 </div>
+                <div class="flex items-center justify-between">
+                  <p class="text-sm text-gray-700">{{ t('reservationDetail.serviceFee') }}</p>
+                  <p class="text-sm font-medium text-gray-900">
+                    {{ formatCurrency(detail.price_breakdown.comision_travelkhub) }}
+                  </p>
+                </div>
                 <div class="pt-3 border-t-2 border-gray-300">
                   <div class="flex items-center justify-between">
                     <p class="text-base font-bold text-gray-900">
