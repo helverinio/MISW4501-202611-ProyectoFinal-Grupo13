@@ -162,6 +162,10 @@
                 <span>{{ label('taxesFees') }}</span>
                 <span>{{ formatPrice(taxesAmount()) }}</span>
               </div>
+              <div class="flex justify-between text-gray-600">
+                <span>{{ label('serviceFee') }}</span>
+                <span>{{ formatPrice(commissionAmount()) }}</span>
+              </div>
               <div class="flex justify-between items-center pt-3 sm:pt-4 border-t border-gray-200">
                 <span class="text-lg sm:text-xl font-bold text-gray-900">{{
                   label('totalPaid')
@@ -514,6 +518,10 @@
             <span>{{ label('taxesFees') }}</span>
             <span>{{ formatPrice(taxesAmount()) }}</span>
           </div>
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ label('serviceFee') }}</span>
+            <span>{{ formatPrice(commissionAmount()) }}</span>
+          </div>
         </div>
 
         <div class="flex items-center justify-between py-4">
@@ -802,6 +810,10 @@
             <div class="flex items-center justify-between text-gray-600">
               <span>{{ label('taxesFees') }}</span>
               <span>{{ formatPrice(taxesAmount()) }}</span>
+            </div>
+            <div class="flex items-center justify-between text-gray-600">
+              <span>{{ label('serviceFee') }}</span>
+              <span>{{ formatPrice(commissionAmount()) }}</span>
             </div>
           </div>
 

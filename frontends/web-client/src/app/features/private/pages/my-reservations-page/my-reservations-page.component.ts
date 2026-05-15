@@ -205,7 +205,7 @@ export class MyReservationsPageComponent {
         cancelledStatus: 'Cancelled',
         rejectedStatus: 'Rejected',
         paymentReceived: 'Payment Received',
-        taxIncluded: 'Includes taxes (10%)',
+        taxIncluded: 'Includes taxes (10%) and service fee (5%)',
         rateStay: 'Rate Stay',
         reviewStayTitle: 'Rate and review your stay',
         reviewRatingLabel: 'Rating',
@@ -245,7 +245,7 @@ export class MyReservationsPageComponent {
         cancelledStatus: 'Cancelada',
         rejectedStatus: 'Rechazada',
         paymentReceived: 'Pago recibido',
-        taxIncluded: 'Incluye impuestos (10%)',
+        taxIncluded: 'Incluye impuestos (10%) y comisión de servicio (5%)',
         rateStay: 'Calificar estancia',
         reviewStayTitle: 'Califica y reseña tu estancia',
         reviewRatingLabel: 'Calificación',
@@ -285,7 +285,7 @@ export class MyReservationsPageComponent {
         cancelledStatus: 'Cancelada',
         rejectedStatus: 'Rejeitada',
         paymentReceived: 'Pagamento recebido',
-        taxIncluded: 'Inclui impostos (10%)',
+        taxIncluded: 'Inclui impostos (10%) e taxa de serviço (5%)',
         rateStay: 'Avaliar estadia',
         reviewStayTitle: 'Avalie e comente sua estadia',
         reviewRatingLabel: 'Classificação',
@@ -475,7 +475,7 @@ export class MyReservationsPageComponent {
 
   protected formatPrice(amountUsd: number): string {
     const currency = this.currentCurrency();
-    const converted = this.currencyService.convertFromUsd(amountUsd * 1.1);
+    const converted = this.currencyService.convertFromUsd(amountUsd);
     const locale = this.getLocale();
 
     return new Intl.NumberFormat(locale, {
