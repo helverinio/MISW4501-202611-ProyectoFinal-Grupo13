@@ -18,7 +18,13 @@ import {
 } from '../../../search-results/services/reservation.service';
 
 type ReservationTab = 'all' | 'upcoming' | 'past' | 'cancelled';
-type ReservationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled';
+type ReservationStatus =
+  | 'confirmed'
+  | 'pending'
+  | 'completed'
+  | 'cancelled'
+  | 'rejected'
+  | 'paymentReceived';
 
 interface ReservationItemVm {
   id: string;
@@ -77,9 +83,12 @@ export class MyReservationsPageComponent {
       const matchesTab =
         tab === 'all' ||
         (tab === 'upcoming' &&
-          (reservation.status === 'confirmed' || reservation.status === 'pending')) ||
+          (reservation.status === 'confirmed' ||
+            reservation.status === 'pending' ||
+            reservation.status === 'paymentReceived')) ||
         (tab === 'past' && reservation.status === 'completed') ||
-        (tab === 'cancelled' && reservation.status === 'cancelled');
+        (tab === 'cancelled' &&
+          (reservation.status === 'cancelled' || reservation.status === 'rejected'));
 
       if (!matchesTab) {
         return false;
@@ -152,6 +161,9 @@ export class MyReservationsPageComponent {
       | 'pending'
       | 'completed'
       | 'cancelledStatus'
+      | 'rejectedStatus'
+      | 'paymentReceived'
+      | 'taxIncluded'
       | 'rateStay'
       | 'reviewStayTitle'
       | 'reviewRatingLabel'
@@ -191,6 +203,9 @@ export class MyReservationsPageComponent {
         pending: 'Pending',
         completed: 'Completed',
         cancelledStatus: 'Cancelled',
+        rejectedStatus: 'Rejected',
+        paymentReceived: 'Payment Received',
+        taxIncluded: 'Includes taxes (10%)',
         rateStay: 'Rate Stay',
         reviewStayTitle: 'Rate and review your stay',
         reviewRatingLabel: 'Rating',
@@ -228,6 +243,9 @@ export class MyReservationsPageComponent {
         pending: 'Pendiente',
         completed: 'Completada',
         cancelledStatus: 'Cancelada',
+        rejectedStatus: 'Rechazada',
+        paymentReceived: 'Pago recibido',
+        taxIncluded: 'Incluye impuestos (10%)',
         rateStay: 'Calificar estancia',
         reviewStayTitle: 'Califica y reseña tu estancia',
         reviewRatingLabel: 'Calificación',
@@ -265,6 +283,9 @@ export class MyReservationsPageComponent {
         pending: 'Pendente',
         completed: 'Concluída',
         cancelledStatus: 'Cancelada',
+        rejectedStatus: 'Rejeitada',
+        paymentReceived: 'Pagamento recebido',
+        taxIncluded: 'Inclui impostos (10%)',
         rateStay: 'Avaliar estadia',
         reviewStayTitle: 'Avalie e comente sua estadia',
         reviewRatingLabel: 'Classificação',
@@ -430,8 +451,14 @@ export class MyReservationsPageComponent {
     if (status === 'pending') {
       return 'bg-amber-50 text-amber-600';
     }
+    if (status === 'paymentReceived') {
+      return 'bg-blue-50 text-blue-600';
+    }
     if (status === 'cancelled') {
       return 'bg-rose-50 text-rose-500';
+    }
+    if (status === 'rejected') {
+      return 'bg-red-100 text-red-700';
     }
     return 'bg-slate-100 text-slate-500';
   }
@@ -448,7 +475,7 @@ export class MyReservationsPageComponent {
 
   protected formatPrice(amountUsd: number): string {
     const currency = this.currentCurrency();
-    const converted = this.currencyService.convertFromUsd(amountUsd);
+    const converted = this.currencyService.convertFromUsd(amountUsd * 1.1);
     const locale = this.getLocale();
 
     return new Intl.NumberFormat(locale, {
@@ -669,12 +696,20 @@ export class MyReservationsPageComponent {
       return 'cancelled';
     }
 
+    if (normalized.includes('rechaz')) {
+      return 'rejected';
+    }
+
     if (checkout.getTime() < new Date(today.toDateString()).getTime()) {
       return 'completed';
     }
 
     if (normalized.includes('pend')) {
       return 'pending';
+    }
+
+    if (normalized.includes('pago')) {
+      return 'paymentReceived';
     }
 
     return 'confirmed';
@@ -687,8 +722,14 @@ export class MyReservationsPageComponent {
     if (status === 'pending') {
       return this.label('pending');
     }
+    if (status === 'paymentReceived') {
+      return this.label('paymentReceived');
+    }
     if (status === 'cancelled') {
       return this.label('cancelledStatus');
+    }
+    if (status === 'rejected') {
+      return this.label('rejectedStatus');
     }
     return this.label('completed');
   }

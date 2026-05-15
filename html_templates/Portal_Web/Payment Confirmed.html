@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Confirmed – TravelHub</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+  <!-- Wrapper -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6;padding:32px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- Card -->
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+
+          <!-- ── HEADER BRAND ── -->
+          <tr>
+            <td style="background:#1665f5;padding:16px 28px;">
+              <p style="margin:0;color:#ffffff;font-size:20px;font-weight:800;letter-spacing:.4px;">TravelHub</p>
+            </td>
+          </tr>
+
+          <!-- ── BOOKING ID BAND ── -->
+          <tr>
+            <td style="background:linear-gradient(90deg,#1665f5 0%,#0f57dd 100%);padding:24px 28px;">
+              <p style="margin:0 0 6px 0;color:#dbeafe;font-size:12px;letter-spacing:.3px;">BOOKING ID</p>
+              <p style="margin:0;color:#ffffff;font-size:28px;font-weight:700;letter-spacing:.8px;">{{booking_id}}</p>
+            </td>
+          </tr>
+
+          <!-- ── HERO: PAYMENT CONFIRMED ── -->
+          <tr>
+            <td align="center" style="padding:28px 28px 10px 28px;">
+              <div style="width:72px;height:72px;line-height:72px;border-radius:50%;background:#1665f5;color:#ffffff;font-size:34px;font-weight:700;text-align:center;">&#10003;</div>
+              <h1 style="margin:16px 0 8px 0;font-size:30px;line-height:1.2;color:#111827;">Payment Confirmed!</h1>
+              <p style="margin:0;color:#6b7280;font-size:16px;">Your payment has been successfully processed.</p>
+            </td>
+          </tr>
+
+          <!-- ── PENDING HOTEL CONFIRMATION NOTICE ── -->
+          <tr>
+            <td style="padding:18px 28px 4px 28px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                     style="background:#fefce8;border:1px solid #fbbf24;border-radius:12px;">
+                <tr>
+                  <td style="padding:14px 16px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="32" style="vertical-align:top;padding-right:10px;">
+                          <div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#f59e0b;color:#ffffff;font-size:16px;font-weight:700;text-align:center;">!</div>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <p style="margin:0 0 4px 0;color:#92400e;font-size:14px;font-weight:700;">Pending Hotel Confirmation</p>
+                          <p style="margin:0;color:#92400e;font-size:13px;line-height:1.5;">
+                            Your reservation is subject to confirmation by the hotel. You will receive a final confirmation email once the hotel reviews and approves your booking.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── BOOKING DETAILS CARD ── -->
+          <tr>
+            <td style="padding:18px 28px 8px 28px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+                     style="border:1px solid #e5e7eb;border-radius:12px;">
+
+                <!-- Hotel & Room -->
+                <tr>
+                  <td style="padding:14px 16px;border-bottom:1px solid #e5e7eb;">
+                    <p style="margin:0 0 4px 0;color:#6b7280;font-size:12px;">Hotel</p>
+                    <p style="margin:0;color:#111827;font-size:18px;font-weight:700;">{{hotel_name}}</p>
+                    <p style="margin:6px 0 0 0;color:#4b5563;font-size:14px;">{{room_type}}</p>
+                  </td>
+                </tr>
+
+                <!-- Check-in / Check-out -->
+                <tr>
+                  <td style="padding:14px 16px;border-bottom:1px solid #e5e7eb;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="50%" style="vertical-align:top;padding-right:8px;">
+                          <p style="margin:0 0 4px 0;color:#6b7280;font-size:12px;">Check-in</p>
+                          <p style="margin:0;color:#111827;font-size:15px;font-weight:600;">{{check_in}}</p>
+                        </td>
+                        <td width="50%" style="vertical-align:top;padding-left:8px;">
+                          <p style="margin:0 0 4px 0;color:#6b7280;font-size:12px;">Check-out</p>
+                          <p style="margin:0;color:#111827;font-size:15px;font-weight:600;">{{check_out}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Guest Information -->
+                <tr>
+                  <td style="padding:14px 16px;border-bottom:1px solid #e5e7eb;">
+                    <p style="margin:0 0 10px 0;color:#111827;font-size:16px;font-weight:700;">Guest Information</p>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="50%" style="padding:0 8px 10px 0;vertical-align:top;">
+                          <p style="margin:0 0 3px 0;color:#6b7280;font-size:12px;">Guest Name</p>
+                          <p style="margin:0;color:#111827;font-size:14px;font-weight:600;">{{guest_name}}</p>
+                        </td>
+                        <td width="50%" style="padding:0 0 10px 8px;vertical-align:top;">
+                          <p style="margin:0 0 3px 0;color:#6b7280;font-size:12px;">Email</p>
+                          <p style="margin:0;color:#111827;font-size:14px;font-weight:600;">{{guest_email}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%" style="padding:0 8px 0 0;vertical-align:top;">
+                          <p style="margin:0 0 3px 0;color:#6b7280;font-size:12px;">Phone</p>
+                          <p style="margin:0;color:#111827;font-size:14px;font-weight:600;">{{phone}}</p>
+                        </td>
+                        <td width="50%" style="padding:0 0 0 8px;vertical-align:top;">
+                          <p style="margin:0 0 3px 0;color:#6b7280;font-size:12px;">Guests</p>
+                          <p style="margin:0;color:#111827;font-size:14px;font-weight:600;">{{guests}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Payment Summary -->
+                <tr>
+                  <td style="padding:14px 16px;">
+                    <p style="margin:0 0 10px 0;color:#111827;font-size:16px;font-weight:700;">Payment Summary</p>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td style="padding:4px 0;color:#6b7280;font-size:14px;">Nights</td>
+                        <td align="right" style="padding:4px 0;color:#111827;font-size:14px;font-weight:600;">{{nights}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:4px 0;color:#6b7280;font-size:14px;">Payment Method</td>
+                        <td align="right" style="padding:4px 0;color:#111827;font-size:14px;font-weight:600;">{{payment_method}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding:8px 0 0 0;">
+                          <div style="height:1px;background:#e5e7eb;"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:10px 0 0 0;color:#111827;font-size:18px;font-weight:700;">Total Paid</td>
+                        <td align="right" style="padding:10px 0 0 0;color:#1665f5;font-size:22px;font-weight:800;">{{total_paid}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── WHAT HAPPENS NEXT ── -->
+          <tr>
+            <td style="padding:18px 28px 8px 28px;">
+              <p style="margin:0 0 14px 0;color:#111827;font-size:16px;font-weight:700;">What Happens Next?</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+
+                <tr>
+                  <td style="padding:0 0 12px 0;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="36" style="vertical-align:top;">
+                          <div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#dbeafe;color:#1665f5;font-size:13px;font-weight:700;text-align:center;">1</div>
+                        </td>
+                        <td style="vertical-align:top;padding-left:8px;">
+                          <p style="margin:0 0 2px 0;color:#111827;font-size:14px;font-weight:600;">Hotel Review</p>
+                          <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">The hotel will review your reservation and confirm availability within 24 hours.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 12px 0;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="36" style="vertical-align:top;">
+                          <div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#dbeafe;color:#1665f5;font-size:13px;font-weight:700;text-align:center;">2</div>
+                        </td>
+                        <td style="vertical-align:top;padding-left:8px;">
+                          <p style="margin:0 0 2px 0;color:#111827;font-size:14px;font-weight:600;">Final Confirmation Email</p>
+                          <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">Once approved, you will receive a final booking confirmation with your voucher.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="36" style="vertical-align:top;">
+                          <div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#dbeafe;color:#1665f5;font-size:13px;font-weight:700;text-align:center;">3</div>
+                        </td>
+                        <td style="vertical-align:top;padding-left:8px;">
+                          <p style="margin:0 0 2px 0;color:#111827;font-size:14px;font-weight:600;">Enjoy Your Stay</p>
+                          <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">Check in at the hotel using your Booking ID: {{booking_id}}.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── FOOTER ── -->
+          <tr>
+            <td style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:20px 28px;text-align:center;">
+              <p style="margin:0 0 4px 0;color:#6b7280;font-size:12px;">This is an automated email from TravelHub. Please do not reply.</p>
+              <p style="margin:0;color:#9ca3af;font-size:11px;">&copy; 2026 TravelHub. All rights reserved.</p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Card -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

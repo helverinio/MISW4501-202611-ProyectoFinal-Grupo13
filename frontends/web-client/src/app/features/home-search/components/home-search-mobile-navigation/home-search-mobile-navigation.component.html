@@ -12,17 +12,7 @@
         [class.text-gray-700]="!isHomeSearch()"
         >{{ t('homeSearch.nav.travelerHome') }}</a
       >
-      <a
-        routerLink="/app/search-results"
-        class="whitespace-nowrap hover:text-gray-900"
-        [class.text-primary]="isSearchResultsPage()"
-        [class.font-medium]="isSearchResultsPage()"
-        [class.border-b-2]="isSearchResultsPage()"
-        [class.border-primary]="isSearchResultsPage()"
-        [class.pb-1]="isSearchResultsPage()"
-        [class.text-gray-700]="!isSearchResultsPage()"
-        >{{ t('homeSearch.nav.searchResults') }}</a
-      >
+
       <a
         routerLink="/app/mis-reservas"
         class="whitespace-nowrap hover:text-gray-900"

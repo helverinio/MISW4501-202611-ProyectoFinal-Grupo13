@@ -406,7 +406,7 @@
                   </div>
                   <div class="text-right">
                     <p class="text-lg font-bold mt-1" [ngClass]="getPaymentAmountClass(p.estado)">
-                      {{ formatCurrency(p.total) }}
+                      {{ formatCurrency(getPaymentDisplayTotal(p)) }}
                     </p>
                     <span
                       class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1"

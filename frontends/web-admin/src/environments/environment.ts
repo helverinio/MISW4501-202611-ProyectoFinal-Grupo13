@@ -7,7 +7,7 @@ export const environment = {
     serviceId: 'service_ir1ojbq',
     templateId: 'template_599obil',
     cancellationTemplateId: 'template_8yp6uod',
-    adminRejectionTemplateId: 'template_8yp6uod',
-    publicKey: 'iqjzNhxcPVbGXAAo4',
+    adminRejectionTemplateId: 'template_iqgy2xl',
+    publicKey: 'qIWlUVUW18YUGcMH2',
   },
 };
