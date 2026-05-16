@@ -128,13 +128,14 @@ describe('Flujo E2E #6: Mis Reservas', () => {
       cy.wait('@getMyReservas');
     });
 
-    it('E.1 reserva confirmed muestra botones "Cancel" y "Modify"', () => {
-      // Filtramos a Upcoming para tener solo confirmed/pending
+    it('E.1 reserva confirmed muestra el boton "Cancel" (rojo)', () => {
+      // SPRINT3: el boton "Modify" fue removido del componente. Las cards
+      // confirmadas ahora solo tienen "Cancel" (y opcionalmente "Rate Stay"
+      // si aplica). Validamos que Cancel exista y que Modify ya NO aparezca.
       cy.contains('button', /Upcoming|Pr.ximas/i).click();
-      // Buscamos la card de res-001 (confirmed)
       cy.contains('article', 'res-001').within(() => {
-        cy.contains('button', /Cancel|Cancelar/i).should('be.visible');
-        cy.contains('button', /Modify|Modificar/i).should('be.visible');
+        cy.contains('button', /^\s*(Cancel|Cancelar)\s*$/i).should('be.visible');
+        cy.contains('button', /^\s*(Modify|Modificar)\s*$/i).should('not.exist');
       });
     });
 
@@ -159,14 +160,85 @@ describe('Flujo E2E #6: Mis Reservas', () => {
       });
     });
 
-    it('E.5 click en "View Details" navega al detalle del hotel con query params', () => {
-      cy.contains('article', 'res-001').within(() => {
-        cy.contains('button', /View Details|Ver detalle|Ver detalhes/i).click();
+    it('E.5 reserva completed muestra el primary action "Book Again" que navega al hotel', () => {
+      // SPRINT3: el boton "View Details" fue removido. En su lugar, las
+      // reservas completed sin reseña pendiente muestran como primary
+      // action el "Book Again" / "Reservar de nuevo" (primaryActionLabel
+      // para status completed). Verificamos ese comportamiento.
+      cy.contains('button', /^Past$|Pasadas|Anteriores/i).click();
+      cy.contains('article', 'res-005').within(() => {
+        cy.contains('button', /Book Again|Reservar de nuevo|Reservar novamente/i).click();
       });
 
       cy.url().should('include', '/app/hoteles/');
       cy.url().should('include', 'fecha_ingreso=');
       cy.url().should('include', 'nro_personas=');
+    });
+  });
+
+  // ────────────────────────────────────────────────────────
+  // PARTE F: NUEVOS estados sprint3 (paymentReceived, rejected) + tax label
+  // ────────────────────────────────────────────────────────
+  // Sprint3 introdujo dos estados adicionales:
+  //   - paymentReceived (nombre del estado contiene "pago"): el pago se proceso
+  //     pero el hotel aun no confirma. Se trata como una reserva proxima
+  //     y muestra el boton Cancel.
+  //   - rejected (nombre contiene "rechaz"): el hotel rechazo la reserva.
+  //     Aparece en el tab "Cancelled" y NO muestra acciones.
+  //
+  // Tambien se agrego una etiqueta "Includes taxes (10%)" debajo del total
+  // de cada card.
+  describe('F. NUEVOS estados sprint3 + etiqueta de impuestos', () => {
+    beforeEach(() => {
+      // Pre-cargamos las fixtures FUERA del intercept callback para evitar
+      // problemas con promesas anidadas (mismo patron que inventory-sync A.4).
+      cy.fixture('mis-reservas.json').then((base) => {
+        cy.fixture('mis-reservas-extended.json').then((extra) => {
+          const combined = [...base, ...extra];
+          cy.intercept('GET', '**/api/v1/usuarios/*/reservas', { body: combined }).as(
+            'getMyReservas',
+          );
+          cy.intercept('GET', '**/api/v1/estados', { fixture: 'estados-extended.json' }).as(
+            'getEstados',
+          );
+          cy.intercept('GET', '**/api/v1/habitaciones/*', { fixture: 'habitacion-by-id.json' });
+          cy.intercept('GET', '**/api/v1/hoteles/*/comentarios*', {
+            fixture: 'comentarios-with-review.json',
+          });
+          cy.intercept('GET', '**/api/v1/hoteles/h*', { fixture: 'hotel-by-id.json' });
+          cy.intercept('GET', '**/api/v1/ciudades/*', { fixture: 'ciudad-by-id.json' });
+          cy.intercept('GET', '**/api/v1/paises/*', { fixture: 'pais-by-id.json' });
+          cy.intercept('GET', /\/api\/v1\/usuarios\/\d+$/, { fixture: 'usuario-by-id.json' });
+
+          cy.loginByToken();
+          cy.visit('/app/mis-reservas');
+          cy.wait('@getMyReservas');
+        });
+      });
+    });
+
+    it('F.1 cada card muestra la etiqueta "Includes taxes (10%)" debajo del total', () => {
+      // El label viene del dictionary de my-reservations: taxIncluded
+      // EN: "Includes taxes (10%)" / ES: "Incluye impuestos (10%)" / PT: "Inclui impostos (10%)"
+      cy.contains(/Includes taxes|Incluye impuestos|Inclui impostos/i).should('be.visible');
+    });
+
+    it('F.2 reserva con estado "Pago Recibido" se trata como upcoming y tiene boton Cancel', () => {
+      cy.contains('button', /Upcoming|Pr.ximas/i).click();
+      // res-007 (id_estado=e005, nombre "Pago Recibido") debe aparecer
+      cy.contains('article', 'res-007').within(() => {
+        cy.contains(/Payment Received|Pago recibido|Pagamento recebido/i).should('be.visible');
+        cy.contains('button', /^\s*(Cancel|Cancelar)\s*$/i).should('be.visible');
+      });
+    });
+
+    it('F.3 reserva con estado "Rechazada" aparece en Cancelled tab y NO tiene boton Cancel', () => {
+      cy.contains('button', /Cancelled|Canceladas/i).click();
+      // res-008 (id_estado=e006, nombre "Rechazada") debe aparecer en el filtro Cancelled
+      cy.contains('article', 'res-008').within(() => {
+        cy.contains(/Rejected|Rechazada|Rejeitada/i).should('be.visible');
+        cy.contains('button', /^\s*(Cancel|Cancelar)\s*$/i).should('not.exist');
+      });
     });
   });
 });

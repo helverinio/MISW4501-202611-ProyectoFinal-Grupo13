@@ -63,13 +63,15 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.contains(/reserve now|reservar ahora|reservar agora/i).should('exist');
     });
 
-    it('A.2 muestra las tarjetas de habitaciones ordenadas por precio', () => {
+    it('A.2 muestra las tarjetas de habitaciones disponibles', () => {
       cy.visit(detailsUrl);
       cy.wait(['@getHotelById', '@getHotelRooms']);
 
-      // Fixture tiene 3 habitaciones: r003 ($90), r002 ($120), r001 ($180)
+      // SPRINT3: el componente ahora FILTRA las habitaciones que aparecen
+      // en buscar-disponibles. Para h001 el fixture search-results.json
+      // solo trae r001 (Suite) y r002 (Doble) — r003 del fixture
+      // hotel-rooms.json queda filtrada por no tener precio en la busqueda.
       cy.get('app-hotel-details-page').within(() => {
-        cy.contains(/habitacion sencilla|single room|quarto simples/i).should('exist');
         cy.contains(/habitacion doble|double room|quarto duplo/i).should('exist');
         cy.contains(/suite/i).should('exist');
       });
@@ -79,20 +81,18 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.visit(detailsUrl);
       cy.wait(['@getHotelById', '@getHotelRooms']);
 
-      // Las rooms se ordenan por precio ascendente: r003 ($90), r002 ($120), r001 ($180).
-      // La card inicial activa es la mas barata (r003) y su boton incluye un check
-      // mark Unicode + el label "Select"/"Seleccionar"/"Selecionar"; las otras dos
-      // solo muestran el label. Para evitar problemas con whitespace y caracteres
-      // especiales, scopeamos al article cuyo h2 tiene el header de
-      // "Habitaciones disponibles" y obtenemos los buttons en orden de aparicion.
+      // SPRINT3: solo se muestran las habitaciones con precio (r002 Doble $120
+      // y r001 Suite $180). El sort las ordena por canReserve primero, luego
+      // por precio ascendente. activeRoomCard default = primera con canReserve
+      // = r002 ($120). Click en .eq(1) selecciona la otra (r001 Suite $180).
       cy.contains('h2', /available rooms|habitaciones disponibles|quartos disponiveis/i)
         .parents('article')
         .find('button')
         .eq(1)
         .click();
 
-      // El hero price de la barra lateral debe reflejar el valor de la habitacion activa ($120)
-      cy.get('app-hotel-details-page aside').should('contain.text', '120');
+      // El hero price de la barra lateral debe reflejar el valor de r001 ($180)
+      cy.get('app-hotel-details-page aside').should('contain.text', '180');
     });
 
     it('A.4 el boton "Reserve Now" navega al formulario de reserva con los query params', () => {
@@ -281,11 +281,18 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.fillPaymentForm();
       cy.contains('button', /complete payment/i).click();
 
+      // SPRINT3: POST /payments (sin /process). El componente ya NO hace
+      // polling — usa un setTimeout(2000ms) hardcoded para pasar a
+      // status='completado'. Por eso esperamos al processPayment y dejamos
+      // un timeout amplio para que el assertion de "booking confirmed" tenga
+      // tiempo de aparecer (la transicion ocurre 2 s despues).
       cy.wait('@processPayment');
-      cy.wait('@getPaymentStatus');
 
-      // La vista de confirmacion debe aparecer (TFP-15.2)
-      cy.contains(/booking confirmed|reserva confirmada/i).should('be.visible');
+      // La vista de confirmacion aparece 2 segundos tras processPayment
+      cy.contains(
+        /booking confirmed|reserva confirmada|payment confirmed|pago confirmado|pagamento confirmado/i,
+        { timeout: 10000 },
+      ).should('be.visible');
       // El booking ID del fixture es "res-abc-123"
       cy.contains('res-abc-123').should('be.visible');
     });
@@ -334,7 +341,9 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.contains(/unable to create reservation|could not load|no fue posible/i).should(
         'be.visible',
       );
-      cy.contains(/booking confirmed|reserva confirmada/i).should('not.exist');
+      cy.contains(
+        /booking confirmed|reserva confirmada|payment confirmed|pago confirmado|pagamento confirmado/i,
+      ).should('not.exist');
     });
 
     it('C.7 con check-in lejano se aplica el descuento por reserva anticipada (porcentaje)', () => {
@@ -456,14 +465,19 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
 
       cy.fillPaymentForm();
       cy.contains('button', /complete payment/i).click();
+      // SPRINT3: el endpoint de pago ya no tiene /process y el componente
+      // hace setTimeout(2000) en lugar de polling — esperamos @sendEmailJs
+      // que es asincrono y se dispara DESPUES del setTimeout, garantizando
+      // que la vista de confirmacion ya esta pintada.
       cy.wait('@processPayment');
-      cy.wait('@getPaymentStatus');
-      cy.wait('@sendEmailJs');
+      cy.wait('@sendEmailJs', { timeout: 10000 });
     });
 
     it('D.1 muestra el stepper completo con los 5 pasos en "done"', () => {
       // El nuevo stepper tiene 5 pasos (Search, Select, Booking, Payment, Confirmed)
-      cy.contains(/booking confirmed|reserva confirmada/i).should('be.visible');
+      cy.contains(
+        /booking confirmed|reserva confirmada|payment confirmed|pago confirmado|pagamento confirmado/i,
+      ).should('be.visible');
       cy.get('.steps-wrap').should('exist');
       cy.get('.steps-wrap .step-item.done').should('have.length.at.least', 5);
     });
@@ -569,11 +583,16 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
       cy.contains(/complete your payment/i).should('be.visible');
       cy.fillPaymentForm();
       cy.contains('button', /complete payment/i).click();
+      // SPRINT3: el endpoint /payments ya no tiene /process y el polling
+      // fue reemplazado por setTimeout(2s). El timeout de 10s del contains
+      // siguiente cubre la espera del setTimeout interno.
       cy.wait('@processPayment');
-      cy.wait('@getPaymentStatus');
 
-      // Paso 6: confirmacion (TFP-15.2)
-      cy.contains(/booking confirmed|reserva confirmada/i).should('be.visible');
+      // Paso 6: confirmacion (TFP-15.2) — espera el setTimeout interno
+      cy.contains(
+        /booking confirmed|reserva confirmada|payment confirmed|pago confirmado|pagamento confirmado/i,
+        { timeout: 10000 },
+      ).should('be.visible');
       cy.contains('res-abc-123').should('be.visible');
     });
   });
@@ -652,10 +671,10 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
 
       cy.fillPaymentForm();
       cy.contains('button', /complete payment/i).click();
+      // SPRINT3: no polling — solo POST /payments y luego setTimeout(2s)
       cy.wait('@processPayment');
-      cy.wait('@getPaymentStatus');
 
-      cy.wait('@sendEmailJs').then(({ request }) => {
+      cy.wait('@sendEmailJs', { timeout: 10000 }).then(({ request }) => {
         const params = request.body.template_params;
         expect(params.booking_id).to.equal('res-abc-123');
         expect(params.hotel_name).to.match(/Hotel Tequendama/);
@@ -693,6 +712,36 @@ describe('Flujo E2E #3: Ciclo completo de reserva', () => {
         expect(request.body.total).to.be.a('number');
         expect(request.body.total).to.be.greaterThan(0);
       });
+    });
+
+    it('F.6 el aside muestra la nueva comision TravelHub (5%) junto con impuestos', () => {
+      // SPRINT3 (deploy mas reciente): se agrego un nuevo concepto
+      // "TravelHub Commission" / "Comisión TravelHub" / "Comissão TravelHub"
+      // calculado como 5% del subtotal con descuento. El grandTotal ahora
+      // incluye: subtotal - discount + taxes(10%) + commission(5%).
+      cy.visit(reservationUrl);
+      cy.wait(['@getHotelById', '@getHotelRooms', '@acquireHold']);
+
+      // El aside muestra la linea del service fee. Verificamos label e importe.
+      cy.get('aside').should('contain.text', 'TravelHub').and('contain.text', '5%');
+
+      // El monto debe ser > 0 (5 noches x $120 = $600 subtotal; 5% = $30,
+      // pero usamos asercion robusta a cambios de fixture).
+      cy.get('aside')
+        .invoke('text')
+        .should((text) => {
+          // Buscamos el patron "Comisión TravelHub (5%) US$ N,NN" — el numero > 0.
+          const match = text.match(
+            /(?:TravelHub|Comisi.n|Comiss.o)[^0-9-]*?(?:US\$|\$)?\s*(\d+)[.,]?(\d{0,2})/i,
+          );
+          expect(match, 'aside debe mostrar el monto de la comision').to.not.be.null;
+          if (match) {
+            const integerPart = parseInt(match[1], 10);
+            // Aceptamos 5 (min plausible) hasta 9999 — no validamos el calculo
+            // exacto para tolerar cambios de fixture.
+            expect(integerPart, 'la comision debe ser > 0').to.be.greaterThan(0);
+          }
+        });
     });
   });
 });

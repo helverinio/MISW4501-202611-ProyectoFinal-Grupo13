@@ -131,9 +131,16 @@ Cypress.Commands.add('interceptReservationCycle', (options = {}) => {
     'createReserva',
   );
 
-  // Pago externo: process devuelve "procesando", luego el componente hace polling
-  // a GET /payments/:id y debe ver "completado" para terminar.
-  cy.intercept('POST', '**/api/v1/payments/*/process', {
+  // SPRINT3 NOTA: el endpoint de pago cambio. Ahora:
+  //   POST {extPaymentsBaseUrl}/api/v1/payments  (sin /process al final,
+  //        contra el ext-payments service via CloudFront /ext-payments).
+  //   El payload es ahora solo { payment_intent_id, payment_method } —
+  //   el cardNumber/cvv/etc se siguen llenando en el form pero el web-client
+  //   ya no los envia al backend, lo hace el provider externo.
+  //   Despues de la respuesta, el componente espera 2s (setTimeout) y
+  //   pone status='completado' sin polling. El GET /payments/:id ya NO
+  //   se llama desde el flujo principal.
+  cy.intercept('POST', '**/api/v1/payments', {
     statusCode: 200,
     body: {
       id: 'pay-xyz-456',
@@ -147,6 +154,8 @@ Cypress.Commands.add('interceptReservationCycle', (options = {}) => {
     },
   }).as('processPayment');
 
+  // GET /payments/:id queda mockeado por compatibilidad (algunas otras
+  // vistas podrian usarlo, aunque el flow principal ya no llama polling).
   cy.intercept('GET', '**/api/v1/payments/*', {
     statusCode: 200,
     body: {
