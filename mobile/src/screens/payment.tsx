@@ -38,6 +38,7 @@ interface PaymentParams {
   holdId: string;
   taxRate: string;
   taxesAmount: string;
+  serviceFee: string;
   isModification?: string;
   reservationId?: string;
   originalTotal?: string;
@@ -67,6 +68,7 @@ export default function PaymentScreen() {
   const holdId = getParam('holdId');
   const taxRate = parseFloat(getParam('taxRate') || '0.12');
   const taxesAmount = parseFloat(getParam('taxesAmount') || '0');
+  const serviceFee = parseFloat(getParam('serviceFee') || '0');
   const reservationId = getParam('reservationId');
   const originalTotal = parseFloat(getParam('originalTotal') || '0');
   const newTotal = parseFloat(getParam('newTotal') || '0');
@@ -433,13 +435,14 @@ export default function PaymentScreen() {
             checkOut,
             nights: nights.toString(),
             guests: guests.toString(),
-            roomPrice: (newTotal - taxesAmount).toFixed(2),
-            taxesFees: taxesAmount.toFixed(2),
+            roomPrice: (newTotal - taxesAmount - serviceFee).toFixed(2),
+            taxesFees: taxesAmount.toString(),
             grandTotal: newTotal.toString(),
             cardLast4,
             cardType,
             isModification: 'true',
             priceDifference: finalTotal.toString(),
+            serviceFee: serviceFee.toString(),
           },
         });
         return;
@@ -521,6 +524,7 @@ export default function PaymentScreen() {
             grandTotal: finalTotal.toString(),
             cardLast4,
             cardType,
+            serviceFee: (grandTotal * SERVICE_FEE).toFixed(2),
           },
         });
         return;
@@ -550,14 +554,14 @@ export default function PaymentScreen() {
         });
       }
 
-      const checkInDate = new Date(checkIn + 'T00:00:00');
-      const checkOutDate = new Date(checkOut + 'T00:00:00');
-      const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-      const taxesFees = taxesAmount;
-      const roomPrice = finalTotal - taxesFees;
-      const cleanedCard = cardNumber.replace(/\s/g, '');
-      const cardLast4 = cleanedCard.slice(-4);
-      const cardType = detectCardType(cleanedCard);
+      const stdCheckInDate = new Date(checkIn + 'T00:00:00');
+      const stdCheckOutDate = new Date(checkOut + 'T00:00:00');
+      const stdNights = Math.ceil((stdCheckOutDate.getTime() - stdCheckInDate.getTime()) / (1000 * 60 * 60 * 24));
+      const stdTaxesFees = taxesAmount + serviceFee;
+      const stdRoomPrice = finalTotal - stdTaxesFees;
+      const stdCleanedCard = cardNumber.replace(/\s/g, '');
+      const stdCardLast4 = stdCleanedCard.slice(-4);
+      const stdCardType = detectCardType(stdCleanedCard);
 
       await new Promise((resolve) => { processingTimerRef.current = setTimeout(resolve, 2000); });
 
@@ -572,13 +576,14 @@ export default function PaymentScreen() {
           roomImage: roomData.imagen || hotelData.imagen || '',
           checkIn,
           checkOut,
-          nights: nights.toString(),
+          nights: stdNights.toString(),
           guests: guests.toString(),
-          roomPrice: roomPrice.toFixed(2),
-          taxesFees: taxesFees.toFixed(2),
+          roomPrice: stdRoomPrice.toFixed(2),
+          taxesFees: stdTaxesFees.toFixed(2),
           grandTotal: finalTotal.toString(),
-          cardLast4,
-          cardType,
+          cardLast4: stdCardLast4,
+          cardType: stdCardType,
+          serviceFee: serviceFee.toString(),
         },
       });
     } catch (error: any) {

@@ -246,8 +246,16 @@ export class ReservationFormPageComponent {
     return Math.round(taxable * 0.1 * 100) / 100;
   });
 
+  protected readonly commissionAmount = computed(() => {
+    const taxable = Math.max(this.totalPrice() - this.discountAmount(), 0);
+    return Math.round(taxable * 0.05 * 100) / 100;
+  });
+
   protected readonly grandTotal = computed(
-    () => Math.max(this.totalPrice() - this.discountAmount(), 0) + this.taxesAmount(),
+    () =>
+      Math.max(this.totalPrice() - this.discountAmount(), 0) +
+      this.taxesAmount() +
+      this.commissionAmount(),
   );
 
   protected readonly holdCountdownLabel = computed(() => {
@@ -422,6 +430,7 @@ export class ReservationFormPageComponent {
       | 'nightsLabel'
       | 'earlyBirdDiscount'
       | 'taxesFees'
+      | 'serviceFee'
       | 'secureBooking'
       | 'sslPayment'
       | 'freeCancellation'
@@ -483,7 +492,8 @@ export class ReservationFormPageComponent {
         pricePerNight: 'Price per night',
         nightsLabel: 'nights',
         earlyBirdDiscount: 'Early bird discount',
-        taxesFees: 'Taxes',
+        taxesFees: 'Taxes (10%)',
+        serviceFee: 'TravelHub Commission (5%)',
         secureBooking: 'Secure Booking',
         sslPayment: 'SSL encrypted payment',
         freeCancellation: 'Free cancellation',
@@ -544,7 +554,8 @@ export class ReservationFormPageComponent {
         pricePerNight: 'Precio por noche',
         nightsLabel: 'noches',
         earlyBirdDiscount: 'Descuento por reserva anticipada',
-        taxesFees: 'Impuestos',
+        taxesFees: 'Impuestos (10%)',
+        serviceFee: 'Comisión TravelHub (5%)',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pago cifrado SSL',
         freeCancellation: 'Cancelacion gratis',
@@ -607,7 +618,8 @@ export class ReservationFormPageComponent {
         pricePerNight: 'Preco por noite',
         nightsLabel: 'noites',
         earlyBirdDiscount: 'Desconto por reserva antecipada',
-        taxesFees: 'Impostos',
+        taxesFees: 'Impostos (10%)',
+        serviceFee: 'Comissão TravelHub (5%)',
         secureBooking: 'Reserva segura',
         sslPayment: 'Pagamento SSL criptografado',
         freeCancellation: 'Cancelamento gratis',

@@ -415,7 +415,7 @@ describe('PaymentResultScreen', () => {
       
       fireEvent.press(button);
       
-      expect(router.push).toHaveBeenCalledWith('/screens/bookings');
+      expect(router.push).toHaveBeenCalledWith('/screens/myReservations');
     });
 
     it('should navigate to landing when book another hotel is pressed', () => {

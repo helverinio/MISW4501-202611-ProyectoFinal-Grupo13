@@ -222,10 +222,24 @@ export class ReservationDetailPageComponent implements OnInit {
   }
 
   getCalculatedTotal(): number {
-    const subtotal = this.detail?.price_breakdown?.subtotal_noches ?? 0;
-    const discount = this.detail?.price_breakdown?.discount ?? 0;
-    const taxes = this.detail?.price_breakdown?.impuestos_estimados ?? 0;
-    return subtotal - discount + taxes;
+    return this.detail?.price_breakdown?.total_pagado ?? 0;
+  }
+
+  getBaseAmount(): number {
+    const gross = this.detail?.price_breakdown?.total_pagado ?? 0;
+    return Math.round((gross / 1.15) * 100) / 100;
+  }
+
+  getTaxesAmount(): number {
+    const gross = this.detail?.price_breakdown?.total_pagado ?? 0;
+    const base = gross / 1.15;
+    return Math.round(base * 0.1 * 100) / 100;
+  }
+
+  getCommissionAmount(): number {
+    const gross = this.detail?.price_breakdown?.total_pagado ?? 0;
+    const base = gross / 1.15;
+    return Math.round(base * 0.05 * 100) / 100;
   }
 
   private getDisplayedPaymentsNet(): number {
@@ -252,34 +266,17 @@ export class ReservationDetailPageComponent implements OnInit {
   getTotalPaid(): number {
     const backendTotalPaid = this.detail?.price_breakdown?.total_pagado ?? 0;
     if (backendTotalPaid > 0) {
-      const backendBalance = this.detail?.price_breakdown?.balance_pendiente ?? 0;
-      // When balance is 0 the full amount (including taxes) was paid.
-      // The backend stores only the pre-tax base in total_pagado, so we
-      // return the full calculated total to avoid showing the wrong amount.
-      if (backendBalance === 0) {
-        return this.getCalculatedTotal();
-      }
       return backendTotalPaid;
     }
-
     return Math.max(this.getDisplayedPaymentsNet(), 0);
   }
 
   getTotalPaidWithTax(): number {
-    return Math.round(this.getTotalPaid() * 1.1 * 100) / 100;
+    // Total already includes taxes and service fee — no further multiplication needed.
+    return this.getTotalPaid();
   }
 
-  /**
-   * Returns the display amount for a payment row.
-   * When there is only one payment and the balance is fully settled,
-   * the backend may store only the pre-tax base; we return the full
-   * calculated total (including taxes) so the UI matches what was charged.
-   */
   getPaymentDisplayTotal(payment: ReservationPaymentItem): number {
-    const balance = this.detail?.price_breakdown?.balance_pendiente ?? -1;
-    if (balance === 0 && this.paymentsToShow.length === 1) {
-      return this.getCalculatedTotal();
-    }
     return payment.total;
   }
 
@@ -598,16 +595,25 @@ export class ReservationDetailPageComponent implements OnInit {
       },
       payments: Array.isArray(detail.payments) ? detail.payments : [],
       timeline: Array.isArray(detail.timeline) ? detail.timeline : [],
-      price_breakdown: {
-        subtotal_noches: detail.price_breakdown?.subtotal_noches ?? 0,
-        discount: 0,
-        impuestos_estimados: (detail.price_breakdown?.subtotal_noches ?? 0) * 0.1,
-        total_pagado: detail.price_breakdown?.total_pagado ?? 0,
-        balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
-        detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
-          ? detail.price_breakdown.detalle_noches
-          : [],
-      },
+      price_breakdown: (() => {
+        // The value stored in DB already includes 10% taxes + 5% TravelHub service fee.
+        // Example: if raw = 115 → base = 100, taxes = 10, commission = 5.
+        const raw = detail.price_breakdown?.subtotal_noches ?? detail.total ?? 0;
+        const base = raw / 1.15;
+        const taxes = Math.round(base * 0.1 * 100) / 100;
+        const commission = Math.round(base * 0.05 * 100) / 100;
+        return {
+          subtotal_noches: Math.round(base * 100) / 100,
+          discount: 0,
+          impuestos_estimados: taxes,
+          comision_travelkhub: commission,
+          total_pagado: detail.price_breakdown?.total_pagado ?? 0,
+          balance_pendiente: detail.price_breakdown?.balance_pendiente ?? 0,
+          detalle_noches: Array.isArray(detail.price_breakdown?.detalle_noches)
+            ? detail.price_breakdown.detalle_noches
+            : [],
+        };
+      })(),
     };
   }
 }

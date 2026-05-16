@@ -15,6 +15,9 @@ from app.infrastructure.models.reserva_detalle_tarifa_model import ReservaDetall
 from app.infrastructure.messaging import MessagePublisher, ReservationStateChangedEvent
 from app.infrastructure.repositories.sqlalchemy_comentario_hotel_repository import SQLAlchemyComentarioHotelRepository
 from app.application.use_cases.admin_review_use_cases import ListAdminReviewsUseCase
+from app.application.use_cases import SendPushNotificationUseCase
+from app.infrastructure.repositories import SQLAlchemyDeviceTokenRepository
+from app.infrastructure.services import PushNotificationService
 
 
 PAID_PAYMENT_STATUSES = {'completado', 'pagado', 'paid'}
@@ -53,6 +56,12 @@ def _calculate_payment_net(pagos):
 
 def _has_effective_payment(pagos):
     return _calculate_payment_net(pagos) > 0
+
+
+def get_push_notification_use_case():
+    device_token_repository = SQLAlchemyDeviceTokenRepository()
+    push_service = PushNotificationService()
+    return SendPushNotificationUseCase(device_token_repository, push_service)
 
 
 def _create_virtual_refund_if_needed(reserva, pagos):
@@ -266,7 +275,7 @@ def get_admin_revenue_report(current_usuario=None):
     hotel_ids = [hotel['id'] for hotel in authorized_hotels]
 
     commission_percentage = float(
-        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 12.0)
+        current_app.config.get('TRAVELHUB_COMMISSION_PERCENTAGE', 5.0)
     )
 
     if not hotel_ids:
@@ -327,8 +336,9 @@ def get_admin_revenue_report(current_usuario=None):
     for row in rows:
         report_date = row.report_date.isoformat() if hasattr(row.report_date, 'isoformat') else str(row.report_date)
         gross_revenue = float(row.gross_revenue or 0.0)
-        commission_amount = round(gross_revenue * (commission_percentage / 100.0), 2)
-        net_revenue = round(gross_revenue - commission_amount, 2)
+        base_revenue = gross_revenue / 1.15  # DB total includes 10% tax + 5% commission
+        commission_amount = round(base_revenue * (commission_percentage / 100.0), 2)
+        net_revenue = round(base_revenue, 2)
         if report_date in daily_rows_by_date:
             daily_rows_by_date[report_date]['bookings_count'] = int(row.bookings_count or 0)
             daily_rows_by_date[report_date]['gross_revenue'] = round(gross_revenue, 2)
@@ -714,6 +724,23 @@ def update_reserva_estado_admin(reserva_id, current_usuario=None):
         refund = _create_virtual_refund_if_needed(reserva, pagos)
 
     db.session.commit()
+
+    if nuevo_estado_nombre == 'confirmada':
+        current_app.logger.info(f"[RESERVAS] Reservation {reserva_id} updated to confirmed estado by admin, sending push notification")
+        try:
+            push_use_case = get_push_notification_use_case()
+            push_result = push_use_case.execute(
+                user_id=reserva.id_usuario,
+                title='Reserva Confirmada',
+                body='Tu reserva ha sido confirmada exitosamente',
+                data={'type': 'reservation_confirmed', 'reservation_id': reserva.id}
+            )
+            if push_result.get('success'):
+                current_app.logger.info(f"[RESERVAS] Push notification sent successfully for reservation {reserva_id}")
+            else:
+                current_app.logger.warning(f"[RESERVAS] Failed to send push notification for reservation {reserva_id}: {push_result.get('error')}")
+        except Exception as e:
+            current_app.logger.error(f"[RESERVAS] Error sending push notification for reservation {reserva_id}: {str(e)}")
 
     current_app.logger.info(
         '[RESERVAS_AUDIT] estado_changed '
