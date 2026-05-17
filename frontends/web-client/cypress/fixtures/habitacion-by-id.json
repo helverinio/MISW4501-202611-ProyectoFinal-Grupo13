@@ -1,0 +1,8 @@
+{
+  "id": "r002",
+  "tipo": "Habitacion Doble",
+  "nro_habitacion": 302,
+  "capacidad": 2,
+  "camas": 2,
+  "id_hotel": "h001"
+}

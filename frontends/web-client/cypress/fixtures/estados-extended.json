@@ -1,0 +1,32 @@
+[
+  {
+    "id": "e001",
+    "nombre": "Confirmada",
+    "descripcion": "Reserva confirmada"
+  },
+  {
+    "id": "e002",
+    "nombre": "Pendiente",
+    "descripcion": "Reserva pendiente de confirmacion"
+  },
+  {
+    "id": "e003",
+    "nombre": "Reservada via PMS",
+    "descripcion": "Reserva sincronizada desde el PMS del hotel"
+  },
+  {
+    "id": "e004",
+    "nombre": "Cancelada",
+    "descripcion": "Reserva cancelada por el usuario"
+  },
+  {
+    "id": "e005",
+    "nombre": "Pago Recibido",
+    "descripcion": "El pago fue procesado, pendiente confirmacion del hotel"
+  },
+  {
+    "id": "e006",
+    "nombre": "Rechazada",
+    "descripcion": "Reserva rechazada por el hotel"
+  }
+]
